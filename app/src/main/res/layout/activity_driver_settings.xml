@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.simcoder.bimbo.DriverSettingsActivity"
+    android:orientation="vertical"
+    android:padding="20sp"
+    style="?android:buttonBarStyle">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+    <ImageView
+        android:layout_width="100sp"
+        android:layout_height="100sp"
+        android:id="@+id/profileImage"
+        android:src="@mipmap/ic_default_user"
+        android:layout_marginBottom="20sp"
+        android:contentDescription="@string/select_driver_picture" />
+    <EditText
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:hint="@string/name"
+        android:layout_marginBottom="20sp"
+        android:inputType=""
+        android:autofillHints="" />
+    <EditText
+        android:id="@+id/phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:hint="@string/phone"
+        android:layout_marginBottom="20sp"
+        android:inputType="phone"
+        android:autofillHints="" />
+    <EditText
+        android:id="@+id/car"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:hint="@string/car"
+        android:inputType="text"
+        android:layout_marginBottom="20sp"
+        android:autofillHints="" />
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/radioGroup"
+        android:orientation="horizontal">
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/uberx"
+            android:id="@+id/UberX"
+            style="?android:attr/borderlessButtonStyle"/>
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/uberblackS"
+            android:id="@+id/UberBlack"
+            style="?android:attr/borderlessButtonStyle"/>
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/uberblackxiSS"
+            android:id="@+id/UberXl"
+            style="?android:attr/borderlessButtonStyle"/>
+    </RadioGroup>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/confirm"
+        android:text="@string/confirm"
+        style="?android:attr/borderlessButtonStyle"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/back"
+        android:text="@string/back"
+        style="?android:attr/borderlessButtonStyle"/>
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>

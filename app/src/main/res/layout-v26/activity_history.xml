@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.simcoder.bimbo.HistoryActivity"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    android:id="@+id/layout">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        style="?android:buttonBarStyle">
+
+        <TextView
+            android:id="@+id/balance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="20sp"
+            android:text="@string/balance_0"
+            android:visibility="visible" />
+
+        <EditText
+            android:id="@+id/payoutEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/paypal_email"
+            android:visibility="visible"
+            android:inputType="textEmailAddress"
+            android:autofillHints="" />
+
+        <Button
+            android:id="@+id/payout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/payout"
+            android:visibility="visible"
+            style="?android:attr/borderlessButtonStyle"/>
+
+        
+    </LinearLayout>
+
+    <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/historyRecyclerView"
+                android:scrollbars="vertical">
+            </android.support.v7.widget.RecyclerView>
+
+        </android.support.v4.widget.NestedScrollView>
+
+</LinearLayout>

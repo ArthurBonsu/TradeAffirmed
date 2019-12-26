@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.simcoder.bimbo.CustomerSettingsActivity"
+    android:orientation="vertical"
+    android:padding="20sp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+    <ImageView
+        android:layout_width="100sp"
+        android:layout_height="100sp"
+        android:id="@+id/profileImage"
+        android:src="@mipmap/ic_default_user"
+        android:layout_marginBottom="20sp"
+        android:contentDescription="@string/call_bus_driver"
+        />
+    <EditText
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:hint="@string/name"
+        android:layout_marginBottom="20sp"
+        android:inputType=""
+        android:autofillHints="" tools:targetApi="o"/>
+    <EditText
+        android:id="@+id/phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:hint="@string/phone"
+        android:layout_marginBottom="20sp"
+        android:inputType="phone"
+        android:autofillHints="" tools:targetApi="o"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/confirm"
+        android:text="@string/confirm"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/back"
+        android:text="@string/back"/>
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>

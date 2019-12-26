@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v4.widget.NestedScrollView
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_marginTop="10dp"
+            android:padding="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="125dp"
+                    android:layout_height="170dp"
+                    android:background="#2d2d2d"
+                    android:id="@+id/stickytradersimageonscreen"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="@string/tradersimageonscreen" />
+
+
+                <ImageView
+                    android:layout_width="125dp"
+                    android:layout_height="170dp"
+                    android:background="#2d2d2d"
+                    android:id="@+id/stickyproductimageonscreeen"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="@string/tradersimageonscreen" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/theproductname"
+                    android:id="@+id/stickytheproductname"
+                    android:padding="8dp"
+                    android:textSize="18sp"
+                    android:layout_marginTop="10dp"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/productprice"
+                    android:id="@+id/stickytheproductprice"
+                    android:background="#ecedec"
+                    android:padding="8dp"
+                    android:layout_marginTop="10dp"
+                    />
+
+
+                <TextView
+                    android:textSize="18sp"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="@string/thetradername"
+                    android:id="@+id/stickytradernamehere"
+                    android:background="#ecedec"
+                    android:padding="8dp"
+                    android:layout_marginTop="10dp"
+                    />
+
+
+                <ImageView
+                    android:layout_width="125dp"
+                    android:layout_height="170dp"
+                    android:background="#2d2d2d"
+                    android:id="@+id/stickynumberoflikesimage"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="@string/tradersimageonscreen" />
+
+            </LinearLayout>
+
+
+        </android.support.v4.widget.NestedScrollView>
+
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>

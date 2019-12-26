@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.simcoder.bimbo.DriverLoginActivity"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/emailsd"
+        android:id="@+id/email"
+        android:inputType="textEmailAddress"
+        android:autofillHints="" />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/password"
+        android:id="@+id/password"
+        android:inputType="textPassword"
+        android:importantForAutofill="no" />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/login"
+        android:id="@+id/login"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/registration"
+        android:id="@+id/registration"/>
+
+          <com.google.android.gms.common.SignInButton
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+
+              android:layout_marginTop="5dp"
+              android:id="@+id/signinbtngoogle"
+              android:layout_marginStart="120dp"
+              android:layout_gravity="start"
+              android:paddingStart="10dp"
+              android:paddingEnd="10dp"></com.google.android.gms.common.SignInButton>
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>
