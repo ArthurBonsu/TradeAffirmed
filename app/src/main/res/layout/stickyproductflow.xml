@@ -23,7 +23,7 @@
                     android:layout_width="125dp"
                     android:layout_height="170dp"
                     android:background="#2d2d2d"
-                    android:id="@+id/stickytradersimageonscreen"
+                    android:id="@+id/tradersimageonscreen"
                     android:scaleType="centerCrop"
                     android:contentDescription="@string/tradersimageonscreen" />
 
@@ -32,7 +32,7 @@
                     android:layout_width="125dp"
                     android:layout_height="170dp"
                     android:background="#2d2d2d"
-                    android:id="@+id/stickyproductimageonscreeen"
+                    android:id="@+id/productimageonscreeen"
                     android:scaleType="centerCrop"
                     android:contentDescription="@string/tradersimageonscreen" />
 
@@ -40,7 +40,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/theproductname"
-                    android:id="@+id/stickytheproductname"
+                    android:id="@+id/theproductname"
                     android:padding="8dp"
                     android:textSize="18sp"
                     android:layout_marginTop="10dp"
@@ -49,7 +49,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/productprice"
-                    android:id="@+id/stickytheproductprice"
+                    android:id="@+id/theproductprice"
                     android:background="#ecedec"
                     android:padding="8dp"
                     android:layout_marginTop="10dp"
@@ -61,7 +61,7 @@
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:text="@string/thetradername"
-                    android:id="@+id/stickytradernamehere"
+                    android:id="@+id/tradernamehere"
                     android:background="#ecedec"
                     android:padding="8dp"
                     android:layout_marginTop="10dp"
@@ -72,7 +72,7 @@
                     android:layout_width="125dp"
                     android:layout_height="170dp"
                     android:background="#2d2d2d"
-                    android:id="@+id/stickynumberoflikesimage"
+                    android:id="@+id/numberoflikesimage"
                     android:scaleType="centerCrop"
                     android:contentDescription="@string/tradersimageonscreen" />
 

@@ -1,26 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-
-    <TextView
-        android:id="@+id/fromstickylayoutend"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:padding="10dp"
-        android:text="@string/shoes"
-        android:textSize="30sp"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="0dp">
+        android:layout_height="match_parent">
 
-    </TextView>
+        <android.support.v4.widget.NestedScrollView
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_marginTop="10dp"
+            android:padding="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="125dp"
+                    android:layout_height="170dp"
+                    android:background="#2d2d2d"
+                    android:id="@+id/stickytradersimageonscreen"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="@string/tradersimageonscreen" />
 
 
+                <ImageView
+                    android:layout_width="125dp"
+                    android:layout_height="170dp"
+                    android:background="#2d2d2d"
+                    android:id="@+id/stickyproductimageonscreeen"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="@string/tradersimageonscreen" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/theproductname"
+                    android:id="@+id/stickytheproductname"
+                    android:padding="8dp"
+                    android:textSize="18sp"
+                    android:layout_marginTop="10dp"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/productprice"
+                    android:id="@+id/stickytheproductprice"
+                    android:background="#ecedec"
+                    android:padding="8dp"
+                    android:layout_marginTop="10dp"
+                    />
+
+
+                <TextView
+                    android:textSize="18sp"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="@string/thetradername"
+                    android:id="@+id/stickytradernamehere"
+                    android:background="#ecedec"
+                    android:padding="8dp"
+                    android:layout_marginTop="10dp"
+                    />
+
+                <TextView
+                    android:textSize="18sp"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="@string/categoryhere"
+                    android:id="@+id/stickycategoryhere"
+                    android:background="#ecedec"
+                    android:padding="8dp"
+                    android:layout_marginTop="10dp"
+                    />
+
+                <ImageView
+                    android:id="@+id/stickynumberoflikesimage"
+                    android:layout_width="125dp"
+                    android:layout_height="170dp"
+                    android:background="#2d2d2d"
+                    android:contentDescription="@string/tradersimageonscreen"
+                    android:scaleType="centerCrop" />
+
+            </LinearLayout>
+
+
+        </android.support.v4.widget.NestedScrollView>
+
+    </LinearLayout>
 </android.support.constraint.ConstraintLayout>

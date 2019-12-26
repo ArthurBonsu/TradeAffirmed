@@ -165,4 +165,7 @@
     <string name="SHOES">SHOES</string>
     <string name="shoes">shoes</string>
     <string name="books">books</string>
+    <string name="theproductname">theproductname</string>
+    <string name="productprice">ProductPrice</string>
+    <string name="categoryhere">categoryhere</string>
 </resources>

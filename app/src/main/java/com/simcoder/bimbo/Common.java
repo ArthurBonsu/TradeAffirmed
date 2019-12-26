@@ -142,21 +142,24 @@ public class Common {
              getThefirstPersonProductCategory(category1);
              getTheSecondPersonProductCategory(category2);
 
-             if (product1 == product2) {
+             if (category1 == category2) {
 
                  // WE THEN SET THE VIEW TYPE
+                      //OR IF CATEGORIES ARE THE SAME, YOU HAVE TO ADD ONLY ONE TO THE CATEGORY INDEX TO BE BOUNDED
 
-                 viewType = theviewtype.setViewType(Common.ECOMMERCEVIEW);
 
                   // WE WILL JUST ADD ONLY ONE OF THE CATEGORIES HERE
 
                  keeperofproductnames.add(product1);
-                 keeperofcategories.add(category1);
+                 keeperofproductnames.add(product2);
+                 viewType = theviewtype.setViewType(Common.ECOMMERCEVIEW);
 
+                 keeperofcategories.add(category1);
+                    // WE ONLY SEE OE CATEGORY HERE
                  getcategorywithequalnames  ( keeperofcategories  );
                  getproductwithequalnames  (keeperofproductnames);
                  // WE WILL ADD THE CATEGORIES HERE
-
+                 viewType = theviewtype.setViewType(Common.CATEGORY);
                  Ecommercefullproductlist.add(productdetails);
               return productdetails;
              }

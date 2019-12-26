@@ -16,7 +16,6 @@ import com.simcoder.bimbo.VirtualLayoutManager.LayoutParams;
 
 // import com.simcoder.bimbo.VirtualLayoutManager.LayoutParams;
 import com.simcoder.bimbo.RangeGridLayoutHelper.GridRangeStyle;
-import com.simcoder.bimbo.historyRecyclerView.HistoryObject;
 // import com.simcoder.bimbo.VirtualLayoutManager.LayoutParams;
 
 
@@ -30,7 +29,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
@@ -46,8 +44,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -137,9 +133,19 @@ public class VLayoutActivity extends Activity {
     private ArrayList<EcommerceGrid> getEcommerceListHistory() {
         return EccomerceList;
     }
+
     ImageView myvlayoutproductimage = (ImageView)findViewById(R.id.productimageonscreeen);
     ImageView  myvlayouttraderimage = (ImageView)findViewById(R.id.tradersimageonscreen);
     RecyclerView ecommercegridrecyclervie = (RecyclerView)findViewById(R.id.ecommercegridrecyclerview);
+
+    // STICKY LAYOUT THAT WE HAVE
+    public  List<String>  storecategorylist = new ArrayList<>();
+    ImageView mySTICKYlayoutproductimage = (ImageView)findViewById(R.id.stickyproductimageonscreeen);
+    ImageView  mySTICKYlayouttraderimage = (ImageView)findViewById(R.id.stickytradersimageonscreen);
+    RecyclerView stickylayourrecycler = (RecyclerView)findViewById(R.id.fromstickylayoutrecycler);
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -337,13 +343,10 @@ public class VLayoutActivity extends Activity {
 
         churchkey = getIntent().getExtras().getString("churchkey");
         currentid = mAuth.getCurrentUser().getUid();
-        mQueryGetPic = mDatabaseGetPic.orderByChild("uid").equalTo(currentid);
-        // HOW TO PULL UP
-        // THIS IS THE RECYCLE SCREEN
-        //    final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.main_view);
 
 
 
+             // STICKY LAYOUT STUFF
 
 
 
@@ -703,9 +706,15 @@ public class VLayoutActivity extends Activity {
         }
 
         if (STICKY_LAYOUT) {
-            final StickyLayoutHelper stickyLayoutHelper = new StickyLayoutHelper();
+           final StickyLayoutHelper stickyLayoutHelper = new StickyLayoutHelper();
             //layoutHelper.setOffset(100);
             stickyLayoutHelper.setAspectRatio(4);
+
+
+
+
+
+
 
 
             adapters.add(new StickyLayoutAdapter(this, stickyLayoutHelper, 1, new VirtualLayoutManager.LayoutParams (ViewGroup.LayoutParams.MATCH_PARENT, 100){
@@ -716,24 +725,50 @@ public class VLayoutActivity extends Activity {
 
                 @Override
                 public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+                   // IT WIIL POPULATE EVERYTHING, SORT IT OUT, PRODUCE THE NEW RESULT,
+                    // CHECK WHETHER CATEGORIES HAVE ALREADY BEEN REPEATED AND THEN SET THE VIEWTYPES
+
+                    Common categoryarraylist = new Common();
+                    Common.sortList(EccomerceList);
+                    categoryarraylist.populatealphabetandproductlist(EccomerceList);
+                    categoryarraylist.getcategorywithequalnames(storecategorylist);
+                    viewType = categoryarraylist.viewType;
+
+
+
                     if (viewType == Common.CATEGORY) {
 
-                        ViewGroup group = (ViewGroup)getLayoutInflater().inflate(R.layout.viewproductactivity, parent, false);
+
+                          ViewGroup group = (ViewGroup)getLayoutInflater().inflate(R.layout.headerlayout, parent, false);
                         MainViewHolder mainViewHolder = new MainViewHolder(group);
-                          Common arthurcommon = new Common();
-                          arthurcommon.populatealphabetandproductlist(EccomerceList);
+
+
+
+
+                // PASS IN THE LIST TO ANOTHER ACTIVITY
+
+
                         return mainViewHolder;
 
                     }
                     else if(viewType ==  Common.ECOMMERCEVIEW){
-                        ViewGroup group = (ViewGroup)getLayoutInflater().inflate(R.layout.stickynoterecycler, parent, false);
+
+
+                        ViewGroup group = (ViewGroup)getLayoutInflater().inflate(R.layout.fromstickylayout, parent, false);
                         MainViewHolder mainViewHolder = new MainViewHolder(group);
+
+
+
 
                         return mainViewHolder;
                     }
                     else{
                         ViewGroup group = (ViewGroup)getLayoutInflater().inflate(R.layout.stickynoterecycler, parent, false);
                         MainViewHolder mainViewHolder = new MainViewHolder(group);
+
+
+
 
                         return mainViewHolder;
 
@@ -750,31 +785,40 @@ public class VLayoutActivity extends Activity {
 
 
 
+
+
                 @Override
                 public void onBindViewHolder(MainViewHolder holder, int position) {
                     // only vertical
+
+
 
                     ecommercegridrecyclervie = (RecyclerView) holder.itemView;
 
 
                     LayoutParams lp = (LayoutParams) holder.itemView.getLayoutParams();
+                       //GRABS THE BANNER TEXT
+                    holder.categoryheaderbanner.setText(storecategorylist.get(position).toString() );
 
-                    holder.traderimage.setImageResource(Integer.parseInt(EccomerceList.get(position).getProductimage()));
-                    holder.productimageview.setImageResource(Integer.parseInt(EccomerceList.get(position).getTradername()));
-                    holder.productname.setText(EccomerceList.get(position).getProductname());
-                    holder.productprice.setText(EccomerceList.get(position).getProductprice());
-                    holder.tradername.setText(EccomerceList.get(position).getTradername());
-                    holder.numberoflikes.setText(EccomerceList.get(position).getLikenumber());
-                    holder.category.setText(EccomerceList.get(position).getCategory());
+                     // GRABBING TO ECOMMERCE VIEW HOLDER
+
+                    holder. stickytraderimage.setImageResource(Integer.parseInt(EccomerceList.get(position).getProductimage()));
+                    holder.stickyproductimageview.setImageResource(Integer.parseInt(EccomerceList.get(position).getTradername()));
+                    holder.stickyproductname.setText(EccomerceList.get(position).getProductname());
+                    holder. stickyproductprice.setText(EccomerceList.get(position).getProductprice());
+                    holder.stickynumberoflikes.setText(EccomerceList.get(position).getTradername());
+                    holder.stickynumberoflikes.setText(EccomerceList.get(position).getLikenumber());
 
 
-                    Glide.with(getApplication()).load(Integer.parseInt(EccomerceList.get(position).getProductimage())).into( myvlayoutproductimage);
-                    Glide.with(getApplication()).load(Integer.parseInt(EccomerceList.get(position).getTraderimage())).into(myvlayouttraderimage);
+
+
+                    Glide.with(getApplication()).load(Integer.parseInt(EccomerceList.get(position).getProductimage())).into( mySTICKYlayoutproductimage);
+                    Glide.with(getApplication()).load(Integer.parseInt(EccomerceList.get(position).getTraderimage())).into(mySTICKYlayouttraderimage);
 
 
                      // from position to get adapter
                     //sTICKY ADAPTER
-                    ecommercegridrecyclervie.setAdapter(new StickyLayoutAdapter(context, stickyLayoutHelper , 80));
+                    stickylayourrecycler.setAdapter(new StickyLayoutAdapter(context, stickyLayoutHelper , 80));
 
                 }
 
@@ -1910,6 +1954,11 @@ public class VLayoutActivity extends Activity {
         public int getItemCount() {
             return mCount;
         }
+
+        @Override
+        public int getItemViewType(int position) {
+            return 0;
+        }
     }
 
     static class CollumnLayoutAdapter extends DelegateAdapter.Adapter<MainViewHolder> {
@@ -2226,6 +2275,17 @@ public class VLayoutActivity extends Activity {
         TextView category;
 
 
+        // STICKYLAYOUT
+        ImageView  stickytraderimage;
+        ImageView    stickyproductimageview;
+        TextView     stickyproductname;
+        TextView  stickyproductprice;
+        TextView   stickytradername ;
+        TextView  stickynumberoflikes;
+        TextView   stickycategory;
+        TextView categoryheaderbanner;
+
+
         public MainViewHolder(View itemView) {
             super(itemView);
             createdTimes++;
@@ -2250,6 +2310,18 @@ public class VLayoutActivity extends Activity {
             category = itemView.findViewById(R.id.categoryhere);
 
 
+                 // STICKYLAYOUT VIEW
+
+            categoryheaderbanner = itemView.findViewById(R.id.Stickyheader);
+                  // STICKYLAYOUT FROM ECOMMERCE VIEW
+            stickytraderimage = itemView.findViewById(R.id.tradersimageonscreen);
+            stickyproductimageview = itemView.findViewById(R.id.productimageonscreeen);
+
+            stickyproductname = itemView.findViewById(R.id.theproductname);
+            stickyproductprice = itemView.findViewById(R.id.theproductprice);
+            stickytradername = itemView.findViewById(R.id.tradernamehere);
+            stickynumberoflikes = itemView.findViewById(R.id.numberoflikesimage);
+            stickycategory = itemView.findViewById(R.id.categoryhere);
 
         }
 
