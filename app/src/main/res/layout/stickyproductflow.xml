@@ -76,6 +76,8 @@
                     android:scaleType="centerCrop"
                     android:contentDescription="@string/tradersimageonscreen" />
 
+
+
             </LinearLayout>
 
 

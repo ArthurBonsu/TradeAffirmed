@@ -20,12 +20,12 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:layout_width="125dp"
-                    android:layout_height="170dp"
-                    android:background="#2d2d2d"
                     android:id="@+id/stickytradersimageonscreen"
-                    android:scaleType="centerCrop"
-                    android:contentDescription="@string/tradersimageonscreen" />
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:background="#2d2d2d"
+                    android:contentDescription="@string/tradersimageonscreen"
+                    android:scaleType="centerCrop" />
 
 
                 <ImageView
@@ -85,6 +85,18 @@
                     android:background="#2d2d2d"
                     android:contentDescription="@string/tradersimageonscreen"
                     android:scaleType="centerCrop" />
+
+
+                <TextView
+                    android:textSize="18sp"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="@string/thenumberoflikesgotten"
+                    android:id="@+id/stickynumberoflikeshere"
+                    android:background="#ecedec"
+                    android:padding="8dp"
+                    android:layout_marginTop="10dp"
+                    />
 
             </LinearLayout>
 

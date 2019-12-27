@@ -168,4 +168,5 @@
     <string name="theproductname">theproductname</string>
     <string name="productprice">ProductPrice</string>
     <string name="categoryhere">categoryhere</string>
+    <string name="thenumberoflikesgotten">thenumberoflikesgotten</string>
 </resources>

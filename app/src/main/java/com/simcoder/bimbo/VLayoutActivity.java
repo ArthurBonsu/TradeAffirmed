@@ -28,6 +28,7 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -133,15 +134,17 @@ public class VLayoutActivity extends Activity {
     private ArrayList<EcommerceGrid> getEcommerceListHistory() {
         return EccomerceList;
     }
-
+                 // GRID VIEW PRODUCT
     ImageView myvlayoutproductimage = (ImageView)findViewById(R.id.productimageonscreeen);
     ImageView  myvlayouttraderimage = (ImageView)findViewById(R.id.tradersimageonscreen);
+    ImageView numberoflikesimage = (ImageView)findViewById(R.id.numberoflikesimage);
     RecyclerView ecommercegridrecyclervie = (RecyclerView)findViewById(R.id.ecommercegridrecyclerview);
 
     // STICKY LAYOUT THAT WE HAVE
     public  List<String>  storecategorylist = new ArrayList<>();
     ImageView mySTICKYlayoutproductimage = (ImageView)findViewById(R.id.stickyproductimageonscreeen);
     ImageView  mySTICKYlayouttraderimage = (ImageView)findViewById(R.id.stickytradersimageonscreen);
+    ImageView mystickynumberoflikesimage  = (ImageView)findViewById(R.id.stickynumberoflikesimage);
     RecyclerView stickylayourrecycler = (RecyclerView)findViewById(R.id.fromstickylayoutrecycler);
 
            // FOOTER LAYOUT THAT WE HAVE
@@ -153,13 +156,10 @@ public class VLayoutActivity extends Activity {
     ImageView ecommerceprofile = (ImageView)findViewById(R.id.ecommerceprofile);
 
     // STAGGERED GRIDLAYOUT PARAMETERS
-    RecyclerView footerrecycler = ( RecyclerView)findViewById(R.id.myfooterrecyler);
-    ImageView ecommercehome = (ImageView)findViewById(R.id.ecommercehome);
-    ImageView  ecommercesearched = (ImageView)findViewById(R.id.ecommercesearched);
-    ImageView ecommercemessages = (ImageView)findViewById(R.id.ecommercemessages);
-    ImageView  ecommercecart = (ImageView)findViewById(R.id.ecommercecart);
-    ImageView ecommerceprofile = (ImageView)findViewById(R.id.ecommerceprofile);
 
+    ImageView stagtradersimageonscreen = (ImageView)findViewById(R.id.stagtradersimageonscreen);
+    ImageView  stagproductimageonscreeen = (ImageView)findViewById(R.id.stagproductimageonscreeen);
+    RecyclerView mystaggeredgridrecyler = (RecyclerView)findViewById(R.id.mystaggeredgridrecyler);
 
 
     @Override
@@ -481,6 +481,7 @@ public class VLayoutActivity extends Activity {
 
                 @Override
                 public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                   // YOU CAN USE THIS TO GET MULTIPLE PICURES AND IMAGES UP THERE
                     if (viewType == 1)
                         return new MainViewHolder(
                                 // HERE WE GET ALL THE VIEWS FROM THE VIEWPAGER LAYOUT PAGE, VIEWS SUCH AS TEXTVIEW, VIEWPAGER ETC.
@@ -824,14 +825,17 @@ public class VLayoutActivity extends Activity {
                                              holder.stickyproductimageview.setImageResource(Integer.parseInt(EccomerceList.get(position).getTradername()));
                                              holder.stickyproductname.setText(EccomerceList.get(position).getProductname());
                                              holder.stickyproductprice.setText(EccomerceList.get(position).getProductprice());
-                                             holder.stickynumberoflikes.setText(EccomerceList.get(position).getTradername());
-                                             holder.stickynumberoflikes.setText(EccomerceList.get(position).getLikenumber());
+                                             holder.stickytradername.setText(EccomerceList.get(position).getTradername());
+                                             holder.stickynumberoflikesimage.setImageResource(R.drawable.foollow_heart);
+                                             holder.stickynumberoflikeshere.setText(EccomerceList.get(position).getLikenumber());
+
                                          }
 
 
 
                     Glide.with(getApplication()).load(Integer.parseInt(EccomerceList.get(position).getProductimage())).into( mySTICKYlayoutproductimage);
                     Glide.with(getApplication()).load(Integer.parseInt(EccomerceList.get(position).getTraderimage())).into(mySTICKYlayouttraderimage);
+                    Glide.with(getApplication()).load((R.drawable.foollow_heart)).into(mystickynumberoflikesimage);
 
 
                      // from position to get adapter
@@ -1233,6 +1237,7 @@ public class VLayoutActivity extends Activity {
                                 holder.productprice.setText(EccomerceList.get(position).getProductprice());
                                 holder.tradername.setText(EccomerceList.get(position).getTradername());
                                 holder.numberoflikes.setText(EccomerceList.get(position).getLikenumber());
+                                holder.numberoflikesimage.setImageResource(R.drawable.foollow_heart);
 
 
 
@@ -1241,6 +1246,7 @@ public class VLayoutActivity extends Activity {
 
                                 Glide.with(getApplication()).load(Integer.parseInt(EccomerceList.get(position).getProductimage())).into( myvlayoutproductimage);
                                 Glide.with(getApplication()).load(Integer.parseInt(EccomerceList.get(position).getTraderimage())).into(myvlayouttraderimage);
+                                Glide.with(getApplication()).load((R.drawable.foollow_heart)).into(numberoflikesimage);
 
                                 // from position to get adapter
                                 ecommercegridrecyclervie.setAdapter(new GridSubAdapter(context, mygridhelperhere , 80));
@@ -1356,6 +1362,19 @@ public class VLayoutActivity extends Activity {
             mystaggeredgridhelper.setPadding(10, 10, 20, 10);
             mystaggeredgridhelper.setBgColor(0xFF86345A);
             adapters.add(new StaggeredGridLayoutAdapters(this, mystaggeredgridhelper, 27) {
+                 Context context = null;
+                @Override
+                public LayoutHelper onCreateLayoutHelper() {
+                    return super.onCreateLayoutHelper();
+                }
+
+                @Override
+                public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                    LayoutInflater.from(VLayoutActivity.this).inflate(R.layout.staggeredgridlayout, parent, false);
+
+                    return super.onCreateViewHolder(parent, viewType);
+                }
+
                 @Override
                 public void onBindViewHolder(MainViewHolder holder, int position) {
                     super.onBindViewHolder(holder, position);
@@ -1368,7 +1387,23 @@ public class VLayoutActivity extends Activity {
                         @Override
                         public void onBindViewHolder(MainViewHolder holder, int position) {
 
+                            holder.fff.setImageResource(Integer.parseInt(EccomerceList.get(position).getProductimage()));
+                            holder.productimageview.setImageResource(Integer.parseInt(EccomerceList.get(position).getTradername()));
+                            holder.productname.setText(EccomerceList.get(position).getProductname());
+                            holder.productprice.setText(EccomerceList.get(position).getProductprice());
+                            holder.tradername.setText(EccomerceList.get(position).getTradername());
+                            holder.numberoflikes.setText(EccomerceList.get(position).getLikenumber());
 
+
+
+
+
+
+                            Glide.with(getApplication()).load(Integer.parseInt(EccomerceList.get(position).getProductimage())).into( myvlayoutproductimage);
+                            Glide.with(getApplication()).load(Integer.parseInt(EccomerceList.get(position).getTraderimage())).into(myvlayouttraderimage);
+
+                            // from position to get adapter
+                            mystaggeredgridrecyler.setAdapter(new StaggeredGridLayoutAdapters(context, mystaggeredgridhelper , 80));
 
 
                         }
@@ -2421,25 +2456,31 @@ public class VLayoutActivity extends Activity {
         public TextView bannertext;
         //    public TextView time;
         ImageView adbannerslot;
-      //GIFS
+      //GRID LAYOUT
       ImageView traderimage;
         ImageView productimageview;
+        ImageView numberoflikesimage;
         TextView productname;
         TextView productprice;
         TextView tradername;
-        TextView numberoflikes;
+
         TextView category;
+        TextView numberoflikes;
+
 
 
         // STICKYLAYOUT
         ImageView  stickytraderimage;
         ImageView    stickyproductimageview;
+        ImageView   stickynumberoflikesimage;
         TextView     stickyproductname;
         TextView  stickyproductprice;
         TextView   stickytradername ;
-        TextView  stickynumberoflikes;
+
         TextView   stickycategory;
         TextView categoryheaderbanner;
+        TextView stickynumberoflikeshere;
+
 
  // FOOTER LAYOUT HERE
         ImageView footerecommercehome;
@@ -2447,6 +2488,17 @@ public class VLayoutActivity extends Activity {
         ImageView footerecommercemessages;
         ImageView  footerecommercecart;
         ImageView footerecommerceprofile;
+
+        // STAGGERED GRID VIEW LAYOUT STUFF
+
+        ImageView stagtradersimageonscreen;
+        ImageView stagproductimageonscreeen;
+        ImageView stagnumberoflikesimage;
+        TextView stagtheproductname;
+        TextView stagtheproductprice;
+        TextView stagtradernamehere;
+        TextView stagcategoryhere;
+        TextView stagnumberoflikes;
 
 
         public MainViewHolder(View itemView) {
@@ -2469,22 +2521,24 @@ public class VLayoutActivity extends Activity {
             productname = itemView.findViewById(R.id.theproductname);
             productprice = itemView.findViewById(R.id.theproductprice);
             tradername = itemView.findViewById(R.id.tradernamehere);
-            numberoflikes = itemView.findViewById(R.id.numberoflikesimage);
+            numberoflikesimage = itemView.findViewById(R.id.numberoflikesimage);
             category = itemView.findViewById(R.id.categoryhere);
-
+             numberoflikes  = itemView.findViewById(R.id.numoflikesgotten);
 
                  // STICKYLAYOUT VIEW
 
             categoryheaderbanner = itemView.findViewById(R.id.Stickyheader);
                   // STICKYLAYOUT FROM ECOMMERCE VIEW
-            stickytraderimage = itemView.findViewById(R.id.tradersimageonscreen);
-            stickyproductimageview = itemView.findViewById(R.id.productimageonscreeen);
 
-            stickyproductname = itemView.findViewById(R.id.theproductname);
-            stickyproductprice = itemView.findViewById(R.id.theproductprice);
-            stickytradername = itemView.findViewById(R.id.tradernamehere);
-            stickynumberoflikes = itemView.findViewById(R.id.numberoflikesimage);
-            stickycategory = itemView.findViewById(R.id.categoryhere);
+            stickytraderimage = itemView.findViewById(R.id.stickytradersimageonscreen);
+            stickyproductimageview = itemView.findViewById(R.id.stickyproductimageonscreeen);
+
+            stickyproductname = itemView.findViewById(R.id.stickytheproductname);
+            stickyproductprice = itemView.findViewById(R.id.stickytheproductprice);
+            stickytradername = itemView.findViewById(R.id.stickytradernamehere);
+            stickynumberoflikesimage = itemView.findViewById(R.id.stickynumberoflikesimage);
+            stickycategory = itemView.findViewById(R.id.stickycategoryhere);
+            stickynumberoflikeshere = itemView.findViewById(R.id.stickynumberoflikeshere);
 
             // FOR FOOTER LAYOUT AND STUFF
 
@@ -2493,6 +2547,20 @@ public class VLayoutActivity extends Activity {
             footerecommercemessages   = itemView.findViewById(R.id.ecommercemessages);
              footerecommercecart = itemView.findViewById(R.id.ecommercecart);
              footerecommerceprofile = itemView.findViewById(R.id.ecommerceprofile);
+
+              // DEFINING STAGGERED GRID STUFF
+
+
+
+            stagtradersimageonscreen = itemView.findViewById(R.id.stagtradersimageonscreen);
+            stagproductimageonscreeen = itemView.findViewById(R.id.stagproductimageonscreeen);
+
+            stagtheproductname = itemView.findViewById(R.id.stagtheproductname);
+            stagtheproductprice = itemView.findViewById(R.id.stagtheproductprice);
+            stagtradernamehere = itemView.findViewById(R.id.stagtradernamehere);
+            stagnumberoflikesimage = itemView.findViewById(R.id.stagnumberoflikesimage);
+            stagcategoryhere = itemView.findViewById(R.id.stagcategoryhere);
+            stagnumberoflikes = itemView.findViewById(R.id.stagnumberoflikes);
 
         }
 
@@ -2529,7 +2597,7 @@ public class VLayoutActivity extends Activity {
                          break;
                      case  R.id.categoryhere:
 
-                         // TRADER BUTTONS
+                         // FOOTER BUTTONS BUTTONS
 
                      case R.id.ecommercehome:
 
@@ -2544,6 +2612,9 @@ public class VLayoutActivity extends Activity {
 
                          break;
                      case R.id.ecommerceprofile:
+
+                   // STAGGERED GRID LAYOUT
+
 
 
                  }
