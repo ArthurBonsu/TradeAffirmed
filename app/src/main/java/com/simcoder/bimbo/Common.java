@@ -145,16 +145,19 @@ public class Common {
              if (category1 == category2) {
 
                  // WE THEN SET THE VIEW TYPE
-                      //OR IF CATEGORIES ARE THE SAME, YOU HAVE TO ADD ONLY ONE TO THE CATEGORY INDEX TO BE BOUNDED
+                 //OR IF CATEGORIES ARE THE SAME, YOU HAVE TO ADD ONLY ONE TO THE CATEGORY INDEX TO BE BOUNDED
 
 
-                  // WE WILL JUST ADD ONLY ONE OF THE CATEGORIES HERE
+                 // WE WILL JUST ADD ONLY ONE OF THE CATEGORIES HERE
 
                  keeperofproductnames.add(product1);
                  keeperofproductnames.add(product2);
                  viewType = theviewtype.setViewType(Common.ECOMMERCEVIEW);
 
-                 keeperofcategories.add(category1);
+                 // IT HAS TO ADD ONLY ONE CATEGORY, NOT MULTIPLE CATEGORIES
+                 if (!keeperofcategories.contains(category1)){
+                     keeperofcategories.add(category1);
+             }
                     // WE ONLY SEE OE CATEGORY HERE
                  getcategorywithequalnames  ( keeperofcategories  );
                  getproductwithequalnames  (keeperofproductnames);
@@ -178,7 +181,8 @@ public class Common {
 
                         //ADD ALL THE PRODUCTS, THE FIRST AND THE SECOND
 
-                 keeperofproductnames.add(product1);
+                  keeperofproductnames.add(product1);
+
                  keeperofproductnames.add(product2);
 
                   //GET PRODUCT WITH EQUAL NAMES
@@ -191,8 +195,17 @@ public class Common {
 
                       // ADD THE TWO CATEGORIES TO THE LIST
 
-                 keeperofcategories.add(product1category);
-                 keeperofcategories.add(product2category);
+                         // WE WILL CHECK IF THIS CATEGORY IS NOT CONTAINED ALREADY
+                 if (!keeperofcategories.contains(product1category)){
+                     keeperofcategories.add(product1category);
+                 }
+                         // CHECK IF SECOND CATEGORY IS NOT IN THE LIST OF CATEGORIES ALREADY
+
+                 if (!keeperofcategories.contains(product2category)){
+                     keeperofcategories.add(product2category);
+                 }
+
+
                  // YOU CAN PULL OUT LIST OF CATEGORIES GAINED SO FAR
 
                  getcategorieswithoutqualnames  (keeperofcategories);

@@ -144,6 +144,22 @@ public class VLayoutActivity extends Activity {
     ImageView  mySTICKYlayouttraderimage = (ImageView)findViewById(R.id.stickytradersimageonscreen);
     RecyclerView stickylayourrecycler = (RecyclerView)findViewById(R.id.fromstickylayoutrecycler);
 
+           // FOOTER LAYOUT THAT WE HAVE
+    RecyclerView footerrecycler = ( RecyclerView)findViewById(R.id.myfooterrecyler);
+    ImageView ecommercehome = (ImageView)findViewById(R.id.ecommercehome);
+    ImageView  ecommercesearched = (ImageView)findViewById(R.id.ecommercesearched);
+    ImageView ecommercemessages = (ImageView)findViewById(R.id.ecommercemessages);
+    ImageView  ecommercecart = (ImageView)findViewById(R.id.ecommercecart);
+    ImageView ecommerceprofile = (ImageView)findViewById(R.id.ecommerceprofile);
+
+    // STAGGERED GRIDLAYOUT PARAMETERS
+    RecyclerView footerrecycler = ( RecyclerView)findViewById(R.id.myfooterrecyler);
+    ImageView ecommercehome = (ImageView)findViewById(R.id.ecommercehome);
+    ImageView  ecommercesearched = (ImageView)findViewById(R.id.ecommercesearched);
+    ImageView ecommercemessages = (ImageView)findViewById(R.id.ecommercemessages);
+    ImageView  ecommercecart = (ImageView)findViewById(R.id.ecommercecart);
+    ImageView ecommerceprofile = (ImageView)findViewById(R.id.ecommerceprofile);
+
 
 
     @Override
@@ -797,18 +813,20 @@ public class VLayoutActivity extends Activity {
 
 
                     LayoutParams lp = (LayoutParams) holder.itemView.getLayoutParams();
-                       //GRABS THE BANNER TEXT
-                    holder.categoryheaderbanner.setText(storecategorylist.get(position).toString() );
 
-                     // GRABBING TO ECOMMERCE VIEW HOLDER
+                                         if (storecategorylist.get(position) == EccomerceList.get(position).getCategory()) {
+                                             //GRABS THE BANNER TEXT
+                                             holder.categoryheaderbanner.setText(storecategorylist.get(position).toString());
 
-                    holder. stickytraderimage.setImageResource(Integer.parseInt(EccomerceList.get(position).getProductimage()));
-                    holder.stickyproductimageview.setImageResource(Integer.parseInt(EccomerceList.get(position).getTradername()));
-                    holder.stickyproductname.setText(EccomerceList.get(position).getProductname());
-                    holder. stickyproductprice.setText(EccomerceList.get(position).getProductprice());
-                    holder.stickynumberoflikes.setText(EccomerceList.get(position).getTradername());
-                    holder.stickynumberoflikes.setText(EccomerceList.get(position).getLikenumber());
+                                             // GRABBING TO ECOMMERCE VIEW HOLDER
 
+                                             holder.stickytraderimage.setImageResource(Integer.parseInt(EccomerceList.get(position).getProductimage()));
+                                             holder.stickyproductimageview.setImageResource(Integer.parseInt(EccomerceList.get(position).getTradername()));
+                                             holder.stickyproductname.setText(EccomerceList.get(position).getProductname());
+                                             holder.stickyproductprice.setText(EccomerceList.get(position).getProductprice());
+                                             holder.stickynumberoflikes.setText(EccomerceList.get(position).getTradername());
+                                             holder.stickynumberoflikes.setText(EccomerceList.get(position).getLikenumber());
+                                         }
 
 
 
@@ -827,10 +845,71 @@ public class VLayoutActivity extends Activity {
 
                 }));
 
+            adapters.add(
+                    new FooterAdapter(recyclerView, VLayoutActivity.this, new GridLayoutHelper(1), 1){
+
+                        Context ourcontext = null;
+
+
+                        @Override
+                        public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+                            LayoutInflater.from(VLayoutActivity.this).inflate(R.layout.footer, parent, false);
+                            return super.onCreateViewHolder(parent, viewType);
+                        }
+                        @Override
+                        public void onBindViewHolder(MainViewHolder holder, int position) {
+
+                            holder.footerecommercehome.setImageResource(R.drawable.home_icon);
+                            holder.footerecommercesearched.setImageResource(R.drawable.basedonsearchhere);
+                            holder.footerecommercemessages.setImageResource(R.drawable.commentsectionagain);
+                            holder.footerecommercecart.setImageResource(R.drawable.cart);
+                            holder.footerecommerceprofile.setImageResource(R.drawable.profile_imagehere);
+
+
+                            Glide.with(getApplication()).load(R.drawable.home_icon ).into( ecommercehome);
+                            Glide.with(getApplication()).load(R.drawable.basedonsearchhere).into(ecommercesearched);
+                            Glide.with(getApplication()).load(R.drawable.commentsectionagain).into( ecommercemessages);
+                            Glide.with(getApplication()).load(R.drawable.cart).into(ecommercecart);
+                            Glide.with(getApplication()).load(R.drawable.profile_imagehere).into( ecommerceprofile);
 
 
 
-               }
+
+                            // from position to get adapter
+                            footerrecycler.setAdapter(new FooterAdapter(footerrecycler, ourcontext,  stickyLayoutHelper , 80));
+
+
+                            super.onBindViewHolder(holder, position);
+                        }
+
+                        @Override
+                        protected void onBindViewHolderWithOffset(MainViewHolder holder, int position, int offsetTotal) {
+                            super.onBindViewHolderWithOffset(holder, position, offsetTotal);
+                        }
+
+                        @Override
+                        public int getItemViewType(int position) {
+                            return super.getItemViewType(position);
+                        }
+
+                        @Override
+                        public int getItemCount() {
+                            return super.getItemCount();
+                        }
+
+                        @Override
+                        public void toggleFoot() {
+                            super.toggleFoot();
+                        }
+                    });
+
+
+
+
+
+
+        }
 
         ;
 
@@ -1155,6 +1234,11 @@ public class VLayoutActivity extends Activity {
                                 holder.tradername.setText(EccomerceList.get(position).getTradername());
                                 holder.numberoflikes.setText(EccomerceList.get(position).getLikenumber());
 
+
+
+
+
+
                                 Glide.with(getApplication()).load(Integer.parseInt(EccomerceList.get(position).getProductimage())).into( myvlayoutproductimage);
                                 Glide.with(getApplication()).load(Integer.parseInt(EccomerceList.get(position).getTraderimage())).into(myvlayouttraderimage);
 
@@ -1172,6 +1256,62 @@ public class VLayoutActivity extends Activity {
 
 
             });
+
+            adapters.add(
+                    new FooterAdapter(recyclerView, VLayoutActivity.this, new GridLayoutHelper(1), 1){
+
+                            Context ourcontext = null;
+
+
+                        @Override
+                        public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+                            LayoutInflater.from(VLayoutActivity.this).inflate(R.layout.footer, parent, false);
+                            return super.onCreateViewHolder(parent, viewType);
+                        }
+                        @Override
+                        public void onBindViewHolder(MainViewHolder holder, int position) {
+
+                            holder.footerecommercehome.setImageResource(R.drawable.home_icon);
+                            holder.footerecommercesearched.setImageResource(R.drawable.basedonsearchhere);
+                            holder.footerecommercemessages.setImageResource(R.drawable.commentsectionagain);
+                            holder.footerecommercecart.setImageResource(R.drawable.cart);
+                            holder.footerecommerceprofile.setImageResource(R.drawable.profile_imagehere);
+
+                            Glide.with(getApplication()).load(R.drawable.home_icon ).into( ecommercehome);
+                            Glide.with(getApplication()).load(R.drawable.basedonsearchhere).into(ecommercesearched);
+                            Glide.with(getApplication()).load(R.drawable.commentsectionagain).into( ecommercemessages);
+                            Glide.with(getApplication()).load(R.drawable.cart).into(ecommercecart);
+                            Glide.with(getApplication()).load(R.drawable.profile_imagehere).into( ecommerceprofile);
+
+
+                            // from position to get adapter
+                            footerrecycler.setAdapter(new FooterAdapter(footerrecycler, ourcontext,  mygridhelperhere , 80));
+
+
+                            super.onBindViewHolder(holder, position);
+                        }
+
+                        @Override
+                        protected void onBindViewHolderWithOffset(MainViewHolder holder, int position, int offsetTotal) {
+                            super.onBindViewHolderWithOffset(holder, position, offsetTotal);
+                        }
+
+                        @Override
+                        public int getItemViewType(int position) {
+                            return super.getItemViewType(position);
+                        }
+
+                        @Override
+                        public int getItemCount() {
+                            return super.getItemCount();
+                        }
+
+                        @Override
+                        public void toggleFoot() {
+                            super.toggleFoot();
+                        }
+                    });
 
 
 
@@ -1208,14 +1348,14 @@ public class VLayoutActivity extends Activity {
             helper.setMargin(0, 10, 0, 10);
             adapters.add(new GridSubAdapter(this, helper, 3));
         }
-
+ // IMPLEMENT STAGERRED GRID VIEW HERE
         if (STAGGER_LAYOUT) {
             // adapters.add(new SubAdapter(this, new StaggeredGridLayoutHelper(2, 0), 0));
-            final StaggeredGridLayoutHelper helper = new StaggeredGridLayoutHelper(2, 10);
-            helper.setMargin(20, 10, 10, 10);
-            helper.setPadding(10, 10, 20, 10);
-            helper.setBgColor(0xFF86345A);
-            adapters.add(new StaggeredGridLayoutAdapters(this, helper, 27) {
+            final StaggeredGridLayoutHelper mystaggeredgridhelper = new StaggeredGridLayoutHelper(2, 10);
+            mystaggeredgridhelper.setMargin(20, 10, 10, 10);
+            mystaggeredgridhelper.setPadding(10, 10, 20, 10);
+            mystaggeredgridhelper.setBgColor(0xFF86345A);
+            adapters.add(new StaggeredGridLayoutAdapters(this, mystaggeredgridhelper, 27) {
                 @Override
                 public void onBindViewHolder(MainViewHolder holder, int position) {
                     super.onBindViewHolder(holder, position);
@@ -1228,6 +1368,9 @@ public class VLayoutActivity extends Activity {
                         @Override
                         public void onBindViewHolder(MainViewHolder holder, int position) {
 
+
+
+
                         }
                     };
                     if (position % 2 == 0) {
@@ -1237,6 +1380,8 @@ public class VLayoutActivity extends Activity {
                     }
                     holder.itemView.setLayoutParams(layoutParams);
                 }
+
+
             });
         }
 
@@ -1244,12 +1389,15 @@ public class VLayoutActivity extends Activity {
             // adapters.add(new SubAdapter(this, new ColumnLayoutHelper(), 3));
         }
 
-        if (GRID_LAYOUT) {
+        if (GRID_LAYOUT ) {
             // adapters.add(new SubAdapter(this, new GridLayoutHelper(4), 24));
         }
-
-        adapters.add(
+         adapters.add(
                 new FooterAdapter(recyclerView, VLayoutActivity.this, new GridLayoutHelper(1), 1));
+
+
+
+
 
         delegateAdapter.setAdapters(adapters);
 
@@ -1377,7 +1525,7 @@ public class VLayoutActivity extends Activity {
 
         @Override
         public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new MainViewHolder(LayoutInflater.from(mContext).inflate(R.layout.item, parent, false));
+            return new MainViewHolder(LayoutInflater.from(mContext).inflate(R.layout.footer, parent, false));
         }
 
         @Override
@@ -1389,12 +1537,18 @@ public class VLayoutActivity extends Activity {
                 lp.height = 0;
             }
             holder.itemView.setLayoutParams(lp);
+
+
+
+
         }
 
 
         @Override
         protected void onBindViewHolderWithOffset(MainViewHolder holder, int position, int offsetTotal) {
             ((TextView) holder.itemView.findViewById(R.id.title)).setText(Integer.toString(offsetTotal));
+
+
         }
 
         @Override
@@ -1574,6 +1728,8 @@ public class VLayoutActivity extends Activity {
 
                         @Override
                         public void onBindViewHolder(MainViewHolder holder, int position) {
+
+
 
                         }
                     });
@@ -2285,6 +2441,13 @@ public class VLayoutActivity extends Activity {
         TextView   stickycategory;
         TextView categoryheaderbanner;
 
+ // FOOTER LAYOUT HERE
+        ImageView footerecommercehome;
+        ImageView  footerecommercesearched;
+        ImageView footerecommercemessages;
+        ImageView  footerecommercecart;
+        ImageView footerecommerceprofile;
+
 
         public MainViewHolder(View itemView) {
             super(itemView);
@@ -2323,6 +2486,14 @@ public class VLayoutActivity extends Activity {
             stickynumberoflikes = itemView.findViewById(R.id.numberoflikesimage);
             stickycategory = itemView.findViewById(R.id.categoryhere);
 
+            // FOR FOOTER LAYOUT AND STUFF
+
+             footerecommercehome  = itemView.findViewById(R.id.ecommercehome);
+            footerecommercesearched = itemView.findViewById(R.id.ecommercesearched);
+            footerecommercemessages   = itemView.findViewById(R.id.ecommercemessages);
+             footerecommercecart = itemView.findViewById(R.id.ecommercecart);
+             footerecommerceprofile = itemView.findViewById(R.id.ecommerceprofile);
+
         }
 
 
@@ -2330,12 +2501,13 @@ public class VLayoutActivity extends Activity {
         @Override
         public void onClick(View v) {
                  switch (v.getId()){
+                     // VIEWPAGER BUTTONS
 
                      case R.id.viewpagertext:
 
                          break;
                      case R.id.viewpagerimages:
-
+                    // GRIDVIEW BUTTONS
                          break;
                      case R.id.tradersimageonscreen:
 
@@ -2356,6 +2528,23 @@ public class VLayoutActivity extends Activity {
 
                          break;
                      case  R.id.categoryhere:
+
+                         // TRADER BUTTONS
+
+                     case R.id.ecommercehome:
+
+                         break;
+                     case R.id.ecommercesearched:
+
+                         break;
+                     case R.id.ecommercemessages:
+
+                         break;
+                     case R.id.ecommercecart:
+
+                         break;
+                     case R.id.ecommerceprofile:
+
 
                  }
 

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v4.widget.NestedScrollView
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_marginTop="10dp"
+            android:padding="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="125dp"
+                    android:layout_height="170dp"
+                    android:background="#2d2d2d"
+                    android:id="@+id/stagtradersimageonscreen"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="@string/tradersimageonscreen" />
+
+
+                <ImageView
+                    android:layout_width="125dp"
+                    android:layout_height="170dp"
+                    android:background="#2d2d2d"
+                    android:id="@+id/stagproductimageonscreeen"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="@string/tradersimageonscreen" />
+
+                <TextView
+                    android:id="@+id/stagtheproductname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:padding="8dp"
+                    android:text="stagtheproductname"
+                    android:textSize="18sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ProductPrice"
+                    android:id="@+id/stagtheproductprice"
+                    android:background="#ecedec"
+                    android:padding="8dp"
+                    android:layout_marginTop="10dp"
+                    />
+
+
+                <TextView
+                    android:textSize="18sp"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="@string/thetradername"
+                    android:id="@+id/stagtradernamehere"
+                    android:background="#ecedec"
+                    android:padding="8dp"
+                    android:layout_marginTop="10dp"
+                    />
+
+                <TextView
+                    android:textSize="18sp"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="categoryhere"
+                    android:id="@+id/stagcategoryhere"
+                    android:background="#ecedec"
+                    android:padding="8dp"
+                    android:layout_marginTop="10dp"
+                    />
+
+                <ImageView
+                    android:id="@+id/stagnumberoflikesimage"
+                    android:layout_width="125dp"
+                    android:layout_height="170dp"
+                    android:background="#2d2d2d"
+                    android:contentDescription="@string/tradersimageonscreen"
+                    android:scaleType="centerCrop" />
+
+            </LinearLayout>
+
+
+        </android.support.v4.widget.NestedScrollView>
+
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>
