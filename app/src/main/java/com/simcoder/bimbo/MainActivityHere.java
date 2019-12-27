@@ -94,7 +94,17 @@ public class MainActivityHere extends Activity {
                     @Override
                     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
                         VirtualLayoutManager.LayoutParams layoutParams = new VirtualLayoutManager.LayoutParams(
-                                ViewGroup.LayoutParams.MATCH_PARENT, 300);
+                                ViewGroup.LayoutParams.MATCH_PARENT, 300) {
+                            @Override
+                            public VLayoutActivity.MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                                return null;
+                            }
+
+                            @Override
+                            public void onBindViewHolder(VLayoutActivity.MainViewHolder holder, int position) {
+
+                            }
+                        };
                         holder.itemView.setLayoutParams(layoutParams);
 
                         ((TextView) holder.itemView).setText(Integer.toString(position));

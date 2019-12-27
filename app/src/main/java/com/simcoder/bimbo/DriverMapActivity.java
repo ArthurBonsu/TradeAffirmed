@@ -86,7 +86,10 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     private static final String TAG = "GoogleActivity";
     private static final int RC_SIGN_IN = 9001;
 
-    private Button mLogout, mSettings, mRideStatus, mHistory;
+     Button mLogout ;
+     Button mSettings;
+     Button mRideStatus ;
+     Button mHistory ;
 
     private Switch mWorkingSwitch;
 
@@ -112,7 +115,14 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         setContentView(R.layout.activity_driver_map);
+        mSettings = (Button)findViewById(R.id.settings);
+        mLogout = (Button)findViewById(R.id.logout);
+        mRideStatus =(Button) findViewById(R.id.rideStatus);
+        mHistory = (Button) findViewById(R.id.historys);
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         polylines = new ArrayList<>();
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -148,10 +158,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             }
         });
 
-        mSettings = findViewById(R.id.settings);
-        mLogout = findViewById(R.id.logout);
-        mRideStatus = findViewById(R.id.rideStatus);
-        mHistory = findViewById(R.id.history);
+
         mRideStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -215,6 +222,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                 return;
             }
         });
+
         mHistory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

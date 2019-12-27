@@ -162,7 +162,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         }
 
         destinationLatLng = new LatLng(0.0, 0.0);
-
+         mLastLocation = new Location("");
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
@@ -248,7 +248,10 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     //ERROR IS IT IS NOT GETTING LATITITUDES
                     //WHENEVER I PRESS THIS I PUT THE USER INTO THE DATABASE
                     // IT SEARCHES FOR THE LOCATION
-                    geoFire.setLocation(userId, new GeoLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
+
+
+
+                    geoFire.setLocation(userId, new GeoLocation(mLastLocation.getLatitude() , mLastLocation.getLongitude()));
 
                     // AND PUTS THEM HERE IN LATITUDES
                     pickupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
@@ -663,11 +666,13 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     @Override
     //ONLACATION CHANGED IS THE RELATIONSHIP BETWEEN NMAP AND GEOFIRE
     public void onLocationChanged(Location location) {
+
         if (getApplicationContext() != null) {
             mLastLocation = location;
 
 
-            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+
+            LatLng latLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
             //THIS IS WHERE WE PLAY WITH CAMERA, CAN PROVIDE MANY CAMERA FEATURES
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             mMap.animateCamera(CameraUpdateFactory.zoomTo(11));

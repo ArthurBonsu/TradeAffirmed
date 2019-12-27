@@ -155,10 +155,11 @@ public class VLayoutActivity extends Activity {
     ImageView  ecommercecart = (ImageView)findViewById(R.id.ecommercecart);
     ImageView ecommerceprofile = (ImageView)findViewById(R.id.ecommerceprofile);
 
-    // STAGGERED GRIDLAYOUT PARAMETERS
+    // STAGGERED STAGLAYOUT PARAMETERS
 
     ImageView stagtradersimageonscreen = (ImageView)findViewById(R.id.stagtradersimageonscreen);
     ImageView  stagproductimageonscreeen = (ImageView)findViewById(R.id.stagproductimageonscreeen);
+    ImageView  stagnumberoflikesimage = (ImageView)findViewById(R.id.stagnumberoflikesimage);
     RecyclerView mystaggeredgridrecyler = (RecyclerView)findViewById(R.id.mystaggeredgridrecyler);
 
 
@@ -166,13 +167,18 @@ public class VLayoutActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
+
         //SWIPE REFRESH LAYOUT, THERE IS A SWIPE SCREEN
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+
+     //   mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
         ;
-        mFirstText = (TextView) findViewById(R.id.first);
-        mLastText = (TextView) findViewById(R.id.last);
-        mCountText = (TextView) findViewById(R.id.count);
-        mTotalOffsetText = (TextView) findViewById(R.id.total_offset);
+      //  mFirstText = (TextView) findViewById(R.id.first);
+      //  mLastText = (TextView) findViewById(R.id.last);
+      //  mCountText = (TextView) findViewById(R.id.count);
+     //   mTotalOffsetText = (TextView) findViewById(R.id.total_offset);
+
+
+
         myadviewpager = findViewById(R.id.pager);
 
         // HOW TO PULL UP
@@ -383,20 +389,20 @@ public class VLayoutActivity extends Activity {
                 Log.d("VLayoutActivity", view.getClass().getName() + " " + (end - start));
             }
         });
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int scrollState) {
+       // recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        //    @Override
+      //      public void onScrollStateChanged(RecyclerView recyclerView, int scrollState) {
 
-            }
+    //        }
 
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int i, int i2) {
-                mFirstText.setText("First: " + layoutManager.findFirstVisibleItemPosition());
-                mLastText.setText("Existing: " + MainViewHolder.existing + " Created: " + MainViewHolder.createdTimes);
-                mCountText.setText("Count: " + recyclerView.getChildCount());
-                mTotalOffsetText.setText("Total Offset: " + layoutManager.getOffsetToStart());
-            }
-        });
+          //  @Override
+         //   public void onScrolled(RecyclerView recyclerView, int i, int i2) {
+           //     mFirstText.setText("First: " + layoutManager.findFirstVisibleItemPosition());
+           //     mLastText.setText("Existing: " + MainViewHolder.existing + " Created: " + MainViewHolder.createdTimes);
+           //     mCountText.setText("Count: " + recyclerView.getChildCount());
+           //     mTotalOffsetText.setText("Total Offset: " + layoutManager.getOffsetToStart());
+          //  }
+       // });
 
         recyclerView.setLayoutManager(layoutManager);
 
@@ -821,12 +827,14 @@ public class VLayoutActivity extends Activity {
 
                                              // GRABBING TO ECOMMERCE VIEW HOLDER
 
-                                             holder.stickytraderimage.setImageResource(Integer.parseInt(EccomerceList.get(position).getProductimage()));
-                                             holder.stickyproductimageview.setImageResource(Integer.parseInt(EccomerceList.get(position).getTradername()));
+                                             holder.stickytraderimage.setImageResource(Integer.parseInt(EccomerceList.get(position).getTraderimage()));
+                                             holder.stickyproductimageview.setImageResource(Integer.parseInt(EccomerceList.get(position).getProductimage()));
+                                             holder.stickynumberoflikesimage.setImageResource(R.drawable.foollow_heart);
+
+                                             holder.stagcategoryhere.setText(EccomerceList.get(position).getCategory());
                                              holder.stickyproductname.setText(EccomerceList.get(position).getProductname());
                                              holder.stickyproductprice.setText(EccomerceList.get(position).getProductprice());
                                              holder.stickytradername.setText(EccomerceList.get(position).getTradername());
-                                             holder.stickynumberoflikesimage.setImageResource(R.drawable.foollow_heart);
                                              holder.stickynumberoflikeshere.setText(EccomerceList.get(position).getLikenumber());
 
                                          }
@@ -1231,13 +1239,15 @@ public class VLayoutActivity extends Activity {
 
                             @Override
                             public void onBindViewHolder(MainViewHolder holder, int position) {
-                                holder.traderimage.setImageResource(Integer.parseInt(EccomerceList.get(position).getProductimage()));
-                                holder.productimageview.setImageResource(Integer.parseInt(EccomerceList.get(position).getTradername()));
+
+                                holder.productimageview.setImageResource(Integer.parseInt(EccomerceList.get(position).getProductimage()));
+                                holder.traderimage.setImageResource(Integer.parseInt(EccomerceList.get(position).getTraderimage()));
+                                holder.numberoflikesimage.setImageResource(R.drawable.foollow_heart);
+
                                 holder.productname.setText(EccomerceList.get(position).getProductname());
                                 holder.productprice.setText(EccomerceList.get(position).getProductprice());
                                 holder.tradername.setText(EccomerceList.get(position).getTradername());
                                 holder.numberoflikes.setText(EccomerceList.get(position).getLikenumber());
-                                holder.numberoflikesimage.setImageResource(R.drawable.foollow_heart);
 
 
 
@@ -1386,22 +1396,26 @@ public class VLayoutActivity extends Activity {
 
                         @Override
                         public void onBindViewHolder(MainViewHolder holder, int position) {
-
-                            holder.fff.setImageResource(Integer.parseInt(EccomerceList.get(position).getProductimage()));
-                            holder.productimageview.setImageResource(Integer.parseInt(EccomerceList.get(position).getTradername()));
-                            holder.productname.setText(EccomerceList.get(position).getProductname());
-                            holder.productprice.setText(EccomerceList.get(position).getProductprice());
-                            holder.tradername.setText(EccomerceList.get(position).getTradername());
-                            holder.numberoflikes.setText(EccomerceList.get(position).getLikenumber());
+               // NO TRADER IMAGE
+                            holder.stagtradersimageonscreen.setImageResource(Integer.parseInt(EccomerceList.get(position).getTraderimage()));
+                            holder.stagproductimageonscreeen.setImageResource(Integer.parseInt(EccomerceList.get(position).getProductimage()));
+                            holder.stagnumberoflikesimage.setImageResource((R.drawable.foollow_heart));
 
 
+                            holder.stagtheproductname.setText(EccomerceList.get(position).getProductname());
+                            holder.stagtheproductprice.setText(EccomerceList.get(position).getProductprice());
+                            holder.stagtradernamehere.setText(EccomerceList.get(position).getTradername());
+                            holder.stagnumberoflikes.setText(EccomerceList.get(position).getLikenumber());
+                            holder.stagcategoryhere.setText(EccomerceList.get(position).getCategory());
 
 
 
 
-                            Glide.with(getApplication()).load(Integer.parseInt(EccomerceList.get(position).getProductimage())).into( myvlayoutproductimage);
-                            Glide.with(getApplication()).load(Integer.parseInt(EccomerceList.get(position).getTraderimage())).into(myvlayouttraderimage);
 
+
+                            Glide.with(getApplication()).load(Integer.parseInt(EccomerceList.get(position).getProductimage())).into( stagproductimageonscreeen);
+                            Glide.with(getApplication()).load(Integer.parseInt(EccomerceList.get(position).getTraderimage())).into(stagtradersimageonscreen);
+                            Glide.with(getApplication()).load(R.drawable.foollow_heart).into(stagnumberoflikesimage);
                             // from position to get adapter
                             mystaggeredgridrecyler.setAdapter(new StaggeredGridLayoutAdapters(context, mystaggeredgridhelper , 80));
 
@@ -1454,24 +1468,6 @@ public class VLayoutActivity extends Activity {
             }
         };
 
-        findViewById(R.id.jump).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                EditText position = (EditText) findViewById(R.id.position);
-                if (!TextUtils.isEmpty(position.getText())) {
-                    try {
-                        int pos = Integer.parseInt(position.getText().toString());
-                        recyclerView.scrollToPosition(pos);
-                    } catch (Exception e) {
-                        Log.e("VlayoutActivity", e.getMessage(), e);
-                    }
-                } else {
-                    recyclerView.requestLayout();
-                }
-                //FooterAdapter footer = (FooterAdapter)adapters.get(adapters.size() - 1);
-                //footer.toggleFoot();
-            }
-        });
 
 
         mainHandler.postDelayed(trigger, 1000);
@@ -2615,7 +2611,30 @@ public class VLayoutActivity extends Activity {
 
                    // STAGGERED GRID LAYOUT
 
+                     case R.id.stagtradersimageonscreen:
+                         break;
 
+                     case R.id.stagproductimageonscreeen:
+                         break;
+
+                     case R.id.stagtheproductname:
+                         break;
+
+                     case R.id.stagtheproductprice:
+                         break;
+
+
+                     case R.id.stagtradernamehere:
+                         break;
+
+                     case R.id.stagnumberoflikesimage:
+                         break;
+
+                     case  R.id.stagcategoryhere:
+                         break;
+
+                     case R.id.stagnumberoflikes:
+                         break;
 
                  }
 

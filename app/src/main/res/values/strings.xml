@@ -155,18 +155,20 @@
     <string name="pictureofmyviewpager">pictureofmyviewpager</string>
     <string name="this_is_my_application">This is my application</string>
     <string name="women_shoes">Women Shoes</string>
-    <string name="theproductname">theproductname</string>
+
     <string name="thetradername">thetradername</string>
     <string name="customerphone">CustomerPhone</string>
     <string name="order">Order</string>
     <string name="header">Header</string>
-    <string name="theproductname">theproductname</string>
-    <string name="productprice">ProductPrice</string>
     <string name="SHOES">SHOES</string>
     <string name="shoes">shoes</string>
     <string name="books">books</string>
     <string name="theproductname">theproductname</string>
+
     <string name="productprice">ProductPrice</string>
     <string name="categoryhere">categoryhere</string>
     <string name="thenumberoflikesgotten">thenumberoflikesgotten</string>
+    <string name="thenavigationaldrawerbutton">TheNavigationalDrawerButton</string>
+    <string name="the_scanner_camera_here">The Scanner Camera Here</string>
+    <string name="a_black_camera_to_shoot">A Black camera to shoot</string>
 </resources>
