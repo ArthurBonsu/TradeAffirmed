@@ -92,12 +92,25 @@ public class CustomerLoginActivity extends AppCompatActivity {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                if(user!=null){
-                    Intent intent = new Intent(CustomerLoginActivity.this, CustomerMapActivity.class);
-                    startActivity(intent);
-                    finish();
-                    return;
-                }
+
+
+                if (user != null) {
+
+
+                            String uid = "";
+                            uid = user.getUid();
+                            if (FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(uid) != null) {
+                            Intent intent = new Intent(CustomerLoginActivity.this, CustomerMapActivity.class);
+                            startActivity(intent);
+                            finish();
+                            return;
+                        }
+
+                    } else {
+                        Toast.makeText(CustomerLoginActivity.this, "Customer not found", Toast.LENGTH_SHORT).show();
+
+                    }
+
 
                 // I HAVE TO TRY TO GET THE SETUP INFORMATION , IF THEY ARE ALREADY PROVIDED WE TAKE TO THE NEXT STAGE
                 // WHICH IS CUSTOMER TO BE ADDED.

@@ -1,6 +1,7 @@
 package com.simcoder.bimbo;
 
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseUser;
 import com.simcoder.*;
 import android.app.Activity;
 import android.content.Intent;
@@ -14,12 +15,14 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -82,34 +85,44 @@ public class DriverSettingsActivity extends AppCompatActivity {
         mConfirm = findViewById(R.id.confirm);
 
         mAuth = FirebaseAuth.getInstance();
-        userID = mAuth.getCurrentUser().getUid();
-        mDriverDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(userID);
 
-        getUserInfo();
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            userID = "";
+            userID = user.getUid();
 
-        mProfileImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_PICK);
-                intent.setType("image/*");
-                startActivityForResult(intent, 1);
+
+            mDriverDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(userID);
+
+            getUserInfo();
+            if (mProfileImage != null) {
+                mProfileImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(Intent.ACTION_PICK);
+                        intent.setType("image/*");
+                        startActivityForResult(intent, 1);
+                    }
+                });
+                if (mConfirm != null) {
+                    mConfirm.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            saveUserInformation();
+                        }
+                    });
+                    if (mBack != null) {
+                        mBack.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                finish();
+                                return;
+                            }
+                        });
+                    }
+                }
             }
-        });
-
-        mConfirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveUserInformation();
-            }
-        });
-
-        mBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-                return;
-            }
-        });
+        }
     }
     private void getUserInfo(){
         mDriverDatabase.addValueEventListener(new ValueEventListener() {
@@ -168,66 +181,77 @@ public class DriverSettingsActivity extends AppCompatActivity {
         mName = mNameField.getText().toString();
         mPhone = mPhoneField.getText().toString();
         mCar = mCarField.getText().toString();
+        if (mName != null && mPhone != null && mCar != null) {
 
-        int selectId = mRadioGroup.getCheckedRadioButtonId();
+            int selectId = mRadioGroup.getCheckedRadioButtonId();
 
-        final RadioButton radioButton = findViewById(selectId);
+            final RadioButton radioButton = findViewById(selectId);
+            if (radioButton != null) {
+                if (radioButton.getText() == null) {
+                    return;
+                }
 
-        if (radioButton.getText() == null){
-            return;
-        }
+                mService = radioButton.getText().toString();
+                if (mService != null) {
+                    Map userInfo = new HashMap();
+                    userInfo.put("name", mName);
+                    userInfo.put("phone", mPhone);
+                    userInfo.put("car", mCar);
+                    userInfo.put("service", mService);
+                    mDriverDatabase.updateChildren(userInfo);
 
-        mService = radioButton.getText().toString();
+                    if (resultUri != null) {
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        if (user != null) {
+                            userID = "";
+                            userID = user.getUid();
+                            StorageReference filePath = FirebaseStorage.getInstance().getReference().child("profile_images").child(userID);
+                            Bitmap bitmap = null;
+                            try {
+                                bitmap = MediaStore.Images.Media.getBitmap(getApplication().getContentResolver(), resultUri);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
 
-        Map userInfo = new HashMap();
-        userInfo.put("name", mName);
-        userInfo.put("phone", mPhone);
-        userInfo.put("car", mCar);
-        userInfo.put("service", mService);
-        mDriverDatabase.updateChildren(userInfo);
+                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
+                            byte[] data = baos.toByteArray();
+                            UploadTask uploadTask = filePath.putBytes(data);
 
-        if(resultUri != null) {
+                            uploadTask.addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    finish();
+                                    return;
+                                }
+                            });
+                            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    Task<Uri> downloadUrl = taskSnapshot.getStorage().getDownloadUrl();
 
-            StorageReference filePath = FirebaseStorage.getInstance().getReference().child("profile_images").child(userID);
-            Bitmap bitmap = null;
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(getApplication().getContentResolver(), resultUri);
-            } catch (IOException e) {
-                e.printStackTrace();
+                                    Map newImage = new HashMap();
+                                    newImage.put("profileImageUrl", downloadUrl.toString());
+                                    mDriverDatabase.updateChildren(newImage);
+
+                                    finish();
+                                    return;
+                                }
+                            });
+                        } else {
+                            finish();
+                        }
+
+                    }
+                } else {
+
+                    Toast.makeText(getApplicationContext(), "Please provide details", Toast.LENGTH_LONG).show();
+                }
+
             }
-
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
-            byte[] data = baos.toByteArray();
-            UploadTask uploadTask = filePath.putBytes(data);
-
-            uploadTask.addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    finish();
-                    return;
-                }
-            });
-            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Task<Uri> downloadUrl = taskSnapshot.getStorage().getDownloadUrl();
-
-                    Map newImage = new HashMap();
-                    newImage.put("profileImageUrl", downloadUrl.toString());
-                    mDriverDatabase.updateChildren(newImage);
-
-                    finish();
-                    return;
-                }
-            });
-        }else{
-            finish();
         }
-
     }
-
-    @Override
+        @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == 1 && resultCode == Activity.RESULT_OK){

@@ -93,11 +93,23 @@ public class DriverLoginActivity extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = mAuth.getCurrentUser();
 
-                if(user!=null) {
-                    Intent intent = new Intent(DriverLoginActivity.this, DriverMapActivity.class);
-                    startActivity(intent);
-                    finish();
-                    return;
+                if(user!=null  ) {
+
+                    String uid = "";
+                    uid = user.getUid();
+
+                    if (FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(uid) != null) {
+
+
+                        Intent intent = new Intent(DriverLoginActivity.this, DriverMapActivity.class);
+                        startActivity(intent);
+                        finish();
+                        return;
+                    } else {
+                        Toast.makeText(DriverLoginActivity.this, "Driver not found", Toast.LENGTH_SHORT).show();
+
+                    }
+
                 }
              /*   if(user!=null){
 

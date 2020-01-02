@@ -27,12 +27,13 @@
             android:layout_height="wrap_content">
 
             <ImageButton
-                android:id="@+id/mypersonnavigation"
+                android:id="@+id/myvlayoutnavigationalview"
                 android:layout_width="63dp"
                 android:layout_height="57dp"
                 android:contentDescription="@string/navigation_drawer_things"
-                android:src="@drawable/com_facebook_profile_picture_blank_portrait"
-                tools:src="@mipmap/ic_default_user" />
+                android:scaleType="centerCrop"
+                android:src="@drawable/navigationdrawer"
+                tools:src="@drawable/navigationdrawer" />
 
             <Button
                 android:id="@+id/logout"
