@@ -290,18 +290,19 @@ public class DelegateAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
         for (Adapter adapter : adapters) {
             // every adapter has an unique index id
             AdapterDataObserver observer = new AdapterDataObserver(mTotal, mIndexGen == null ? mIndex++ : mIndexGen.incrementAndGet());
-            adapter.registerAdapterDataObserver(observer);
-            hasStableIds = hasStableIds && adapter.hasStableIds();
-            LayoutHelper helper = adapter.onCreateLayoutHelper();
+            if (adapter != null) {
+                adapter.registerAdapterDataObserver(observer);
+                hasStableIds = hasStableIds && adapter.hasStableIds();
+                LayoutHelper helper = adapter.onCreateLayoutHelper();
 
-            helper.setItemCount(adapter.getItemCount());
-            mTotal += helper.getItemCount();
-            helpers.add(helper);
-            pair = Pair.create(observer, adapter);
-            mIndexAry.put(observer.mIndex, pair);
-            mAdapters.add(pair);
+                helper.setItemCount(adapter.getItemCount());
+                mTotal += helper.getItemCount();
+                helpers.add(helper);
+                pair = Pair.create(observer, adapter);
+                mIndexAry.put(observer.mIndex, pair);
+                mAdapters.add(pair);
+            }
         }
-
         if (!hasObservers()) {
             super.setHasStableIds(hasStableIds);
         }

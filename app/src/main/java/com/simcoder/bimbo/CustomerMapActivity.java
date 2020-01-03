@@ -66,6 +66,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.nabinbhandari.android.permissions.PermissionHandler;
 import com.nabinbhandari.android.permissions.Permissions;
+import com.simcoder.bimbo.WorkActivities.HomeActivity;
 
 
 import java.util.ArrayList;
@@ -188,7 +189,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             VlayoutNavigation.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(CustomerMapActivity.this, VLayoutActivity.class);
+                    Intent intent = new Intent(CustomerMapActivity.this, com.simcoder.bimbo.WorkActivities.HomeActivity.class);
                     startActivity(intent);
                     finish();
                     return;

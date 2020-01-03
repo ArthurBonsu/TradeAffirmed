@@ -21,6 +21,7 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/tradexlogo"
+        tools:replace="android:icon"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/tradexlogo"
         android:supportsRtl="true"
@@ -78,26 +79,26 @@
         <activity android:name=".HistoryActivity" />
         <activity android:name=".HistorySingleActivity" />
         <activity android:name=".DriverMapActivity" />
+        <activity android:name=".WorkActivities.CartActivity" />
+        <activity android:name=".WorkActivities.ConfirmFinalOrderActivity" />
+        <activity android:name=".WorkActivities.HomeActivity" />
+        <activity android:name=".WorkActivities.LoginActivity" />
+        <activity android:name=".WorkActivities.MainActivity" />
+        <activity android:name=".WorkActivities.ProductDetailsActivity" />
+        <activity android:name=".WorkActivities.RegisterActivity" />
+        <activity android:name=".WorkActivities.ResetPasswordActivity" />
+        <activity android:name=".WorkActivities.SearchProductsActivity" />
+        <activity android:name=".WorkActivities.SettinsActivity" />
 
-        <activity android:name="com.alibaba.android.vlayout.example.OnePlusNLayoutActivity">
 
-        </activity>
 
-        <activity android:name="com.alibaba.android.vlayout.example.MainActivity">
 
-        </activity>
 
-        <activity android:name="com.alibaba.android.vlayout.example.TestActivity">
 
-        </activity>
 
-        <activity android:name="com.alibaba.android.vlayout.example.VLayoutActivity">
 
-        </activity>
 
-        <activity android:name="com.alibaba.android.vlayout.example.DebugActivity">
 
-        </activity>
     </application>
 
 </manifest>

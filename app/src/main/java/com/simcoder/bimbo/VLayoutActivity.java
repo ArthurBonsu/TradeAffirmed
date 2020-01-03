@@ -33,6 +33,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
@@ -52,7 +53,7 @@ import java.util.List;
 /**
  * @author villadora
  */
-public class VLayoutActivity extends Activity {
+public class VLayoutActivity extends AppCompatActivity {
     //VLAYOUT IS THE MAIN ACTIVITY
 //VLAYOUT IS THE MAIN ACTIVITY THAT HAS ALL THE DIVERSE ACTIVITIES
     private static final boolean BANNER_LAYOUT = true;
@@ -163,11 +164,14 @@ public class VLayoutActivity extends Activity {
     ImageView  stagnumberoflikesimage;
     RecyclerView mystaggeredgridrecyler;
 
+    //RECYCLERS
+    SubAdapter mysubadapter;  PagerAdapter  mypageadapter;      StickyLayoutAdapter mystickylaoutadapter;  FooterAdapter myfootadapter;
+    GridSubAdapter mygridsubadapter ;  FooterAdapter myfootadapteragain; StaggeredGridLayoutAdapters mystaggeredgridlayoutadapter ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_activity);
+        setContentView(R.layout.officialvlayoutview);
 
         //SWIPE REFRESH LAYOUT, THERE IS A SWIPE SCREEN
 
@@ -250,16 +254,16 @@ public class VLayoutActivity extends Activity {
                     // I have to add goods prices here Double Agreed Prices
                     //WE WILL CLEAR OFF PRICE CALCULATIONS
 
-                    if (dataSnapshot.child("title").getValue() != null) {
-                        viepagertitle = dataSnapshot.child("title").getValue().toString();
+                    if (dataSnapshot.child(addvertId).child("title").getValue() != null) {
+                        viepagertitle = dataSnapshot.child(addvertId).child("title").getValue().toString();
                     }
 
-                    if (dataSnapshot.child("image").getValue() != null) {
-                        viewpagerimage = dataSnapshot.child("image").getValue().toString();
+                    if (dataSnapshot.child(addvertId).child("image").getValue() != null) {
+                        viewpagerimage = dataSnapshot.child(addvertId).child("image").getValue().toString();
                     }
 
-                    if (dataSnapshot.child("desc").getValue() != null) {
-                        viewpagerdesc = dataSnapshot.child("desc").getValue().toString();
+                    if (dataSnapshot.child(addvertId).child("desc").getValue() != null) {
+                        viewpagerdesc = dataSnapshot.child(addvertId).child("desc").getValue().toString();
                     }
 
 
@@ -383,12 +387,12 @@ public class VLayoutActivity extends Activity {
             EccomerceList.add(ecommerceGrid);
         }
         mDatabaseGetPic = FirebaseDatabase.getInstance().getReference().child("PERSONALPICS");
-                if (mViewpagerDatabase != null) {
-                    mViewpagerDatabase.keepSynced(true);
-                }
-                if (mDatabaseGetPic != null) {
-                    mDatabaseGetPic.keepSynced(true);
-                }
+        if (mViewpagerDatabase != null) {
+            mViewpagerDatabase.keepSynced(true);
+        }
+        if (mDatabaseGetPic != null) {
+            mDatabaseGetPic.keepSynced(true);
+        }
         churchkey = getIntent().getExtras().getString("churchkey");
         currentid = mAuth.getCurrentUser().getUid();
 
@@ -413,38 +417,40 @@ public class VLayoutActivity extends Activity {
                 Log.d("VLayoutActivity", view.getClass().getName() + " " + (end - start));
             }
         });
-        // recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-        //    @Override
-        //      public void onScrollStateChanged(RecyclerView recyclerView, int scrollState) {
+          if (recyclerView != null) {
+              recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                  @Override
+                  public void onScrollStateChanged(RecyclerView recyclerView, int scrollState) {
 
-        //        }
+                  }
 
-        //  @Override
-        //   public void onScrolled(RecyclerView recyclerView, int i, int i2) {
-        //     mFirstText.setText("First: " + layoutManager.findFirstVisibleItemPosition());
-        //     mLastText.setText("Existing: " + MainViewHolder.existing + " Created: " + MainViewHolder.createdTimes);
-        //     mCountText.setText("Count: " + recyclerView.getChildCount());
-        //     mTotalOffsetText.setText("Total Offset: " + layoutManager.getOffsetToStart());
-        //  }
-        // });
+                  @Override
+                  public void onScrolled(RecyclerView recyclerView, int i, int i2) {
+                      layoutManager.findFirstVisibleItemPosition();
 
-        recyclerView.setLayoutManager(layoutManager);
+                      recyclerView.getChildCount();
+                      layoutManager.getOffsetToStart();
+                  }
+              });
 
-        // layoutManager.setReverseLayout(true);
+              recyclerView.setLayoutManager(layoutManager);
+               setListenerToRootView();
+              //   layoutManager.setReverseLayout(true);
 
-        final RecyclerView.ItemDecoration itemDecoration = new RecyclerView.ItemDecoration() {
+  /*      final RecyclerView.ItemDecoration itemDecoration = new RecyclerView.ItemDecoration() {
             public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
                 int position = ((VirtualLayoutManager.LayoutParams) view.getLayoutParams()).getViewPosition();
                 outRect.set(4, 4, 4, 4);
             }
         };
-
+*/
 // HERE WE JUST SET UP THE BASIS WITH THE VLAYOUT BACKGROUND
 // THIS VLAYOUT SERVES AS THE TEMPLATE UPON WHICH EVERYTHING IS BUILT
-        final RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool();
-
-        recyclerView.setRecycledViewPool(viewPool);
-
+          }
+              final RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool();
+             if (recyclerView != null) {
+                 recyclerView.setRecycledViewPool(viewPool);
+             }
         // recyclerView.addItemDecoration(itemDecoration);
 
         viewPool.setMaxRecycledViews(0, 20);
@@ -491,100 +497,126 @@ public class VLayoutActivity extends Activity {
         // DELEGATE LAYOUT HELPS TO KEEP OR THE LAYOUT HERE
         final DelegateAdapter delegateAdapter = new DelegateAdapter(layoutManager, true);
 
-        recyclerView.setAdapter(delegateAdapter);
 
         final List<DelegateAdapter.Adapter> adapters = new LinkedList<>();
 
+
+        adapters.add(mysubadapter);
+
+        adapters.add(mystickylaoutadapter);
+        adapters.add(myfootadapter);
+        adapters.add(mygridsubadapter);
+        adapters.add(myfootadapteragain);
+        adapters.add(mystaggeredgridlayoutadapter);
+
+
+        if (delegateAdapter !=null) {
+            delegateAdapter.setAdapters(adapters);
+        }
+             if (recyclerView !=null) {
+
+                 recyclerView.getAdapter().notifyDataSetChanged();
+                 recyclerView.setAdapter(delegateAdapter);
+             }
+
+
+           mypageadapter  = new PagerAdapter(mysubadapter, viewPool);
         if (BANNER_LAYOUT) {
             // FOR THIS NEW ADAPTER LAYOUT THIS IS A NEW ADAPTER LAYOUT THAT IS PUT UNTO THE INTERNET
             if (AdbannerList != null) {
-            adapters.add(new SubAdapter(this, new LinearLayoutHelper(), 1) {
 
-                @Override
-                public void onViewRecycled(MainViewHolder holder) {
 
-                    if (holder.itemView instanceof ViewPager) {
-                        //HOW TO REFERENCE THE HOLDERS
-                        ((ViewPager) holder.itemView).setAdapter(null);
-                        // I HAVE TO KEEP THE VIEWPAGER SOMEWHERE
+                  mysubadapter =     new SubAdapter(this, new LinearLayoutHelper(), 1) {
+                      Context mContext;
+                       @Override
+                       public void onViewRecycled(MainViewHolder holder) {
+
+                           if (holder.itemView instanceof ViewPager) {
+                               //HOW TO REFERENCE THE HOLDERS
+                          //     ((ViewPager) holder.itemView).setAdapter(null);
+                               // I HAVE TO KEEP THE VIEWPAGER SOMEWHERE
+                           }
+                       }
+
+                       @Override
+                       public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                           // YOU CAN USE THIS TO GET MULTIPLE PICURES AND IMAGES UP THERE
+                           if (viewType == 1)
+                               return new MainViewHolder(
+                                       // HERE WE GET ALL THE VIEWS FROM THE VIEWPAGER LAYOUT PAGE, VIEWS SUCH AS TEXTVIEW, VIEWPAGER ETC.
+                                       LayoutInflater.from(VLayoutActivity.this).inflate(R.layout.fragment_view_pager, parent, false));
+
+                           return super.onCreateViewHolder(parent, viewType);
+                       }
+
+                       @Override
+                       public int getItemViewType(int position) {
+                           return 1;
+                       }
+
+                       @Override
+                       protected void onBindViewHolderWithOffset(MainViewHolder holder, int position, int offsetTotal) {
+
+                       }
+
+                       @Override
+                       public void onBindViewHolder(MainViewHolder holder, int position) {
+
+                           if (holder.itemView instanceof ViewPager) {
+                               //HOW DO WE POPULATE IT
+                               myadviewpager = (ViewPager) holder.itemView;
+
+                               myadviewpager.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200) {
+                                   @Override
+                                   public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                                       return null;
+                                   }
+
+                                   @Override
+                                   public void onBindViewHolder(MainViewHolder holder, int position) {
+
+                                   }
+                               });
+
+                               holder.itemView.setLayoutParams(
+                                       new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT) {
+                                           @Override
+                                           public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                                                return new MainViewHolder(LayoutInflater.from(mContext).inflate(R.layout.fragment_view_pager, parent, false));
+                                           }
+
+                                           @Override
+                                           public void onBindViewHolder(MainViewHolder holder, int position) {
+
+                                           }
+                                       });
+
+
+                               holder.bannertext.setText(AdbannerList.get(position).getTitle());
+                               holder.adbannerslot.setImageResource(Integer.parseInt(AdbannerList.get(position).getImage()));
+
+                               Glide.with(getApplication()).load(AdbannerList.get(position).getImage()).into(adbannerslothere);
+
+
+                               // from position to get adapter
+
+                               if (myadviewpager != null) {
+                                   myadviewpager.setAdapter(mypageadapter);
+                               }
+
+                           }
+
+                       }
+
+
+                    public int getItemCount() {
+
+
+                        return AdbannerList.size();
                     }
-                }
+                };
 
-                @Override
-                public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                    // YOU CAN USE THIS TO GET MULTIPLE PICURES AND IMAGES UP THERE
-                    if (viewType == 1)
-                        return new MainViewHolder(
-                                // HERE WE GET ALL THE VIEWS FROM THE VIEWPAGER LAYOUT PAGE, VIEWS SUCH AS TEXTVIEW, VIEWPAGER ETC.
-                                LayoutInflater.from(VLayoutActivity.this).inflate(R.layout.fragment_view_pager, parent, false));
-
-                    return super.onCreateViewHolder(parent, viewType);
-                }
-
-                @Override
-                public int getItemViewType(int position) {
-                    return 1;
-                }
-
-                @Override
-                protected void onBindViewHolderWithOffset(MainViewHolder holder, int position, int offsetTotal) {
-
-                }
-
-                @Override
-                public void onBindViewHolder(MainViewHolder holder, int position) {
-                    if (holder.itemView instanceof ViewPager) {
-                        //HOW DO WE POPULATE IT
-                        myadviewpager = (ViewPager) holder.itemView;
-
-                        myadviewpager.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200) {
-                            @Override
-                            public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                                return null;
-                            }
-
-                            @Override
-                            public void onBindViewHolder(MainViewHolder holder, int position) {
-
-                            }
-                        });
-
-                        holder.itemView.setLayoutParams(
-                                new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT) {
-                                    @Override
-                                    public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                                        return null;
-                                    }
-
-                                    @Override
-                                    public void onBindViewHolder(MainViewHolder holder, int position) {
-
-                                    }
-                                });
-
-
-                        holder.bannertext.setText(AdbannerList.get(position).getTitle());
-                        holder.adbannerslot.setImageResource(Integer.parseInt(AdbannerList.get(position).getImage()));
-
-                        Glide.with(getApplication()).load(AdbannerList.get(position).getImage()).into(adbannerslothere);
-
-
-                        // from position to get adapter
-                        if (myadviewpager != null) {
-                            myadviewpager.setAdapter(new PagerAdapter(this, viewPool));
-                        }
-
-                    }
-                }
-
-                public int getItemCount() {
-
-
-                    return AdbannerList.size();
-                }
-            });
-
-        }
+            }
         }
 
         //{
@@ -609,9 +641,10 @@ public class VLayoutActivity extends Activity {
 
                 }
             };
-            if ( adapters != null) {
+            if (adapters != null) {
                 adapters.add(new FloatSubAdapter(this, layoutHelper, 1, layoutParams));
-            }}
+            }
+        }
         // MY LINEARR LAYOUT FOR HORIZONTAL
         if (LINEAR_LAYOUT) {
             LinearLayoutHelper layoutHelper1 = new LinearLayoutHelper();
@@ -767,114 +800,121 @@ public class VLayoutActivity extends Activity {
             final StickyLayoutHelper stickyLayoutHelper = new StickyLayoutHelper();
             //layoutHelper.setOffset(100);
             stickyLayoutHelper.setAspectRatio(4);
+            if (EccomerceList != null) {
+                if (adapters != null) {
+                     mystickylaoutadapter = new StickyLayoutAdapter(this, stickyLayoutHelper, 1, new VirtualLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100) {
 
-               if (adapters != null) {
-                   adapters.add(new StickyLayoutAdapter(this, stickyLayoutHelper, 1, new VirtualLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 100) {
-
-                       Context context = null;
-
-
-                       @Override
-                       public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-                           // IT WIIL POPULATE EVERYTHING, SORT IT OUT, PRODUCE THE NEW RESULT,
-                           // CHECK WHETHER CATEGORIES HAVE ALREADY BEEN REPEATED AND THEN SET THE VIEWTYPES
-
-                           Common categoryarraylist = new Common();
-                           Common.sortList(EccomerceList);
-                           categoryarraylist.populatealphabetandproductlist(EccomerceList);
-                           categoryarraylist.getcategorywithequalnames(storecategorylist);
-                           viewType = categoryarraylist.viewType;
+                        Context context = null;
 
 
-                           if (viewType == Common.CATEGORY) {
+                        @Override
+                        public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+                            // IT WIIL POPULATE EVERYTHING, SORT IT OUT, PRODUCE THE NEW RESULT,
+                            // CHECK WHETHER CATEGORIES HAVE ALREADY BEEN REPEATED AND THEN SET THE VIEWTYPES
+
+                            Common categoryarraylist = new Common();
+                            Common.sortList(EccomerceList);
+                            categoryarraylist.populatealphabetandproductlist(EccomerceList);
+                            categoryarraylist.getcategorywithequalnames(storecategorylist);
+                            viewType = categoryarraylist.viewType;
 
 
-                               ViewGroup group = (ViewGroup) getLayoutInflater().inflate(R.layout.headerlayout, parent, false);
-                               MainViewHolder mainViewHolder = new MainViewHolder(group);
+                            if (viewType == Common.CATEGORY) {
 
 
-                               // PASS IN THE LIST TO ANOTHER ACTIVITY
+                                ViewGroup group = (ViewGroup) getLayoutInflater().inflate(R.layout.headerlayout, parent, false);
+                                MainViewHolder mainViewHolder = new MainViewHolder(group);
 
 
-                               return mainViewHolder;
-
-                           } else if (viewType == Common.ECOMMERCEVIEW) {
+                                // PASS IN THE LIST TO ANOTHER ACTIVITY
 
 
-                               ViewGroup group = (ViewGroup) getLayoutInflater().inflate(R.layout.fromstickylayout, parent, false);
-                               MainViewHolder mainViewHolder = new MainViewHolder(group);
+                                return mainViewHolder;
+
+                            } else if (viewType == Common.ECOMMERCEVIEW) {
 
 
-                               return mainViewHolder;
-                           } else {
-                               ViewGroup group = (ViewGroup) getLayoutInflater().inflate(R.layout.stickynoterecycler, parent, false);
-                               MainViewHolder mainViewHolder = new MainViewHolder(group);
+                                ViewGroup group = (ViewGroup) getLayoutInflater().inflate(R.layout.fromstickylayout, parent, false);
+                                MainViewHolder mainViewHolder = new MainViewHolder(group);
 
 
-                               return mainViewHolder;
-
-                           }
-
-
-                       }
-                       // I HAVE TO FIX GETITEMVIEWTYPE
+                                return mainViewHolder;
+                            } else {
+                                ViewGroup group = (ViewGroup) getLayoutInflater().inflate(R.layout.stickynoterecycler, parent, false);
+                                MainViewHolder mainViewHolder = new MainViewHolder(group);
 
 
-                       public int getItemCount() {
-                           return EccomerceList.size();
-                       }
+                                return mainViewHolder;
+
+                            }
 
 
-                       @Override
-                       public void onBindViewHolder(MainViewHolder holder, int position) {
-                           // only vertical
+                        }
+                        // I HAVE TO FIX GETITEMVIEWTYPE
 
 
-                           ecommercegridrecyclervie = (RecyclerView) holder.itemView;
+                        public int getItemCount() {
+                            return EccomerceList.size();
+                        }
 
 
-                           LayoutParams lp = (LayoutParams) holder.itemView.getLayoutParams();
-
-                           if (storecategorylist.get(position) == EccomerceList.get(position).getCategory()) {
-                               //GRABS THE BANNER TEXT
-                               holder.categoryheaderbanner.setText(storecategorylist.get(position).toString());
-
-                               // GRABBING TO ECOMMERCE VIEW HOLDER
-
-                               holder.stickytraderimage.setImageResource(Integer.parseInt(EccomerceList.get(position).getTraderimage()));
-                               holder.stickyproductimageview.setImageResource(Integer.parseInt(EccomerceList.get(position).getProductimage()));
-                               holder.stickynumberoflikesimage.setImageResource(R.drawable.foollow_heart);
-
-                               holder.stagcategoryhere.setText(EccomerceList.get(position).getCategory());
-                               holder.stickyproductname.setText(EccomerceList.get(position).getProductname());
-                               holder.stickyproductprice.setText(EccomerceList.get(position).getProductprice());
-                               holder.stickytradername.setText(EccomerceList.get(position).getTradername());
-                               holder.stickynumberoflikeshere.setText(EccomerceList.get(position).getLikenumber());
-
-                           }
+                        @Override
+                        public void onBindViewHolder(MainViewHolder holder, int position) {
+                            // only vertical
 
 
-                           Glide.with(getApplication()).load(Integer.parseInt(EccomerceList.get(position).getProductimage())).into(mySTICKYlayoutproductimage);
-                           Glide.with(getApplication()).load(Integer.parseInt(EccomerceList.get(position).getTraderimage())).into(mySTICKYlayouttraderimage);
-                           Glide.with(getApplication()).load((R.drawable.foollow_heart)).into(mystickynumberoflikesimage);
+                            ecommercegridrecyclervie = (RecyclerView) holder.itemView;
 
 
-                           // from position to get adapter
-                           //sTICKY ADAPTER
-                           if (stickylayourrecycler != null) {
-                               stickylayourrecycler.setAdapter(new StickyLayoutAdapter(context, stickyLayoutHelper, 80));
+                            LayoutParams lp = (LayoutParams) holder.itemView.getLayoutParams();
 
-                           }
-                       }
+                            if (storecategorylist.get(position) == EccomerceList.get(position).getCategory()) {
+                                //GRABS THE BANNER TEXT
+                                holder.categoryheaderbanner.setText(storecategorylist.get(position).toString());
+
+                                // GRABBING TO ECOMMERCE VIEW HOLDER
+
+                                holder.stickytraderimage.setImageResource(Integer.parseInt(EccomerceList.get(position).getTraderimage()));
+                                holder.stickyproductimageview.setImageResource(Integer.parseInt(EccomerceList.get(position).getProductimage()));
+                                holder.stickynumberoflikesimage.setImageResource(R.drawable.foollow_heart);
+
+                                holder.stagcategoryhere.setText(EccomerceList.get(position).getCategory());
+                                holder.stickyproductname.setText(EccomerceList.get(position).getProductname());
+                                holder.stickyproductprice.setText(EccomerceList.get(position).getProductprice());
+                                holder.stickytradername.setText(EccomerceList.get(position).getTradername());
+                                holder.stickynumberoflikeshere.setText(EccomerceList.get(position).getLikenumber());
+
+                            }
+
+                            if (mySTICKYlayoutproductimage != null) {
+
+                                Glide.with(getApplication()).load(Integer.parseInt(EccomerceList.get(position).getProductimage())).into(mySTICKYlayoutproductimage);
+                            }
+                            if (mySTICKYlayouttraderimage != null) {
+                                Glide.with(getApplication()).load(Integer.parseInt(EccomerceList.get(position).getTraderimage())).into(mySTICKYlayouttraderimage);
+                            }
+                            if (mystickynumberoflikesimage != null) {
+                                Glide.with(getApplication()).load((R.drawable.foollow_heart)).into(mystickynumberoflikesimage);
+                            }
+
+                            // from position to get adapter
+                            //sTICKY ADAPTER
+                             if (recyclerView != null) {
+                                recyclerView.setAdapter(mystickylaoutadapter);
+
+                             }
+                        }
 
 
-                   }));
-               }
+                    });
+                }
+            }
 
             if (adapters != null) {
-                adapters.add(
-                        new FooterAdapter(recyclerView, VLayoutActivity.this, new GridLayoutHelper(1), 1) {
+
+
+                         myfootadapter =    new FooterAdapter(recyclerView, VLayoutActivity.this, new GridLayoutHelper(1), 1) {
 
                             Context ourcontext = null;
 
@@ -895,19 +935,30 @@ public class VLayoutActivity extends Activity {
                                 holder.footerecommercecart.setImageResource(R.drawable.cart);
                                 holder.footerecommerceprofile.setImageResource(R.drawable.profile_imagehere);
 
+                                if (ecommercehome != null) {
+                                    Glide.with(getApplication()).load(R.drawable.home_icon).into(ecommercehome);
+                                }
+                                if (ecommercesearched != null) {
 
-                                Glide.with(getApplication()).load(R.drawable.home_icon).into(ecommercehome);
-                                Glide.with(getApplication()).load(R.drawable.basedonsearchhere).into(ecommercesearched);
-                                Glide.with(getApplication()).load(R.drawable.commentsectionagain).into(ecommercemessages);
-                                Glide.with(getApplication()).load(R.drawable.cart).into(ecommercecart);
-                                Glide.with(getApplication()).load(R.drawable.profile_imagehere).into(ecommerceprofile);
+                                    Glide.with(getApplication()).load(R.drawable.basedonsearchhere).into(ecommercesearched);
+                                }
 
+                                if (ecommercemessages != null) {
+                                    Glide.with(getApplication()).load(R.drawable.commentsectionagain).into(ecommercemessages);
+                                }
+                                if (ecommercecart != null) {
+                                    Glide.with(getApplication()).load(R.drawable.cart).into(ecommercecart);
+                                }
+
+                                if (ecommerceprofile != null) {
+                                    Glide.with(getApplication()).load(R.drawable.profile_imagehere).into(ecommerceprofile);
+                                }
+                                super.onBindViewHolder(holder, position);
 
                                 // from position to get adapter
-                                footerrecycler.setAdapter(new FooterAdapter(footerrecycler, ourcontext, stickyLayoutHelper, 80));
+                              recyclerView.setAdapter(myfootadapter);
 
 
-                                super.onBindViewHolder(holder, position);
                             }
 
                             @Override
@@ -929,7 +980,7 @@ public class VLayoutActivity extends Activity {
                             public void toggleFoot() {
                                 super.toggleFoot();
                             }
-                        });
+                        };
 
 
             }
@@ -1083,9 +1134,10 @@ public class VLayoutActivity extends Activity {
             helper.setColWeights(new float[]{40f, 45f});
             helper.setMargin(10, 20, 10, 20);
             helper.setPadding(10, 10, 10, 10);
-             if (adapters !=null) {
-                 adapters.add(new OnePlusNLayoutAdapter(this, helper, 2));
-             }}
+            if (adapters != null) {
+                adapters.add(new OnePlusNLayoutAdapter(this, helper, 2));
+            }
+        }
 
         if (ONEN_LAYOUT) {
             OnePlusNLayoutHelper helper = new OnePlusNLayoutHelper();
@@ -1146,10 +1198,11 @@ public class VLayoutActivity extends Activity {
         }
 
         if (COLUMN_LAYOUT) {
-                if (adapters != null) {
-                    adapters.add(new CollumnLayoutAdapter(this, new ColumnLayoutHelper(), 0));
-                    adapters.add(new CollumnLayoutAdapter(this, new ColumnLayoutHelper(), 4));
-                } }
+            if (adapters != null) {
+                adapters.add(new CollumnLayoutAdapter(this, new ColumnLayoutHelper(), 0));
+                adapters.add(new CollumnLayoutAdapter(this, new ColumnLayoutHelper(), 4));
+            }
+        }
 
         if (FIX_LAYOUT) {
             FixLayoutHelper layoutHelper = new FixLayoutHelper(10, 10);
@@ -1197,15 +1250,16 @@ public class VLayoutActivity extends Activity {
             layoutHelper.setWeights(new float[]{20f, 26.665f});
             layoutHelper.setMargin(7, 0, 7, 0);
             layoutHelper.setHGap(3);
-             if (adapters != null) {
-                 adapters.add(new GridSubAdapter(this, layoutHelper, 8));
+            if (adapters != null) {
+                adapters.add(new GridSubAdapter(this, layoutHelper, 8));
 
-             }}
+            }
+        }
 
         if (GRID_LAYOUT) {
 
             if (adapters != null) {
-                adapters.add(new GridSubAdapter(this, new GridLayoutHelper(4), 0));
+             adapters.add(new GridSubAdapter(this, new GridLayoutHelper(4), 0));
             }
             final GridLayoutHelper mygridhelperhere = new GridLayoutHelper(4);
 
@@ -1215,75 +1269,87 @@ public class VLayoutActivity extends Activity {
             mygridhelperhere.setGap(10);
 
             if (adapters != null) {
-                adapters.add(new GridSubAdapter(this, mygridhelperhere, 80) {
+                if (EccomerceList != null) {
+                mygridsubadapter =new GridSubAdapter(this, mygridhelperhere, 80) {
 
-                    Context context = null;
-
-
-                    @Override
-                    public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                        if (viewType == 1)
-                            return new MainViewHolder(
-                                    // HERE WE GET ALL THE VIEWS FROM THE VIEWPAGER LAYOUT PAGE, VIEWS SUCH AS TEXTVIEW, VIEWPAGER ETC.
-                                    LayoutInflater.from(VLayoutActivity.this).inflate(R.layout.viewproductactivity, parent, false));
-
-                        return super.onCreateViewHolder(parent, viewType);
-                    }
+                        Context context = null;
 
 
-                    @Override
-                    public void onBindViewHolder(MainViewHolder holder, int position) {
+                        @Override
+                        public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                            if (viewType == 1)
+                                return new MainViewHolder(
+                                        // HERE WE GET ALL THE VIEWS FROM THE VIEWPAGER LAYOUT PAGE, VIEWS SUCH AS TEXTVIEW, VIEWPAGER ETC.
+                                        LayoutInflater.from(VLayoutActivity.this).inflate(R.layout.viewproductactivity, parent, false));
 
-                        //HOW DO WE POPULATE IT
-                        ecommercegridrecyclervie = (RecyclerView) holder.itemView;
-
-
-                        LayoutParams lp = (LayoutParams) holder.itemView.getLayoutParams();
-                        lp.bottomMargin = 1;
-                        lp.rightMargin = 1;
-                        //    holder.itemView.setLayoutParams(
-                        //          new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-                        if (ecommercegridrecyclervie != null) {
-                            ecommercegridrecyclervie.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200) {
-                                @Override
-                                public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                                    return null;
-                                }
-
-
-                                @Override
-                                public void onBindViewHolder(MainViewHolder holder, int position) {
-
-                                    holder.productimageview.setImageResource(Integer.parseInt(EccomerceList.get(position).getProductimage()));
-                                    holder.traderimage.setImageResource(Integer.parseInt(EccomerceList.get(position).getTraderimage()));
-                                    holder.numberoflikesimage.setImageResource(R.drawable.foollow_heart);
-
-                                    holder.productname.setText(EccomerceList.get(position).getProductname());
-                                    holder.productprice.setText(EccomerceList.get(position).getProductprice());
-                                    holder.tradername.setText(EccomerceList.get(position).getTradername());
-                                    holder.numberoflikes.setText(EccomerceList.get(position).getLikenumber());
-
-
-                                    Glide.with(getApplication()).load(Integer.parseInt(EccomerceList.get(position).getProductimage())).into(myvlayoutproductimage);
-                                    Glide.with(getApplication()).load(Integer.parseInt(EccomerceList.get(position).getTraderimage())).into(myvlayouttraderimage);
-                                    Glide.with(getApplication()).load((R.drawable.foollow_heart)).into(numberoflikesimage);
-
-                                    // from position to get adapter
-                                    ecommercegridrecyclervie.setAdapter(new GridSubAdapter(context, mygridhelperhere, 80));
-                                }
-                            });
-
-
+                            return super.onCreateViewHolder(parent, viewType);
                         }
-                    }
 
 
-                });
+                        @Override
+                        public void onBindViewHolder(MainViewHolder holder, int position) {
+
+                            //HOW DO WE POPULATE IT
+                            ecommercegridrecyclervie = (RecyclerView) holder.itemView;
+
+
+                            LayoutParams lp = (LayoutParams) holder.itemView.getLayoutParams();
+                            lp.bottomMargin = 1;
+                            lp.rightMargin = 1;
+                            //    holder.itemView.setLayoutParams(
+                            //          new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                            if (ecommercegridrecyclervie != null) {
+                                ecommercegridrecyclervie.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200) {
+                                    @Override
+                                    public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                                        return null;
+                                    }
+
+
+                                    @Override
+                                    public void onBindViewHolder(MainViewHolder holder, int position) {
+
+                                        holder.productimageview.setImageResource(Integer.parseInt(EccomerceList.get(position).getProductimage()));
+                                        holder.traderimage.setImageResource(Integer.parseInt(EccomerceList.get(position).getTraderimage()));
+                                        holder.numberoflikesimage.setImageResource(R.drawable.foollow_heart);
+
+                                        holder.productname.setText(EccomerceList.get(position).getProductname());
+                                        holder.productprice.setText(EccomerceList.get(position).getProductprice());
+                                        holder.tradername.setText(EccomerceList.get(position).getTradername());
+                                        holder.numberoflikes.setText(EccomerceList.get(position).getLikenumber());
+
+                                        if (myvlayoutproductimage != null) {
+                                            Glide.with(getApplication()).load(Integer.parseInt(EccomerceList.get(position).getProductimage())).into(myvlayoutproductimage);
+                                        }
+
+                                        if (myvlayouttraderimage != null) {
+                                            Glide.with(getApplication()).load(Integer.parseInt(EccomerceList.get(position).getTraderimage())).into(myvlayouttraderimage);
+                                        }
+
+                                        if (numberoflikesimage != null) {
+                                            Glide.with(getApplication()).load((R.drawable.foollow_heart)).into(numberoflikesimage);
+                                        }
+
+                                        // from position to get adapter
+                                        if (recyclerView != null){
+                                            recyclerView.setAdapter(mygridsubadapter);
+                                        }
+                                    }
+
+                                });
+
+
+                            }
+                        }
+
+
+                    };
+                }
             }
 
             if (adapters != null) {
-                adapters.add(
-                        new FooterAdapter(recyclerView, VLayoutActivity.this, new GridLayoutHelper(1), 1) {
+
+                 myfootadapteragain =        new FooterAdapter(recyclerView, VLayoutActivity.this, new GridLayoutHelper(1), 1) {
 
                             Context ourcontext = null;
 
@@ -1304,20 +1370,29 @@ public class VLayoutActivity extends Activity {
                                 holder.footerecommercecart.setImageResource(R.drawable.cart);
                                 holder.footerecommerceprofile.setImageResource(R.drawable.profile_imagehere);
 
-                                Glide.with(getApplication()).load(R.drawable.home_icon).into(ecommercehome);
-                                Glide.with(getApplication()).load(R.drawable.basedonsearchhere).into(ecommercesearched);
-                                Glide.with(getApplication()).load(R.drawable.commentsectionagain).into(ecommercemessages);
-                                Glide.with(getApplication()).load(R.drawable.cart).into(ecommercecart);
-                                Glide.with(getApplication()).load(R.drawable.profile_imagehere).into(ecommerceprofile);
-
-
-                                // from position to get adapter
-                                if (footerrecycler != null) {
-                                    footerrecycler.setAdapter(new FooterAdapter(footerrecycler, ourcontext, mygridhelperhere, 80));
-
-
-                                    super.onBindViewHolder(holder, position);
+                                if (ecommercehome != null) {
+                                    Glide.with(getApplication()).load(R.drawable.home_icon).into(ecommercehome);
                                 }
+                                if (ecommercesearched != null) {
+                                    Glide.with(getApplication()).load(R.drawable.basedonsearchhere).into(ecommercesearched);
+                                }
+                                if (ecommercemessages != null) {
+                                    Glide.with(getApplication()).load(R.drawable.commentsectionagain).into(ecommercemessages);
+                                }
+
+                                if (ecommercecart != null) {
+                                    Glide.with(getApplication()).load(R.drawable.cart).into(ecommercecart);
+                                }
+                                if (ecommerceprofile != null) {
+                                    Glide.with(getApplication()).load(R.drawable.profile_imagehere).into(ecommerceprofile);
+                                }
+                                super.onBindViewHolder(holder, position);
+                                // from position to get adapter
+                                   if (recyclerView != null) {
+                                      recyclerView.setAdapter(myfootadapteragain);
+
+
+                                  }
 
                             }
 
@@ -1340,7 +1415,7 @@ public class VLayoutActivity extends Activity {
                             public void toggleFoot() {
                                 super.toggleFoot();
                             }
-                        });
+                        };
 
 
             }
@@ -1376,77 +1451,94 @@ public class VLayoutActivity extends Activity {
             helper.setMargin(0, 10, 0, 10);
             if (adapters != null) {
                 adapters.add(new GridSubAdapter(this, helper, 3));
-            }}
-        // IMPLEMENT STAGERRED GRID VIEW HERE
-        if (STAGGER_LAYOUT) {
-            // adapters.add(new SubAdapter(this, new StaggeredGridLayoutHelper(2, 0), 0));
-            final StaggeredGridLayoutHelper mystaggeredgridhelper = new StaggeredGridLayoutHelper(2, 10);
-            mystaggeredgridhelper.setMargin(20, 10, 10, 10);
-            mystaggeredgridhelper.setPadding(10, 10, 20, 10);
-            mystaggeredgridhelper.setBgColor(0xFF86345A);
-            if (adapters != null) {
-                adapters.add(new StaggeredGridLayoutAdapters(this, mystaggeredgridhelper, 27) {
-                    Context context = null;
-
-                    @Override
-                    public LayoutHelper onCreateLayoutHelper() {
-                        return super.onCreateLayoutHelper();
-                    }
-
-                    @Override
-                    public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                        LayoutInflater.from(VLayoutActivity.this).inflate(R.layout.staggeredgridlayout, parent, false);
-
-                        return super.onCreateViewHolder(parent, viewType);
-                    }
-
-                    @Override
-                    public void onBindViewHolder(MainViewHolder holder, int position) {
-                        super.onBindViewHolder(holder, position);
-                        LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200) {
-                            @Override
-                            public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                                return null;
-                            }
-
-                            @Override
-                            public void onBindViewHolder(MainViewHolder holder, int position) {
-                                // NO TRADER IMAGE
-                                holder.stagtradersimageonscreen.setImageResource(Integer.parseInt(EccomerceList.get(position).getTraderimage()));
-                                holder.stagproductimageonscreeen.setImageResource(Integer.parseInt(EccomerceList.get(position).getProductimage()));
-                                holder.stagnumberoflikesimage.setImageResource((R.drawable.foollow_heart));
-
-
-                                holder.stagtheproductname.setText(EccomerceList.get(position).getProductname());
-                                holder.stagtheproductprice.setText(EccomerceList.get(position).getProductprice());
-                                holder.stagtradernamehere.setText(EccomerceList.get(position).getTradername());
-                                holder.stagnumberoflikes.setText(EccomerceList.get(position).getLikenumber());
-                                holder.stagcategoryhere.setText(EccomerceList.get(position).getCategory());
-
-
-                                Glide.with(getApplication()).load(Integer.parseInt(EccomerceList.get(position).getProductimage())).into(stagproductimageonscreeen);
-                                Glide.with(getApplication()).load(Integer.parseInt(EccomerceList.get(position).getTraderimage())).into(stagtradersimageonscreen);
-                                Glide.with(getApplication()).load(R.drawable.foollow_heart).into(stagnumberoflikesimage);
-                                // from position to get adapter
-                                if (mystaggeredgridrecyler != null) {
-                                    mystaggeredgridrecyler.setAdapter(new StaggeredGridLayoutAdapters(context, mystaggeredgridhelper, 80));
-
-
-                                }
-                            }
-                        };
-                        if (position % 2 == 0) {
-                            layoutParams.mAspectRatio = 1.0f;
-                        } else {
-                            layoutParams.height = 340 + position % 7 * 20;
-                        }
-                        holder.itemView.setLayoutParams(layoutParams);
-                    }
-
-
-                });
             }
         }
+        // IMPLEMENT STAGERRED GRID VIEW HERE
+        if (STAGGER_LAYOUT) {
+            if (EccomerceList != null) {
+                // adapters.add(new SubAdapter(this, new StaggeredGridLayoutHelper(2, 0), 0));
+                final StaggeredGridLayoutHelper mystaggeredgridhelper = new StaggeredGridLayoutHelper(2, 10);
+                mystaggeredgridhelper.setMargin(20, 10, 10, 10);
+                mystaggeredgridhelper.setPadding(10, 10, 20, 10);
+                mystaggeredgridhelper.setBgColor(0xFF86345A);
+
+                if (adapters != null) {
+                     mystaggeredgridlayoutadapter = new StaggeredGridLayoutAdapters(this, mystaggeredgridhelper, 27) {
+                        Context context = null;
+
+                        @Override
+                        public LayoutHelper onCreateLayoutHelper() {
+                            return super.onCreateLayoutHelper();
+                        }
+
+                        @Override
+                        public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                            LayoutInflater.from(VLayoutActivity.this).inflate(R.layout.staggeredgridlayout, parent, false);
+
+                            return super.onCreateViewHolder(parent, viewType);
+                        }
+
+                        @Override
+                        public void onBindViewHolder(MainViewHolder holder, int position) {
+                            super.onBindViewHolder(holder, position);
+                            LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200) {
+                                @Override
+                                public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                                    return null;
+                                }
+
+                                @Override
+                                public void onBindViewHolder(MainViewHolder holder, int position) {
+                                    // NO TRADER IMAGE
+                                    holder.stagtradersimageonscreen.setImageResource(Integer.parseInt(EccomerceList.get(position).getTraderimage()));
+                                    holder.stagproductimageonscreeen.setImageResource(Integer.parseInt(EccomerceList.get(position).getProductimage()));
+                                    holder.stagnumberoflikesimage.setImageResource((R.drawable.foollow_heart));
+
+
+                                    holder.stagtheproductname.setText(EccomerceList.get(position).getProductname());
+                                    holder.stagtheproductprice.setText(EccomerceList.get(position).getProductprice());
+                                    holder.stagtradernamehere.setText(EccomerceList.get(position).getTradername());
+                                    holder.stagnumberoflikes.setText(EccomerceList.get(position).getLikenumber());
+                                    holder.stagcategoryhere.setText(EccomerceList.get(position).getCategory());
+
+
+                                    if (stagproductimageonscreeen != null) {
+
+                                        Glide.with(getApplication()).load(Integer.parseInt(EccomerceList.get(position).getProductimage())).into(stagproductimageonscreeen);
+                                    }
+                                    if (stagtradersimageonscreen != null) {
+                                        Glide.with(getApplication()).load(Integer.parseInt(EccomerceList.get(position).getTraderimage())).into(stagtradersimageonscreen);
+                                    }
+                                    if (stagnumberoflikesimage != null) {
+                                        Glide.with(getApplication()).load(R.drawable.foollow_heart).into(stagnumberoflikesimage);
+                                    }
+                                    // from position to get adapter
+
+                                    //
+                                            if (recyclerView != null) {
+
+                                               recyclerView.setAdapter(mystaggeredgridlayoutadapter);
+
+
+                                         }
+                                }
+                            };
+                            if (position % 2 == 0) {
+                                layoutParams.mAspectRatio = 1.0f;
+                            } else {
+                                layoutParams.height = 340 + position % 7 * 20;
+                            }
+                            holder.itemView.setLayoutParams(layoutParams);
+                        }
+
+
+                    };
+                      }
+            }
+            if (delegateAdapter != null) {
+                delegateAdapter.setAdapters(adapters);
+            }
+             }
 
         if (COLUMN_LAYOUT) {
             // adapters.add(new SubAdapter(this, new ColumnLayoutHelper(), 3));
@@ -1459,10 +1551,11 @@ public class VLayoutActivity extends Activity {
             adapters.add(
                     new FooterAdapter(recyclerView, VLayoutActivity.this, new GridLayoutHelper(1), 1));
         }
-                if (delegateAdapter != null) {
-                    delegateAdapter.setAdapters(adapters);
-                }
-
+        if (delegateAdapter != null) {
+            delegateAdapter.setAdapters(adapters);
+        }
+    }
+      /*
         final Handler mainHandler = new Handler(Looper.getMainLooper());
 
         trigger = new Runnable() {
@@ -1480,7 +1573,7 @@ public class VLayoutActivity extends Activity {
             }
         };
 
-
+/*
         mainHandler.postDelayed(trigger, 1000);
         if (mSwipeRefreshLayout != null) {
             mSwipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
@@ -1494,9 +1587,11 @@ public class VLayoutActivity extends Activity {
                     }, 2000L);
                 }
             });
-            setListenerToRootView();
+
+
         }
-    }
+
+*/
 
     boolean isOpened = false;
 
@@ -1514,12 +1609,16 @@ public class VLayoutActivity extends Activity {
                     isOpened = true;
                 } else if (isOpened == true) {
                     isOpened = false;
-                    final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.main_view);
+                    final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.ourvlayoutrecycler);
                     recyclerView.getAdapter().notifyDataSetChanged();
                 }
             }
         });
+
     }
+
+
+//----------  ADAPTERS BEGIN HERE                           --------------------------- ADAPTER BEGIN HERE
 
     static class FooterAdapter extends DelegateAdapter.Adapter<MainViewHolder> {
 
@@ -1534,21 +1633,36 @@ public class VLayoutActivity extends Activity {
 
         private boolean showFooter = false;
 
-        public FooterAdapter(RecyclerView recyclerView, Context context, LayoutHelper layoutHelper, int count) {
+        public FooterAdapter(RecyclerView recyclerView, final Context context, LayoutHelper layoutHelper, int count) {
             this(recyclerView, context, layoutHelper, count, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 300) {
                 @Override
                 public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                    return null;
+                    return new MainViewHolder(LayoutInflater.from(context).inflate(R.layout.footer, parent, false));
                 }
 
                 @Override
                 public void onBindViewHolder(MainViewHolder holder, int position) {
 
+
+                    LayoutParams lp = (LayoutParams) holder.itemView.getLayoutParams();
+                    boolean showthefooter =false;
+                    if (showthefooter) {
+                        lp.height = 300;
+                    } else {
+                        lp.height = 0;
+                    }
+                    holder.itemView.setLayoutParams(lp);
+
+
                 }
+
+
             });
         }
 
         public FooterAdapter(RecyclerView recyclerView, Context context, LayoutHelper layoutHelper, int count, @NonNull LayoutParams layoutParams) {
+
+
             this.mRecyclerView = recyclerView;
             this.mContext = context;
             this.mLayoutHelper = layoutHelper;
@@ -1568,9 +1682,10 @@ public class VLayoutActivity extends Activity {
 
         @Override
         public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new MainViewHolder(LayoutInflater.from(mContext).inflate(R.layout.footer, parent, false));
-        }
 
+
+        return new MainViewHolder(LayoutInflater.from(mContext).inflate(R.layout.footer, parent, false));
+        }
         @Override
         public void onBindViewHolder(MainViewHolder holder, int position) {
             LayoutParams lp = (LayoutParams) holder.itemView.getLayoutParams();
@@ -1589,7 +1704,8 @@ public class VLayoutActivity extends Activity {
 
         @Override
         protected void onBindViewHolderWithOffset(MainViewHolder holder, int position, int offsetTotal) {
-            ((TextView) holder.itemView.findViewById(R.id.title)).setText(Integer.toString(offsetTotal));
+
+           // ((TextView) holder.itemView.findViewById(R.id.title)).setText(Integer.toString(offsetTotal));
 
 
         }
@@ -1687,7 +1803,7 @@ public class VLayoutActivity extends Activity {
 
         @Override
         public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new MainViewHolder(LayoutInflater.from(mContext).inflate(R.layout.item, parent, false));
+            return new MainViewHolder(LayoutInflater.from(mContext).inflate(R.layout.viewproductactivity, parent, false));
         }
 
         @Override
@@ -1710,7 +1826,7 @@ public class VLayoutActivity extends Activity {
 
         @Override
         protected void onBindViewHolderWithOffset(MainViewHolder holder, int position, int offsetTotal) {
-            ((TextView) holder.itemView.findViewById(R.id.title)).setText(Integer.toString(offsetTotal));
+       //     ((TextView) holder.itemView.findViewById(R.id.title)).setText(Integer.toString(offsetTotal));
         }
 
         @Override
@@ -1854,7 +1970,7 @@ public class VLayoutActivity extends Activity {
 
         @Override
         protected void onBindViewHolderWithOffset(MainViewHolder holder, int position, int offsetTotal) {
-            ((TextView) holder.itemView.findViewById(R.id.title)).setText(Integer.toString(offsetTotal));
+          //  ((TextView) holder.itemView.findViewById(R.id.title)).setText(Integer.toString(offsetTotal));
         }
 
         @Override
@@ -1928,7 +2044,7 @@ public class VLayoutActivity extends Activity {
 
         @Override
         protected void onBindViewHolderWithOffset(MainViewHolder holder, int position, int offsetTotal) {
-            ((TextView) holder.itemView.findViewById(R.id.title)).setText(Integer.toString(offsetTotal));
+          //  ((TextView) holder.itemView.findViewById(R.id.title)).setText(Integer.toString(offsetTotal));
         }
 
         @Override
@@ -2093,11 +2209,11 @@ public class VLayoutActivity extends Activity {
         private int mCount = 0;
 
 
-        public StickyLayoutAdapter(Context context, StickyLayoutHelper layoutHelper, int count) {
+        public StickyLayoutAdapter(final Context context, StickyLayoutHelper layoutHelper, int count) {
             this(context, layoutHelper, count, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 300) {
                 @Override
                 public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                    return null;
+                    return new MainViewHolder(LayoutInflater.from(context).inflate(R.layout.fromstickylayout, parent, false));
                 }
 
                 @Override
@@ -2148,7 +2264,7 @@ public class VLayoutActivity extends Activity {
 
         @Override
         protected void onBindViewHolderWithOffset(MainViewHolder holder, int position, int offsetTotal) {
-            ((TextView) holder.itemView.findViewById(R.id.title)).setText(Integer.toString(offsetTotal));
+            //((TextView) holder.itemView.findViewById(R.id.title)).setText(Integer.toString(offsetTotal));
         }
 
         @Override
@@ -2210,7 +2326,7 @@ public class VLayoutActivity extends Activity {
                     new LayoutParams(mLayoutParams) {
                         @Override
                         public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                            return null;
+                            return new MainViewHolder(LayoutInflater.from(mContext).inflate(R.layout.item, parent, false));
                         }
 
                         @Override
@@ -2223,7 +2339,7 @@ public class VLayoutActivity extends Activity {
 
         @Override
         protected void onBindViewHolderWithOffset(MainViewHolder holder, int position, int offsetTotal) {
-            ((TextView) holder.itemView.findViewById(R.id.title)).setText(Integer.toString(offsetTotal));
+          //  ((TextView) holder.itemView.findViewById(R.id.title)).setText(Integer.toString(offsetTotal));
         }
 
         @Override
@@ -2282,7 +2398,7 @@ public class VLayoutActivity extends Activity {
                     new LayoutParams(mLayoutParams) {
                         @Override
                         public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                            return null;
+                            return  new MainViewHolder(LayoutInflater.from(mContext).inflate(R.layout.item, parent, false));
                         }
 
                         @Override
@@ -2295,7 +2411,7 @@ public class VLayoutActivity extends Activity {
 
         @Override
         protected void onBindViewHolderWithOffset(MainViewHolder holder, int position, int offsetTotal) {
-            ((TextView) holder.itemView.findViewById(R.id.title)).setText(Integer.toString(offsetTotal));
+         //   ((TextView) holder.itemView.findViewById(R.id.title)).setText(Integer.toString(offsetTotal));
         }
 
         @Override
@@ -2316,11 +2432,11 @@ public class VLayoutActivity extends Activity {
         private int mCount = 0;
 
 
-        public ScrollFixLayoutAdapter(Context context, ScrollFixLayoutHelper layoutHelper, int count) {
+        public ScrollFixLayoutAdapter(final Context context, ScrollFixLayoutHelper layoutHelper, int count) {
             this(context, layoutHelper, count, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 300) {
                 @Override
                 public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                    return null;
+                    return new MainViewHolder(LayoutInflater.from(context).inflate(R.layout.item, parent, false));
                 }
 
                 @Override
@@ -2354,7 +2470,7 @@ public class VLayoutActivity extends Activity {
                     new LayoutParams(mLayoutParams) {
                         @Override
                         public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                            return null;
+                            return new MainViewHolder(LayoutInflater.from(mContext).inflate(R.layout.item, parent, false));
                         }
 
                         @Override
@@ -2367,7 +2483,7 @@ public class VLayoutActivity extends Activity {
 
         @Override
         protected void onBindViewHolderWithOffset(MainViewHolder holder, int position, int offsetTotal) {
-            ((TextView) holder.itemView.findViewById(R.id.title)).setText(Integer.toString(offsetTotal));
+        //    ((TextView) holder.itemView.findViewById(R.id.title)).setText(Integer.toString(offsetTotal));
         }
 
         @Override
@@ -2388,11 +2504,11 @@ public class VLayoutActivity extends Activity {
         private int mCount = 0;
 
 
-        public StaggeredGridLayoutAdapters(Context context, StaggeredGridLayoutHelper layoutHelper, int count) {
+        public StaggeredGridLayoutAdapters(final Context context, StaggeredGridLayoutHelper layoutHelper, int count) {
             this(context, layoutHelper, count, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 300) {
                 @Override
                 public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                    return null;
+                    return new MainViewHolder(LayoutInflater.from(context).inflate(R.layout.staggeredgridlayout, parent, false));
                 }
 
                 @Override
@@ -2416,7 +2532,7 @@ public class VLayoutActivity extends Activity {
 
         @Override
         public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new MainViewHolder(LayoutInflater.from(mContext).inflate(R.layout.item, parent, false));
+            return new MainViewHolder(LayoutInflater.from(mContext).inflate(R.layout.staggeredgridlayout, parent, false));
         }
 
         @Override
@@ -2426,7 +2542,7 @@ public class VLayoutActivity extends Activity {
                     new LayoutParams(mLayoutParams) {
                         @Override
                         public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                            return null;
+                            return new MainViewHolder(LayoutInflater.from(mContext).inflate(R.layout.staggeredgridlayout, parent, false));
                         }
 
                         @Override
@@ -2439,7 +2555,7 @@ public class VLayoutActivity extends Activity {
 
         @Override
         protected void onBindViewHolderWithOffset(MainViewHolder holder, int position, int offsetTotal) {
-            ((TextView) holder.itemView.findViewById(R.id.title)).setText(Integer.toString(offsetTotal));
+         //   ((TextView) holder.itemView.findViewById(R.id.title)).setText(Integer.toString(offsetTotal));
         }
 
         @Override

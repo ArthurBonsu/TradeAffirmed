@@ -26,8 +26,9 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-             android:layout_height="match_parent"
-    android:id="@+id/mainviewroot"
+    android:layout_height="match_parent"
+    android:id="@+id/officialvlayoutroot"
+
     >
 
     <LinearLayout
@@ -38,8 +39,8 @@
 
         <ImageButton
             android:id="@+id/Navigationaldrawerbutton"
-            android:layout_width="69dp"
-            android:layout_height="67dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:contentDescription="@string/thenavigationaldrawerbutton"
             android:scaleType="fitXY"
             app:srcCompat="@drawable/navigationdrawer" />
@@ -51,25 +52,25 @@
             android:padding="3dp"/>
         <ImageView
             android:id="@+id/acamerascanner"
-            android:layout_width="60dp"
-            android:layout_height="67dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             app:srcCompat="@drawable/acamerascannerhere"
             android:contentDescription="@string/the_scanner_camera_here" />
 
         <ImageView
             android:id="@+id/camerablack"
-            android:layout_width="58dp"
-            android:layout_height="67dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             app:srcCompat="@drawable/camerahere"
             android:contentDescription="@string/a_black_camera_to_shoot" />
 
     </LinearLayout>
 
-
+<!--
     <android.support.v7.widget.RecyclerView
         android:id="@+id/main_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="755dp"
         android:layout_marginTop="100sp"
         android:background="#aaaaaa"
         android:clipToPadding="true"
@@ -78,6 +79,15 @@
         android:requiresFadingEdge="none"
         android:scrollbars="vertical" />
 
+-->
 
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="100sp"
+        android:id="@+id/ourvlayoutrecycler"
+        android:orientation="horizontal"
+
+        />
 
 </FrameLayout>
