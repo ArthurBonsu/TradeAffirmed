@@ -76,11 +76,12 @@ public class HomeActivity extends AppCompatActivity
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         if (bundle != null)
+        // TYPE IS THE SAME AS ROLE
         { if (getIntent().getExtras().get("Trader") != null) {
             type = getIntent().getExtras().get("Trader").toString();
         } }
 
-
+        traderoruser = getIntent().getStringExtra("ecommerceuserkey");
 
         ProductsRef = FirebaseDatabase.getInstance().getReference().child("Product");
 
@@ -311,5 +312,13 @@ public class HomeActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        //     mProgress.hide();
+        mAuth.removeAuthStateListener(firebaseAuthListener);
+
     }
 }

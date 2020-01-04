@@ -241,4 +241,13 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity
             }
         });
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        //     mProgress.hide();
+        mAuth.removeAuthStateListener(firebaseAuthListener);
+
+    }
+
 }

@@ -170,6 +170,10 @@ public class DriverLoginActivity extends AppCompatActivity {
             }
         });
 
+
+         // SET THE VALUE T O FIREBASE
+        //SET THE STATUS OR ROLE TYPE TO CUSTOMER
+
         mLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

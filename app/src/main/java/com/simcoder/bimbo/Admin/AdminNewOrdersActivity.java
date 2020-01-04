@@ -188,7 +188,13 @@ public class AdminNewOrdersActivity extends AppCompatActivity
     }
 
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        //     mProgress.hide();
+        mAuth.removeAuthStateListener(firebaseAuthListener);
 
+    }
 
     public static class AdminOrdersViewHolder extends RecyclerView.ViewHolder
     {

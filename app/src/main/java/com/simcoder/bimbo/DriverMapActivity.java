@@ -148,6 +148,15 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         mGoogleSignInClient = GoogleSignIn.getClient(DriverMapActivity.this, gso);
 
         mWorkingSwitch = findViewById(R.id.workingSwitch);
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+
+        if (user != null) {
+            customerId = "";
+            customerId = user.getUid();}
+        Intent intent = new Intent(DriverMapActivity.this, com.simcoder.bimbo.WorkActivities.HomeActivity.class);
+
+        intent.putExtra("ecommerceuserkey",customerId );
 
         if (mWorkingSwitch != null) {
             mWorkingSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

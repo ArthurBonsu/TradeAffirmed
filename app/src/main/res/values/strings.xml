@@ -171,4 +171,7 @@
     <string name="thenavigationaldrawerbutton">TheNavigationalDrawerButton</string>
     <string name="the_scanner_camera_here">The Scanner Camera Here</string>
     <string name="a_black_camera_to_shoot">A Black camera to shoot</string>
+    <string name="emailcommerce">Email</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="passwordcommerce">Password</string>
 </resources>

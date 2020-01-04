@@ -145,4 +145,12 @@ public  class ViewSingleUserOrders extends AppCompatActivity
         productsList.setAdapter(adapter);
         adapter.startListening();
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        //     mProgress.hide();
+        mAuth.removeAuthStateListener(firebaseAuthListener);
+
+    }
 }

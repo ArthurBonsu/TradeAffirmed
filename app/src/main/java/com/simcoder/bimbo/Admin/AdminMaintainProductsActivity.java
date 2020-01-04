@@ -142,7 +142,13 @@ public class AdminMaintainProductsActivity extends AppCompatActivity
     }
 
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        //     mProgress.hide();
+        mAuth.removeAuthStateListener(firebaseAuthListener);
 
+    }
 
 
     private void deleteThisProduct()
