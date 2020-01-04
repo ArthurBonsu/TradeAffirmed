@@ -2,14 +2,14 @@ package  com.simcoder.bimbo.Model;
 
 public class Cart
 {
-    private String pid, pname, price, quantity, discount;
+    private String pid, name, price, quantity, discount;
 
     public Cart() {
     }
 
-    public Cart(String pid, String pname, String price, String quantity, String discount) {
+    public Cart(String pid, String name, String price, String quantity, String discount) {
         this.pid = pid;
-        this.pname = pname;
+        this.name = name;
         this.price = price;
         this.quantity = quantity;
         this.discount = discount;
@@ -23,12 +23,12 @@ public class Cart
         this.pid = pid;
     }
 
-    public String getPname() {
-        return pname;
+    public String getname() {
+        return name;
     }
 
-    public void setPname(String pname) {
-        this.pname = pname;
+    public void setname(String pname) {
+        this.name = name;
     }
 
     public String getPrice() {

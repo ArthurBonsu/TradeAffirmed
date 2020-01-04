@@ -10,6 +10,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import  com.simcoder.bimbo.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -22,6 +31,9 @@ import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 
+
+
+
 public class AdminMaintainProductsActivity extends AppCompatActivity
 {
     private Button applyChangesBtn, deleteBtn;
@@ -31,6 +43,18 @@ public class AdminMaintainProductsActivity extends AppCompatActivity
     private String productID = "";
     private DatabaseReference productsRef;
 
+    //AUTHENITICATORS
+    private static final int RC_SIGN_IN = 1;
+    private FirebaseAuth.AuthStateListener firebaseAuthListener;
+    String traderID;
+
+    //AUTHENTICATORS
+
+    private GoogleMap mMap;
+    GoogleApiClient mGoogleApiClient;
+    private static final String TAG = "Google Activity";
+    private FirebaseAuth mAuth;
+    private GoogleSignInClient mGoogleSignInClient;
 
 
     @Override
@@ -39,7 +63,7 @@ public class AdminMaintainProductsActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_maintain_products);
 
-
+             // WE GET THE PRODUCT ID FROM PREVIOUS ACTIVITIES
         productID = getIntent().getStringExtra("pid");
         productsRef = FirebaseDatabase.getInstance().getReference().child("Products").child(productID);
 
@@ -51,6 +75,48 @@ public class AdminMaintainProductsActivity extends AppCompatActivity
         description = findViewById(R.id.product_description_maintain);
         imageView = findViewById(R.id.product_image_maintain);
         deleteBtn = findViewById(R.id.delete_product_btn);
+
+
+        // THE AUTHENTICATORS
+
+        //AUTHENTICATORS
+        FirebaseAuth.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+
+
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
+        if (mGoogleApiClient != null) {
+            mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        }
+
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(AdminMaintainProductsActivity.this,
+                    new GoogleApiClient.OnConnectionFailedListener() {
+                        @Override
+                        public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+                        }
+                    }).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
+        }
+
+        firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                if (user != null) {
+                    traderID = "";
+                    traderID = user.getUid();
+                }
+
+                // I HAVE TO TRY TO GET THE SETUP INFORMATION , IF THEY ARE ALREADY PROVIDED WE TAKE TO THE NEXT STAGE
+                // WHICH IS CUSTOMER TO BE ADDED.
+                // PULLING DATABASE REFERENCE IS NULL, WE CHANGE BACK TO THE SETUP PAGE ELSE WE GO STRAIGHT TO MAP PAGE
+            }
+        };
+
+
 
 
         displaySpecificProductInfo();
@@ -122,7 +188,8 @@ public class AdminMaintainProductsActivity extends AppCompatActivity
             productMap.put("pid", productID);
             productMap.put("description", pDescription);
             productMap.put("price", pPrice);
-            productMap.put("pname", pName);
+            productMap.put("name", pName);
+            productMap.put("traderID", traderID);
 
             productsRef.updateChildren(productMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override

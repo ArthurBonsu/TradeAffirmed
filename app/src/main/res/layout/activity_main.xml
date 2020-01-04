@@ -49,7 +49,7 @@
         android:textSize="18sp"
         android:text="Already have an Account? Login"
         android:textColor="@android:color/white"
-        />
+        android:layout_alignParentLeft="true" />
 
     <Button
         android:id="@+id/main_join_now_btn"

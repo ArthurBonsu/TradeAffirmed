@@ -89,6 +89,7 @@
         <activity android:name=".WorkActivities.ResetPasswordActivity" />
         <activity android:name=".WorkActivities.SearchProductsActivity" />
         <activity android:name=".WorkActivities.SettinsActivity" />
+        <activity android:name=".Admin.ViewSingleUserOrders" />
 
 
 

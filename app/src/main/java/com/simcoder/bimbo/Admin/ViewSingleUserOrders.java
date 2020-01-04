@@ -27,15 +27,17 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class AdminUserProductsActivity extends AppCompatActivity
+class ViewSingleUserOrders extends AppCompatActivity
 {
     private RecyclerView productsList;
     RecyclerView.LayoutManager layoutManager;
     private DatabaseReference cartListRef;
-     private Query mQueryTraderandUserCart;
+    private Query mQueryTraderandUserCart;
     private String userID = "";
-    String  traderID ="";
-    Query QueryUser;
+    String orderkey="";
+    String traderID= "";
+    Query myQuery;
+    Query myUserQuery;
 
     private static final int RC_SIGN_IN = 1;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
@@ -49,31 +51,32 @@ public class AdminUserProductsActivity extends AppCompatActivity
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
 
-
-
     // HAS TO BE ORDERED BY ADMINID
 // THE ADMIN CAN CHECK FOR A PARTICULAR USERS PRODUCT BOUGHT
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_admin_user_products);
+        setContentView(R.layout.activity_admin_user_orders);
 
 
         userID = getIntent().getStringExtra("userID");
+        orderkey = getIntent().getStringExtra("orderkey");
 
 
         productsList = findViewById(R.id.products_list);
         productsList.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         productsList.setLayoutManager(layoutManager);
+
+
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
         if (mGoogleApiClient != null) {
             mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         }
 
         if (mGoogleApiClient != null) {
-            mGoogleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(AdminUserProductsActivity.this,
+            mGoogleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(ViewSingleUserOrders.this,
                     new GoogleApiClient.OnConnectionFailedListener() {
                         @Override
                         public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
@@ -97,19 +100,13 @@ public class AdminUserProductsActivity extends AppCompatActivity
                 // PULLING DATABASE REFERENCE IS NULL, WE CHANGE BACK TO THE SETUP PAGE ELSE WE GO STRAIGHT TO MAP PAGE
             }
         };
-
         // WE HAVE TO PUT AUTHENTICATIONS ON CARTS
         //WE PICK THE CURRENT ORDER
 
         cartListRef = FirebaseDatabase.getInstance().getReference()
-                .child("Cart List");
-
-        mQueryTraderandUserCart= cartListRef.orderByChild(userID);
-        QueryUser = mQueryTraderandUserCart.orderByChild(traderID);
-        FirebaseAuth.getInstance();
-        mAuth = FirebaseAuth.getInstance();
-
-
+                .child("Orders");
+        myQuery = cartListRef.orderByChild(userID);
+        myUserQuery = myQuery.orderByChild(traderID);
 
 
     }
@@ -123,8 +120,8 @@ public class AdminUserProductsActivity extends AppCompatActivity
 
         FirebaseRecyclerOptions<Cart> options =
                 new FirebaseRecyclerOptions.Builder<Cart>()
-                .setQuery(QueryUser, Cart.class)
-                .build();
+                        .setQuery(myUserQuery, Cart.class)
+                        .build();
 
         FirebaseRecyclerAdapter<Cart, CartViewHolder> adapter = new FirebaseRecyclerAdapter<Cart, CartViewHolder>(options) {
             @Override

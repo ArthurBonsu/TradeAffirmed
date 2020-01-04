@@ -55,13 +55,13 @@ public class HomeActivity extends AppCompatActivity
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         if (bundle != null)
-        {
-            type = getIntent().getExtras().get("Admin").toString();
-        }
+        { if (getIntent().getExtras().get("Trader") != null) {
+            type = getIntent().getExtras().get("Trader").toString();
+        } }
 
 
 
-        ProductsRef = FirebaseDatabase.getInstance().getReference().child("Products");
+        ProductsRef = FirebaseDatabase.getInstance().getReference().child("Product");
 
 
         Paper.init(this);
@@ -69,7 +69,7 @@ public class HomeActivity extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Home");
-        setSupportActionBar(toolbar);
+//        setSupportActionBar(toolbar);
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -77,7 +77,7 @@ public class HomeActivity extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                if (!type.equals("Admin"))
+                if (!type.equals("Trader"))
                 {
                     Intent intent = new Intent(HomeActivity.this, CartActivity.class);
                     startActivity(intent);
@@ -101,10 +101,14 @@ public class HomeActivity extends AppCompatActivity
         CircleImageView profileImageView = headerView.findViewById(R.id.user_profile_image);
 
 
-        if (!type.equals("Admin"))
-        {
+        if (!type.equals("Trader"))
+        {          if (userNameTextView != null) {
+            if (Prevalent.currentOnlineUser != null) {
             userNameTextView.setText(Prevalent.currentOnlineUser.getName());
-            Picasso.get().load(Prevalent.currentOnlineUser.getImage()).placeholder(R.drawable.profile).into(profileImageView);
+
+                Picasso.get().load(Prevalent.currentOnlineUser.getImage()).placeholder(R.drawable.profile).into(profileImageView);
+            }
+        }
         }
 
 
@@ -141,7 +145,7 @@ public class HomeActivity extends AppCompatActivity
                             @Override
                             public void onClick(View view)
                             {
-                                if (type.equals("Admin"))
+                                if (type.equals("Trader"))
                                 {
                                     Intent intent = new Intent(HomeActivity.this, AdminMaintainProductsActivity.class);
                                     intent.putExtra("pid", model.getPid());
@@ -215,7 +219,7 @@ public class HomeActivity extends AppCompatActivity
 
         if (id == R.id.nav_cart)
         {
-            if (!type.equals("Admin"))
+            if (!type.equals("Trader"))
             {
                 Intent intent = new Intent(HomeActivity.this, CartActivity.class);
                 startActivity(intent);
@@ -223,7 +227,7 @@ public class HomeActivity extends AppCompatActivity
         }
         else if (id == R.id.nav_search)
         {
-            if (!type.equals("Admin"))
+            if (!type.equals("Trader"))
             {
                 Intent intent = new Intent(HomeActivity.this, SearchProductsActivity.class);
                 startActivity(intent);
@@ -235,7 +239,7 @@ public class HomeActivity extends AppCompatActivity
         }
         else if (id == R.id.nav_settings)
         {
-            if (!type.equals("Admin"))
+            if (!type.equals("Trader"))
             {
                 Intent intent = new Intent(HomeActivity.this, SettinsActivity.class);
                 startActivity(intent);
@@ -243,7 +247,7 @@ public class HomeActivity extends AppCompatActivity
         }
         else if (id == R.id.nav_logout)
         {
-            if (!type.equals("Admin"))
+            if (!type.equals("Trader"))
             {
                 Paper.book().destroy();
 

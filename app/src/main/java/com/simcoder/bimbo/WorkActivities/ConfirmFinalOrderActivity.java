@@ -10,6 +10,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.ecommerce.Product;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+import com.simcoder.bimbo.Model.Cart;
 import com.simcoder.bimbo.Prevalent.Prevalent;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -21,11 +26,15 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 
+
 public class ConfirmFinalOrderActivity extends AppCompatActivity
 {
     private EditText nameEditText, phoneEditText, addressEditText, cityEditText;
     private Button confirmOrderBtn;
-
+    String productIDHERE;
+    String orderKey;
+    String cartkey;
+    String productImage;
     private String totalAmount = "";
 
 
@@ -35,8 +44,9 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_confirm_final_order);
 
-
+        cartkey = getIntent().getStringExtra("cartkey");
         totalAmount = getIntent().getStringExtra("Total Price");
+        productIDHERE = getIntent().getStringExtra("pid");
         Toast.makeText(this, "Total Price =  $ " + totalAmount, Toast.LENGTH_SHORT).show();
 
 
@@ -94,12 +104,43 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity
 
         SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss a");
         saveCurrentTime = currentDate.format(calForDate.getTime());
+                 String userID ="";
+                 String productID="";
 
-        final DatabaseReference ordersRef = FirebaseDatabase.getInstance().getReference()
-                .child("Orders")
-                .child(Prevalent.currentOnlineUser.getPhone());
+                 final DatabaseReference ordersRef = FirebaseDatabase.getInstance().getReference()
+                .child("Orders");
+
+
+                 orderKey =ordersRef.push().getKey();
+        final DatabaseReference productRef = FirebaseDatabase.getInstance().getReference()
+                .child("Orders").child(orderKey).child(userID).child("productS").child(productIDHERE);
+        final DatabaseReference productImageRef = FirebaseDatabase.getInstance().getReference()
+                .child("Product").child(productIDHERE).child("image");
+
+
+        productImageRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+
+                    // CURRENT USERNAME HERE
+                    productImage = dataSnapshot.getValue().toString();
+
+
+                    }
+                }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
 
         HashMap<String, Object> ordersMap = new HashMap<>();
+
         ordersMap.put("totalAmount", totalAmount);
         ordersMap.put("name", nameEditText.getText().toString());
         ordersMap.put("phone", phoneEditText.getText().toString());
@@ -109,16 +150,29 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity
         ordersMap.put("time", saveCurrentTime);
         ordersMap.put("state", "not shipped");
 
-        ordersRef.updateChildren(ordersMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+        HashMap<String, Object> productMap = new HashMap<>();
+
+        productMap.put("productID", productIDHERE);
+        productMap.put("productID", productImage);
+        productRef.updateChildren(productMap);
+
+        Intent intent = new Intent(ConfirmFinalOrderActivity.this, CartActivity.class);
+        intent.putExtra("orderkey", orderKey);
+
+        // AFTER EVERYTHING IS SUCCESSFUL MOVE IT FROM CART TO TO ORDERS,
+        //clear cut
+        ordersRef.child(orderKey).updateChildren(ordersMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+              String userID = "";
+
             @Override
             public void onComplete(@NonNull Task<Void> task)
             {
                 if (task.isSuccessful())
                 {
                     FirebaseDatabase.getInstance().getReference()
-                            .child("Cart List")
-                            .child("User View")
-                            .child(Prevalent.currentOnlineUser.getPhone())
+                            .child("Cart List").child(cartkey)
+
+
                             .removeValue()
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override

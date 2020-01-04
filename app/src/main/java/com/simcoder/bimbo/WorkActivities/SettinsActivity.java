@@ -125,7 +125,7 @@ public class SettinsActivity extends AppCompatActivity
         HashMap<String, Object> userMap = new HashMap<>();
         userMap. put("name", fullNameEditText.getText().toString());
         userMap. put("address", addressEditText.getText().toString());
-        userMap. put("phoneOrder", userPhoneEditText.getText().toString());
+        userMap. put("phone", userPhoneEditText.getText().toString());
         ref.child(Prevalent.currentOnlineUser.getPhone()).updateChildren(userMap);
 
         startActivity(new Intent(SettinsActivity.this, HomeActivity.class));
@@ -221,7 +221,7 @@ public class SettinsActivity extends AppCompatActivity
                         HashMap<String, Object> userMap = new HashMap<>();
                         userMap. put("name", fullNameEditText.getText().toString());
                         userMap. put("address", addressEditText.getText().toString());
-                        userMap. put("phoneOrder", userPhoneEditText.getText().toString());
+                        userMap. put("phone", userPhoneEditText.getText().toString());
                         userMap. put("image", myUrl);
                         ref.child(Prevalent.currentOnlineUser.getPhone()).updateChildren(userMap);
 
