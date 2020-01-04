@@ -11,6 +11,15 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.analytics.ecommerce.Product;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -34,9 +43,20 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity
     String productIDHERE;
     String orderKey;
     String cartkey;
+    String userID= "";
     String productImage;
     private String totalAmount = "";
+    private static final int RC_SIGN_IN = 1;
+    private FirebaseAuth.AuthStateListener firebaseAuthListener;
 
+
+    //AUTHENTICATORS
+
+    private GoogleMap mMap;
+    GoogleApiClient mGoogleApiClient;
+    private static final String TAG = "Google Activity";
+    private FirebaseAuth mAuth;
+    private GoogleSignInClient mGoogleSignInClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -56,7 +76,36 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity
         addressEditText = (EditText) findViewById(R.id.shippment_address);
         cityEditText = (EditText) findViewById(R.id.shippment_city);
 
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
+        if (mGoogleApiClient != null) {
+            mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        }
 
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(ConfirmFinalOrderActivity.this,
+                    new GoogleApiClient.OnConnectionFailedListener() {
+                        @Override
+                        public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+                        }
+                    }).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
+        }
+
+        firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                if (user != null) {
+                    userID="";
+                    userID = user.getUid();
+                }
+
+                // I HAVE TO TRY TO GET THE SETUP INFORMATION , IF THEY ARE ALREADY PROVIDED WE TAKE TO THE NEXT STAGE
+                // WHICH IS CUSTOMER TO BE ADDED.
+                // PULLING DATABASE REFERENCE IS NULL, WE CHANGE BACK TO THE SETUP PAGE ELSE WE GO STRAIGHT TO MAP PAGE
+            }
+        };
         confirmOrderBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view)
@@ -104,8 +153,7 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity
 
         SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss a");
         saveCurrentTime = currentDate.format(calForDate.getTime());
-                 String userID ="";
-                 String productID="";
+
 
                  final DatabaseReference ordersRef = FirebaseDatabase.getInstance().getReference()
                 .child("Orders");
@@ -162,7 +210,7 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity
         // AFTER EVERYTHING IS SUCCESSFUL MOVE IT FROM CART TO TO ORDERS,
         //clear cut
         ordersRef.child(orderKey).updateChildren(ordersMap).addOnCompleteListener(new OnCompleteListener<Void>() {
-              String userID = "";
+
 
             @Override
             public void onComplete(@NonNull Task<Void> task)

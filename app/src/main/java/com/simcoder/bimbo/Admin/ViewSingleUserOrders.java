@@ -27,7 +27,7 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-class ViewSingleUserOrders extends AppCompatActivity
+public  class ViewSingleUserOrders extends AppCompatActivity
 {
     private RecyclerView productsList;
     RecyclerView.LayoutManager layoutManager;
