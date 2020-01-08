@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 
@@ -85,11 +86,13 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     LocationRequest mLocationRequest;
     private static final String TAG = "GoogleActivity";
     private static final int RC_SIGN_IN = 9001;
-
+    String  driverId;
      Button mLogout ;
      Button mSettings;
      Button mRideStatus ;
      Button mHistory ;
+     String role;
+     ImageButton mydrivernavigations;
 
     private Switch mWorkingSwitch;
 
@@ -143,6 +146,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         mCustomerName = findViewById(R.id.customerName);
         mCustomerPhone = findViewById(R.id.customerPhone);
         mCustomerDestination = findViewById(R.id.customerDestination);
+        mydrivernavigations =findViewById(R.id.mydrivernavigation);
         //HE CAN SWITHCH FROM NON WORK TO WORK
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
         mGoogleSignInClient = GoogleSignIn.getClient(DriverMapActivity.this, gso);
@@ -152,11 +156,11 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
 
         if (user != null) {
-            customerId = "";
-            customerId = user.getUid();}
+          driverId = "";
+            driverId= user.getUid();}
         Intent intent = new Intent(DriverMapActivity.this, com.simcoder.bimbo.WorkActivities.HomeActivity.class);
 
-        intent.putExtra("ecommerceuserkey",customerId );
+        intent.putExtra("ecommerceuserkey",driverId );
 
         if (mWorkingSwitch != null) {
             mWorkingSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -244,6 +248,42 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             });
 
         }
+        DatabaseReference myrolereference = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverId).child("role");
+        myrolereference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                 role = dataSnapshot.getValue().toString();
+
+                }   }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
+
+        mydrivernavigations.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverId) != null) {
+
+
+                    Intent intent = new Intent(DriverMapActivity.this, com.simcoder.bimbo.WorkActivities.HomeActivity.class);
+                     intent.putExtra("Trader", role);
+                    startActivity(intent);
+                    finish();
+                    return;
+                } else {
+                    Intent intent = new Intent(DriverMapActivity.this, com.simcoder.bimbo.WorkActivities.MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                    return;
+                }
+            }
+        });
+
+
 
         if (mHistory != null) {
             mHistory.setOnClickListener(new View.OnClickListener() {
@@ -259,6 +299,8 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             getAssignedCustomer();
         }
     }
+
+
     private void getAssignedCustomer() {
         FirebaseUser driver = FirebaseAuth.getInstance().getCurrentUser();
         if (driver != null) {
@@ -389,8 +431,8 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                     if(map.get("phone")!=null){
                         mCustomerPhone.setText(map.get("phone").toString());
                     }
-                    if(map.get("profileImageUrl")!=null){
-                        Glide.with(getApplication()).load(map.get("profileImageUrl").toString()).into(mCustomerProfileImage);
+                    if(map.get("image")!=null){
+                        Glide.with(getApplication()).load(map.get("image").toString()).into(mCustomerProfileImage);
                     }
                 }
             }

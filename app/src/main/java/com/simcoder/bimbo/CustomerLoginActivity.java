@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -78,15 +79,17 @@ public class CustomerLoginActivity extends AppCompatActivity {
 */
 
         mGoogleSignInClient = GoogleSignIn.getClient(CustomerLoginActivity.this, gso);
-        GoogleBtn.setOnClickListener(new View.OnClickListener(){
+        if (GoogleBtn != null) {
+            GoogleBtn.setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                mProgress.show();
-                signIn();
-                mProgress.hide(); }
-        });
-
+                @Override
+                public void onClick(View v) {
+                    mProgress.show();
+                    signIn();
+                    mProgress.hide();
+                }
+            });
+        }
 
         firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -199,17 +202,16 @@ public class CustomerLoginActivity extends AppCompatActivity {
         });
     }
 
-    private  void signIn(){
+    private  void signIn() {
         //    signInIntent  = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        if (mGoogleSignInClient != null) {
+            Intent signInIntent = mGoogleSignInClient.getSignInIntent();
 
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-
-        startActivityForResult(signInIntent, RC_SIGN_IN);
+            startActivityForResult(signInIntent, RC_SIGN_IN);
 
 
-
+        }
     }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

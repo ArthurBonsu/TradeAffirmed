@@ -106,14 +106,14 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity
                 // PULLING DATABASE REFERENCE IS NULL, WE CHANGE BACK TO THE SETUP PAGE ELSE WE GO STRAIGHT TO MAP PAGE
             }
         };
-        confirmOrderBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view)
-            {
-                Check();
-            }
-        });
-    }
+          if (confirmOrderBtn != null) {
+              confirmOrderBtn.setOnClickListener(new View.OnClickListener() {
+                  @Override
+                  public void onClick(View view) {
+                      Check();
+                  }
+              });
+          }}
 
 
 
@@ -246,8 +246,9 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity
     protected void onStop() {
         super.onStop();
         //     mProgress.hide();
-        mAuth.removeAuthStateListener(firebaseAuthListener);
-
+       if (mAuth !=null) {
+           mAuth.removeAuthStateListener(firebaseAuthListener);
+       }
     }
 
 }

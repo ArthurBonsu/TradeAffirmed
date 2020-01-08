@@ -61,6 +61,7 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 1;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
     String traderID;
+    String role;
     //AUTHENTICATORS
 
     private GoogleMap mMap;
@@ -74,8 +75,17 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_add_new_product);
 
+             if (getIntent().getExtras().get("category") != null) {
+            CategoryName = getIntent().getExtras().get("category").toString();
+        }
+             // KEYS PASSED IN FROM ADMINCATEGORY
 
-        CategoryName = getIntent().getExtras().get("category").toString();
+        { if (getIntent().getExtras().get("rolefromadmincategorytoaddadmin") != null) {
+            role = getIntent().getExtras().get("rolefromadmincategorytoaddadmin").toString();     } }
+
+             if (getIntent() != null) {
+                 traderID = getIntent().getStringExtra("fromadmincategoryactivitytoaddadmin");
+             }
         ProductImagesRef = FirebaseStorage.getInstance().getReference().child("product_images");
         ProductsRef = FirebaseDatabase.getInstance().getReference().child("Product");
         productRandomKey = ProductsRef.push().getKey();
@@ -121,20 +131,23 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
                 // PULLING DATABASE REFERENCE IS NULL, WE CHANGE BACK TO THE SETUP PAGE ELSE WE GO STRAIGHT TO MAP PAGE
             }
         };
-        InputProductImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                OpenGallery();
-            }
-        });
+             if (InputProductImage !=null) {
+                 InputProductImage.setOnClickListener(new View.OnClickListener() {
+                     @Override
+                     public void onClick(View view) {
+                         OpenGallery();
+                     }
+                 });
+             }
 
-
-        AddNewProductButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ValidateProductData();
-            }
-        });
+             if (AddNewProductButton != null) {
+                 AddNewProductButton.setOnClickListener(new View.OnClickListener() {
+                     @Override
+                     public void onClick(View view) {
+                         ValidateProductData();
+                     }
+                 });
+             }
     }
 
 
@@ -146,139 +159,142 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        mAuth.addAuthStateListener(firebaseAuthListener);
+        if (mAuth != null) {
+            mAuth.addAuthStateListener(firebaseAuthListener);
+        }
     }
     @Override
     protected void onStop() {
         super.onStop();
-        mAuth.removeAuthStateListener(firebaseAuthListener);
-    }
+       if (mAuth !=null) {
+           mAuth.removeAuthStateListener(firebaseAuthListener);
+       }
+       }
 
 
 
-    private void OpenGallery()
-    {
+    private void OpenGallery() {
         Intent galleryIntent = new Intent();
-        galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
-        galleryIntent.setType("image/*");
-        startActivityForResult(galleryIntent, GalleryPick);
+        if (galleryIntent != null) {
+            galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+            galleryIntent.setType("image/*");
+            startActivityForResult(galleryIntent, GalleryPick);
+        }
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == GalleryPick && resultCode == RESULT_OK && data != null) {
-            ImageUri = data.getData();
-            InputProductImage.setImageURI(ImageUri);
-        }
+            if (ImageUri != null) {
+                ImageUri = data.getData();
 
-
-
-        }
-
-
-
-    private void ValidateProductData()
-    {
-        Description = InputProductDescription.getText().toString();
-        Price = InputProductPrice.getText().toString();
-        Pname = InputProductName.getText().toString();
-
-
-        if (ImageUri == null)
-        {
-            Toast.makeText(this, "Product image is mandatory...", Toast.LENGTH_SHORT).show();
-        }
-        else if (TextUtils.isEmpty(Description))
-        {
-            Toast.makeText(this, "Please write product description...", Toast.LENGTH_SHORT).show();
-        }
-        else if (TextUtils.isEmpty(Price))
-        {
-            Toast.makeText(this, "Please write product Price...", Toast.LENGTH_SHORT).show();
-        }
-        else if (TextUtils.isEmpty(Pname))
-        {
-            Toast.makeText(this, "Please write product name...", Toast.LENGTH_SHORT).show();
-        }
-        else
-        {
-            StoreProductInformation();
-        }
-    }
-
-
-
-    private void StoreProductInformation()
-    {
-        loadingBar.setTitle("Add New Product");
-        loadingBar.setMessage("Dear Trader, please wait while we are adding the new product.");
-        loadingBar.setCanceledOnTouchOutside(false);
-        loadingBar.show();
-
-        Calendar calendar = Calendar.getInstance();
-
-        SimpleDateFormat currentDate = new SimpleDateFormat("MMM dd, yyyy");
-        saveCurrentDate = currentDate.format(calendar.getTime());
-
-        SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss a");
-        saveCurrentTime = currentTime.format(calendar.getTime());
-
-
-
-
-        final StorageReference filePath = ProductImagesRef.child(ImageUri.getLastPathSegment() + productRandomKey + ".jpg");
-
-        final UploadTask uploadTask = filePath.putFile(ImageUri);
-
-
-        uploadTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e)
-            {
-                String message = e.toString();
-                Toast.makeText(AdminAddNewProductActivity.this, "Error: " + message, Toast.LENGTH_SHORT).show();
-                loadingBar.dismiss();
+                if (InputProductImage != null) {
+                    InputProductImage.setImageURI(ImageUri);
+                }
             }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot)
-            {
-                Toast.makeText(AdminAddNewProductActivity.this, "Product Image uploaded Successfully...", Toast.LENGTH_SHORT).show();
+        }
 
-                Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                    @Override
-                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception
-                    {
-                        if (!task.isSuccessful())
-                        {
-                            throw task.getException();
-                        }
 
-                        downloadImageUrl = filePath.getDownloadUrl().toString();
-                        return filePath.getDownloadUrl();
-                    }
-                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Uri> task)
-                    {
-                        if (task.isSuccessful())
-                        {
-                            downloadImageUrl = task.getResult().toString();
+        }
 
-                            Toast.makeText(AdminAddNewProductActivity.this, "got the Product image Url Successfully...", Toast.LENGTH_SHORT).show();
 
-                            SaveProductInfoToDatabase();
-                        }
-                    }
-                });
+
+    private void ValidateProductData() {
+        if (InputProductDescription != null) {
+            Description = InputProductDescription.getText().toString();
+            if (InputProductPrice != null) {
+                Price = InputProductPrice.getText().toString();
+            if (InputProductName != null){
+                Pname = InputProductName.getText().toString();
+
+
+                if (ImageUri == null) {
+                    Toast.makeText(this, "Product image is mandatory...", Toast.LENGTH_SHORT).show();
+                } else if (TextUtils.isEmpty(Description)) {
+                    Toast.makeText(this, "Please write product description...", Toast.LENGTH_SHORT).show();
+                } else if (TextUtils.isEmpty(Price)) {
+                    Toast.makeText(this, "Please write product Price...", Toast.LENGTH_SHORT).show();
+                } else if (TextUtils.isEmpty(Pname)) {
+                    Toast.makeText(this, "Please write product name...", Toast.LENGTH_SHORT).show();
+                } else {
+                    StoreProductInformation();
+                }}
             }
-        });
+        }
+
     }
+    private void StoreProductInformation() {
+        if (loadingBar != null) {
+            loadingBar.setTitle("Add New Product");
+            loadingBar.setMessage("Dear Trader, please wait while we are adding the new product.");
+            loadingBar.setCanceledOnTouchOutside(false);
+            loadingBar.show();
+
+            Calendar calendar = Calendar.getInstance();
+
+            SimpleDateFormat currentDate = new SimpleDateFormat("MMM dd, yyyy");
+            if (currentDate != null) {
+                saveCurrentDate = currentDate.format(calendar.getTime());
+
+                SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss a");
+                if (currentTime != null) {
+                    saveCurrentTime = currentTime.format(calendar.getTime());
 
 
+                    final StorageReference filePath = ProductImagesRef.child(ImageUri.getLastPathSegment() + productRandomKey + ".jpg");
+
+                                  if (filePath !=null){
+                    final UploadTask uploadTask = filePath.putFile(ImageUri);
+
+
+                    uploadTask.addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            String message = e.toString();
+                            Toast.makeText(AdminAddNewProductActivity.this, "Error: " + message, Toast.LENGTH_SHORT).show();
+                            if (loadingBar != null) {
+                                loadingBar.dismiss();
+                            }
+                        }
+                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Toast.makeText(AdminAddNewProductActivity.this, "Product Image uploaded Successfully...", Toast.LENGTH_SHORT).show();
+
+
+                            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                                @Override
+                                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                                    if (!task.isSuccessful()) {
+                                        throw task.getException();
+                                    }
+
+                                      if (filePath != null) {
+                                          downloadImageUrl = filePath.getDownloadUrl().toString();
+                                      }
+                                    return filePath.getDownloadUrl();
+                                }
+                            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Uri> task) {
+                                    if (task.isSuccessful()) {
+                                                            if (task != null) {
+                                                                downloadImageUrl = task.getResult().toString();
+                                                            }
+                                        Toast.makeText(AdminAddNewProductActivity.this, "got the Product image Url Successfully...", Toast.LENGTH_SHORT).show();
+
+                                        SaveProductInfoToDatabase();
+                                    }
+                                }
+                            });
+                        }
+                    });
+                }
+            }
+        }
+    }}
 
     private void SaveProductInfoToDatabase()
     {
@@ -310,16 +326,13 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
                         else
                         {
                             loadingBar.dismiss();
-                            String message = task.getException().toString();
+                            if (task !=null) {
+                                String message = task.getException().toString();
+
                             Toast.makeText(AdminAddNewProductActivity.this, "Error: " + message, Toast.LENGTH_SHORT).show();
                         }
-                    }
+                    }}
                 });
 
     }
-
-
-
-
-
 }

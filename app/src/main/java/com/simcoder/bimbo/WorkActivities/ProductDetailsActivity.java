@@ -61,8 +61,7 @@ public class ProductDetailsActivity extends AppCompatActivity
     private GoogleSignInClient mGoogleSignInClient;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_details);
 
@@ -96,7 +95,7 @@ public class ProductDetailsActivity extends AppCompatActivity
 
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 if (user != null) {
-                    traderoruser="";
+                    traderoruser = "";
                     traderoruser = user.getUid();
                 }
 
@@ -110,28 +109,25 @@ public class ProductDetailsActivity extends AppCompatActivity
         Intent intent = new Intent(ProductDetailsActivity.this, ConfirmFinalOrderActivity.class);
 
         intent.putExtra("cartkey", cartkey);
-        orderkey = getIntent().getStringExtra("orderkey");
+        if (getIntent() != null) {
+            orderkey = getIntent().getStringExtra("orderkey");
 
-        getProductDetails(productID);
+            getProductDetails(productID);
 
-
-        addToCartButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view)
-            {
-                if (state.equals("Order Placed") || state.equals("Order Shipped"))
-                {
-                    Toast.makeText(ProductDetailsActivity.this, "you can add purchase more products, once your order is shipped or confirmed.", Toast.LENGTH_LONG).show();
-                }
-                else
-                {
-                    addingToCartList();
-                }
+            if (addToCartButton != null) {
+                addToCartButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (state.equals("Order Placed") || state.equals("Order Shipped")) {
+                            Toast.makeText(ProductDetailsActivity.this, "you can add purchase more products, once your order is shipped or confirmed.", Toast.LENGTH_LONG).show();
+                        } else {
+                            addingToCartList();
+                        }
+                    }
+                });
             }
-        });
+        }
     }
-
-
     @Override
     protected void onStart()
     {
@@ -145,6 +141,7 @@ public class ProductDetailsActivity extends AppCompatActivity
         String saveCurrentTime, saveCurrentDate;
 
         Calendar calForDate = Calendar.getInstance();
+
         SimpleDateFormat currentDate = new SimpleDateFormat("MMM dd, yyyy");
         saveCurrentDate = currentDate.format(calForDate.getTime());
 
@@ -219,44 +216,41 @@ public class ProductDetailsActivity extends AppCompatActivity
         });
     }
 
-    private void CheckOrderState()
-    {
+    private void CheckOrderState() {
         DatabaseReference ordersRef;
-        String userID="";
-        ordersRef = FirebaseDatabase.getInstance().getReference().child("Orders").child(orderkey);
+        String userID = "";
+        if (orderkey != null) {
+            ordersRef = FirebaseDatabase.getInstance().getReference().child("Orders").child(orderkey);
 
-        ordersRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot)
-            {
-                if (dataSnapshot.exists())
-                {
-                    String shippingState = dataSnapshot.child("state").getValue().toString();
+            ordersRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        String shippingState = dataSnapshot.child("state").getValue().toString();
 
-                    if (shippingState.equals("shipped"))
-                    {
-                        state = "Order Shipped";
-                    }
-                    else if(shippingState.equals("not shipped"))
-                    {
-                        state = "Order Placed";
+                        if (shippingState.equals("shipped")) {
+                            state = "Order Shipped";
+                        } else if (shippingState.equals("not shipped")) {
+                            state = "Order Placed";
+                        }
                     }
                 }
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-            }
-        });
+                }
+            });
+        }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         //     mProgress.hide();
-        mAuth.removeAuthStateListener(firebaseAuthListener);
-
+       if (mAuth != null) {
+           mAuth.removeAuthStateListener(firebaseAuthListener);
+       }
     }
 
 }

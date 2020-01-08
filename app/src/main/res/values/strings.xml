@@ -56,7 +56,7 @@
     <string name="workings">Working</string>
 
 
-    <string name="todo">TODO</string>
+    <string name="todoagain">TODO</string>
 
 
 
@@ -174,4 +174,14 @@
     <string name="emailcommerce">Email</string>
     <string name="phone_number">Phone Number</string>
     <string name="passwordcommerce">Password</string>
+    <string name="find_discover_choose_and_buy_anything_online">Find, Discover, Choose and Buy anything online.</string>
+    <string name="already_have_an_account_login">Already have an Account? Login</string>
+    <string name="join_now">Join Now</string>
+    <string name="todo">TODO</string>
+    <string name="todo">TODO</string>
+    <string name="remember_me">Remember me</string>
+    <string name="forget_password">Forget Password?</string>
+    <string name="login1">Login</string>
+    <string name="i_m_a_trader">I\'m a Trader?</string>
+    <string name="i_m_a_customer1">I\'m a Customer</string>
 </resources>

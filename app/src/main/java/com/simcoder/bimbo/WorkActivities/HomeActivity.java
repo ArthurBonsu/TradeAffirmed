@@ -48,6 +48,7 @@ public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener
 {
     private DatabaseReference ProductsRef;
+    private DatabaseReference Userdetails;
     private RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
 
@@ -77,11 +78,21 @@ public class HomeActivity extends AppCompatActivity
         Bundle bundle = intent.getExtras();
         if (bundle != null)
         // TYPE IS THE SAME AS ROLE
+
+
         { if (getIntent().getExtras().get("Trader") != null) {
             type = getIntent().getExtras().get("Trader").toString();
         } }
-
         traderoruser = getIntent().getStringExtra("ecommerceuserkey");
+
+        //KEY PASSESS FOR TRADER
+
+        { if (getIntent().getExtras().get("rolefromadmincategory") != null) {
+            type = getIntent().getExtras().get("rolefromadmincategory").toString();     } }
+
+            traderoruser = getIntent().getStringExtra("fromadmincategoryactivity");
+
+
 
         ProductsRef = FirebaseDatabase.getInstance().getReference().child("Product");
 
@@ -124,7 +135,8 @@ public class HomeActivity extends AppCompatActivity
             }
         };
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        fab.setOnClickListener(
+                new View.OnClickListener() {
             @Override
             public void onClick(View view)
             {
@@ -151,23 +163,41 @@ public class HomeActivity extends AppCompatActivity
         TextView userNameTextView = headerView.findViewById(R.id.user_profile_name);
         CircleImageView profileImageView = headerView.findViewById(R.id.user_profile_image);
 
+            // USER
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
+          if (traderoruser !=null) {
+              Userdetails = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(traderoruser);
+
+          }
         if (!type.equals("Trader"))
-        {          if (userNameTextView != null) {
-            if (Prevalent.currentOnlineUser != null) {
-            userNameTextView.setText(Prevalent.currentOnlineUser.getName());
 
-                Picasso.get().load(Prevalent.currentOnlineUser.getImage()).placeholder(R.drawable.profile).into(profileImageView);
+        if (user != null) {
+            traderoruser="";
+            traderoruser = user.getUid();
+        }
+
+
+
+        {          if (user.getDisplayName() != null) {
+            if (user.getDisplayName() != null) {
+            userNameTextView.setText(user.getDisplayName());
+
+                Picasso.get().load(user.getPhotoUrl()).placeholder(R.drawable.profile).into(profileImageView);
             }
         }
         }
 
 
         recyclerView = findViewById(R.id.recycler_menu);
-        recyclerView.setHasFixedSize(true);
+         if (recyclerView !=null) {
+             recyclerView.setHasFixedSize(true);
+
+         }
         layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-    }
+          if (recyclerView != null) {
+              recyclerView.setLayoutManager(layoutManager);
+          }}
 
 
     @Override
@@ -221,9 +251,13 @@ public class HomeActivity extends AppCompatActivity
                         return holder;
                     }
                 };
-        recyclerView.setAdapter(adapter);
-        adapter.startListening();
-    }
+
+        if (recyclerView !=null) {
+            recyclerView.setAdapter(adapter);
+        }
+        if (adapter != null) {
+            adapter.startListening();
+        }}
 
     @Override
     public void onBackPressed() {
@@ -291,9 +325,25 @@ public class HomeActivity extends AppCompatActivity
         else if (id == R.id.nav_settings)
         {
             if (!type.equals("Trader"))
-            {
+            { FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+               String cusomerId = "";
+                 cusomerId = user.getUid();
                 Intent intent = new Intent(HomeActivity.this, SettinsActivity.class);
+                intent.putExtra("traderorcustomer", traderoruser);
+                intent.putExtra("role", type);
                 startActivity(intent);
+            }
+
+            else {
+
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                String cusomerId = "";
+                cusomerId = user.getUid();
+                Intent intent = new Intent(HomeActivity.this, SettinsActivity.class);
+                intent.putExtra("traderorcustomer", traderoruser);
+                intent.putExtra("role", type);
+                startActivity(intent);
+
             }
         }
         else if (id == R.id.nav_logout)
@@ -317,8 +367,9 @@ public class HomeActivity extends AppCompatActivity
     @Override
     protected void onStop() {
         super.onStop();
-        //     mProgress.hide();
-        mAuth.removeAuthStateListener(firebaseAuthListener);
-
+         //     mProgress.hide();
+        if (mAuth != null) {
+            mAuth.removeAuthStateListener(firebaseAuthListener);
+        }
     }
 }

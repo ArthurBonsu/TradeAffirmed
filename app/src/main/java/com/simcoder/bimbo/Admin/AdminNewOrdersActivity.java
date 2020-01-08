@@ -39,6 +39,7 @@ public class AdminNewOrdersActivity extends AppCompatActivity
     String traderID= "";
     String orderkey;
     String userID;
+    String role;
     // NEW ORDERS RECEIVED FROM THE USERS
 //AUTHENITICATORS
     private static final int RC_SIGN_IN = 1;
@@ -63,6 +64,13 @@ public class AdminNewOrdersActivity extends AppCompatActivity
         FirebaseAuth.getInstance();
         mAuth = FirebaseAuth.getInstance();
 
+
+        { if (getIntent().getExtras().get("rolefromadmincategorytoadminneworder") != null) {
+            role = getIntent().getExtras().get("rolefromadmincategorytoadminneworder").toString();     } }
+
+        if (getIntent() != null) {
+            traderID = getIntent().getStringExtra("fromadmincategoryactivityadminnewordder");
+        }
 
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
@@ -96,11 +104,14 @@ public class AdminNewOrdersActivity extends AppCompatActivity
             }
         };
         ordersRef = FirebaseDatabase.getInstance().getReference().child("Orders");
-        MyordersQuery =  ordersRef.orderByChild("traderID").equalTo(traderID);
-
+                  if (ordersRef != null) {
+                      // that means after the order traderID IS FILLED
+                      MyordersQuery = ordersRef.orderByChild("traderID").equalTo(traderID);
+                  }
         ordersList = findViewById(R.id.orders_list);
-        ordersList.setLayoutManager(new LinearLayoutManager(this));
-
+              if (ordersList != null) {
+                  ordersList.setLayoutManager(new LinearLayoutManager(this));
+              }
     }
 
 
@@ -115,64 +126,65 @@ public class AdminNewOrdersActivity extends AppCompatActivity
                 .setQuery(MyordersQuery, AdminOrders.class)
                 .build();
 
+
         FirebaseRecyclerAdapter<AdminOrders, AdminOrdersViewHolder> adapter =
                 new FirebaseRecyclerAdapter<AdminOrders, AdminOrdersViewHolder>(options) {
                     @Override
-                    protected void onBindViewHolder(@NonNull AdminOrdersViewHolder holder, final int position, @NonNull final AdminOrders model)
-                    {
+                    protected void onBindViewHolder(@NonNull AdminOrdersViewHolder holder, final int position, @NonNull final AdminOrders model) {
                         holder.userName.setText("Name: " + model.getName());
                         holder.userPhoneNumber.setText("Phone: " + model.getPhone());
                         holder.userTotalPrice.setText("Total Amount =  $" + model.getTotalAmount());
                         holder.userDateTime.setText("Order at: " + model.getDate() + "  " + model.getTime());
                         holder.userShippingAddress.setText("Shipping Address: " + model.getAddress() + ", " + model.getCity());
-                        userID=  model.getUid();
+                        if (model != null) {
+                            userID = model.getUid();
 
-                        holder.ShowOrdersBtn.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view)
-                            {
-                                 orderkey = getRef(position).getKey();
 
-                                Intent intent = new Intent(AdminNewOrdersActivity.this, AdminUserProductsActivity.class);
-                                intent.putExtra("orderkey", orderkey);
-                                intent.putExtra("userID", userID);
-                                startActivity(intent);
-                            }
-                        });
-
-                        holder.itemView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view)
-                            {
-                                CharSequence options[] = new CharSequence[]
-                                        {
-                                                "Yes",
-                                                "No"
-                                        };
-
-                                AlertDialog.Builder builder = new AlertDialog.Builder(AdminNewOrdersActivity.this);
-                                builder.setTitle("Have you shipped this order products ?");
-
-                                builder.setItems(options, new DialogInterface.OnClickListener() {
+                                holder.ShowOrdersBtn.setOnClickListener(new View.OnClickListener() {
                                     @Override
-                                    public void onClick(DialogInterface dialogInterface, int i)
-                                    {
-                                        if (i == 0)
-                                        {
-                                            String uID = getRef(position).getKey();
+                                    public void onClick(View view) {
+                                        orderkey = getRef(position).getKey();
 
-                                            RemoverOrder(uID);
-                                        }
-                                        else
-                                        {
-                                            finish();
-                                        }
+                                        Intent intent = new Intent(AdminNewOrdersActivity.this, AdminUserProductsActivity.class);
+                                        intent.putExtra("orderkey", orderkey);
+                                        intent.putExtra("userID", userID);
+
+                                        intent.putExtra("fromnewordertousersproductactivity", traderID);
+                                        intent.putExtra("rolefromnewordertouserproduct", role);
+
+                                        startActivity(intent);
                                     }
                                 });
-                                builder.show();
+
+                                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        CharSequence options[] = new CharSequence[]
+                                                {
+                                                        "Yes",
+                                                        "No"
+                                                };
+
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(AdminNewOrdersActivity.this);
+                                        builder.setTitle("Have you shipped this order products ?");
+
+                                        builder.setItems(options, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                if (i == 0) {
+                                                    String uID = getRef(position).getKey();
+
+                                                    RemoverOrder(uID);
+                                                } else {
+                                                    finish();
+                                                }
+                                            }
+                                        });
+                                        builder.show();
+                                    }
+                                });
                             }
-                        });
-                    }
+                        }
 
                     @NonNull
                     @Override
@@ -182,18 +194,22 @@ public class AdminNewOrdersActivity extends AppCompatActivity
                         return new AdminOrdersViewHolder(view);
                     }
                 };
+              if (ordersList != null) {
+                  ordersList.setAdapter(adapter);
+              }
+           if (adapter != null) {
+               adapter.startListening();
 
-        ordersList.setAdapter(adapter);
-        adapter.startListening();
-    }
+           }}
 
 
     @Override
     protected void onStop() {
         super.onStop();
         //     mProgress.hide();
-        mAuth.removeAuthStateListener(firebaseAuthListener);
-
+             if (mAuth != null) {
+                 mAuth.removeAuthStateListener(firebaseAuthListener);
+             }
     }
 
     public static class AdminOrdersViewHolder extends RecyclerView.ViewHolder
@@ -220,7 +236,7 @@ public class AdminNewOrdersActivity extends AppCompatActivity
 
 
     private void RemoverOrder(String uID)
-    {
+    {       if ( ordersRef.child(uID) != null) {
         ordersRef.child(uID).removeValue();
-    }
+    }}
 }

@@ -56,6 +56,7 @@ public class SettinsActivity extends AppCompatActivity
     private String checker = "";
 
     String traderoruser= "";
+    String role= "";
     private static final int RC_SIGN_IN = 1;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
 
@@ -69,8 +70,7 @@ public class SettinsActivity extends AppCompatActivity
     private GoogleSignInClient mGoogleSignInClient;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settins);
 
@@ -84,6 +84,8 @@ public class SettinsActivity extends AppCompatActivity
         closeTextBtn = (TextView) findViewById(R.id.close_settings_btn);
         saveTextButton = (TextView) findViewById(R.id.update_account_settings_btn);
         securityQuestionBtn = findViewById(R.id.security_questions_btn);
+        traderoruser = getIntent().getStringExtra("traderorcustomer");
+        role = getIntent().getStringExtra("role");
 
 
         userInfoDisplay(profileImageView, fullNameEditText, userPhoneEditText, addressEditText);
@@ -91,6 +93,7 @@ public class SettinsActivity extends AppCompatActivity
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
         if (mGoogleApiClient != null) {
+
             mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         }
 
@@ -110,7 +113,7 @@ public class SettinsActivity extends AppCompatActivity
 
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 if (user != null) {
-                    traderoruser="";
+                    traderoruser = "";
                     traderoruser = user.getUid();
                 }
 
@@ -119,65 +122,65 @@ public class SettinsActivity extends AppCompatActivity
                 // PULLING DATABASE REFERENCE IS NULL, WE CHANGE BACK TO THE SETUP PAGE ELSE WE GO STRAIGHT TO MAP PAGE
             }
         };
-
-        closeTextBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view)
-            {
-                finish();
-            }
-        });
-
-        securityQuestionBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view)
-            {
-                Intent intent = new Intent(SettinsActivity.this, ResetPasswordActivity.class);
-                intent.putExtra("check", "settings");
-                startActivity(intent);
-            }
-        });
-
-
-        saveTextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view)
-            {
-                if (checker.equals("clicked"))
-                {
-                    userInfoSaved();
+        if (closeTextBtn != null) {
+            closeTextBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    finish();
                 }
-                else
-                {
-                    updateOnlyUserInfo();
+            });
+        }
+        if (securityQuestionBtn != null) {
+            securityQuestionBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(SettinsActivity.this, ResetPasswordActivity.class);
+                    intent.putExtra("check", "settings");
+                    startActivity(intent);
                 }
-            }
-        });
+            });
+        }
 
+        if (saveTextButton != null) {
+            saveTextButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (checker != null) {
+                        if (checker.equals("clicked")) {
+                            userInfoSaved();
+                        } else {
+                            updateOnlyUserInfo();
+                        }
+                    }
+                }
+            });
 
-        profileChangeTextBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view)
-            {
-                checker = "clicked";
+        }
+        if (profileChangeTextBtn != null) {
+            profileChangeTextBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+           if (checker != null) {
+               checker = "clicked";
 
-                CropImage.activity(imageUri)
-                        .setAspectRatio(1, 1)
-                        .start(SettinsActivity.this);
-            }
-        });
+                     CropImage.activity(imageUri)
+                             .setAspectRatio(1, 1)
+                             .start(SettinsActivity.this);
+                 }    }
+            });
+                }
+
     }
-
-
 
     private void updateOnlyUserInfo()
     {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Users");
 
         HashMap<String, Object> userMap = new HashMap<>();
-        userMap. put("name", fullNameEditText.getText().toString());
-        userMap. put("address", addressEditText.getText().toString());
-        userMap. put("phone", userPhoneEditText.getText().toString());
+
+         userMap.put("name", fullNameEditText.getText().toString());
+        userMap.put("address", addressEditText.getText().toString());
+        userMap.put("phone", userPhoneEditText.getText().toString());
         ref.child(Prevalent.currentOnlineUser.getPhone()).updateChildren(userMap);
 
         startActivity(new Intent(SettinsActivity.this, HomeActivity.class));
@@ -187,26 +190,23 @@ public class SettinsActivity extends AppCompatActivity
 
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode==CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE  &&  resultCode==RESULT_OK  &&  data!=null)
-        {
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             imageUri = result.getUri();
 
-            profileImageView.setImageURI(imageUri);
-        }
-        else
-        {
-            Toast.makeText(this, "Error, Try Again.", Toast.LENGTH_SHORT).show();
+            if (profileImageView != null) {
+                profileImageView.setImageURI(imageUri);
+            } else {
+                Toast.makeText(this, "Error, Try Again.", Toast.LENGTH_SHORT).show();
 
-            startActivity(new Intent(SettinsActivity.this, SettinsActivity.class));
-            finish();
+                startActivity(new Intent(SettinsActivity.this, SettinsActivity.class));
+                finish();
+            }
         }
     }
-
 
 
 
@@ -232,75 +232,68 @@ public class SettinsActivity extends AppCompatActivity
 
 
 
-    private void uploadImage()
-    {
+    private void uploadImage() {
         final ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("Update Profile");
-        progressDialog.setMessage("Please wait, while we are updating your account information");
-        progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.show();
+        if (progressDialog != null) {
+            progressDialog.setTitle("Update Profile");
 
-        if (imageUri != null)
-        {
+            progressDialog.setMessage("Please wait, while we are updating your account information");
+            progressDialog.setCanceledOnTouchOutside(false);
+            progressDialog.show();
+        }
+        if (imageUri != null) {
             final StorageReference fileRef = storageProfilePrictureRef
                     .child(Prevalent.currentOnlineUser.getPhone() + ".jpg");
+            if (fileRef != null) {
+                uploadTask = fileRef.putFile(imageUri);
 
-            uploadTask = fileRef.putFile(imageUri);
+                uploadTask.continueWithTask(new Continuation() {
+                    @Override
+                    public Object then(@NonNull Task task) throws Exception {
+                        if (!task.isSuccessful()) {
+                            throw task.getException();
+                        }
 
-            uploadTask.continueWithTask(new Continuation() {
-                @Override
-                public Object then(@NonNull Task task) throws Exception
-                {
-                    if (!task.isSuccessful())
-                    {
-                        throw task.getException();
+                        return fileRef.getDownloadUrl();
                     }
+                })
+                        .addOnCompleteListener(new OnCompleteListener<Uri>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Uri> task) {
+                                if (task.isSuccessful()) {
+                                    Uri downloadUrl = task.getResult();
+                                             if (downloadUrl !=null){
+                                    myUrl = downloadUrl.toString();
 
-                    return fileRef.getDownloadUrl();
-                }
-            })
-            .addOnCompleteListener(new OnCompleteListener<Uri>() {
-                @Override
-                public void onComplete(@NonNull Task<Uri> task)
-                {
-                    if (task.isSuccessful())
-                    {
-                        Uri downloadUrl = task.getResult();
-                        myUrl = downloadUrl.toString();
+                                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Users");
 
-                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Users");
+                                    HashMap<String, Object> userMap = new HashMap<>();
+                                    userMap.put("name", fullNameEditText.getText().toString());
+                                    userMap.put("address", addressEditText.getText().toString());
+                                    userMap.put("phone", userPhoneEditText.getText().toString());
+                                    userMap.put("image", myUrl);
+                                    ref.child(Prevalent.currentOnlineUser.getPhone()).updateChildren(userMap);
 
-                        HashMap<String, Object> userMap = new HashMap<>();
-                        userMap. put("name", fullNameEditText.getText().toString());
-                        userMap. put("address", addressEditText.getText().toString());
-                        userMap. put("phone", userPhoneEditText.getText().toString());
-                        userMap. put("image", myUrl);
-                        ref.child(Prevalent.currentOnlineUser.getPhone()).updateChildren(userMap);
+                                    progressDialog.dismiss();
 
-                        progressDialog.dismiss();
-
-                        startActivity(new Intent(SettinsActivity.this, HomeActivity.class));
-                        Toast.makeText(SettinsActivity.this, "Profile Info update successfully.", Toast.LENGTH_SHORT).show();
-                        finish();
-                    }
-                    else
-                    {
-                        progressDialog.dismiss();
-                        Toast.makeText(SettinsActivity.this, "Error.", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
-        }
-        else
-        {
-            Toast.makeText(this, "image is not selected.", Toast.LENGTH_SHORT).show();
+                                    startActivity(new Intent(SettinsActivity.this, HomeActivity.class));
+                                    Toast.makeText(SettinsActivity.this, "Profile Info update successfully.", Toast.LENGTH_SHORT).show();
+                                    finish();
+                                } else {
+                                                 progressDialog.dismiss();
+                                                 Toast.makeText(SettinsActivity.this, "Error.", Toast.LENGTH_SHORT).show();
+                                             }                   }
+                            }
+                        });
+            } else {
+                Toast.makeText(this, "image is not selected.", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
-
     private void userInfoDisplay(final CircleImageView profileImageView, final EditText fullNameEditText, final EditText userPhoneEditText, final EditText addressEditText)
     {
-        DatabaseReference UsersRef = FirebaseDatabase.getInstance().getReference().child("Users").child(Prevalent.currentOnlineUser.getPhone());
+        DatabaseReference UsersRef = FirebaseDatabase.getInstance().getReference().child("Users").child(role).child(traderoruser);
 
         UsersRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -334,7 +327,8 @@ public class SettinsActivity extends AppCompatActivity
     protected void onStop() {
         super.onStop();
         //     mProgress.hide();
-        mAuth.removeAuthStateListener(firebaseAuthListener);
-
+        if (mAuth !=null) {
+            mAuth.removeAuthStateListener(firebaseAuthListener);
+        }
     }
 }

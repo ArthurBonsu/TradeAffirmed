@@ -84,16 +84,20 @@ public class RegisterActivity extends AppCompatActivity
 
         loadingBar = new ProgressDialog(this);
         GoogleBtn =findViewById(R.id.eccommercegoogleregister);
-        GoogleBtn.setOnClickListener(new View.OnClickListener() {
+         if (GoogleBtn != null) {
+             GoogleBtn.setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
+                 @Override
+                 public void onClick(View v) {
 
-                signIn();
-              }
-        });
+                     signIn();
+                 }
+             });
+         }
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
-        if (mGoogleApiClient != null) {
+
+         if (mGoogleApiClient != null) {
+
             mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         }
 
@@ -122,49 +126,61 @@ public class RegisterActivity extends AppCompatActivity
                 // PULLING DATABASE REFERENCE IS NULL, WE CHANGE BACK TO THE SETUP PAGE ELSE WE GO STRAIGHT TO MAP PAGE
             }
         };
-
-        CreateAccountButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view)
-            {
-                CreateAccount();
+            if (CreateAccountButton != null) {
+                CreateAccountButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        CreateAccount();
+                    }
+                });
             }
-        });
+          if ( TraderLink != null) {
+              TraderLink.setOnClickListener(new View.OnClickListener() {
+                  @Override
+                  public void onClick(View view) {
+                      if (CreateAccountButton !=null) {
+                          CreateAccountButton.setText("Create Account Trader");
+                      }
+                       if (TraderLink != null) {
+                           TraderLink.setVisibility(View.INVISIBLE);
+                       }
+                       if (CustomerLink != null) {
+                           CustomerLink.setVisibility(View.VISIBLE);
+                       }
+                      parentDbName = "Customer";
+                  }
+              });
+          }
+        if (CustomerLink != null) {
+            CustomerLink.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                   if (CreateAccountButton != null) {
+                       CreateAccountButton.setText("Create Account Customer");
+                   }
+                   if (TraderLink != null ) {
+                       TraderLink.setVisibility(View.VISIBLE);
+                   }
+                   if (CustomerLink !=null) {
+                       CustomerLink.setVisibility(View.INVISIBLE);
+                   }
+                    parentDbName = "Driver";
+                }
+            });
 
-        TraderLink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                CreateAccountButton.setText("Create Account Trader");
-                TraderLink.setVisibility(View.INVISIBLE);
-                CustomerLink.setVisibility(View.VISIBLE);
-                parentDbName = "Customer";
-            }
-        });
-
-        CustomerLink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                CreateAccountButton.setText("Create Account Customer");
-                TraderLink.setVisibility(View.VISIBLE);
-                CustomerLink.setVisibility(View.INVISIBLE);
-                parentDbName = "Driver";
-            }
-        });
-
-
+        }
     }
 
-    private  void signIn(){
+    private  void signIn() {
         //    signInIntent  = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        if (mGoogleSignInClient != null) {
+            Intent signInIntent = mGoogleSignInClient.getSignInIntent();
 
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-
-        startActivityForResult(signInIntent, RC_SIGN_IN);
+            startActivityForResult(signInIntent, RC_SIGN_IN);
 
 
-
+        }
     }
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -175,218 +191,209 @@ public class RegisterActivity extends AppCompatActivity
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
                 // Google Sign In was successful, authenticate with Firebase
-                GoogleSignInAccount account = task.getResult(ApiException.class);
-                firebaseAuthWithGoogle(account);
-            } catch (ApiException e) {
-                // Google Sign In failed, update UI appropriately
-                Log.w(TAG, "Google sign in failed", e);
-                // ...
-            }
+                if (task != null) {
+                    GoogleSignInAccount account = task.getResult(ApiException.class);
+                    firebaseAuthWithGoogle(account);
+                }    } catch(ApiException e){
+                    // Google Sign In failed, update UI appropriately
+                    Log.w(TAG, "Google sign in failed", e);
+                    // ...
+                }
+                    }
         }
-    }
 
     private void firebaseAuthWithGoogle(final GoogleSignInAccount acct) {
-        Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
+        if (acct != null) {
+            Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
 
-        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithCredential:success");
+            AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+               if (mAuth !=null){
+            mAuth.signInWithCredential(credential)
+                    .addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                // Sign in success, update UI with the signed-in user's information
+                                Log.d(TAG, "signInWithCredential:success");
 
-                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-                            if (user != null) {
-                                traderoruser = "";
-                                traderoruser = user.getUid();
+                                if (user != null) {
+                                    traderoruser = "";
+                                    traderoruser = user.getUid();
 
-                                final DatabaseReference RootRef;
+                                    final DatabaseReference RootRef;
 
-                                RootRef = FirebaseDatabase.getInstance().getReference().child("Users");
-                                UserorTraderDatabase =  FirebaseDatabase.getInstance().getReference().child("Users").child(parentDbName);
-
-
-
-                                usertraderskey = UserorTraderDatabase.push().getKey();
+                                    RootRef = FirebaseDatabase.getInstance().getReference().child("Users");
+                                    UserorTraderDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(parentDbName);
 
 
-                                RootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    usertraderskey = UserorTraderDatabase.push().getKey();
 
 
-                                                                           @Override
-                                                                           public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                                               if (!dataSnapshot.child(parentDbName).child(traderoruser).exists()) {
-                                                                                   //    Users usersData = dataSnapshot.child(parentDbName).child(phone).getValue(Users.class);
-
-                                                                                   // GETTING THE TYPE OF TRADER
+                                    RootRef.addListenerForSingleValueEvent(new ValueEventListener() {
 
 
-                                                                                   //  if (usersData.getPhone().equals(phone))
-                                                                                   {
-                                                                                       //    if (usersData.getPassword().equals(password))
+                                                                               @Override
+                                                                               public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                                   if (!dataSnapshot.child(parentDbName).child(traderoruser).exists()) {
+                                                                                       //    Users usersData = dataSnapshot.child(parentDbName).child(phone).getValue(Users.class);
 
+                                                                                       // GETTING THE TYPE OF TRADER
+
+
+                                                                                       //  if (usersData.getPhone().equals(phone))
                                                                                        {
-                                                                                           if (parentDbName.equals("Drivers")) {
-                                                                                               firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
-                                                                                                   @Override
-                                                                                                   public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                                                                                           //    if (usersData.getPassword().equals(password))
 
-                                                                                                       FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                                                                           {
+                                                                                               if (parentDbName.equals("Drivers")) {
+                                                                                                   firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
+                                                                                                       @Override
+                                                                                                       public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
 
-
-                                                                                                       if (user != null) {
-                                                                                                           traderoruser = "";
-                                                                                                           traderoruser = user.getUid();
-                                                                                                           role="Trader";
-                                                                                                           UserorTraderDatabase.child(traderoruser).setValue("role", role);
-
-                                                                                                           if (FirebaseDatabase.getInstance().getReference().child("Users").child(parentDbName).child(traderoruser) != null && role.equals("Trader")) {
+                                                                                                           FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
 
+                                                                                                           if (user != null) {
+                                                                                                               traderoruser = "";
+                                                                                                               traderoruser = user.getUid();
+                                                                                                               role = "Trader";
+                                                                                                               UserorTraderDatabase.child(traderoruser).setValue("role", role);
+
+                                                                                                               if (FirebaseDatabase.getInstance().getReference().child("Users").child(parentDbName).child(traderoruser) != null && role.equals("Trader")) {
 
 
-                                                                                                               Toast.makeText(RegisterActivity.this, "logged in Successfully...", Toast.LENGTH_SHORT).show();
+                                                                                                                   Toast.makeText(RegisterActivity.this, "logged in Successfully...", Toast.LENGTH_SHORT).show();
+                                                                                                                   loadingBar.dismiss();
+                                                                                                                   Intent intent = new Intent(RegisterActivity.this, AdminCategoryActivity.class);
+                                                                                                                   startActivity(intent);
+                                                                                                                   finish();
+
+                                                                                                               }
+                                                                                                           } else {
+
                                                                                                                loadingBar.dismiss();
-                                                                                                               Intent intent = new Intent(RegisterActivity.this, AdminCategoryActivity.class);
-                                                                                                               startActivity(intent);
-                                                                                                               finish();
+                                                                                                               Toast.makeText(RegisterActivity.this, "Trader " + acct.getDisplayName() + "already exists", Toast.LENGTH_SHORT).show();
 
                                                                                                            }
-                                                                                                       } else {
 
-                                                                                                           loadingBar.dismiss();
-                                                                                                           Toast.makeText(RegisterActivity.this, "Trader " + acct.getDisplayName() + "already exists", Toast.LENGTH_SHORT).show();
+                                                                                                           // I HAVE TO TRY TO GET THE SETUP INFORMATION , IF THEY ARE ALREADY PROVIDED WE TAKE TO THE NEXT STAGE
+                                                                                                           // WHICH IS CUSTOMER TO BE ADDED.
+                                                                                                           // PULLING DATABASE REFERENCE IS NULL, WE CHANGE BACK TO THE SETUP PAGE ELSE WE GO STRAIGHT TO MAP PAGE
 
                                                                                                        }
 
-                                                                                                       // I HAVE TO TRY TO GET THE SETUP INFORMATION , IF THEY ARE ALREADY PROVIDED WE TAKE TO THE NEXT STAGE
-                                                                                                       // WHICH IS CUSTOMER TO BE ADDED.
-                                                                                                       // PULLING DATABASE REFERENCE IS NULL, WE CHANGE BACK TO THE SETUP PAGE ELSE WE GO STRAIGHT TO MAP PAGE
+                                                                                                       ;
+                                                                                                   };
 
-                                                                                                   }
-
-                                                                                                   ;
-                                                                                               };
-
-                                                                                               // Intent intent = new Intent(LoginActivity.this, AdminCategoryActivity.class);
-                                                                                               //   startActivity(intent);
-                                                                                           } else if (parentDbName.equals("Customers")) {
+                                                                                                   // Intent intent = new Intent(LoginActivity.this, AdminCategoryActivity.class);
+                                                                                                   //   startActivity(intent);
+                                                                                               } else if (parentDbName.equals("Customers")) {
 
 
-                                                                                               firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
-                                                                                                   @Override
-                                                                                                   public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                                                                                                   firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
+                                                                                                       @Override
+                                                                                                       public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
 
-                                                                                                       FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                                                                                                       if (user != null) {
-                                                                                                           traderoruser = "";
-                                                                                                           traderoruser = user.getUid();
-                                                                                                           role="Customers";
-                                                                                                           UserorTraderDatabase.child(traderoruser).setValue("role", role);
+                                                                                                           FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                                                                                           if (user != null) {
+                                                                                                               traderoruser = "";
+                                                                                                               traderoruser = user.getUid();
+                                                                                                               role = "Customers";
+                                                                                                               UserorTraderDatabase.child(traderoruser).setValue("role", role);
 
 
-                                                                                                           if (FirebaseDatabase.getInstance().getReference().child("Users").child(parentDbName).child(traderoruser) != null && role.equals("Customer")); {
+                                                                                                               if (FirebaseDatabase.getInstance().getReference().child("Users").child(parentDbName).child(traderoruser) != null && role.equals("Customer"));
+                                                                                                               {
 
-                                                                                                               Toast.makeText(RegisterActivity.this, "logged in Successfully...", Toast.LENGTH_SHORT).show();
+                                                                                                                   Toast.makeText(RegisterActivity.this, "logged in Successfully...", Toast.LENGTH_SHORT).show();
+                                                                                                                   loadingBar.dismiss();
+                                                                                                                   Intent intent = new Intent(RegisterActivity.this, HomeActivity.class);
+                                                                                                                   startActivity(intent);
+                                                                                                                   finish();
+
+                                                                                                               }
+                                                                                                           } else {
                                                                                                                loadingBar.dismiss();
-                                                                                                               Intent intent = new Intent(RegisterActivity.this, HomeActivity.class);
-                                                                                                               startActivity(intent);
-                                                                                                               finish();
+                                                                                                               Toast.makeText(RegisterActivity.this, "User with" + acct.getDisplayName() + "already exist", Toast.LENGTH_SHORT).show();
+                                                                                                               // WE HAVE TO UPDATE THE CURRENT UI AND GO TO THE NEXT ACTIVITY WHICH IS MAP
 
-                                                                                                           }} else {
-                                                                                                           loadingBar.dismiss();
-                                                                                                           Toast.makeText(RegisterActivity.this, "User with" + acct.getDisplayName() + "already exist", Toast.LENGTH_SHORT).show();
-                                                                                                           // WE HAVE TO UPDATE THE CURRENT UI AND GO TO THE NEXT ACTIVITY WHICH IS MAP
-
+                                                                                                           }
                                                                                                        }
-                                                                                                   }
 
 
+                                                                                                   };
+                                                                                               }
+                                                                                               ;
 
 
+                                                                                               // I HAVE TO TRY TO GET THE SETUP INFORMATION , IF THEY ARE ALREADY PROVIDED WE TAKE TO THE NEXT STAGE
+                                                                                               // WHICH IS CUSTOMER TO BE ADDED.
+                                                                                               // PULLING DATABASE REFERENCE IS NULL, WE CHANGE BACK TO THE SETUP PAGE ELSE WE GO STRAIGHT TO MAP PAGE
+                                                                                               ;
 
 
+                                                                                               ;
+                                                                                           }
+                                                                                       }
+                                                                                   }
+                                                                               }
 
-                                                                                               };
-                                                                                           };
+                                                                               @Override
+                                                                               public void onCancelled(DatabaseError databaseError) {
 
-
-
-
-
-                                                                                           // I HAVE TO TRY TO GET THE SETUP INFORMATION , IF THEY ARE ALREADY PROVIDED WE TAKE TO THE NEXT STAGE
-                                                                                           // WHICH IS CUSTOMER TO BE ADDED.
-                                                                                           // PULLING DATABASE REFERENCE IS NULL, WE CHANGE BACK TO THE SETUP PAGE ELSE WE GO STRAIGHT TO MAP PAGE
-                                                                                           ;
-
-
-
-
-
-                                                                                           ;}}}}
-
-                                                                           @Override
-                                                                           public void onCancelled(DatabaseError databaseError) {
-
+                                                                               }
                                                                            }
-                                                                       }
-                                );
+                                    );
+                                }
+
+
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                Log.w(TAG, "signInWithCredential:failure", task.getException());
+                                Toast.makeText(RegisterActivity.this, "sign in error", Toast.LENGTH_SHORT).show();
                             }
 
-
-
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            Toast.makeText(RegisterActivity.this, "sign in error", Toast.LENGTH_SHORT).show();
+                            // ...
                         }
-
-                        // ...
-                    }
-                });
-    }
-
-
-
-    private void CreateAccount()
-    {
-        String name = InputName.getText().toString();
-        String phone = InputPhoneNumber.getText().toString();
-        String password = InputPassword.getText().toString();
-        String email = InputEmail.getText().toString();
-
-        if (TextUtils.isEmpty(name))
-        {
-            Toast.makeText(this, "Please write your name...", Toast.LENGTH_SHORT).show();
-        }
-        else if (TextUtils.isEmpty(phone))
-        {
-            Toast.makeText(this, "Please write your phone number...", Toast.LENGTH_SHORT).show();
-        }
-        else if (TextUtils.isEmpty(email))
-        {
-            Toast.makeText(this, "Please write your email...", Toast.LENGTH_SHORT).show();
+                    });
         }
 
-        else if (TextUtils.isEmpty(password))
-        {
-            Toast.makeText(this, "Please write your password...", Toast.LENGTH_SHORT).show();
+    }}
+
+    private void CreateAccount() {
+        if (InputName != null) {
+            String name = InputName.getText().toString();
+
+        if (InputPhoneNumber != null) {
+            String phone = InputPhoneNumber.getText().toString();
+
+        if (InputPassword != null) {
+            String password = InputPassword.getText().toString();
+
+        if (InputEmail != null) {
+            String email = InputEmail.getText().toString();
+
+            if (TextUtils.isEmpty(name)) {
+                Toast.makeText(this, "Please write your name...", Toast.LENGTH_SHORT).show();
+            } else if (TextUtils.isEmpty(phone)) {
+                Toast.makeText(this, "Please write your phone number...", Toast.LENGTH_SHORT).show();
+            } else if (TextUtils.isEmpty(email)) {
+                Toast.makeText(this, "Please write your email...", Toast.LENGTH_SHORT).show();
+            } else if (TextUtils.isEmpty(password)) {
+                Toast.makeText(this, "Please write your password...", Toast.LENGTH_SHORT).show();
+            } else {
+                loadingBar.setTitle("Create Account");
+                loadingBar.setMessage("Please wait, while we are checking the credentials.");
+                loadingBar.setCanceledOnTouchOutside(false);
+                loadingBar.show();
+
+                ValidatephoneNumber(name, phone, password, email);
+            }
         }
-        else
-        {
-            loadingBar.setTitle("Create Account");
-            loadingBar.setMessage("Please wait, while we are checking the credentials.");
-            loadingBar.setCanceledOnTouchOutside(false);
-            loadingBar.show();
-
-            ValidatephoneNumber(name, phone, password, email);
-        }
-    }
-
-
+    }}
+    }}
 
     private void ValidatephoneNumber(final String name, final String phone, final String password, final String email)
     {
@@ -488,7 +495,8 @@ public class RegisterActivity extends AppCompatActivity
 
                                     // Intent intent = new Intent(LoginActivity.this, AdminCategoryActivity.class);
                                     //   startActivity(intent);
-                                 else if (parentDbName.equals("Customers")) {
+                                if (parentDbName != null){
+                                  if (parentDbName.equals("Customers")) {
                                     firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
                                         @Override
                                         public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -507,6 +515,7 @@ public class RegisterActivity extends AppCompatActivity
                                                 userdataMap.put("password", password);
                                                 userdataMap.put("name", name);
                                                 userdataMap.put("email", email);
+
 
                                                 RootRef.child("Users").child(parentDbName).child(traderoruser).updateChildren(userdataMap)
                                                         .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -549,7 +558,7 @@ public class RegisterActivity extends AppCompatActivity
 
 
 
-                                    ;}}}}
+                                    ;}}}}}
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
@@ -569,7 +578,8 @@ public class RegisterActivity extends AppCompatActivity
     protected void onStop() {
         super.onStop();
         //     mProgress.hide();
-        mAuth.removeAuthStateListener(firebaseAuthListener);
-
+        if (mAuth != null) {
+            mAuth.removeAuthStateListener(firebaseAuthListener);
+        }
     }
 }

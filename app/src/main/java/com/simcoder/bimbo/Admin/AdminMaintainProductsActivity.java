@@ -34,14 +34,14 @@ import java.util.HashMap;
 
 
 
-public class AdminMaintainProductsActivity extends AppCompatActivity
-{
+public class AdminMaintainProductsActivity extends AppCompatActivity {
     private Button applyChangesBtn, deleteBtn;
     private EditText name, price, description;
     private ImageView imageView;
 
     private String productID = "";
     private DatabaseReference productsRef;
+    String role;
 
     //AUTHENITICATORS
     private static final int RC_SIGN_IN = 1;
@@ -58,15 +58,13 @@ public class AdminMaintainProductsActivity extends AppCompatActivity
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_maintain_products);
 
-             // WE GET THE PRODUCT ID FROM PREVIOUS ACTIVITIES
+        // WE GET THE PRODUCT ID FROM PREVIOUS ACTIVITIES
         productID = getIntent().getStringExtra("pid");
         productsRef = FirebaseDatabase.getInstance().getReference().child("Products").child(productID);
-
 
 
         applyChangesBtn = findViewById(R.id.apply_changes_btn);
@@ -84,7 +82,14 @@ public class AdminMaintainProductsActivity extends AppCompatActivity
         mAuth = FirebaseAuth.getInstance();
 
 
+        // KEYS PASSED IN FROM ADMINCATEGORY
 
+        { if (getIntent().getExtras().get("maintainrolefromadmincategory") != null) {
+            role = getIntent().getExtras().get("maintainrolefromadmincategory").toString();     } }
+
+        if (getIntent() != null) {
+            traderID = getIntent().getStringExtra("maintainfromadmincategoryactivity");
+        }
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
         if (mGoogleApiClient != null) {
             mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
@@ -117,28 +122,25 @@ public class AdminMaintainProductsActivity extends AppCompatActivity
         };
 
 
-
-
         displaySpecificProductInfo();
 
 
-
-        applyChangesBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view)
-            {
-                applyChanges();
-            }
-        });
-
-
-        deleteBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view)
-            {
-                deleteThisProduct();
-            }
-        });
+        if (applyChangesBtn != null) {
+            applyChangesBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    applyChanges();
+                }
+            });
+        }
+        if (deleteBtn != null) {
+            deleteBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    deleteThisProduct();
+                }
+            });
+        }
     }
 
 
@@ -146,103 +148,103 @@ public class AdminMaintainProductsActivity extends AppCompatActivity
     protected void onStop() {
         super.onStop();
         //     mProgress.hide();
-        mAuth.removeAuthStateListener(firebaseAuthListener);
-
+        if (mAuth != null) {
+            mAuth.removeAuthStateListener(firebaseAuthListener);
+        }
     }
 
 
-    private void deleteThisProduct()
-    {
-        productsRef.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task)
-            {
-                Intent intent = new Intent(AdminMaintainProductsActivity.this, AdminCategoryActivity.class);
-                startActivity(intent);
-                finish();
-
-                Toast.makeText(AdminMaintainProductsActivity.this, "The Product Is deleted successfully.", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-
-
-
-
-    private void applyChanges()
-    {
-        String pName = name.getText().toString();
-        String pPrice = price.getText().toString();
-        String pDescription = description.getText().toString();
-
-        if (pName.equals(""))
-        {
-            Toast.makeText(this, "Write down Product Name.", Toast.LENGTH_SHORT).show();
-        }
-        else if (pPrice.equals(""))
-        {
-            Toast.makeText(this, "Write down Product Price.", Toast.LENGTH_SHORT).show();
-        }
-        else if (pDescription.equals(""))
-        {
-            Toast.makeText(this, "Write down Product Description.", Toast.LENGTH_SHORT).show();
-        }
-        else
-        {
-            HashMap<String, Object> productMap = new HashMap<>();
-            productMap.put("pid", productID);
-            productMap.put("description", pDescription);
-            productMap.put("price", pPrice);
-            productMap.put("name", pName);
-            productMap.put("traderID", traderID);
-
-            productsRef.updateChildren(productMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+    private void deleteThisProduct() {
+        if (productsRef != null) {
+            productsRef.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
-                public void onComplete(@NonNull Task<Void> task)
-                {
-                    if (task.isSuccessful())
-                    {
-                        Toast.makeText(AdminMaintainProductsActivity.this, "Changes applied successfully.", Toast.LENGTH_SHORT).show();
+                public void onComplete(@NonNull Task<Void> task) {
+                    Intent intent = new Intent(AdminMaintainProductsActivity.this, AdminCategoryActivity.class);
+                    startActivity(intent);
+                    finish();
 
-                        Intent intent = new Intent(AdminMaintainProductsActivity.this, AdminCategoryActivity.class);
-                        startActivity(intent);
-                        finish();
-                    }
+                    Toast.makeText(AdminMaintainProductsActivity.this, "The Product Is deleted successfully.", Toast.LENGTH_SHORT).show();
                 }
             });
         }
     }
 
 
+    private void applyChanges() {
+        if (name != null) {
+            String pName = name.getText().toString();
 
+            if (price != null) {
+                String pPrice = price.getText().toString();
 
+                if (description != null) {
+                    String pDescription = description.getText().toString();
 
-    private void displaySpecificProductInfo()
-    {
-        productsRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot)
-            {
-                if (dataSnapshot.exists())
-                {
-                    String pName = dataSnapshot.child("pname").getValue().toString();
-                    String pPrice = dataSnapshot.child("price").getValue().toString();
-                    String pDescription = dataSnapshot.child("description").getValue().toString();
-                    String pImage = dataSnapshot.child("image").getValue().toString();
+                    if (pName.equals("")) {
+                        Toast.makeText(this, "Write down Product Name.", Toast.LENGTH_SHORT).show();
+                    } else if (pPrice.equals("")) {
+                        Toast.makeText(this, "Write down Product Price.", Toast.LENGTH_SHORT).show();
+                    } else if (pDescription.equals("")) {
+                        Toast.makeText(this, "Write down Product Description.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        HashMap<String, Object> productMap = new HashMap<>();
+                        productMap.put("pid", productID);
+                        productMap.put("description", pDescription);
+                        productMap.put("price", pPrice);
+                        productMap.put("name", pName);
+                        productMap.put("traderID", traderID);
+                        if (productsRef != null) {
+                            productsRef.updateChildren(productMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        Toast.makeText(AdminMaintainProductsActivity.this, "Changes applied successfully.", Toast.LENGTH_SHORT).show();
 
+                                        Intent intent = new Intent(AdminMaintainProductsActivity.this, AdminCategoryActivity.class);
+                                        startActivity(intent);
+                                        finish();
+                                    }
+                                }
+                            });
+                        }
+                    }
 
-                    name.setText(pName);
-                    price.setText(pPrice);
-                    description.setText(pDescription);
-                    Picasso.get().load(pImage).into(imageView);
                 }
             }
+        }
+    }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+    private void displaySpecificProductInfo() {
+        if (productsRef != null) {
+            productsRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        String pName = dataSnapshot.child("pname").getValue().toString();
+                        String pPrice = dataSnapshot.child("price").getValue().toString();
+                        String pDescription = dataSnapshot.child("description").getValue().toString();
+                        String pImage = dataSnapshot.child("image").getValue().toString();
 
-            }
-        });
+                              if (name != null) {
+                                  name.setText(pName);
+                              }
+                              if (price != null) {
+                                  price.setText(pPrice);
+                              }
+                              if (description != null) {
+                                  description.setText(pDescription);
+                              };
+                              if (Picasso.get() != null) {
+                                  Picasso.get().load(pImage).into(imageView);
+
+                              }}
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
     }
 }

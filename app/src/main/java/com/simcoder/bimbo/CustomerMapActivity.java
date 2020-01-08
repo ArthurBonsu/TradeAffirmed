@@ -91,6 +91,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     private Boolean requestBol = false;
 
     private Marker pickupMarker;
+    String role;
 
     private SupportMapFragment mapFragment;
 
@@ -167,6 +168,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         Intent intent = new Intent(CustomerMapActivity.this, com.simcoder.bimbo.WorkActivities.HomeActivity.class);
 
         intent.putExtra("ecommerceuserkey",customerId );
+
+
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(CustomerMapActivity.this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
         } else {
@@ -192,6 +195,22 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     }).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
         }
 
+        final DatabaseReference roleDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(customerId).child("role");
+        roleDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+
+                    role = dataSnapshot.getValue().toString();
+
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
+
         if (VlayoutNavigation != null) {
             VlayoutNavigation.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -199,11 +218,17 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
                     if (FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(customerId) != null) {
                         Intent intent = new Intent(CustomerMapActivity.this, com.simcoder.bimbo.WorkActivities.HomeActivity.class);
+
+                        intent.putExtra("Trader", role);
+                        intent.putExtra("ecommerceuserkey",customerId );
+
                         startActivity(intent);
                         finish();
                         return;
                     } else {
                         Intent intent = new Intent(CustomerMapActivity.this, com.simcoder.bimbo.WorkActivities.MainActivity.class);
+                        intent.putExtra("traderoruser", customerId);
+                        intent.putExtra("traderoruser", role);
                         startActivity(intent);
                         finish();
                         return;
@@ -641,8 +666,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                 mDriverCar.setText("Product Unavailable");
                             }
                         }
-                        if (dataSnapshot.child("profileImageUrl") != null) {
-                            Glide.with(getApplication()).load(dataSnapshot.child("profileImageUrl").getValue().toString()).into(mDriverProfileImage);
+                        if (dataSnapshot.child("image") != null) {
+                            Glide.with(getApplication()).load(dataSnapshot.child("image").getValue().toString()).into(mDriverProfileImage);
                         }
 
 
@@ -1051,9 +1076,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                             }
 
 
-                                            if (dataSnapshot.child("profileImageUrl") != null) {
+                                            if (dataSnapshot.child("image") != null) {
                                                 myTradersPic = dataSnapshot.getValue().toString();
-                                                Glide.with(getApplication()).load(dataSnapshot.child("profileImageUrl").getValue().toString()).into(mDriverProfileImage);
+                                                Glide.with(getApplication()).load(dataSnapshot.child("image").getValue().toString()).into(mDriverProfileImage);
                                                 if (mDriverProfileImage != null) {
                                                     mydriverbitmap = ((BitmapDrawable) mDriverProfileImage.getDrawable()).getBitmap();
                                                 }

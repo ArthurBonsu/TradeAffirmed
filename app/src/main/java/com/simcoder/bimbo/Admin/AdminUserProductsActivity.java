@@ -36,6 +36,7 @@ public class AdminUserProductsActivity extends AppCompatActivity
     private String userID = "";
     String  traderID ="";
     Query QueryUser;
+    String  role;
 
     private static final int RC_SIGN_IN = 1;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
@@ -61,6 +62,13 @@ public class AdminUserProductsActivity extends AppCompatActivity
 
 
         userID = getIntent().getStringExtra("userID");
+
+        { if (getIntent().getExtras().get("rolefromnewordertouserproduct") != null) {
+            role = getIntent().getExtras().get("rolefromnewordertouserproduct").toString();     } }
+
+        if (getIntent() != null) {
+            traderID = getIntent().getStringExtra("fromnewordertousersproductactivity");
+        }
 
 
         productsList = findViewById(R.id.products_list);
@@ -116,45 +124,50 @@ public class AdminUserProductsActivity extends AppCompatActivity
 
 
     @Override
-    protected void onStart()
-    {
+    protected void onStart() {
         super.onStart();
 
 
         FirebaseRecyclerOptions<Cart> options =
                 new FirebaseRecyclerOptions.Builder<Cart>()
-                .setQuery(QueryUser, Cart.class)
-                .build();
+                        .setQuery(QueryUser, Cart.class)
+                        .build();
 
         FirebaseRecyclerAdapter<Cart, CartViewHolder> adapter = new FirebaseRecyclerAdapter<Cart, CartViewHolder>(options) {
             @Override
-            protected void onBindViewHolder(@NonNull CartViewHolder holder, int position, @NonNull Cart model)
-            {
-                holder.txtProductQuantity.setText("Quantity = " + model.getQuantity());
-                holder.txtProductPrice.setText("Price " + model.getPrice() + "$");
-                holder.txtProductName.setText(model.getname());
-            }
+            protected void onBindViewHolder(@NonNull CartViewHolder holder, int position, @NonNull Cart model) {
+                if (model != null) {
 
-            @NonNull
-            @Override
-            public CartViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
-            {
-                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.cart_items_layout, parent, false);
-                CartViewHolder holder = new CartViewHolder(view);
-                return holder;
+                    holder.txtProductQuantity.setText("Quantity = " + model.getQuantity());
+                    holder.txtProductPrice.setText("Price " + model.getPrice() + "$");
+                    holder.txtProductName.setText(model.getname());
+                }
             }
-        };
+                @NonNull
+                @Override
+                public CartViewHolder onCreateViewHolder (@NonNull ViewGroup parent,int viewType)
+                {
+                    View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.cart_items_layout, parent, false);
+                    CartViewHolder holder = new CartViewHolder(view);
+                    return holder;
+                }
+            };
 
-        productsList.setAdapter(adapter);
-        adapter.startListening();
-    }
+
+            if (productsList !=null) {
+                productsList.setAdapter(adapter);
+            }
+            if (adapter != null) {
+                adapter.startListening();
+            }}
 
     @Override
     protected void onStop() {
         super.onStop();
         //     mProgress.hide();
-        mAuth.removeAuthStateListener(firebaseAuthListener);
-
+         if (mAuth !=  null) {
+             mAuth.removeAuthStateListener(firebaseAuthListener);
+         }
     }
 
 }

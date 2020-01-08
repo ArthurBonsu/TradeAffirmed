@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -17,8 +18,13 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.simcoder.bimbo.Admin.AdminCategoryActivity;
+import com.simcoder.bimbo.CustomerMapActivity;
 import com.simcoder.bimbo.Model.Users;
 import com.simcoder.bimbo.Prevalent.Prevalent;
 import com.google.firebase.database.DataSnapshot;
@@ -37,7 +43,15 @@ public class MainActivity extends AppCompatActivity
     String traderoruser= "";
     private static final int RC_SIGN_IN = 1;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
+    String role;
 
+    { if (getIntent().getExtras().get("traderoruserkey") != null) {
+        traderoruser = getIntent().getExtras().get("traderoruserkey").toString();
+    } }
+
+    { if (getIntent().getExtras().get("role") != null) {
+        role = getIntent().getExtras().get("role").toString();
+    } }
 
     //AUTHENTICATORS
 
@@ -48,8 +62,7 @@ public class MainActivity extends AppCompatActivity
     private GoogleSignInClient mGoogleSignInClient;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -60,6 +73,8 @@ public class MainActivity extends AppCompatActivity
 
 
         Paper.init(this);
+
+        final DatabaseReference traderoruserdetails = FirebaseDatabase.getInstance().getReference().child("Users").child(role).child(traderoruser);
 
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
@@ -83,7 +98,7 @@ public class MainActivity extends AppCompatActivity
 
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 if (user != null) {
-                    traderoruser="";
+                    traderoruser = "";
                     traderoruser = user.getUid();
                 }
 
@@ -93,97 +108,61 @@ public class MainActivity extends AppCompatActivity
             }
         };
 
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view)
-            {
-                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        if (loginButton != null) {
+            loginButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                }
+            });
+        }
+
+        if (joinNowButton != null) {
+            joinNowButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
+                    startActivity(intent);
+                }
+            });
+
+        }
+        if (role != null) {
+            if (FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(traderoruser) != null && role.equals("Trader")) {
+                Intent intent = new Intent(MainActivity.this, com.simcoder.bimbo.Admin.AdminCategoryActivity.class);
+
+                intent.putExtra("Trader", role);
+                intent.putExtra("ecommerceuserkey", traderoruser);
+
                 startActivity(intent);
-            }
-        });
-
-
-        joinNowButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view)
-            {
-                Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
+                finish();
+                return;
+            } else if (FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(traderoruser) != null && role.equals("Customers")) {
+                Intent intent = new Intent(MainActivity.this, com.simcoder.bimbo.WorkActivities.HomeActivity.class);
+                intent.putExtra("Trader", role);
+                intent.putExtra("ecommerceuserkey", traderoruser);
                 startActivity(intent);
+                finish();
+                return;
+            } else {
+                Intent intent = new Intent(MainActivity.this, com.simcoder.bimbo.WorkActivities.MainActivity.class);
+                startActivity(intent);
+                finish();
+                return;
+
+
             }
-        });
 
-
-        String UserPhoneKey = Paper.book().read(Prevalent.UserPhoneKey);
-        String UserPasswordKey = Paper.book().read(Prevalent.UserPasswordKey);
-
-        if (UserPhoneKey != "" && UserPasswordKey != "")
-        {
-            if (!TextUtils.isEmpty(UserPhoneKey)  &&  !TextUtils.isEmpty(UserPasswordKey))
-            {
-                AllowAccess(UserPhoneKey, UserPasswordKey);
-
-                loadingBar.setTitle("Already Logged in");
-                loadingBar.setMessage("Please wait.....");
-                loadingBar.setCanceledOnTouchOutside(false);
-                loadingBar.show();
-            }
         }
     }
-
-
-
-    private void AllowAccess(final String phone, final String password)
-    {
-        final DatabaseReference RootRef;
-        RootRef = FirebaseDatabase.getInstance().getReference();
-
-
-        RootRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
-            {
-                if (dataSnapshot.child("Users").child(phone).exists())
-                {
-                    Users usersData = dataSnapshot.child("Users").child(phone).getValue(Users.class);
-
-                    if (usersData.getPhone().equals(phone))
-                    {
-                        if (usersData.getPassword().equals(password))
-                        {
-                            Toast.makeText(MainActivity.this, "Please wait, you are already logged in...", Toast.LENGTH_SHORT).show();
-                            loadingBar.dismiss();
-
-                            Intent intent = new Intent(MainActivity.this, HomeActivity.class);
-                            Prevalent.currentOnlineUser = usersData;
-                            startActivity(intent);
-                        }
-                        else
-                        {
-                            loadingBar.dismiss();
-                            Toast.makeText(MainActivity.this, "Password is incorrect.", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                }
-                else
-                {
-                    Toast.makeText(MainActivity.this, "Account with this " + phone + " number do not exists.", Toast.LENGTH_SHORT).show();
-                    loadingBar.dismiss();
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-
     @Override
     protected void onStop() {
         super.onStop();
         //     mProgress.hide();
-        mAuth.removeAuthStateListener(firebaseAuthListener);
-
+       if (mAuth !=null) {
+           mAuth.removeAuthStateListener(firebaseAuthListener);
+       }
     }
 
 }

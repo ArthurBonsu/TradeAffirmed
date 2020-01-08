@@ -35,6 +35,7 @@ public  class ViewSingleUserOrders extends AppCompatActivity
     private Query mQueryTraderandUserCart;
     private String userID = "";
     String orderkey="";
+    String role;
     String traderID= "";
     Query myQuery;
     Query myUserQuery;
@@ -65,11 +66,14 @@ public  class ViewSingleUserOrders extends AppCompatActivity
 
 
         productsList = findViewById(R.id.products_list);
-        productsList.setHasFixedSize(true);
+          if (productsList != null) {
+              productsList.setHasFixedSize(true);
+          }
         layoutManager = new LinearLayoutManager(this);
-        productsList.setLayoutManager(layoutManager);
+         if (productsList != null) {
+             productsList.setLayoutManager(layoutManager);
 
-
+         }
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
         if (mGoogleApiClient != null) {
             mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
@@ -126,11 +130,11 @@ public  class ViewSingleUserOrders extends AppCompatActivity
         FirebaseRecyclerAdapter<Cart, CartViewHolder> adapter = new FirebaseRecyclerAdapter<Cart, CartViewHolder>(options) {
             @Override
             protected void onBindViewHolder(@NonNull CartViewHolder holder, int position, @NonNull Cart model)
-            {
+            {       if (model != null){
                 holder.txtProductQuantity.setText("Quantity = " + model.getQuantity());
                 holder.txtProductPrice.setText("Price " + model.getPrice() + "$");
                 holder.txtProductName.setText(model.getname());
-            }
+            }}
 
             @NonNull
             @Override
@@ -141,16 +145,20 @@ public  class ViewSingleUserOrders extends AppCompatActivity
                 return holder;
             }
         };
+        if (productsList != null) {
+            productsList.setAdapter(adapter);
+        }
+        if (adapter != null) {
+            adapter.startListening();
 
-        productsList.setAdapter(adapter);
-        adapter.startListening();
-    }
+        }}
 
     @Override
     protected void onStop() {
         super.onStop();
         //     mProgress.hide();
-        mAuth.removeAuthStateListener(firebaseAuthListener);
-
+         if (mAuth !=null) {
+             mAuth.removeAuthStateListener(firebaseAuthListener);
+         }
     }
 }

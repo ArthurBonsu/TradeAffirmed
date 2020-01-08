@@ -34,8 +34,7 @@ public class ResetPasswordActivity extends AppCompatActivity
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reset_password);
 
@@ -60,7 +59,7 @@ public class ResetPasswordActivity extends AppCompatActivity
 
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 if (user != null) {
-                    traderoruser="";
+                    traderoruser = "";
                     traderoruser = user.getUid();
                 }
 
@@ -69,33 +68,30 @@ public class ResetPasswordActivity extends AppCompatActivity
                 // PULLING DATABASE REFERENCE IS NULL, WE CHANGE BACK TO THE SETUP PAGE ELSE WE GO STRAIGHT TO MAP PAGE
             }
         };
-
-        check = getIntent().getStringExtra("check");
+        if (getIntent() != null) {
+            check = getIntent().getStringExtra("check");
+        }
     }
-
 
 
     @Override
-    protected void onStart()
-    {
+    protected void onStart() {
         super.onStart();
 
+        if (check != null) {
+            if (check.equals("settings")) {
 
-        if (check.equals("settings"))
-        {
+            } else if (check.equals("login")) {
 
-        }
-        else if (check.equals("login"))
-        {
-
+            }
         }
     }
-
     @Override
     protected void onStop() {
         super.onStop();
         //     mProgress.hide();
-        mAuth.removeAuthStateListener(firebaseAuthListener);
-
+       if (mAuth !=null) {
+           mAuth.removeAuthStateListener(firebaseAuthListener);
+       }
     }
 }

@@ -36,7 +36,7 @@ public class AdminCategoryActivity extends AppCompatActivity
     private ImageView glasses, hatsCaps, walletsBagsPurses, shoes;
     private ImageView headPhonesHandFree, Laptops, watches, mobilePhones;
 
-    private Button LogoutBtn, CheckOrdersBtn, maintainProductsBtn;
+    private Button LogoutBtn, CheckOrdersBtn, maintainProductsBtn, HomeBtn;
     private DatabaseReference RoleReference;
     String role;
     private static final int RC_SIGN_IN = 1;
@@ -53,8 +53,7 @@ public class AdminCategoryActivity extends AppCompatActivity
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_category);
 
@@ -62,61 +61,84 @@ public class AdminCategoryActivity extends AppCompatActivity
         LogoutBtn = (Button) findViewById(R.id.admin_logout_btn);
         CheckOrdersBtn = (Button) findViewById(R.id.check_orders_btn);
         maintainProductsBtn = (Button) findViewById(R.id.maintain_btn);
+        HomeBtn = (Button) findViewById(R.id.homebuttonhere);
         RoleReference = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(traderID).child("role");
 
-        RoleReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0) {
-                role=    dataSnapshot.getValue().toString();
+        if (RoleReference != null) {
+            RoleReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0) {
+                        role = dataSnapshot.getValue().toString();
 
                     }
                 }
 
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
+            });
+        }
+
+        if (maintainProductsBtn != null) {
+            maintainProductsBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //SHOULD HAVE TRADER ID  AND PASS IT TO TYPE TO SEE WHETHER ADMIN OR NOT, SO WE HAVE TO SET A PARAMETER
+                    Intent intent = new Intent(AdminCategoryActivity.this, AdminMaintainProductsActivity.class);
+                    intent.putExtra("maintainrolefromadmincategory", role);
+                    intent.putExtra("maintainfromadmincategoryactivity", traderID);
+                    startActivity(intent);
+                }
+            });
+
+        }
+        if (LogoutBtn != null) {
+            LogoutBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(AdminCategoryActivity.this, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                    startActivity(intent);
+                    finish();
+                }
+            });
+        }
+        if (CheckOrdersBtn != null) {
+            CheckOrdersBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(AdminCategoryActivity.this, AdminNewOrdersActivity.class);
+                    intent.putExtra("rolefromadmincategorytoadminneworder", role);
+                    intent.putExtra("fromadmincategoryactivityadminnewordder", traderID);
 
 
-        maintainProductsBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view)
-            {
-                 //SHOULD HAVE TRADER ID  AND PASS IT TO TYPE TO SEE WHETHER ADMIN OR NOT, SO WE HAVE TO SET A PARAMETER
-                Intent intent = new Intent(AdminCategoryActivity.this, HomeActivity.class);
-                intent.putExtra("Trader", role);
-                startActivity(intent);
-            }
-        });
+                    startActivity(intent);
+                }
+            });
 
+        }
 
-        LogoutBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view)
-            {
-                Intent intent = new Intent(AdminCategoryActivity.this, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                finish();
-            }
-        });
+        if (HomeBtn != null) {
+            HomeBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //SHOULD HAVE TRADER ID  AND PASS IT TO TYPE TO SEE WHETHER ADMIN OR NOT, SO WE HAVE TO SET A PARAMETER
+                    Intent intent = new Intent(AdminCategoryActivity.this, HomeActivity.class);
+                    intent.putExtra("rolefromadmincategory", role);
+                    intent.putExtra("fromadmincategoryactivity", traderID);
+                    startActivity(intent);
+                }
+            });
 
-        CheckOrdersBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view)
-            {
-                Intent intent = new Intent(AdminCategoryActivity.this, AdminNewOrdersActivity.class);
-                startActivity(intent);
-            }
-        });
+        }
 
 
         //AUTHENTICATORS
         FirebaseAuth.getInstance();
         mAuth = FirebaseAuth.getInstance();
-
 
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
@@ -151,7 +173,6 @@ public class AdminCategoryActivity extends AppCompatActivity
         };
 
 
-
         tShirts = (ImageView) findViewById(R.id.t_shirts);
         sportsTShirts = (ImageView) findViewById(R.id.sports_t_shirts);
         femaleDresses = (ImageView) findViewById(R.id.female_dresses);
@@ -167,153 +188,183 @@ public class AdminCategoryActivity extends AppCompatActivity
         watches = (ImageView) findViewById(R.id.watches);
         mobilePhones = (ImageView) findViewById(R.id.mobilephones);
 
+        if (tShirts != null) {
+            tShirts.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(AdminCategoryActivity.this, AdminAddNewProductActivity.class);
+                    intent.putExtra("category", "tShirts");
+                    intent.putExtra("rolefromadmincategorytoaddadmin", role);
+                    intent.putExtra("fromadmincategoryactivitytoaddadmin", traderID);
 
-        tShirts.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view)
-            {
-                Intent intent = new Intent(AdminCategoryActivity.this, AdminAddNewProductActivity.class);
-                intent.putExtra("category", "tShirts");
-                startActivity(intent);
-            }
-        });
+                    startActivity(intent);
+                }
+            });
+        }
 
+        if (sportsTShirts != null) {
+            sportsTShirts.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(AdminCategoryActivity.this, AdminAddNewProductActivity.class);
+                    intent.putExtra("category", "Sports tShirts");
+                    intent.putExtra("rolefromadmincategorytoaddadmin", role);
+                    intent.putExtra("fromadmincategoryactivitytoaddadmin", traderID);
+                    startActivity(intent);
+                }
+            });
 
-        sportsTShirts.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view)
-            {
-                Intent intent = new Intent(AdminCategoryActivity.this, AdminAddNewProductActivity.class);
-                intent.putExtra("category", "Sports tShirts");
-                startActivity(intent);
-            }
-        });
+        }
 
+        if (femaleDresses != null) {
+            femaleDresses.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(AdminCategoryActivity.this, AdminAddNewProductActivity.class);
+                    intent.putExtra("category", "Female Dresses");
+                    intent.putExtra("rolefromadmincategorytoaddadmin", role);
+                    intent.putExtra("fromadmincategoryactivitytoaddadmin", traderID);
+                    startActivity(intent);
+                }
+            });
 
-        femaleDresses.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view)
-            {
-                Intent intent = new Intent(AdminCategoryActivity.this, AdminAddNewProductActivity.class);
-                intent.putExtra("category", "Female Dresses");
-                startActivity(intent);
-            }
-        });
+        }
 
+        if (sweathers != null) {
+            sweathers.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(AdminCategoryActivity.this, AdminAddNewProductActivity.class);
+                    intent.putExtra("category", "Sweathers");
+                    intent.putExtra("rolefromadmincategorytoaddadmin", role);
+                    intent.putExtra("fromadmincategoryactivitytoaddadmin", traderID);
+                    startActivity(intent);
+                }
+            });
 
-        sweathers.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view)
-            {
-                Intent intent = new Intent(AdminCategoryActivity.this, AdminAddNewProductActivity.class);
-                intent.putExtra("category", "Sweathers");
-                startActivity(intent);
-            }
-        });
+        }
+        if (glasses != null) {
+            glasses.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(AdminCategoryActivity.this, AdminAddNewProductActivity.class);
+                    intent.putExtra("category", "Glasses");
+                    intent.putExtra("rolefromadmincategorytoaddadmin", role);
+                    intent.putExtra("fromadmincategoryactivitytoaddadmin", traderID);
+                    startActivity(intent);
+                }
+            });
+        }
 
+        if (hatsCaps != null) {
 
-        glasses.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view)
-            {
-                Intent intent = new Intent(AdminCategoryActivity.this, AdminAddNewProductActivity.class);
-                intent.putExtra("category", "Glasses");
-                startActivity(intent);
-            }
-        });
+            hatsCaps.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(AdminCategoryActivity.this, AdminAddNewProductActivity.class);
+                    intent.putExtra("category", "Hats Caps");
+                    intent.putExtra("rolefromadmincategorytoaddadmin", role);
+                    intent.putExtra("fromadmincategoryactivitytoaddadmin", traderID);
+                    startActivity(intent);
+                }
+            });
 
+        }
+        if (walletsBagsPurses != null) {
 
-        hatsCaps.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view)
-            {
-                Intent intent = new Intent(AdminCategoryActivity.this, AdminAddNewProductActivity.class);
-                intent.putExtra("category", "Hats Caps");
-                startActivity(intent);
-            }
-        });
+            walletsBagsPurses.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(AdminCategoryActivity.this, AdminAddNewProductActivity.class);
+                    intent.putExtra("category", "Wallets Bags Purses");
+                    intent.putExtra("rolefromadmincategorytoaddadmin", role);
+                    intent.putExtra("fromadmincategoryactivitytoaddadmin", traderID);
+                    startActivity(intent);
+                }
+            });
+        }
 
-
-
-        walletsBagsPurses.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view)
-            {
-                Intent intent = new Intent(AdminCategoryActivity.this, AdminAddNewProductActivity.class);
-                intent.putExtra("category", "Wallets Bags Purses");
-                startActivity(intent);
-            }
-        });
-
-
-        shoes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view)
-            {
-                Intent intent = new Intent(AdminCategoryActivity.this, AdminAddNewProductActivity.class);
-                intent.putExtra("category", "Shoes");
-                startActivity(intent);
-            }
-        });
-
-
-
-        headPhonesHandFree.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view)
-            {
-                Intent intent = new Intent(AdminCategoryActivity.this, AdminAddNewProductActivity.class);
-                intent.putExtra("category", "HeadPhones HandFree");
-                startActivity(intent);
-            }
-        });
-
-
-        Laptops.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view)
-            {
-                Intent intent = new Intent(AdminCategoryActivity.this, AdminAddNewProductActivity.class);
-                intent.putExtra("category", "Laptops");
-                startActivity(intent);
-            }
-        });
+        if (shoes != null) {
+            shoes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(AdminCategoryActivity.this, AdminAddNewProductActivity.class);
+                    intent.putExtra("category", "Shoes");
+                    intent.putExtra("rolefromadmincategorytoaddadmin", role);
+                    intent.putExtra("fromadmincategoryactivitytoaddadmin", traderID);
+                    startActivity(intent);
+                }
+            });
 
 
-        watches.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view)
-            {
-                Intent intent = new Intent(AdminCategoryActivity.this, AdminAddNewProductActivity.class);
-                intent.putExtra("category", "Watches");
-                startActivity(intent);
-            }
-        });
+        }
+        if (headPhonesHandFree != null) {
+            headPhonesHandFree.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(AdminCategoryActivity.this, AdminAddNewProductActivity.class);
+                    intent.putExtra("category", "HeadPhones HandFree");
+                    intent.putExtra("rolefromadmincategorytoaddadmin", role);
+                    intent.putExtra("fromadmincategoryactivitytoaddadmin", traderID);
+                    startActivity(intent);
+                }
+            });
+        }
+        if (Laptops != null) {
+            Laptops.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(AdminCategoryActivity.this, AdminAddNewProductActivity.class);
+                    intent.putExtra("category", "Laptops");
+                    intent.putExtra("rolefromadmincategorytoaddadmin", role);
+                    intent.putExtra("fromadmincategoryactivitytoaddadmin", traderID);
+                    startActivity(intent);
+                }
+            });
+        }
+
+        if (watches != null) {
+            watches.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(AdminCategoryActivity.this, AdminAddNewProductActivity.class);
+                    intent.putExtra("category", "Watches");
+                    intent.putExtra("rolefromadmincategorytoaddadmin", role);
+                    intent.putExtra("fromadmincategoryactivitytoaddadmin", traderID);
+                    startActivity(intent);
+                }
+            });
+
+        }
+
+        if (mobilePhones != null) {
+            mobilePhones.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(AdminCategoryActivity.this, AdminAddNewProductActivity.class);
+                    intent.putExtra("category", "Mobile Phones");
+                    intent.putExtra("rolefromadmincategorytoaddadmin", role);
+                    intent.putExtra("fromadmincategoryactivitytoaddadmin", traderID);
+                    startActivity(intent);
+                }
+            });
+        }
 
 
-        mobilePhones.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view)
-            {
-                Intent intent = new Intent(AdminCategoryActivity.this, AdminAddNewProductActivity.class);
-                intent.putExtra("category", "Mobile Phones");
-                startActivity(intent);
-            }
-        });
     }
-
-
-
     @Override
     protected void onStart() {
         super.onStart();
-        mAuth.addAuthStateListener(firebaseAuthListener);
+        if (mAuth != null) {
+            mAuth.addAuthStateListener(firebaseAuthListener);
+        }
     }
     @Override
     protected void onStop() {
         super.onStop();
+          if (mAuth != null){
         mAuth.removeAuthStateListener(firebaseAuthListener);
-    }
+    }}
 
 
 }

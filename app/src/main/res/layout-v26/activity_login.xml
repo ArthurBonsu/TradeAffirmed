@@ -83,22 +83,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/Material.Drawable.CheckBox"
-            android:text="Remember me"
+            android:text="@string/remember_me"
             android:textColor="@color/colorPrimaryDark"
             app:cbd_strokeColor="@color/colorPrimaryDark"
             android:gravity="center_vertical"
             android:textSize="18sp"
-            android:layout_marginLeft="17dp"
+            android:layout_marginStart="17dp"
             />
 
         <TextView
             android:id="@+id/forget_password_link"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Forget Password?"
+            android:text="@string/forget_password"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="19sp"
-            android:layout_marginLeft="70dp"
+            android:layout_marginStart="70dp"
             />
 
     </LinearLayout>
@@ -116,7 +116,7 @@
         android:padding="17dp"
         android:textAllCaps="false"
         android:textSize="18sp"
-        android:text="Login"
+        android:text="@string/login1"
         android:textColor="@android:color/white"
         />
 
@@ -132,7 +132,7 @@
     android:id="@+id/admin_panel_link"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:text="I'm a Trader?"
+    android:text="@string/i_m_a_trader"
     android:layout_alignParentEnd="true"
     android:layout_below="@+id/eccommercegooglelogin"
     android:textColor="@color/colorPrimaryDark"
@@ -149,7 +149,7 @@
         android:id="@+id/not_admin_panel_link"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="I'm a Customer"
+        android:text="@string/i_m_a_customer1"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/eccommercegooglelogin"
         android:textColor="@color/colorPrimaryDark"

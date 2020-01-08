@@ -61,8 +61,9 @@ public class SearchProductsActivity extends AppCompatActivity
         inputText = findViewById(R.id.search_product_name);
         SearchBtn = findViewById(R.id.search_btn);
         searchList = findViewById(R.id.search_list);
-        searchList.setLayoutManager(new LinearLayoutManager(SearchProductsActivity.this));
-
+            if (searchList !=null) {
+                searchList.setLayoutManager(new LinearLayoutManager(SearchProductsActivity.this));
+            }
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
         if (mGoogleApiClient != null) {
             mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
@@ -98,10 +99,11 @@ public class SearchProductsActivity extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                SearchInput = inputText.getText().toString();
+                if (inputText != null) {
+                    SearchInput = inputText.getText().toString();
 
                 onStart();
-            }
+                }       }
         });
     }
 
@@ -120,27 +122,27 @@ public class SearchProductsActivity extends AppCompatActivity
                 .setQuery(reference.orderByChild("name").startAt(SearchInput), Products.class)
                 .build();
 
+
         FirebaseRecyclerAdapter<Products, ProductViewHolder> adapter =
                 new FirebaseRecyclerAdapter<Products, ProductViewHolder>(options) {
                     @Override
-                    protected void onBindViewHolder(@NonNull ProductViewHolder holder, int position, @NonNull final Products model)
-                    {
-                        holder.txtProductName.setText(model.getPname());
-                        holder.txtProductDescription.setText(model.getDescription());
-                        holder.txtProductPrice.setText("Price = " + model.getPrice() + "$");
-                        Picasso.get().load(model.getImage()).into(holder.imageView);
+                    protected void onBindViewHolder(@NonNull ProductViewHolder holder, int position, @NonNull final Products model) {
+                        if (model != null) {
+                            holder.txtProductName.setText(model.getPname());
+                            holder.txtProductDescription.setText(model.getDescription());
+                            holder.txtProductPrice.setText("Price = " + model.getPrice() + "$");
+                            Picasso.get().load(model.getImage()).into(holder.imageView);
 
-                        holder.itemView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view)
-                            {
-                                Intent intent = new Intent(SearchProductsActivity.this, ProductDetailsActivity.class);
-                                intent.putExtra("pid", model.getPid());
-                                startActivity(intent);
-                            }
-                        });
+                            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    Intent intent = new Intent(SearchProductsActivity.this, ProductDetailsActivity.class);
+                                    intent.putExtra("pid", model.getPid());
+                                    startActivity(intent);
+                                }
+                            });
+                        }
                     }
-
                     @NonNull
                     @Override
                     public ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
@@ -150,17 +152,21 @@ public class SearchProductsActivity extends AppCompatActivity
                         return holder;
                     }
                 };
+            if (searchList != null) {
+                searchList.setAdapter(adapter);
+            }
+            if (adapter != null) {
+                adapter.startListening();
 
-        searchList.setAdapter(adapter);
-        adapter.startListening();
-    }
+            }}
 
     @Override
     protected void onStop() {
         super.onStop();
         //     mProgress.hide();
-        mAuth.removeAuthStateListener(firebaseAuthListener);
-
+         if (mAuth !=null) {
+             mAuth.removeAuthStateListener(firebaseAuthListener);
+         }
     }
 
 }
