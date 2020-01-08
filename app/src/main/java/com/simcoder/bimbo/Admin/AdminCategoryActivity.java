@@ -36,7 +36,7 @@ public class AdminCategoryActivity extends AppCompatActivity
     private ImageView glasses, hatsCaps, walletsBagsPurses, shoes;
     private ImageView headPhonesHandFree, Laptops, watches, mobilePhones;
 
-    private Button LogoutBtn, CheckOrdersBtn, maintainProductsBtn, HomeBtn;
+    private Button LogoutBtn, CheckOrdersBtn, maintainProductsBtn, HomeBtn, AllProducts;
     private DatabaseReference RoleReference;
     String role;
     private static final int RC_SIGN_IN = 1;
@@ -62,6 +62,7 @@ public class AdminCategoryActivity extends AppCompatActivity
         CheckOrdersBtn = (Button) findViewById(R.id.check_orders_btn);
         maintainProductsBtn = (Button) findViewById(R.id.maintain_btn);
         HomeBtn = (Button) findViewById(R.id.homebuttonhere);
+        AllProducts = (Button)findViewById(R.id.allproducts);
         RoleReference = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(traderID).child("role");
 
         if (RoleReference != null) {
@@ -121,6 +122,20 @@ public class AdminCategoryActivity extends AppCompatActivity
 
         }
 
+        if (AllProducts != null) {
+            AllProducts.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(AdminCategoryActivity.this, AdminAllProducts.class);
+                    intent.putExtra("rolefromadmincategorytoallproducts", role);
+                    intent.putExtra("fromadmincategorytoallproducts", traderID);
+
+
+                    startActivity(intent);
+                }
+            });
+
+        }
         if (HomeBtn != null) {
             HomeBtn.setOnClickListener(new View.OnClickListener() {
                 @Override

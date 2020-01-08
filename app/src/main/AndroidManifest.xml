@@ -90,6 +90,7 @@
         <activity android:name=".WorkActivities.SearchProductsActivity" />
         <activity android:name=".WorkActivities.SettinsActivity" />
         <activity android:name=".Admin.ViewSingleUserOrders" />
+        <activity android:name=".Admin.AdminAllProducts" />
 
 
 

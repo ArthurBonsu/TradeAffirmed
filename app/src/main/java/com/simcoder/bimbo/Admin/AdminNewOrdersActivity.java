@@ -32,7 +32,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class AdminNewOrdersActivity extends AppCompatActivity
-{
+{  //ACTUALLY THIS ACTIVITY IS TO SEE CART ACTIVITY
     private RecyclerView ordersList;
     private DatabaseReference ordersRef;
     private Query MyordersQuery;

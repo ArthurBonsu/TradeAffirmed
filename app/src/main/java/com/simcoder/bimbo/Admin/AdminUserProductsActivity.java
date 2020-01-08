@@ -141,6 +141,8 @@ public class AdminUserProductsActivity extends AppCompatActivity
                     holder.txtProductQuantity.setText("Quantity = " + model.getQuantity());
                     holder.txtProductPrice.setText("Price " + model.getPrice() + "$");
                     holder.txtProductName.setText(model.getname());
+
+
                 }
             }
                 @NonNull

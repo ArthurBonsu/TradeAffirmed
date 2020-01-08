@@ -184,4 +184,7 @@
     <string name="login1">Login</string>
     <string name="i_m_a_trader">I\'m a Trader?</string>
     <string name="i_m_a_customer1">I\'m a Customer</string>
+    <string name="view_all_your_customers">View All Your Customers</string>
+    <string name="all_products">All Products</string>
+    <string name="view_all_your_customerss">view all your customers</string>
 </resources>
