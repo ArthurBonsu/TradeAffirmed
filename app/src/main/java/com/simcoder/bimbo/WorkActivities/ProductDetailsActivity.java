@@ -42,7 +42,7 @@ public class ProductDetailsActivity extends AppCompatActivity
     private Button addToCartButton;
     private ImageView productImage;
     private ElegantNumberButton numberButton;
-    private TextView productPrice, productDescription, productName;
+    private TextView productPrice, productDescription, productName, tradername;
     private String productID = "", state = "Normal";
     String cartkey;
     String orderkey;
@@ -73,6 +73,7 @@ public class ProductDetailsActivity extends AppCompatActivity
         productName = (TextView) findViewById(R.id.product_name_details);
         productDescription = (TextView) findViewById(R.id.product_description_details);
         productPrice = (TextView) findViewById(R.id.product_price_details);
+        tradername = (TextView)findViewById(R.id.thetrader);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
         if (mGoogleApiClient != null) {
@@ -200,12 +201,31 @@ public class ProductDetailsActivity extends AppCompatActivity
             {
                 if (dataSnapshot.exists())
                 {
-                    Products products = dataSnapshot.getValue(Products.class);
+                    final Products products = dataSnapshot.getValue(Products.class);
 
                     productName.setText(products.getPname());
                     productPrice.setText(products.getPrice());
                     productDescription.setText(products.getDescription());
+                    tradername.setText(products.getTrader());
                     Picasso.get().load(products.getImage()).into(productImage);
+
+                    tradername.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view)
+                        {
+
+                            {
+                                Intent intent = new Intent(ProductDetailsActivity.this, TraderProfile.class);
+                                intent.putExtra("pid", products.getPid());
+                                intent.putExtra("fromhomeactivitytotraderprofile", products.getTrader());
+                                intent.putExtra("fromhomeactivitytotraderprofile", products.getTrader());
+                                startActivity(intent);
+                            }
+
+
+                        }
+                    });
+
                 }
             }
 

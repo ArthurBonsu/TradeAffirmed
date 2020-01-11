@@ -112,7 +112,13 @@ public class TraderProfile extends AppCompatActivity  implements  View.OnClickLi
         traderfollowbutton = (Button)findViewById(R.id.traderfollowbutton);
 
 
-
+       // FRPM HOME ACTIVITY
+        if (getIntent() != null) {
+            theProfileID = getIntent().getStringExtra("fromhomeactivitytotraderprofile");
+        }
+        if (getIntent() != null) {
+            userID = getIntent().getStringExtra("fromhomeactivitytotraderprofile");
+        }
 
 
         // FROM ADMINVIEWUSERS HERE

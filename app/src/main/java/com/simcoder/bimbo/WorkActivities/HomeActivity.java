@@ -67,7 +67,7 @@ public class HomeActivity extends AppCompatActivity
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
     String ProductID;
 
-
+ String thetradername;
     //AUTHENTICATORS
 
     private GoogleMap mMap;
@@ -247,7 +247,7 @@ public class HomeActivity extends AppCompatActivity
                         Picasso.get().load(model.getImage()).into(holder.imageView);
 
                         productkey    =    model.getUid();
-
+                        thetradername = model.getTrader();
 
 
 
@@ -258,14 +258,18 @@ public class HomeActivity extends AppCompatActivity
                             {
                                 if (type.equals("Trader"))
                                 {
-                                    Intent intent = new Intent(HomeActivity.this, AdminMaintainProductsActivity.class);
+                                    Intent intent = new Intent(HomeActivity.this, TraderProfile.class);
                                     intent.putExtra("pid", model.getPid());
+                                    intent.putExtra("fromhomeactivitytotraderprofile", model.getTrader());
+
                                     startActivity(intent);
                                 }
                                 else
                                 {
-                                    Intent intent = new Intent(HomeActivity.this, ProductDetailsActivity.class);
+                                    Intent intent = new Intent(HomeActivity.this, TraderProfile.class);
                                     intent.putExtra("pid", model.getPid());
+                                    intent.putExtra("fromhomeactivitytotraderprofile", model.getTrader());
+
                                     startActivity(intent);
                                 }
                             }
@@ -277,7 +281,7 @@ public class HomeActivity extends AppCompatActivity
                             {
                                 if (type.equals("Trader"))
                                 {
-                                    Intent intent = new Intent(HomeActivity.this, AdminMaintainProductsActivity.class);
+                                    Intent intent = new Intent(HomeActivity.this, ProductDetailsActivity.class);
                                     intent.putExtra("pid", model.getPid());
                                     startActivity(intent);
                                 }
