@@ -165,8 +165,8 @@
     <string name="books">books</string>
     <string name="theproductname">theproductname</string>
 
-    <string name="productprice">ProductPrice</string>
-    <string name="categoryhere">categoryhere</string>
+    <string name="productpricehere">ProductPrice</string>
+    <string name="categoryheretoo">categoryhere</string>
     <string name="thenumberoflikesgotten">thenumberoflikesgotten</string>
     <string name="thenavigationaldrawerbutton">TheNavigationalDrawerButton</string>
     <string name="the_scanner_camera_here">The Scanner Camera Here</string>
@@ -177,8 +177,8 @@
     <string name="find_discover_choose_and_buy_anything_online">Find, Discover, Choose and Buy anything online.</string>
     <string name="already_have_an_account_login">Already have an Account? Login</string>
     <string name="join_now">Join Now</string>
-    <string name="todo">TODO</string>
-    <string name="todo">TODO</string>
+    <string name="todoblacklisted">TODO</string>
+    <string name="todoyet">TODO</string>
     <string name="remember_me">Remember me</string>
     <string name="forget_password">Forget Password?</string>
     <string name="login1">Login</string>
@@ -187,7 +187,7 @@
     <string name="view_all_your_customers">View All Your Customers</string>
     <string name="all_products">All Products</string>
     <string name="view_all_your_customerss">view all your customers</string>
-    <string name="theproductname">theproductname</string>
+    <string name="theproductnamedone">theproductname</string>
     <string name="productprice">ProductPrice</string>
     <string name="categoryhere">categoryhere</string>
     <string name="numberoflikes">numberoflikes</string>
