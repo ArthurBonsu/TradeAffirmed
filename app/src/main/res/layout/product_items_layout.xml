@@ -39,9 +39,8 @@
             android:layout_below="@+id/product_image"
             android:text="Product Price"
             android:textAlignment="center"
-            android:textSize="18dp"
             android:textColor="@color/colorPrimaryDark"
-            />
+            android:textSize="18dp" />
 
         <TextView
             android:id="@+id/product_description"

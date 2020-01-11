@@ -74,6 +74,18 @@
             android:gravity="center"
             android:layout_marginTop="15dp"
             />
+        <TextView
+            android:id="@+id/productnameordered"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Date Time"
+            android:textColor="@android:color/white"
+            android:textSize="16dp"
+            android:textStyle="bold"
+            android:layout_below="@+id/order_address_city"
+            android:gravity="center"
+            android:layout_marginTop="15dp"
+            />
 
         <Button
             android:id="@+id/show_all_products_btn"
@@ -83,12 +95,29 @@
             android:layout_marginRight="20dp"
             android:layout_marginTop="29dp"
             android:layout_marginBottom="10dp"
-            android:text="Show This Order Products"
+            android:text="Show The Products That Were Ordered"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="15dp"
             android:textAllCaps="false"
             android:background="@android:color/white"
             android:layout_below="@+id/order_date_time"
+            />
+
+
+        <Button
+            android:id="@+id/showallcarteduserproducts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="29dp"
+            android:layout_marginBottom="10dp"
+            android:text="Show The Carted Products of User"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="15dp"
+            android:textAllCaps="false"
+            android:background="@android:color/white"
+            android:layout_below="@+id/show_all_products_btn"
             />
 
     </RelativeLayout>

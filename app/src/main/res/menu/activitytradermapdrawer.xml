@@ -22,9 +22,9 @@
             android:id="@+id/group2"
             android:checkableBehavior="single">
             <item
-            android:id="@+id/nav_categories"
-            android:icon="@drawable/ic_github_line"
-            android:title="Categories"/>
+                android:id="@+id/nav_categories"
+                android:icon="@drawable/ic_github_line"
+                android:title="Categories"/>
 
             <item
                 android:id="@+id/nav_history"

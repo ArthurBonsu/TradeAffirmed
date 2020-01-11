@@ -2,14 +2,14 @@ package  com.simcoder.bimbo.Model;
 
 public class Users
 {
-    private String name, phone, password, image, address;
+    private String name, phone, password, image, address, uid;
 
     public Users()
     {
 
     }
 
-    public Users(String name, String phone, String password, String image, String address) {
+    public Users(String name, String phone, String password, String image, String address, String uid) {
         this.name = name;
         this.phone = phone;
         this.password = password;
@@ -17,7 +17,13 @@ public class Users
         this.address = address;
     }
 
+    public String getUid() {
+        return uid;
+    }
 
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
     public String getName() {
         return name;
     }

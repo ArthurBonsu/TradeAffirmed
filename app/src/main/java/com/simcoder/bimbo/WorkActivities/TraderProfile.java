@@ -1,4 +1,4 @@
-package com.simcoder.bimbo.Admin;
+package com.simcoder.bimbo.WorkActivities;
 
 
 import android.content.Intent;
@@ -31,10 +31,11 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.simcoder.bimbo.Model.Products;
+import com.simcoder.bimbo.Model.Users;
 import com.simcoder.bimbo.R;
 import com.squareup.picasso.Picasso;
 
-public class AdminProductDetails extends AppCompatActivity  implements  View.OnClickListener{
+public class TraderProfile extends AppCompatActivity  implements  View.OnClickListener{
     private Button ViewBuyers;
     private ImageView productImage;
     private ElegantNumberButton numberButton;
@@ -42,8 +43,33 @@ public class AdminProductDetails extends AppCompatActivity  implements  View.OnC
     private String productID = "", state = "Normal";
     String role;
     String traderID;
+    String traderkey;
+    String  traderimage;
+    String coverimage;
+    String traderquote;
+    Button traderfollowbutton;
+
+    String traderfollowers;
+    String tradername;
+    String traderphoneaddress;
+    String traderjob;
+
     Query myproductsdetails;
     DatabaseReference mDatabaseLikeCount;
+    DatabaseReference mDatabaseTraderFollowers;
+
+    ImageView traderimageonscreen = (ImageView) findViewById(R.id.traderimageonscreen);
+    ImageView tradercoverprofile = (ImageView) findViewById(R.id.tradercoverprofile);
+    TextView traderquotes = (TextView) findViewById(R.id.traderquotes);
+    TextView traderprofilename = (TextView) findViewById(R.id.traderprofilename);
+    TextView traderprofilejob = (TextView) findViewById(R.id.traderprofilejob);
+    TextView tradernumberoffollowers = (TextView) findViewById(R.id.tradernumberoffollowers);
+    TextView traderprofilephoneadress = (TextView)findViewById(R.id.traderprofilephoneadress);
+
+
+
+    String followersID;
+    String theProfileID;
 
 
     private static final int RC_SIGN_IN = 1;
@@ -57,79 +83,51 @@ public class AdminProductDetails extends AppCompatActivity  implements  View.OnC
     private static final String TAG = "Google Activity";
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
-    DatabaseReference productsRef;
+    DatabaseReference mDatabaseTrader;
+    DatabaseReference mDatabaseReferenceFollowers;
     DatabaseReference LikeRef;
     Boolean mProcessLike;
     String userID;
     boolean increment;
+    Button message;
+    Button call;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.adminproductdetailslayout);
+        setContentView(R.layout.traderprofile);
 
         productID = getIntent().getStringExtra("pid");
 
+        ImageView traderimageonscreen = (ImageView) findViewById(R.id.traderimageonscreen);
+        ImageView tradercoverprofile = (ImageView) findViewById(R.id.tradercoverprofile);
+        TextView traderquotes = (TextView) findViewById(R.id.traderquotes);
+        TextView traderprofilename = (TextView) findViewById(R.id.traderprofilename);
+        TextView traderprofilejob = (TextView) findViewById(R.id.traderprofilejob);
+        TextView tradernumberoffollowers = (TextView) findViewById(R.id.tradernumberoffollowers);
+        TextView traderprofilephoneadress = (TextView)findViewById(R.id.traderprofilephoneadress);
 
-        TextView ViewCustomers = (Button) findViewById(R.id.ViewCustomers);
-        ElegantNumberButton adminproductimagelikebutton = (ElegantNumberButton) findViewById(R.id.adminproductimagelikebutton);
-        ImageView adminproductdetailsimage = (ImageView) findViewById(R.id.adminproductdetailsimage);
-        TextView adminproductimageproductname = (TextView) findViewById(R.id.adminproductimageproductname);
-        TextView adminproductimagedescription = (TextView) findViewById(R.id.adminproductimagedescription);
-        TextView adminproductimagenumberoflikes = (TextView) findViewById(R.id.adminproductimagenumberoflikes);
+
+        traderfollowbutton = (Button)findViewById(R.id.traderfollowbutton);
 
 
-         // FROM ALL PRODUCTS
+
+
+
+        // FROM ADMINVIEWUSERS HERE
         {
-            if (getIntent().getExtras().get("rolefromsingleusertoadminproductdetails") != null) {
-                role = getIntent().getExtras().get("rolefromsingleusertoadminproductdetails").toString();
+            if (getIntent().getExtras().get("rolefromhometotraderprofilehere") != null) {
+                role = getIntent().getExtras().get("rolefromhometotraderprofilehere").toString();
             }
         }
 
         if (getIntent() != null) {
-            traderID = getIntent().getStringExtra("fromadminsingleusertoadminproductdetails");
+            theProfileID = getIntent().getStringExtra("fromtraderinhometotraderprofilehere");
         }
         if (getIntent() != null) {
-            userID = getIntent().getStringExtra("neworderUserID");
+            userID = getIntent().getStringExtra("fromhometotraderprofilehere");
         }
-
-
-
-         // FROM ALL PRODUCTS
-
-        if (getIntent() != null) {
-            productID = getIntent().getStringExtra("productIDfromallproducttoproductdetails");
-        }
-
-        {
-            if (getIntent().getExtras().get("rolefromallproductdetails") != null) {
-                role = getIntent().getExtras().get("rolefromallproductdetails").toString();
-            }
-        }
-
-        if (getIntent() != null) {
-            traderID = getIntent().getStringExtra("fromtheallproducttoadmiproductdetails");
-        }
-
-
-         // FROM CART ACTIVITY
-        if (getIntent() != null) {
-            productID = getIntent().getStringExtra("fromusercartactivitydminproductdetails");
-        }
-        if (getIntent() != null) {
-            userID = getIntent().getStringExtra("fromuserTHEIDcartactivitydminproductdetails");
-        }
-
-        {
-            if (getIntent().getExtras().get("rolefromadmincartadminproductdetails") != null) {
-                role = getIntent().getExtras().get("rolefromadmincartadminproductdetails").toString();
-            }
-        }
-
-        if (getIntent() != null) {
-            traderID = getIntent().getStringExtra("fromadmintcatactivitytoadminproductdetails");
-        }
-
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
         if (mGoogleApiClient != null) {
@@ -137,7 +135,7 @@ public class AdminProductDetails extends AppCompatActivity  implements  View.OnC
         }
 
         if (mGoogleApiClient != null) {
-            mGoogleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(com.simcoder.bimbo.Admin.AdminProductDetails.this,
+            mGoogleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(com.simcoder.bimbo.WorkActivities.TraderProfile.this,
                     new GoogleApiClient.OnConnectionFailedListener() {
                         @Override
                         public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
@@ -152,60 +150,78 @@ public class AdminProductDetails extends AppCompatActivity  implements  View.OnC
 
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 if (user != null) {
-                    traderID = "";
-                    traderID = user.getUid();
+                    userID = "";
+                    userID = user.getUid();
                 }
 
                 // I HAVE TO TRY TO GET THE SETUP INFORMATION , IF THEY ARE ALREADY PROVIDED WE TAKE TO THE NEXT STAGE
-                // WHICH IS CUSTOMER TO BE ADDED.
+                // WHICH IS trader TO BE ADDED.
                 // PULLING DATABASE REFERENCE IS NULL, WE CHANGE BACK TO THE SETUP PAGE ELSE WE GO STRAIGHT TO MAP PAGE
             }
         };
-        getProductDetails(productID);
+        getTraderInformation();
 
-        mDatabaseLikeCount = FirebaseDatabase.getInstance().getReference().child("Product").child(productID).child("Likes").child("count");
+        mDatabaseTrader = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers");
+
+        mDatabaseTrader.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0) {
+
+                    traderkey = dataSnapshot.getKey();
+                    traderimage = dataSnapshot.child(theProfileID).child("image").getValue().toString();
+                    coverimage = dataSnapshot.child(theProfileID).child("covers").child("coverimage").getValue().toString();
+                    traderquote= dataSnapshot.child(theProfileID).child("quote").getValue().toString();
+
+                    traderfollowers= dataSnapshot.child(theProfileID).child("followers").child("number").getValue().toString();
+                    tradername= dataSnapshot.child(theProfileID).child("name").getValue().toString();
+                    traderphoneaddress = dataSnapshot.child(theProfileID).child("address").getValue().toString();
+                    traderjob= dataSnapshot.child(theProfileID).child("job").getValue().toString(); }
 
 
-        if (ViewBuyers != null) {
-            ViewBuyers.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(AdminProductDetails.this, AdminViewBuyersActivity.class);
 
-                    intent.putExtra("productIDfromadminproductdetailstoviewbuyers", productID);
 
-                    intent.putExtra("fromadminproductdetailstoviewbuyers", traderID);
-                    intent.putExtra("rolefromadminproductdetailstoviewbuyers", role);
+            }
 
-                    startActivity(intent);
-                }
-            });
-        }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
-        adminproductimagelikebutton.setOnClickListener(new View.OnClickListener() {
+            }
+
+
+        });
+        // WE HAVE TO ADD ALL PROFILE DETAILS AND PROFILE IMAGES AND COVERS AS WELL
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        followersID="";
+        followersID = user.getUid();
+        traderfollowbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LikeRef = FirebaseDatabase.getInstance().getReference().child("Products");
-                if (LikeRef != null) {
-                    LikeRef.addValueEventListener(new ValueEventListener() {
+                mDatabaseReferenceFollowers =  FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(theProfileID);
+                if (mDatabaseReferenceFollowers != null) {
+                    mDatabaseReferenceFollowers.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if (dataSnapshot.exists()) {
 
-                                if (dataSnapshot.child(productID) != null && dataSnapshot.child(productID).child("Likes").hasChild(traderID)) {
-                                    Log.i("Product Unliked", ".");
-                                    LikeRef.child(productID).child("Likes").child(traderID).removeValue();
+                                if (dataSnapshot.child("followers") != null && dataSnapshot.child("followers").hasChild("numbers")) {
+                                    Log.i("Number of followers", ".");
+                                    mDatabaseReferenceFollowers.child("followers").child(followersID).removeValue();
                                     updateCounter(false);
                                     mProcessLike = false;
                                 } else {
-                                    Log.i("Product Liked", "User Liked");
-                                    LikeRef.child(productID).child("Likes").setValue(mAuth.getCurrentUser().getUid());
+                                    Log.i("Number of follwowers", "Followers liked");
+                                    mDatabaseReferenceFollowers.child("followers").child(followersID).setValue(mAuth.getCurrentUser().getUid());
                                     updateCounter(true);
                                     Log.i(dataSnapshot.getKey(), dataSnapshot.getChildrenCount() + "Count");
                                     mProcessLike = false;
                                 }
                             }
                             ;
+
+
 
                         }
 
@@ -225,7 +241,7 @@ public class AdminProductDetails extends AppCompatActivity  implements  View.OnC
             private void updateCounter(final Boolean increment) {
                 this.increments = increment;
                 DatabaseReference mDatabaseLikeCount;
-                mDatabaseLikeCount = FirebaseDatabase.getInstance().getReference().child("Product").child(productID).child("Likes").child("count");
+                mDatabaseLikeCount = FirebaseDatabase.getInstance().getReference().child("Users").child("traders").child(userID).child("followers").child("numbers");
                 mDatabaseLikeCount.runTransaction(new Transaction.Handler() {
                     @Override
                     public Transaction.Result doTransaction(MutableData mutableData) {
@@ -258,31 +274,41 @@ public class AdminProductDetails extends AppCompatActivity  implements  View.OnC
     protected void onStart() {
         super.onStart();
 
-        getProductDetails(productID);
+        getTraderInformation();
     }
 
 
-    private void getProductDetails(String productID) {
-        productsRef = FirebaseDatabase.getInstance().getReference().child("Products");
+    private void getTraderInformation() {
 
-        productsRef.child(productID).addValueEventListener(new ValueEventListener() {
+
+        mDatabaseReferenceFollowers.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    Products products = dataSnapshot.getValue(Products.class);
+                    Users usershere = dataSnapshot.getValue(Users.class);
 
 
-                    ImageView adminproductdetailsimage = (ImageView) findViewById(R.id.adminproductdetailsimage);
-                    TextView adminproductimageproductname = (TextView) findViewById(R.id.adminproductimageproductname);
-                    TextView adminproductimagedescription = (TextView) findViewById(R.id.adminproductimagedescription);
-                    TextView adminproductimagenumberoflikes = (TextView) findViewById(R.id.adminproductimagenumberoflikes);
 
 
-                    adminproductdetailsimage.setImageResource(Integer.parseInt(products.getImage()));
-                    adminproductimageproductname.setText(products.getPname());
-                    adminproductimagedescription.setText(products.getDescription());
-                    adminproductimagenumberoflikes.setText(products.getLikes());
-                    Picasso.get().load(products.getImage()).into(adminproductdetailsimage);
+                    traderimageonscreen.setImageResource(Integer.parseInt(traderimage));
+                    tradercoverprofile.setImageResource(Integer.parseInt(coverimage));
+
+
+                    traderquotes.setText(traderquote);
+                    traderprofilename.setText(tradername);
+                    traderprofilejob.setText(traderjob);
+                    traderprofilephoneadress.setText(traderphoneaddress);
+
+                    tradernumberoffollowers.setText(traderfollowers);
+
+                    Picasso.get().load(traderimage).into(traderimageonscreen);
+
+                    Picasso.get().load(coverimage).into(tradercoverprofile);
+
+
+
+
+
                 }
 
 

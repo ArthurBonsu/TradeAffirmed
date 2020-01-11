@@ -51,11 +51,13 @@ public class HomeActivity extends AppCompatActivity
     private DatabaseReference Userdetails;
     private RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
+    DatabaseReference TraderDetails;
 
     private String type = "";
     String traderoruser= "";
     private static final int RC_SIGN_IN = 1;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
+    String ProductID;
 
 
     //AUTHENTICATORS
@@ -97,8 +99,8 @@ public class HomeActivity extends AppCompatActivity
         ProductsRef = FirebaseDatabase.getInstance().getReference().child("Product");
 
 
-        Paper.init(this);
 
+        Paper.init(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Home");
@@ -219,10 +221,11 @@ public class HomeActivity extends AppCompatActivity
                         holder.txtProductName.setText(model.getPname());
                         holder.txtProductDescription.setText(model.getDescription());
                         holder.txtProductPrice.setText("Price = " + model.getPrice() + "$");
+                        holder.tradername.setText("Trader of Goods+" )
                         Picasso.get().load(model.getImage()).into(holder.imageView);
 
 
-                        holder.itemView.setOnClickListener(new View.OnClickListener() {
+                        holder.tradername.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view)
                             {
@@ -240,6 +243,26 @@ public class HomeActivity extends AppCompatActivity
                                 }
                             }
                         });
+
+                        holder.txtProductName.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view)
+                            {
+                                if (type.equals("Trader"))
+                                {
+                                    Intent intent = new Intent(HomeActivity.this, AdminMaintainProductsActivity.class);
+                                    intent.putExtra("pid", model.getPid());
+                                    startActivity(intent);
+                                }
+                                else
+                                {
+                                    Intent intent = new Intent(HomeActivity.this, ProductDetailsActivity.class);
+                                    intent.putExtra("pid", model.getPid());
+                                    startActivity(intent);
+                                }
+                            }
+                        });
+
                     }
 
                     @NonNull
@@ -301,6 +324,24 @@ public class HomeActivity extends AppCompatActivity
     {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+
+        if (id == R.id.profilepic)
+        {
+            if (!type.equals("Trader"))
+            {
+                Intent intent = new Intent(HomeActivity.this, CartActivity.class);
+                startActivity(intent);
+            }
+        }
+
+        if (id == R.id.username)
+        {
+            if (!type.equals("Trader"))
+            {
+                Intent intent = new Intent(HomeActivity.this, CartActivity.class);
+                startActivity(intent);
+            }
+        }
 
         if (id == R.id.nav_cart)
         {

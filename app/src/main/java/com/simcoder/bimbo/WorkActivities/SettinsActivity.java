@@ -272,7 +272,7 @@ public class SettinsActivity extends AppCompatActivity
                                     userMap.put("address", addressEditText.getText().toString());
                                     userMap.put("phone", userPhoneEditText.getText().toString());
                                     userMap.put("image", myUrl);
-                                    ref.child(Prevalent.currentOnlineUser.getPhone()).updateChildren(userMap);
+                                    ref.child(role).child(traderoruser).updateChildren(userMap);
 
                                     progressDialog.dismiss();
 

@@ -23,7 +23,10 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import  com.simcoder.bimbo.Model.AdminOrders;
 import  com.simcoder.bimbo.R;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -40,6 +43,8 @@ public class AdminNewOrdersActivity extends AppCompatActivity
     String orderkey;
     String userID;
     String role;
+    String username;
+    String userkey;
     // NEW ORDERS RECEIVED FROM THE USERS
 //AUTHENITICATORS
     private static final int RC_SIGN_IN = 1;
@@ -120,7 +125,23 @@ public class AdminNewOrdersActivity extends AppCompatActivity
     {
         super.onStart();
 
+             DatabaseReference userreference  = ordersRef.getRef().child("Users");
+        userreference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0) {
+                     userkey  = dataSnapshot.getValue().toString();
+                     username = dataSnapshot.child("name").getValue().toString();
 
+
+                }
+            }
+
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
         FirebaseRecyclerOptions<AdminOrders> options =
                 new FirebaseRecyclerOptions.Builder<AdminOrders>()
                 .setQuery(MyordersQuery, AdminOrders.class)
@@ -131,13 +152,15 @@ public class AdminNewOrdersActivity extends AppCompatActivity
                 new FirebaseRecyclerAdapter<AdminOrders, AdminOrdersViewHolder>(options) {
                     @Override
                     protected void onBindViewHolder(@NonNull AdminOrdersViewHolder holder, final int position, @NonNull final AdminOrders model) {
-                        holder.userName.setText("Name: " + model.getName());
+                        holder.userName.setText("Name: " + username);
                         holder.userPhoneNumber.setText("Phone: " + model.getPhone());
                         holder.userTotalPrice.setText("Total Amount =  $" + model.getTotalAmount());
                         holder.userDateTime.setText("Order at: " + model.getDate() + "  " + model.getTime());
                         holder.userShippingAddress.setText("Shipping Address: " + model.getAddress() + ", " + model.getCity());
+                        holder.productnameordered.setText("Product Orderer" + model.getName());
+
                         if (model != null) {
-                            userID = model.getUid();
+                            orderkey = model.getUid();
 
 
                                 holder.ShowOrdersBtn.setOnClickListener(new View.OnClickListener() {
@@ -145,9 +168,10 @@ public class AdminNewOrdersActivity extends AppCompatActivity
                                     public void onClick(View view) {
                                         orderkey = getRef(position).getKey();
 
-                                        Intent intent = new Intent(AdminNewOrdersActivity.this, AdminUserProductsActivity.class);
+                                        Intent intent = new Intent(AdminNewOrdersActivity.this, ViewSingleUserOrders.class);
                                         intent.putExtra("orderkey", orderkey);
-                                        intent.putExtra("userID", userID);
+                                        intent.putExtra("neworderUserID", userkey);
+
 
                                         intent.putExtra("fromnewordertousersproductactivity", traderID);
                                         intent.putExtra("rolefromnewordertouserproduct", role);
@@ -155,7 +179,22 @@ public class AdminNewOrdersActivity extends AppCompatActivity
                                         startActivity(intent);
                                     }
                                 });
+                           holder.showCartsofUser.setOnClickListener(new View.OnClickListener() {
+                               @Override
+                               public void onClick(View v) {
+                                   orderkey = getRef(position).getKey();
 
+                                   Intent intent = new Intent(AdminNewOrdersActivity.this, AdminUserCartedActivity.class);
+                                   intent.putExtra("orderkey", orderkey);
+                                   intent.putExtra("userkey", userkey);
+
+
+                                   intent.putExtra("fromnewordertouseradmincartedactivity", traderID);
+                                   intent.putExtra("rolefromnewordertoadmincartedactivity", role);
+
+                                   startActivity(intent);
+                               }
+                           });
                                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
@@ -214,8 +253,8 @@ public class AdminNewOrdersActivity extends AppCompatActivity
 
     public static class AdminOrdersViewHolder extends RecyclerView.ViewHolder
     {
-        public TextView userName, userPhoneNumber, userTotalPrice, userDateTime, userShippingAddress;
-        public Button ShowOrdersBtn;
+        public TextView userName, userPhoneNumber,productnameordered, userTotalPrice, userDateTime, userShippingAddress;
+        public Button ShowOrdersBtn, showCartsofUser;
 
 
         public AdminOrdersViewHolder(View itemView)
@@ -229,6 +268,8 @@ public class AdminNewOrdersActivity extends AppCompatActivity
             userDateTime = itemView.findViewById(R.id.order_date_time);
             userShippingAddress = itemView.findViewById(R.id.order_address_city);
             ShowOrdersBtn = itemView.findViewById(R.id.show_all_products_btn);
+            showCartsofUser =itemView.findViewById(R.id.showallcarteduserproducts);
+            productnameordered = itemView.findViewById(R.id.productnameordered);
         }
     }
 

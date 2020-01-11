@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Admin.AdminUserCartedActivity">
+    tools:context=".Admin.ViewSingleUserOrders">
 
     <RelativeLayout
-        android:id="@+id/userproduct"
+        android:id="@+id/admincartitemtitle"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@color/colorPrimaryDark"
@@ -16,7 +16,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Products"
+            android:text="THESE ARE THE PRODUCTS IN USER CARTS"
             android:textColor="@android:color/white"
             android:textSize="25dp"
             android:textAlignment="center"
@@ -27,10 +27,10 @@
 
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/products_list"
+        android:id="@+id/theadmincartrecycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/userproduct">
+        android:layout_below="@+id/ir3">
     </android.support.v7.widget.RecyclerView>
 
 </RelativeLayout>

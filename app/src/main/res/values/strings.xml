@@ -187,4 +187,9 @@
     <string name="view_all_your_customers">View All Your Customers</string>
     <string name="all_products">All Products</string>
     <string name="view_all_your_customerss">view all your customers</string>
+    <string name="theproductname">theproductname</string>
+    <string name="productprice">ProductPrice</string>
+    <string name="categoryhere">categoryhere</string>
+    <string name="numberoflikes">numberoflikes</string>
+    <string name="the_number_of_likes">the number of likes</string>
 </resources>

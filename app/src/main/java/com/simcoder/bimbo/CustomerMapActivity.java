@@ -9,11 +9,18 @@ import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -40,6 +47,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
@@ -66,7 +74,11 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.nabinbhandari.android.permissions.PermissionHandler;
 import com.nabinbhandari.android.permissions.Permissions;
+import com.simcoder.bimbo.WorkActivities.CartActivity;
 import com.simcoder.bimbo.WorkActivities.HomeActivity;
+import com.simcoder.bimbo.WorkActivities.SearchProductsActivity;
+import com.simcoder.bimbo.WorkActivities.SettinsActivity;
+import com.squareup.picasso.Picasso;
 
 
 import java.util.ArrayList;
@@ -74,7 +86,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CustomerMapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
+import de.hdodenhof.circleimageview.CircleImageView;
+import io.paperdb.Paper;
+
+public class CustomerMapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, NavigationView.OnNavigationItemSelectedListener {
     // THERE HAS TO BE A SEARCH BOX TO QUERY FROM PRODUCT TABLE
     private GoogleMap mMap;
     GoogleApiClient mGoogleApiClient;
@@ -102,7 +117,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     private LinearLayout mDriverInfo;
 
     private ImageView mDriverProfileImage;
-     private  ImageView VlayoutNavigation;
+    private ImageView VlayoutNavigation;
     private String driverFoundID;
     private static final String TAG = "Google Activity";
     private TextView mDriverName, mDriverPhone, mDriverCar;
@@ -142,7 +157,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         mDriverInfo = findViewById(R.id.driverInfo);
 
         mDriverProfileImage = findViewById(R.id.driverProfileImage);
-        VlayoutNavigation = findViewById( R.id.myvlayoutnavigationalview);
+        VlayoutNavigation = findViewById(R.id.myvlayoutnavigationalview);
 
         mDriverName = findViewById(R.id.driverName);
         mDriverPhone = findViewById(R.id.driverPhone);
@@ -162,12 +177,50 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
 
+        Paper.init(this);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("Home");
+//        setSupportActionBar(toolbar);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        View headerView = navigationView.getHeaderView(0);
+        TextView userNameTextView = headerView.findViewById(R.id.user_profile_name);
+        CircleImageView profileImageView = headerView.findViewById(R.id.user_profile_image);
+
+        // USER
+
+
+
+
+
+
+        {          if (user.getDisplayName() != null) {
+            if (user.getDisplayName() != null) {
+                userNameTextView.setText(user.getDisplayName());
+
+                Picasso.get().load(user.getPhotoUrl()).placeholder(R.drawable.profile).into(profileImageView);
+            }
+        }
+        }
+
+
+
         if (user != null) {
             customerId = "";
-            customerId = user.getUid();}
+            customerId = user.getUid();
+        }
         Intent intent = new Intent(CustomerMapActivity.this, com.simcoder.bimbo.WorkActivities.HomeActivity.class);
 
-        intent.putExtra("ecommerceuserkey",customerId );
+        intent.putExtra("ecommerceuserkey", customerId);
 
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -205,6 +258,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
                 }
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }
@@ -220,7 +274,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                         Intent intent = new Intent(CustomerMapActivity.this, com.simcoder.bimbo.WorkActivities.HomeActivity.class);
 
                         intent.putExtra("Trader", role);
-                        intent.putExtra("ecommerceuserkey",customerId );
+                        intent.putExtra("ecommerceuserkey", customerId);
 
                         startActivity(intent);
                         finish();
@@ -695,6 +749,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             });
         }
     }
+
     private DatabaseReference driveHasEndedRef;
     private ValueEventListener driveHasEndedRefListener;
 
@@ -816,9 +871,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     }
 
     // I HAVE TO PASS IN THE VALUES OVER TO PRODUCT ACTIVITY/ HOME ACTIVITY OR PRODUCT CATEGORY ACTIVITY
-         // THE USER NAME HAS TO BE PASSED.
-
-
+    // THE USER NAME HAS TO BE PASSED.
 
 
     // WE CAN CREATE BUTTONS TO ANIMATE CAMERA
@@ -917,11 +970,12 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     @Override
     public void onConnectionSuspended(int i) {
-        if (mGoogleApiClient != null){
+        if (mGoogleApiClient != null) {
             mGoogleApiClient.connect();
+        }
+
     }
 
-}
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
     }
@@ -976,57 +1030,58 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
 
         getwhereveravailabledriverislocation = FirebaseDatabase.getInstance().getReference().child("driverAvailable").child(theCurrentDriver_s_here).child("l");
-                if (getwhereveravailabledriverislocation != null) {
-                    getwhereveravailabledriverislocationListener = getwhereveravailabledriverislocation.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            if (dataSnapshot.exists() && !customerId.equals("")) {
-                                List<Object> map = (List<Object>) dataSnapshot.getValue();
-                                double locationLat = 0;
-                                double locationLng = 0;
-                                if (map.get(0) != null) {
-                                    locationLat = Double.parseDouble(map.get(0).toString());
-                                }
-                                if (map.get(1) != null) {
-                                    locationLng = Double.parseDouble(map.get(1).toString());
-                                }
+        if (getwhereveravailabledriverislocation != null) {
+            getwhereveravailabledriverislocationListener = getwhereveravailabledriverislocation.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists() && !customerId.equals("")) {
+                        List<Object> map = (List<Object>) dataSnapshot.getValue();
+                        double locationLat = 0;
+                        double locationLng = 0;
+                        if (map.get(0) != null) {
+                            locationLat = Double.parseDouble(map.get(0).toString());
+                        }
+                        if (map.get(1) != null) {
+                            locationLng = Double.parseDouble(map.get(1).toString());
+                        }
 
-                                if (DriverLocationPoint != null) {
-                                    DriverLocationPoint = new LatLng(locationLat, locationLng);
-                                    Location loc1 = new Location("");
-                                    if (loc1 != null) {
-                                        if (pickupLocation != null) {
-                                            loc1.setLatitude(pickupLocation.latitude);
-                                            loc1.setLongitude(pickupLocation.longitude);
-                                        }
-                                    }
-                                    Location loc2 = new Location("");
-                                    if (loc2 != null) {
-                                        if (DriverLocationPoint != null) {
-                                            loc2.setLatitude(DriverLocationPoint.latitude);
-                                            loc2.setLongitude(DriverLocationPoint.longitude);
-                                        }
-                                    }
-                                    if (loc1 != null) {
-                                        distance = loc1.distanceTo(loc2);
-                                    }
-                                    if (distance < 100) {
-                                        if (mRequest != null) {
-                                            mRequest.setText("Driver's Here");
-                                        } else {
-                                            mRequest.setText("Driver Found: " + distance);
-                                        }
-                                    }
-
-
+                        if (DriverLocationPoint != null) {
+                            DriverLocationPoint = new LatLng(locationLat, locationLng);
+                            Location loc1 = new Location("");
+                            if (loc1 != null) {
+                                if (pickupLocation != null) {
+                                    loc1.setLatitude(pickupLocation.latitude);
+                                    loc1.setLongitude(pickupLocation.longitude);
                                 }
                             }
+                            Location loc2 = new Location("");
+                            if (loc2 != null) {
+                                if (DriverLocationPoint != null) {
+                                    loc2.setLatitude(DriverLocationPoint.latitude);
+                                    loc2.setLongitude(DriverLocationPoint.longitude);
+                                }
+                            }
+                            if (loc1 != null) {
+                                distance = loc1.distanceTo(loc2);
+                            }
+                            if (distance < 100) {
+                                if (mRequest != null) {
+                                    mRequest.setText("Driver's Here");
+                                } else {
+                                    mRequest.setText("Driver Found: " + distance);
+                                }
+                            }
+
+
                         }
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                        }
-                    });
+                    }
                 }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
+            });
+        }
 
         GeoFire geoFire = new GeoFire(driverLocation);
 
@@ -1128,6 +1183,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                 }
                             }
                         }
+
                         @Override
                         public void onGeoQueryReady() {
                         }
@@ -1140,5 +1196,110 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                 }
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.activity_home_drawer, menu);
+        return true;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+//        if (id == R.id.action_settings)
+//        {
+//            return true;
+//        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
+
+        public boolean onNavigationItemSelected(MenuItem item)
+        {
+            // Handle navigation view item clicks here.
+            int id = item.getItemId();
+
+            if (id == R.id.nav_cart)
+            {
+                if (!role.equals("Trader"))
+                {
+                    Intent intent = new Intent(CustomerMapActivity.this, CartActivity.class);
+                    startActivity(intent);
+                }
+            }
+            else if (id == R.id.nav_search)
+            {
+                if (!role.equals("Trader"))
+                {
+                    Intent intent = new Intent(CustomerMapActivity.this, SearchProductsActivity.class);
+                    startActivity(intent);
+                }
+            }
+            else if (id == R.id.nav_categories)
+            {
+
+            }
+            else if (id == R.id.nav_settings)
+            {
+                if (!role.equals("Trader"))
+                { FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    String cusomerId = "";
+                    cusomerId = user.getUid();
+                    Intent intent = new Intent(CustomerMapActivity.this, SettinsActivity.class);
+                    intent.putExtra("traderorcustomer", cusomerId);
+                    intent.putExtra("role", role);
+                    startActivity(intent);
+                }
+
+                else {
+
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    String cusomerId = "";
+                    cusomerId = user.getUid();
+                    Intent intent = new Intent(CustomerMapActivity.this, SettinsActivity.class);
+                    intent.putExtra("traderorcustomer", cusomerId);
+                    intent.putExtra("role", role);
+                    startActivity(intent);
+
+                }
+            }
+            else if (id == R.id.nav_logout)
+            {
+                if (!role.equals("Trader"))
+                {
+                    Paper.book().destroy();
+
+                    Intent intent = new Intent(CustomerMapActivity.this, com.simcoder.bimbo.WorkActivities.MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
+            return true;
+        }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+
     }
 }

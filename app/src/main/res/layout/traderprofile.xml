@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.v4.widget.NestedScrollView
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_marginTop="10dp"
+            android:padding="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/traderimageonscreen"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:background="#2d2d2d"
+                    android:contentDescription=""
+                    android:scaleType="centerCrop" />
+
+
+                <ImageView
+                    android:id="@+id/tradercoverprofile"
+                    android:layout_width="310dp"
+                    android:layout_height="113dp"
+                    android:background="#2d2d2d"
+                    android:contentDescription="@string/tradersimageonscreen"
+                    android:scaleType="centerCrop" />
+
+
+
+
+
+                <TextView
+                    android:textSize="18sp"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="the number of likes"
+                    android:id="@+id/traderquotes"
+                    android:background="#ecedec"
+                    android:padding="8dp"
+                    android:layout_marginTop="10dp" />
+
+
+                <TextView
+                    android:textSize="18sp"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="Phone"
+                    android:id="@+id/traderprofilephoneadress"
+                    android:background="#ecedec"
+                    android:padding="8dp"
+                    android:layout_marginTop="10dp" />
+                <TextView
+                    android:id="@+id/traderprofilename"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:padding="8dp"
+                    android:text="theproductname"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/traderprofilejob"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="#ecedec"
+                    android:padding="8dp"
+                    android:text="ProductPrice" />
+
+                <TextView
+                    android:id="@+id/tradernumberoffollowers"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="#ecedec"
+                    android:padding="8dp"
+                    android:text="@string/thetradername"
+                    android:textSize="18sp" />
+
+
+
+                <Button
+                    android:textSize="18sp"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="the number of likes"
+                    android:id="@+id/traderfollowbutton"
+                    android:background="#ecedec"
+                    android:padding="8dp"
+                    android:layout_marginTop="10dp" />
+
+            </LinearLayout>
+
+
+        </android.support.v4.widget.NestedScrollView>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/traderroducts"/>
+
+        </LinearLayout>
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>

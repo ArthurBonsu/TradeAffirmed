@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v4.widget.NestedScrollView
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:layout_marginTop="10dp"
+                android:padding="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/productimagesforadmin"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:background="#2d2d2d"
+                        android:contentDescription=""
+                        android:scaleType="centerCrop" />
+
+
+
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Product Name"
+                        android:id="@+id/productnameforadmin"
+                        android:background="#ecedec"
+                        android:padding="8dp"
+                        android:layout_marginTop="10dp"
+                        />
+
+
+                    <TextView
+                        android:textSize="18sp"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:text="Product Price"
+                        android:id="@+id/productpriceforadmin"
+                        android:background="#ecedec"
+                        android:padding="8dp"
+                        android:layout_marginTop="10dp"
+                        />
+
+                    <TextView
+                        android:textSize="18sp"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:text="categoryhere"
+                        android:id="@+id/productcategoryforadmin"
+                        android:background="#ecedec"
+                        android:padding="8dp"
+                        android:layout_marginTop="10dp"
+                        />
+
+
+
+                    <TextView
+                        android:textSize="18sp"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:text="Product Date and Time"
+                        android:id="@+id/producttimeanddateforadmin"
+                        android:background="#ecedec"
+                        android:padding="8dp"
+                        android:layout_marginTop="10dp"
+                        />
+
+                </LinearLayout>
+
+
+            </android.support.v4.widget.NestedScrollView>
+
+        </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>
