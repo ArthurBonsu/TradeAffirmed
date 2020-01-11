@@ -2,12 +2,13 @@ package  com.simcoder.bimbo.Model;
 
 public class AdminOrders
 {
-    private String name, phone, address, city, state, date, time, totalAmount, uid;
+    private String name, phone, address, city, state, date, time, totalAmount, uid, delivery,products, amount, quantity,shippingcost, trader, Users, price,deliveryID, distance, mode, number;
 
     public AdminOrders() {
     }
 
-    public AdminOrders(String uid, String name, String phone, String address, String city, String state, String date, String time, String totalAmount) {
+    public AdminOrders(String uid, String name, String phone, String address, String city, String state, String date, String time, String totalAmount,String delivery, String products, String amount, String quantity, String shippingcost, String trader, String Users, String  price,
+                     String   deliveryID, String distance, String mode, String number) {
         this.uid = uid;
         this.name = name;
         this.phone = phone;
@@ -17,11 +18,134 @@ public class AdminOrders
         this.date = date;
         this.time = time;
         this.totalAmount = totalAmount;
+
+        //NEW GETTERS AND SETTERS
+
+        this.delivery = delivery;
+        this.products = products;
+        this.amount = amount;
+        this.quantity = quantity;
+        this.shippingcost = shippingcost;
+        this.trader = trader;
+        this.Users = Users;
+        this.price = price;
+
+          // MORE GETTERS
+        this.deliveryID = deliveryID;
+        this.distance = distance;
+        this.mode = mode;
+        this.number = number;
+
+
+        //       delivery,products, amount, quantity,shippingcost, trader, Users, price, [deliveryID, distance, mode, number];
+
     }
 
-    public String getUid() {
-        return uid;
+    public String getdelivery() {
+        return delivery;
     }
+
+    public void setdelivery(String delivery) {
+        this.delivery = delivery;
+    }
+
+    public String getproducts() {
+        return products;
+    }
+
+    public void setproducts(String products) {
+        this.products = products;
+    }
+
+    public String getamount() {
+        return amount;
+    }
+
+    public void setamount(String amount) {
+        this.amount = amount;
+    }
+
+    public String getquantity() {
+        return quantity;
+    }
+
+    public void setquantity(String quantity) {
+        this.quantity = quantity;
+    }
+
+    public String getshippingcost() {
+        return shippingcost;
+    }
+
+    public void setshippingcost(String shippingcost) {
+        this.shippingcost = shippingcost;
+    }
+
+    public String gettrader() {
+        return trader;
+    }
+
+    public void settrader(String trader) {
+        this.trader = trader;
+    }
+
+    public String getUsers() {
+        return Users;
+    }
+
+    public void setUsers(String Users) {
+        this.Users = Users;
+    }
+
+    public String getprice() {
+        return price;
+    }
+
+    public void setprice(String price) {
+        this.price = price;
+    }
+
+
+
+
+    public String getdeliveryID() {
+        return deliveryID;
+    }
+
+    public void setdeliveryID(String deliveryID) {
+        this.deliveryID = deliveryID;
+    }
+
+    public String getdistance() {
+        return distance;
+    }
+
+    public void setdistance(String distance) {
+        this.distance = distance;
+    }
+
+    public String getmode() {
+        return mode;
+    }
+
+    public void setmode(String mode) {
+        this.mode = mode;
+    }
+
+    public String getnumber() {
+        return number;
+    }
+
+    public void setnumber(String number) {
+        this.number = number;
+    }
+
+
+
+    // NEW SETTERS AND GETTERS
+         public String getUid() {
+             return uid;
+         }
 
     public void setUid(String uid) {
         this.uid = uid;
@@ -90,4 +214,6 @@ public class AdminOrders
     public void setTotalAmount(String totalAmount) {
         this.totalAmount = totalAmount;
     }
+
+
 }
