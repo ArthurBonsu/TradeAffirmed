@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+    <group
+        android:id="@+id/homegroup3"
+
+        android:checkableBehavior="single"
+        >
+
+        <item
+            android:id="@+id/nav_updateprofile"
+            android:icon="@drawable/ic_apple_fill"
+            android:title="Update Profile"
+            app:actionLayout="@layout/vip_view"/>
+
+        <item
+            android:id="@+id/nav_changesettings"
+            android:icon="@drawable/ic_android_fill"
+            android:title="Change Settings"
+            app:actionLayout="@layout/bage_hint"/>
+
+        <item
+            android:id="@+id/nave_resetpassword"
+            android:icon="@drawable/ic_apple_fill"
+            android:title="Reset Passwords"
+            app:actionLayout="@layout/vip_view"/>
+
+
+        <item
+            android:id="@+id/nav_changepayment"
+            android:icon="@drawable/ic_apple_fill"
+            android:title="Change Payment Mechanism"
+            app:actionLayout="@layout/vip_view"/>
+
+
+
+
+
+
+
+
+
+
+
+
+    </group>
+</menu>

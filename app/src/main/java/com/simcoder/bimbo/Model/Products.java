@@ -2,12 +2,12 @@ package  com.simcoder.bimbo.Model;
 
 public class Products
 {
-    private String pname, description, price, image, category, pid, date, time, uid, likes;
+    private String pname, description, price, image, category, pid, date, time, uid, likes, trader;
 
     public Products() {
     }
 
-    public Products(String pname, String description, String price, String image, String category, String pid, String date, String time, String uid, String likes) {
+    public Products(String pname, String description, String price, String image, String category, String pid, String date, String time, String uid, String likes, String trader) {
         this.pname = pname;
         this.description = description;
         this.price = price;
@@ -17,6 +17,7 @@ public class Products
         this.date = date;
         this.time = time;
         this.likes = likes;
+        this.trader = trader;
     }
 
     public String getUid() {
@@ -97,5 +98,12 @@ public class Products
 
     public void setLikes(String likes) {
         this.likes = likes;
+    }
+    public String getTrader() {
+        return trader;
+    }
+
+    public void setTrader(String Trader) {
+        this.trader = trader;
     }
 }

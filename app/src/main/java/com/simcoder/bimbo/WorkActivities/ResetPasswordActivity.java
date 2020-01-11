@@ -30,6 +30,7 @@ public class ResetPasswordActivity extends AppCompatActivity
     private static final String TAG = "Google Activity";
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
+    String role;
 
 
 
@@ -71,6 +72,11 @@ public class ResetPasswordActivity extends AppCompatActivity
         if (getIntent() != null) {
             check = getIntent().getStringExtra("check");
         }
+
+        { if (getIntent().getExtras().get("rolefromcustomermapactivitytohomeresetpasswordactivity") != null) {
+            role = getIntent().getExtras().get("rolefromcustomermapactivitytohomeresetpasswordactivity").toString();
+        } }
+        traderoruser = getIntent().getStringExtra("fromcustomermapactivitytoresetpasswordactivity");
     }
 
 

@@ -129,6 +129,21 @@ public class TraderProfile extends AppCompatActivity  implements  View.OnClickLi
             userID = getIntent().getStringExtra("fromhometotraderprofilehere");
         }
 
+
+
+
+        {
+            if (getIntent().getExtras().get("rolefromdrivermaptotraderprofilehere") != null) {
+                role = getIntent().getExtras().get("rolefromdrivermaptotraderprofilehere").toString();
+            }
+        }
+
+        if (getIntent() != null) {
+            theProfileID = getIntent().getStringExtra("fromdrivermapttotraderprofilehere");
+        }
+
+
+
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
         if (mGoogleApiClient != null) {
             mGoogleSignInClient = GoogleSignIn.getClient(this, gso);

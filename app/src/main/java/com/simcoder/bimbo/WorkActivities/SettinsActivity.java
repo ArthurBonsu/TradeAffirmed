@@ -155,6 +155,10 @@ public class SettinsActivity extends AppCompatActivity
                 }
             });
 
+
+
+
+
         }
         if (profileChangeTextBtn != null) {
             profileChangeTextBtn.setOnClickListener(new View.OnClickListener() {

@@ -37,6 +37,8 @@ public class SearchProductsActivity extends AppCompatActivity
     private RecyclerView searchList;
     private String SearchInput;
 
+    String role;
+
     String traderoruser= "";
     private static final int RC_SIGN_IN = 1;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
@@ -94,6 +96,14 @@ public class SearchProductsActivity extends AppCompatActivity
                 // PULLING DATABASE REFERENCE IS NULL, WE CHANGE BACK TO THE SETUP PAGE ELSE WE GO STRAIGHT TO MAP PAGE
             }
         };
+
+        { if (getIntent().getExtras().get("rolefromcustomermapactivtytosearchproductactivity") != null) {
+            role = getIntent().getExtras().get("rolefromcustomermapactivtytosearchproductactivity").toString();
+        } }
+
+
+        traderoruser = getIntent().getStringExtra("fromcustomermapactivitytosearchproductactivity");
+
 
         SearchBtn.setOnClickListener(new View.OnClickListener() {
             @Override

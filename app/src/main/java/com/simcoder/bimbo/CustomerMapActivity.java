@@ -180,7 +180,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         Paper.init(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Home");
+        toolbar.setTitle("Customer MapView");
 //        setSupportActionBar(toolbar);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -263,6 +263,13 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             public void onCancelled(DatabaseError databaseError) {
             }
         });
+
+
+        { if (getIntent().getExtras().get("roledhomeactivitytocustomermapactivity") != null) {
+            role = getIntent().getExtras().get("roledhomeactivitytocustomermapactivity").toString();
+        } }
+        customerId = getIntent().getStringExtra("fromhomeactivitytocustomermapactivity");
+
 
 
         if (VlayoutNavigation != null) {
@@ -1212,7 +1219,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.activity_home_drawer, menu);
+        getMenuInflater().inflate(R.menu.activitycustomermapdrawer, menu);
         return true;
     }
 
@@ -1226,6 +1233,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 //            return true;
 //        }
 
+
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -1236,63 +1245,96 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             // Handle navigation view item clicks here.
             int id = item.getItemId();
 
-            if (id == R.id.nav_cart)
+            if (id == R.id.nav_ViewStore)
             {
-                if (!role.equals("Trader"))
+
                 {
-                    Intent intent = new Intent(CustomerMapActivity.this, CartActivity.class);
-                    startActivity(intent);
+                    if (FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(customerId) != null) {
+                        Intent intent = new Intent(CustomerMapActivity.this, com.simcoder.bimbo.WorkActivities.HomeActivity.class);
+
+                        intent.putExtra("rolefromcustomermapactivitytohomeactivity", role);
+                        intent.putExtra("fromcustomermapactivitytohomeactivity", customerId);
+
+                        startActivity(intent);
+                        finish();
+
+                    } else {
+                        Intent intent = new Intent(CustomerMapActivity.this, com.simcoder.bimbo.WorkActivities.MainActivity.class);
+                        intent.putExtra("traderoruser", customerId);
+                        intent.putExtra("traderoruser", role);
+                        startActivity(intent);
+                        finish();
+
+                    }
                 }
             }
-            else if (id == R.id.nav_search)
-            {
-                if (!role.equals("Trader"))
-                {
-                    Intent intent = new Intent(CustomerMapActivity.this, SearchProductsActivity.class);
-                    startActivity(intent);
-                }
-            }
-            else if (id == R.id.nav_categories)
+            else if (id == R.id.nav_Chat)
             {
 
             }
-            else if (id == R.id.nav_settings)
+            else if (id == R.id.nav_SearchforTraders)
             {
-                if (!role.equals("Trader"))
+            }
+
+            else if (id == R.id.nav_searchforproducts)
+            {
+
                 { FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                     String cusomerId = "";
                     cusomerId = user.getUid();
-                    Intent intent = new Intent(CustomerMapActivity.this, SettinsActivity.class);
-                    intent.putExtra("traderorcustomer", cusomerId);
-                    intent.putExtra("role", role);
+                    Intent intent = new Intent(CustomerMapActivity.this, SearchProductsActivity.class);
+                    intent.putExtra("fromcustomermapactivitytosearchproductactivity", cusomerId);
+                    intent.putExtra("rolefromcustomermapactivtytosearchproductactivity", role);
                     startActivity(intent);
-                }
 
-                else {
 
-                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                    String cusomerId = "";
-                    cusomerId = user.getUid();
-                    Intent intent = new Intent(CustomerMapActivity.this, SettinsActivity.class);
-                    intent.putExtra("traderorcustomer", cusomerId);
-                    intent.putExtra("role", role);
-                    startActivity(intent);
+
 
                 }
             }
             else if (id == R.id.nav_logout)
             {
-                if (!role.equals("Trader"))
+                FirebaseAuth.getInstance().signOut();
+                if (mGoogleSignInClient != null) {
+                    mGoogleSignInClient.signOut().addOnCompleteListener(CustomerMapActivity.this,
+                            new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+
+                                }
+                            });
+                }
+                Intent intent = new Intent(CustomerMapActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+
+            }
+            else if (id == R.id.nav_history)
+            {
+
+                {
+                    Intent intent = new Intent(CustomerMapActivity.this, HistoryActivity.class);
+                    // WE PASS THE CUSTOMER OR DRIVER CODE TO THE HISTORY ACTIVITY TO SEE ALL THE HISTORY ACTIVITES
+                    intent.putExtra("customerOrDriver", "Drivers");
+                    startActivity(intent);
+            }}
+            else if (id == R.id.nav_viewprofilehome)
+            {
+
                 {
                     Paper.book().destroy();
 
-                    Intent intent = new Intent(CustomerMapActivity.this, com.simcoder.bimbo.WorkActivities.MainActivity.class);
+                    Intent intent = new Intent(CustomerMapActivity.this, com.simcoder.bimbo.WorkActivities.CustomerProfile.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                     finish();
                 }
             }
+            else if (id == R.id.nav_paymenthome)
+            {
 
+
+            }
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
             drawer.closeDrawer(GravityCompat.START);
             return true;

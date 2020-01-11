@@ -3,39 +3,44 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     >
     <group
-        android:id="@+id/group1"
-        android:checkableBehavior="single">
+        android:id="@+id/homegroup"
+
+        android:checkableBehavior="single"
+        >
+
         <item
-            android:id="@+id/nav_cart"
+            android:id="@+id/nav_ViewStore"
+            android:icon="@drawable/ic_apple_fill"
+            android:title="ViewStore"
+            app:actionLayout="@layout/vip_view"/>
+
+        <item
+            android:id="@+id/nav_Chat"
             android:icon="@drawable/ic_android_fill"
-            android:title="Go to Cart"
+            android:title="Chat"
             app:actionLayout="@layout/bage_hint"/>
 
         <item
-            android:id="@+id/nav_search"
+            android:id="@+id/nav_SearchforTraders"
+            android:icon="@drawable/ic_apple_fill"
+            android:title="Search for Traders"
+            app:actionLayout="@layout/vip_view"/>
+
+
+
+
+
+        <item
+            android:id="@+id/nav_searchforproducts"
             android:icon="@drawable/ic_apple_fill"
             android:title="Search for Product"
             app:actionLayout="@layout/vip_view"/>
 
 
-        <group
-            android:id="@+id/group2"
-            android:checkableBehavior="single">
-            <item
-                android:id="@+id/nav_categories"
-                android:icon="@drawable/ic_github_line"
-                android:title="Categories"/>
 
-            <item
-                android:id="@+id/nav_history"
-                android:icon="@drawable/ic_github_line"
-                android:title="History"/>
-
-
-        </group>
 
         <item
-            android:title="Toolends">
+            android:title="More">
             <menu>
                 <item
                     android:id="@+id/nav_logout"
@@ -46,6 +51,24 @@
                     android:id="@+id/nav_settings"
                     android:icon="@drawable/ic_wechat_fill"
                     android:title="Settings"/>
+                <item
+                    android:id="@+id/nav_history"
+                    android:icon="@drawable/ic_github_line"
+                    android:title="History"/>
+                <item
+                    android:id="@+id/nav_viewprofilehome"
+                    android:icon="@drawable/ic_github_line"
+                    android:title="View Profile"/>
+
+                <item
+                    android:id="@+id/nav_paymenthome"
+                    android:icon="@drawable/ic_github_line"
+                    android:title="View Payment Method"/>
+
+
+
+
+
 
             </menu>
         </item>

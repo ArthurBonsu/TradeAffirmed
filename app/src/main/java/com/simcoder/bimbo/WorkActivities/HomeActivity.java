@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -26,9 +27,16 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.simcoder.bimbo.Admin.AdminMaintainProductsActivity;
+import com.simcoder.bimbo.DriverMapActivity;
+import com.simcoder.bimbo.HistoryActivity;
 import com.simcoder.bimbo.Model.Products;
 import com.simcoder.bimbo.Prevalent.Prevalent;
 import com.simcoder.bimbo.ViewHolder.ProductViewHolder;
@@ -45,16 +53,16 @@ import io.paperdb.Paper;
 
 
 public class HomeActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener
-{
+        implements NavigationView.OnNavigationItemSelectedListener {
     private DatabaseReference ProductsRef;
     private DatabaseReference Userdetails;
     private RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
     DatabaseReference TraderDetails;
+    String productkey;
 
     private String type = "";
-    String traderoruser= "";
+    String traderoruser = "";
     private static final int RC_SIGN_IN = 1;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
     String ProductID;
@@ -82,22 +90,34 @@ public class HomeActivity extends AppCompatActivity
         // TYPE IS THE SAME AS ROLE
 
 
-        { if (getIntent().getExtras().get("Trader") != null) {
-            type = getIntent().getExtras().get("Trader").toString();
-        } }
-        traderoruser = getIntent().getStringExtra("ecommerceuserkey");
+        {
+            if (getIntent().getExtras().get("rolefromcustomermapactivitytohomeactivity") != null) {
+                type = getIntent().getExtras().get("rolefromcustomermapactivitytohomeactivity").toString();
+            }
+        }
+        traderoruser = getIntent().getStringExtra("fromcustomermapactivitytohomeactivity");
+
+
+        {
+            if (getIntent().getExtras().get("roledrivermapactivitytohomeactivity") != null) {
+                type = getIntent().getExtras().get("roledrivermapactivitytohomeactivity").toString();
+            }
+        }
+        traderoruser = getIntent().getStringExtra("fromdrivermapactivitytohomeactivity");
+
 
         //KEY PASSESS FOR TRADER
 
-        { if (getIntent().getExtras().get("rolefromadmincategory") != null) {
-            type = getIntent().getExtras().get("rolefromadmincategory").toString();     } }
+        {
+            if (getIntent().getExtras().get("rolefromadmincategory") != null) {
+                type = getIntent().getExtras().get("rolefromadmincategory").toString();
+            }
+        }
 
-            traderoruser = getIntent().getStringExtra("fromadmincategoryactivity");
-
+        traderoruser = getIntent().getStringExtra("fromadmincategoryactivity");
 
 
         ProductsRef = FirebaseDatabase.getInstance().getReference().child("Product");
-
 
 
         Paper.init(this);
@@ -127,7 +147,7 @@ public class HomeActivity extends AppCompatActivity
 
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 if (user != null) {
-                    traderoruser="";
+                    traderoruser = "";
                     traderoruser = user.getUid();
                 }
 
@@ -139,16 +159,14 @@ public class HomeActivity extends AppCompatActivity
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(
                 new View.OnClickListener() {
-            @Override
-            public void onClick(View view)
-            {
-                if (!type.equals("Trader"))
-                {
-                    Intent intent = new Intent(HomeActivity.this, CartActivity.class);
-                    startActivity(intent);
-                }
-            }
-        });
+                    @Override
+                    public void onClick(View view) {
+                        if (!type.equals("Trader")) {
+                            Intent intent = new Intent(HomeActivity.this, CartActivity.class);
+                            startActivity(intent);
+                        }
+                    }
+                });
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -165,41 +183,45 @@ public class HomeActivity extends AppCompatActivity
         TextView userNameTextView = headerView.findViewById(R.id.user_profile_name);
         CircleImageView profileImageView = headerView.findViewById(R.id.user_profile_image);
 
-            // USER
+        // USER
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-          if (traderoruser !=null) {
-              Userdetails = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(traderoruser);
+        if (traderoruser != null) {
+            Userdetails = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(traderoruser);
 
-          }
+        }
         if (!type.equals("Trader"))
 
-        if (user != null) {
-            traderoruser="";
-            traderoruser = user.getUid();
-        }
-
-
-
-        {          if (user.getDisplayName() != null) {
-            if (user.getDisplayName() != null) {
-            userNameTextView.setText(user.getDisplayName());
-
-                Picasso.get().load(user.getPhotoUrl()).placeholder(R.drawable.profile).into(profileImageView);
+            if (user != null) {
+                traderoruser = "";
+                traderoruser = user.getUid();
             }
-        }
+
+
+        {
+            if (user.getDisplayName() != null) {
+                if (user.getDisplayName() != null) {
+                    userNameTextView.setText(user.getDisplayName());
+
+                    Picasso.get().load(user.getPhotoUrl()).placeholder(R.drawable.profile).into(profileImageView);
+                }
+            }
         }
 
 
         recyclerView = findViewById(R.id.recycler_menu);
-         if (recyclerView !=null) {
-             recyclerView.setHasFixedSize(true);
+        if (recyclerView != null) {
+            recyclerView.setHasFixedSize(true);
 
-         }
+        }
         layoutManager = new LinearLayoutManager(this);
-          if (recyclerView != null) {
-              recyclerView.setLayoutManager(layoutManager);
-          }}
+        if (recyclerView != null) {
+            recyclerView.setLayoutManager(layoutManager);
+        }
+    }
+
+
+
 
 
     @Override
@@ -221,8 +243,13 @@ public class HomeActivity extends AppCompatActivity
                         holder.txtProductName.setText(model.getPname());
                         holder.txtProductDescription.setText(model.getDescription());
                         holder.txtProductPrice.setText("Price = " + model.getPrice() + "$");
-                        holder.tradername.setText("Trader of Goods+" )
+                        holder.tradername.setText("Trader of Goods+" + model.getTrader() );
                         Picasso.get().load(model.getImage()).into(holder.imageView);
+
+                        productkey    =    model.getUid();
+
+
+
 
 
                         holder.tradername.setOnClickListener(new View.OnClickListener() {
@@ -325,24 +352,31 @@ public class HomeActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.profilepic)
+
+
+
+        if (id == R.id.viewmap)
         {
             if (!type.equals("Trader"))
             {
-                Intent intent = new Intent(HomeActivity.this, CartActivity.class);
-                startActivity(intent);
-            }
-        }
 
-        if (id == R.id.username)
-        {
-            if (!type.equals("Trader"))
-            {
-                Intent intent = new Intent(HomeActivity.this, CartActivity.class);
+                Intent intent = new Intent(HomeActivity.this, com.simcoder.bimbo.CustomerMapActivity.class);
+                intent.putExtra("roledhomeactivitytocustomermapactivity", type);
+                intent.putExtra("fromhomeactivitytocustomermapactivity", traderoruser);
                 startActivity(intent);
-            }
-        }
+                finish();
+            } else{
 
+                Intent intent = new Intent(HomeActivity.this, DriverMapActivity.class);
+                intent.putExtra("rolefromhomeactivitytodrivermapactivity", type);
+                intent.putExtra("fromhomeactivitytodrivermapactivity", traderoruser);
+                startActivity(intent);
+                finish();
+
+            }
+
+
+        }
         if (id == R.id.nav_cart)
         {
             if (!type.equals("Trader"))
@@ -350,26 +384,73 @@ public class HomeActivity extends AppCompatActivity
                 Intent intent = new Intent(HomeActivity.this, CartActivity.class);
                 startActivity(intent);
             }
+
+    }
+
+        if (id == R.id.viewproducts)
+        {
+            if (!type.equals("Trader"))
+            {
+                Intent intent = new Intent(HomeActivity.this, HomeActivity.class);
+                startActivity(intent);
+            }else{}
+
         }
-        else if (id == R.id.nav_search)
+        if (id == R.id.nav_search)
         {
             if (!type.equals("Trader"))
             {
                 Intent intent = new Intent(HomeActivity.this, SearchProductsActivity.class);
                 startActivity(intent);
+            }else{}
+        }
+
+        if (id == R.id.nav_logout)
+        {
+
+
+            FirebaseAuth.getInstance().signOut();
+            if (mGoogleApiClient != null) {
+                mGoogleSignInClient.signOut().addOnCompleteListener(HomeActivity.this,
+                        new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+
+                            }
+                        });
             }
+            Intent intent = new Intent(HomeActivity.this, com.simcoder.bimbo.MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
+        if (id == R.id.nav_settings)
+        {
+            if (!type.equals("Trader"))
+            {
+                Intent intent = new Intent(HomeActivity.this, com.simcoder.bimbo.WorkActivities.SettinsActivity.class);
+                startActivity(intent);
+            }else{}
+        }
+        else if (id == R.id.nav_history)
+        {
+            if (!type.equals("Trader"))
+            {
+                Intent intent = new Intent(HomeActivity.this, HistoryActivity.class);
+                startActivity(intent);
+            }else{}
         }
         else if (id == R.id.nav_categories)
         {
 
         }
-        else if (id == R.id.nav_settings)
+        else if (id == R.id.nav_viewprofilehome)
         {
             if (!type.equals("Trader"))
             { FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                String cusomerId = "";
                  cusomerId = user.getUid();
-                Intent intent = new Intent(HomeActivity.this, SettinsActivity.class);
+                Intent intent = new Intent(HomeActivity.this, CustomerProfile.class);
                 intent.putExtra("traderorcustomer", traderoruser);
                 intent.putExtra("role", type);
                 startActivity(intent);
@@ -380,24 +461,16 @@ public class HomeActivity extends AppCompatActivity
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 String cusomerId = "";
                 cusomerId = user.getUid();
-                Intent intent = new Intent(HomeActivity.this, SettinsActivity.class);
+                Intent intent = new Intent(HomeActivity.this, TraderProfile.class);
                 intent.putExtra("traderorcustomer", traderoruser);
                 intent.putExtra("role", type);
                 startActivity(intent);
 
             }
         }
-        else if (id == R.id.nav_logout)
+        else if (id == R.id.nav_paymenthome)
         {
-            if (!type.equals("Trader"))
-            {
-                Paper.book().destroy();
 
-                Intent intent = new Intent(HomeActivity.this, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                finish();
-            }
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
