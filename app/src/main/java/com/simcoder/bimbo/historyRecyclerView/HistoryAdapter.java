@@ -42,9 +42,9 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryViewHolders> {
     //WE CLICK ON ONE AND IT TAKES US TO HISTORY SINGLE TO SEE FURTHEER DETAIS ABOUT THE TRIP, BUT WHERE IS THE HISTORY OBJECT PULLING
     @Override
     public void onBindViewHolder(HistoryViewHolders holder, final int position) {
-        holder.rideId.setText(itemList.get(position).getRideId());
-        if(itemList.get(position).getTime()!=null){
-            holder.time.setText(itemList.get(position).getTime());
+        holder.rideId.setText(itemList.get(position).getcustomerRideId());
+        if(itemList.get(position).gettime()!=null){
+            holder.time.setText(itemList.get(position).gettime());
         }
     }
     @Override

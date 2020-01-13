@@ -107,11 +107,12 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
                traderID = "";
             traderID = user.getUid();
            }
-
-        productRandomKey = ProductsRef.push().getKey();
-        traderkeryhere = ProductsTraderRef.push().getKey();
-
-
+                       if (ProductsRef.push() != null) {
+                           productRandomKey = ProductsRef.push().getKey();
+                           if (ProductsTraderRef.push() != null) {
+                               traderkeryhere = ProductsTraderRef.push().getKey();
+                           }
+                       }
 
 
         AddNewProductButton = (Button) findViewById(R.id.add_new_product);
@@ -212,17 +213,18 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
 
         if (requestCode == GalleryPick && resultCode == RESULT_OK && data != null) {
             if (ImageUri != null) {
-                ImageUri = data.getData();
+                if (data != null) {
+                    ImageUri = data.getData();
 
-                if (InputProductImage != null) {
-                    InputProductImage.setImageURI(ImageUri);
+                    if (InputProductImage != null) {
+                        InputProductImage.setImageURI(ImageUri);
+                    }
                 }
             }
-        }
 
 
         }
-
+    }
 
 
     private void ValidateProductData() {

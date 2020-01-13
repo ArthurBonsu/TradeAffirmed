@@ -107,6 +107,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     private Marker pickupMarker;
     String role;
+    FirebaseUser user;
 
     private SupportMapFragment mapFragment;
 
@@ -140,7 +141,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     private int radius = 1;
     private Boolean driverFound = false;
     String myTradersName;
-
+    
 
     Bitmap mydriverbitmap;
     GeoQuery geoQuery;
@@ -174,7 +175,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         mSettings = findViewById(R.id.settings);
         mHistory = findViewById(R.id.history);
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
-        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        user = FirebaseAuth.getInstance().getCurrentUser();
 
 
         Paper.init(this);
@@ -187,147 +188,152 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
              if (drawer != null) {
                  ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                          this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-                 drawer.addDrawerListener(toggle);
-                 toggle.syncState();
+                 if (drawer != null) {
+                     drawer.addDrawerListener(toggle);
+                  if (toggle != null){
+                     toggle.syncState();
+                 }
              }
-         }
+         }}
              NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-             navigationView.setNavigationItemSelectedListener(this);
+               if (navigationView != null) {
+                   navigationView.setNavigationItemSelectedListener(this);
 
-             View headerView = navigationView.getHeaderView(0);
-             TextView userNameTextView = headerView.findViewById(R.id.user_profile_name);
-             CircleImageView profileImageView = headerView.findViewById(R.id.user_profile_image);
+                   View headerView = navigationView.getHeaderView(0);
+             if (headerView != null){
+                   TextView userNameTextView = headerView.findViewById(R.id.user_profile_name);
+                   CircleImageView profileImageView = headerView.findViewById(R.id.user_profile_image);
 
-             // USER
-
-
-
-
+                   // USER
 
 
-        {          if (user.getDisplayName() != null) {
-            if (user.getDisplayName() != null) {
-                userNameTextView.setText(user.getDisplayName());
+                   {
+                       if (user.getDisplayName() != null) {
+                           if (user.getDisplayName() != null) {
+                               userNameTextView.setText(user.getDisplayName());
 
-                Picasso.get().load(user.getPhotoUrl()).placeholder(R.drawable.profile).into(profileImageView);
-            }
-        }
-        }
-
-
-
-        if (user != null) {
-            customerId = "";
-            customerId = user.getUid();
-        }
-        Intent intent = new Intent(CustomerMapActivity.this, com.simcoder.bimbo.WorkActivities.HomeActivity.class);
-
-        intent.putExtra("ecommerceuserkey", customerId);
+                               Picasso.get().load(user.getPhotoUrl()).placeholder(R.drawable.profile).into(profileImageView);
+                           }
+                       }
+                   }
 
 
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(CustomerMapActivity.this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
-        } else {
-            if (mapFragment != null) {
-                mapFragment.getMapAsync(this);
-            }
-        }
-        destinationLatLng = new LatLng(0.0, 0.0);
-        mLastLocation = new Location("");
-        if (mGoogleApiClient != null) {
-            mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-        }
-        // HAS TO DECIDE WHETHER HE OR SHE WANTS DELIVERY OR MEETUP OR STATIONARY
+                   if (user != null) {
+                       customerId = "";
+                       customerId = user.getUid();
+                   }
+                   Intent intent = new Intent(CustomerMapActivity.this, com.simcoder.bimbo.WorkActivities.HomeActivity.class);
 
-        fusedLocationProviderClient = new FusedLocationProviderClient(CustomerMapActivity.this);
-        if (mGoogleApiClient != null) {
-            mGoogleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(CustomerMapActivity.this,
-                    new GoogleApiClient.OnConnectionFailedListener() {
-                        @Override
-                        public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-                        }
-                    }).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
-        }
-
-        final DatabaseReference roleDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(customerId).child("role");
-        roleDatabase.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-
-                    role = dataSnapshot.getValue().toString();
-
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
+                   intent.putExtra("ecommerceuserkey", customerId);
 
 
-        { if (getIntent().getExtras().get("roledhomeactivitytocustomermapactivity") != null) {
-            role = getIntent().getExtras().get("roledhomeactivitytocustomermapactivity").toString();
-        } }
-        customerId = getIntent().getStringExtra("fromhomeactivitytocustomermapactivity");
+                   if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                       ActivityCompat.requestPermissions(CustomerMapActivity.this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
+                   } else {
+                       if (mapFragment != null) {
+                           mapFragment.getMapAsync(this);
+                       }
+                   }
+                   destinationLatLng = new LatLng(0.0, 0.0);
+                   mLastLocation = new Location("");
+                   if (mGoogleApiClient != null) {
+                       mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+                   }
+                   // HAS TO DECIDE WHETHER HE OR SHE WANTS DELIVERY OR MEETUP OR STATIONARY
+
+                   fusedLocationProviderClient = new FusedLocationProviderClient(CustomerMapActivity.this);
+                   if (mGoogleApiClient != null) {
+                       mGoogleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(CustomerMapActivity.this,
+                               new GoogleApiClient.OnConnectionFailedListener() {
+                                   @Override
+                                   public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+                                   }
+                               }).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
+                   }
+
+                   final DatabaseReference roleDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(customerId).child("role");
+                   roleDatabase.addValueEventListener(new ValueEventListener() {
+                       @Override
+                       public void onDataChange(DataSnapshot dataSnapshot) {
+                           if (dataSnapshot.exists()) {
+
+                               role = dataSnapshot.getValue().toString();
+
+                           }
+                       }
+
+                       @Override
+                       public void onCancelled(DatabaseError databaseError) {
+                       }
+                   });
 
 
-
-        if (VlayoutNavigation != null) {
-            VlayoutNavigation.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    if (FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(customerId) != null) {
-                        Intent intent = new Intent(CustomerMapActivity.this, com.simcoder.bimbo.WorkActivities.HomeActivity.class);
-
-                        intent.putExtra("Trader", role);
-                        intent.putExtra("ecommerceuserkey", customerId);
-
-                        startActivity(intent);
-                        finish();
-                        return;
-                    } else {
-                        Intent intent = new Intent(CustomerMapActivity.this, com.simcoder.bimbo.WorkActivities.MainActivity.class);
-                        intent.putExtra("traderoruser", customerId);
-                        intent.putExtra("traderoruser", role);
-                        startActivity(intent);
-                        finish();
-                        return;
-                    }
-                }
-
-                ;
+                   {
+                       if (getIntent().getExtras().get("roledhomeactivitytocustomermapactivity") != null) {
+                           role = getIntent().getExtras().get("roledhomeactivitytocustomermapactivity").toString();
+                       }
+                   }
+                   customerId = getIntent().getStringExtra("fromhomeactivitytocustomermapactivity");
 
 
-            });
+                   if (VlayoutNavigation != null) {
+                       VlayoutNavigation.setOnClickListener(new View.OnClickListener() {
+                           @Override
+                           public void onClick(View v) {
+                               user = FirebaseAuth.getInstance().getCurrentUser();
+                               if (user != null) {
+                                   customerId ="";
+                                   customerId = user.getUid();
+                                   if (FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(customerId) != null) {
+                                       Intent intent = new Intent(CustomerMapActivity.this, com.simcoder.bimbo.WorkActivities.HomeActivity.class);
 
-            if (mLogout != null) {
-                mLogout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                                       intent.putExtra("Trader", role);
+                                       intent.putExtra("ecommerceuserkey", customerId);
+
+                                       startActivity(intent);
+                                       finish();
+                                       return;
+                                   } else {
+                                       Intent intent = new Intent(CustomerMapActivity.this, com.simcoder.bimbo.WorkActivities.MainActivity.class);
+                                       intent.putExtra("traderoruser", customerId);
+                                       intent.putExtra("traderoruser", role);
+                                       startActivity(intent);
+                                       finish();
+                                       return;
+                                   }
+                               }
+
+                               ;
+                           }
+
+                       });
+
+                       if (mLogout != null) {
+                           mLogout.setOnClickListener(new View.OnClickListener() {
+                               @Override
+                               public void onClick(View v) {
 
 
-                        FirebaseAuth.getInstance().signOut();
-                        if (mGoogleSignInClient != null) {
-                            mGoogleSignInClient.signOut().addOnCompleteListener(CustomerMapActivity.this,
-                                    new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
+                                   FirebaseAuth.getInstance().signOut();
+                                   if (mGoogleSignInClient != null) {
+                                       mGoogleSignInClient.signOut().addOnCompleteListener(CustomerMapActivity.this,
+                                               new OnCompleteListener<Void>() {
+                                                   @Override
+                                                   public void onComplete(@NonNull Task<Void> task) {
 
-                                        }
-                                    });
-                        }
-                        Intent intent = new Intent(CustomerMapActivity.this, MainActivity.class);
-                        startActivity(intent);
-                        finish();
-                        return;
-                    }
-                });
-            }
-        }
-
+                                                   }
+                                               });
+                                   }
+                                   Intent intent = new Intent(CustomerMapActivity.this, MainActivity.class);
+                                   startActivity(intent);
+                                   finish();
+                                   return;
+                               }
+                           });
+                       }
+                   }
+               }}
         // SELECT , WE MUST SELECT THE OPTION OF WHETHER THE PRODUCT IS BROUGOHT AS A MEETYUP OR DELIVERY RADIO BUTTON
 
         if (mRequest != null) {
@@ -360,7 +366,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                 //if service == delivery do this
                             }
                             requestBol = true;
-                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                             user = FirebaseAuth.getInstance().getCurrentUser();
                             if (user != null) {
                                 String userId = "";
                                 customerId = "";
@@ -1243,15 +1249,13 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
 
 
-        public boolean onNavigationItemSelected(MenuItem item)
-        {
+        public boolean onNavigationItemSelected(MenuItem item) {
             // Handle navigation view item clicks here.
             int id = item.getItemId();
 
-            if (id == R.id.nav_ViewStore)
-            {
+            if (id == R.id.nav_ViewStore) {
 
-                {
+                {            customerId ="";
                     if (FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(customerId) != null) {
                         Intent intent = new Intent(CustomerMapActivity.this, com.simcoder.bimbo.WorkActivities.HomeActivity.class);
 
@@ -1270,19 +1274,11 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
                     }
                 }
-            }
-            else if (id == R.id.nav_Chat)
-            {
+            }  else if (id == R.id.nav_SearchforTraders) {
+            } else if (id == R.id.nav_searchforproducts) {
 
-            }
-            else if (id == R.id.nav_SearchforTraders)
-            {
-            }
-
-            else if (id == R.id.nav_searchforproducts)
-            {
-
-                { FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                {
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                     String cusomerId = "";
                     cusomerId = user.getUid();
                     Intent intent = new Intent(CustomerMapActivity.this, SearchProductsActivity.class);
@@ -1291,12 +1287,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     startActivity(intent);
 
 
-
-
                 }
-            }
-            else if (id == R.id.nav_logout)
-            {
+            } else if (id == R.id.nav_logout) {
                 FirebaseAuth.getInstance().signOut();
                 if (mGoogleSignInClient != null) {
                     mGoogleSignInClient.signOut().addOnCompleteListener(CustomerMapActivity.this,
@@ -1311,18 +1303,15 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                 startActivity(intent);
                 finish();
 
-            }
-            else if (id == R.id.nav_history)
-            {
+            } else if (id == R.id.nav_history) {
 
                 {
                     Intent intent = new Intent(CustomerMapActivity.this, HistoryActivity.class);
                     // WE PASS THE CUSTOMER OR DRIVER CODE TO THE HISTORY ACTIVITY TO SEE ALL THE HISTORY ACTIVITES
                     intent.putExtra("customerOrDriver", "Drivers");
                     startActivity(intent);
-            }}
-            else if (id == R.id.nav_viewprofilehome)
-            {
+                }
+            } else if (id == R.id.nav_viewprofilehome) {
 
                 {
                     Paper.book().destroy();
@@ -1332,16 +1321,16 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     startActivity(intent);
                     finish();
                 }
-            }
-            else if (id == R.id.nav_paymenthome)
-            {
+            } else if (id == R.id.nav_paymenthome) {
 
 
             }
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            drawer.closeDrawer(GravityCompat.START);
-            return true;
-        }
+            if (drawer != null) {
+                drawer.closeDrawer(GravityCompat.START);
+            }
+                return true;
+            }
 
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {

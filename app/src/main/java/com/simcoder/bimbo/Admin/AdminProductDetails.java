@@ -278,11 +278,11 @@ public class AdminProductDetails extends AppCompatActivity  implements  View.OnC
                     TextView adminproductimagenumberoflikes = (TextView) findViewById(R.id.adminproductimagenumberoflikes);
 
 
-                    adminproductdetailsimage.setImageResource(Integer.parseInt(products.getImage()));
-                    adminproductimageproductname.setText(products.getPname());
-                    adminproductimagedescription.setText(products.getDescription());
+                    adminproductdetailsimage.setImageResource(Integer.parseInt(products.getimage()));
+                    adminproductimageproductname.setText(products.getname());
+                    adminproductimagedescription.setText(products.getdesc());
                     adminproductimagenumberoflikes.setText(products.getLikes());
-                    Picasso.get().load(products.getImage()).into(adminproductdetailsimage);
+                    Picasso.get().load(products.getimage()).into(adminproductdetailsimage);
                 }
 
 
