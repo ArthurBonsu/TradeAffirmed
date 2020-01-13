@@ -152,10 +152,10 @@ public  class ViewSingleUserOrders extends AppCompatActivity
 
         singleuserordertListRef = FirebaseDatabase.getInstance().getReference()
                 .child("Orders");
-        myQuery = singleuserordertListRef.orderByChild(traderID);
+        myQuery = singleuserordertListRef.child("trader").orderByChild(traderID);
         myUserQuery = myQuery.getRef().child("Users").child(userID).child("products");
 
-        DatabaseReference getthequatityreference = myUserQuery.getRef().child("quantity");
+        DatabaseReference getthequatityreference = myUserQuery.getRef().child("").child("quantity");
 
 
         getthequatityreference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -193,13 +193,13 @@ public  class ViewSingleUserOrders extends AppCompatActivity
             @Override
             protected void onBindViewHolder(@NonNull SingleUserProductViewHolder holder, int position, @NonNull Products model)
             {       if (model != null){
-                holder.singleuserproductimage.setImageResource(Integer.parseInt(model.getImage()));
+                holder.singleuserproductimage.setImageResource(Integer.parseInt(model.getimage()));
                 holder.singleuserproductquantity.setText("Quantity = " +  quantity);
-                holder.singleuserproductprice.setText("Price " + model.getPrice() + "$");
-                holder.singleuserproductname.setText(model.getPname());
+                holder.singleuserproductprice.setText("Price " + model.getprice() + "$");
+                holder.singleuserproductname.setText(model.getname());
                            // USERNAME SHOULD BE ADDED APART FROM THE PRODUCT QUERY
                 if (singleuserproductimage != null) {
-                    Glide.with(getApplication()).load((model.getImage())).into(singleuserproductimage);
+                    Glide.with(getApplication()).load((model.getimage())).into(singleuserproductimage);
                 }
              }}
 

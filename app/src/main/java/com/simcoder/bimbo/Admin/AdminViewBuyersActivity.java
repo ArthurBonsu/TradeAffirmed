@@ -130,7 +130,8 @@ public class AdminViewBuyersActivity extends AppCompatActivity {  //ACTUALLY THI
         // pass to Datareference
         if (thestateofproductquery != null) {
             // that means after the order traderID IS FILLED
-            MybuyersproductQuery = thestateofproductquery.orderByChild(productID);
+            String theuserskey = thestateofproductquery.getRef().getKey();
+            MybuyersproductQuery = thestateofproductquery.getRef().child(theuserskey).child("products").orderByChild(productID);
 
         }
         thebuyersforthisproduct = findViewById(R.id.thebuyersforthisproductlist);
@@ -151,7 +152,7 @@ public class AdminViewBuyersActivity extends AppCompatActivity {  //ACTUALLY THI
 
         FirebaseRecyclerOptions<Users> options =
                 new FirebaseRecyclerOptions.Builder<Users>()
-                        .setQuery(thebuyersforthisproductdatabase, Users.class)
+                        .setQuery(MybuyersproductQuery, Users.class)
                         .build();
 
 
@@ -174,7 +175,7 @@ public class AdminViewBuyersActivity extends AppCompatActivity {  //ACTUALLY THI
 
 
 
-                            userID = thetraderinformationandkey;
+                            userID = theusers;
 
 
                             if (tradersimageonscreen != null) {
