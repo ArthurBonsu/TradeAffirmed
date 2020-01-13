@@ -56,6 +56,7 @@ public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private DatabaseReference ProductsRef;
     private DatabaseReference Userdetails;
+    private DatabaseReference ProductsRefwithproduct;
     private RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
     DatabaseReference TraderDetails;
@@ -67,6 +68,9 @@ public class HomeActivity extends AppCompatActivity
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
     String ProductID;
 
+    String thetraderkey;
+     String thenameofthetrader;
+    String description;
  String thetradername;
     //AUTHENTICATORS
 
@@ -118,6 +122,27 @@ public class HomeActivity extends AppCompatActivity
 
 
         ProductsRef = FirebaseDatabase.getInstance().getReference().child("Product");
+        ProductsRefwithproduct = FirebaseDatabase.getInstance().getReference().child("Product");
+
+        ProductsRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+
+                   productkey = dataSnapshot.getKey();
+                thetraderkey = dataSnapshot.child(productkey).child("trader").getKey();
+                thenameofthetrader =  dataSnapshot.child(productkey).child("trader").child(thetraderkey).child("name").getValue().toString();
+                description = dataSnapshot.child(productkey).child("desc").getValue().toString();
+            }
+
+            ;
+
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
 
         Paper.init(this);
@@ -240,14 +265,13 @@ public class HomeActivity extends AppCompatActivity
                     @Override
                     protected void onBindViewHolder(@NonNull ProductViewHolder holder, int position, @NonNull final Products model)
                     {
-                        holder.txtProductName.setText(model.getPname());
-                        holder.txtProductDescription.setText(model.getDescription());
-                        holder.txtProductPrice.setText("Price = " + model.getPrice() + "$");
-                        holder.tradername.setText("Trader of Goods+" + model.getTrader() );
-                        Picasso.get().load(model.getImage()).into(holder.imageView);
+                        holder.txtProductName.setText(model.getname());
+                        holder.txtProductDescription.setText(description);
+                        holder.txtProductPrice.setText("Price = " + model.getprice() + "$");
+                        holder.tradername.setText("Trader of Goods+" + thetradername );
+                        Picasso.get().load(model.getimage()).into(holder.imageView);
 
-                        productkey    =    model.getUid();
-                        thetradername = model.getTrader();
+
 
 
 
@@ -259,16 +283,16 @@ public class HomeActivity extends AppCompatActivity
                                 if (type.equals("Trader"))
                                 {
                                     Intent intent = new Intent(HomeActivity.this, TraderProfile.class);
-                                    intent.putExtra("pid", model.getPid());
-                                    intent.putExtra("fromhomeactivitytotraderprofile", model.getTrader());
+                                    intent.putExtra("pid", productkey);
+                                    intent.putExtra("fromhomeactivitytotraderprofile",thetraderkey);
 
                                     startActivity(intent);
                                 }
                                 else
                                 {
                                     Intent intent = new Intent(HomeActivity.this, TraderProfile.class);
-                                    intent.putExtra("pid", model.getPid());
-                                    intent.putExtra("fromhomeactivitytotraderprofile", model.getTrader());
+                                    intent.putExtra("pid", productkey);
+                                    intent.putExtra("fromhomeactivitytotraderprofile", thetraderkey);
 
                                     startActivity(intent);
                                 }
@@ -282,13 +306,13 @@ public class HomeActivity extends AppCompatActivity
                                 if (type.equals("Trader"))
                                 {
                                     Intent intent = new Intent(HomeActivity.this, ProductDetailsActivity.class);
-                                    intent.putExtra("pid", model.getPid());
+                                    intent.putExtra("pid", productkey);
                                     startActivity(intent);
                                 }
                                 else
                                 {
                                     Intent intent = new Intent(HomeActivity.this, ProductDetailsActivity.class);
-                                    intent.putExtra("pid", model.getPid());
+                                    intent.putExtra("pid", productkey);
                                     startActivity(intent);
                                 }
                             }

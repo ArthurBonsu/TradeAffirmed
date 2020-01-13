@@ -45,6 +45,7 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity
     String cartkey;
     String userID= "";
     String productImage;
+    String productname;
     private String totalAmount = "";
     private static final int RC_SIGN_IN = 1;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
@@ -161,9 +162,9 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity
 
                  orderKey =ordersRef.push().getKey();
         final DatabaseReference productRef = FirebaseDatabase.getInstance().getReference()
-                .child("Orders").child(orderKey).child("Users").child(userID).child("productS").child(productIDHERE);
+                .child("Orders").child(orderKey).child("Users").child(userID).child("products").child(productIDHERE);
         final DatabaseReference productImageRef = FirebaseDatabase.getInstance().getReference()
-                .child("Product").child(productIDHERE).child("image");
+                .child("Product").child(productIDHERE);
 
 
         productImageRef.addValueEventListener(new ValueEventListener() {
@@ -172,7 +173,8 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity
                 if (dataSnapshot.exists()) {
 
                     // CURRENT USERNAME HERE
-                    productImage = dataSnapshot.getValue().toString();
+                    productImage = dataSnapshot.child("image").getValue().toString();
+                    productname = dataSnapshot.child("name").getValue().toString();
 
 
                     }
@@ -189,7 +191,7 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity
 
         HashMap<String, Object> ordersMap = new HashMap<>();
 
-        ordersMap.put("totalAmount", totalAmount);
+        ordersMap.put("amount", totalAmount);
         ordersMap.put("name", nameEditText.getText().toString());
         ordersMap.put("phone", phoneEditText.getText().toString());
         ordersMap.put("address", addressEditText.getText().toString());
@@ -200,9 +202,11 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity
 
         HashMap<String, Object> productMap = new HashMap<>();
 
-        productMap.put("productID", productIDHERE);
-        productMap.put("productID", productImage);
+        productMap.put("pid", productIDHERE);
+        productMap.put("image", productImage);
+        productMap.put("name", productname);
         productRef.updateChildren(productMap);
+
 
         Intent intent = new Intent(ConfirmFinalOrderActivity.this, CartActivity.class);
         intent.putExtra("orderkey", orderKey);
