@@ -153,7 +153,7 @@ public class CartActivity extends AppCompatActivity {
                 if (cartkey != null) {
                     FirebaseRecyclerOptions<Cart> options =
                             new FirebaseRecyclerOptions.Builder<Cart>()
-                                    .setQuery(cartListRef.child(cartkey).child(userID)
+                                    .setQuery(cartListRef.child(cartkey).child("Users").child(userID)
                                             .child("products"), Cart.class)
                                     .build();
 
@@ -165,14 +165,14 @@ public class CartActivity extends AppCompatActivity {
                         @Override
                         protected void onBindViewHolder(@NonNull CartViewHolder holder, int position, @NonNull final Cart model) {
                             if (model != null) {
-                                holder.txtProductQuantity.setText("Quantity = " + model.getQuantity());
-                                holder.txtProductPrice.setText("Price " + model.getPrice() + "$");
+                                holder.txtProductQuantity.setText("Quantity = " + model.getquantity());
+                                holder.txtProductPrice.setText("Price " + model.getprice() + "$");
                                 holder.txtProductName.setText(model.getname());
 
-                                int oneTyprProductTPrice = ((Integer.valueOf(model.getPrice()))) * Integer.valueOf(model.getQuantity());
+                                int oneTyprProductTPrice = ((Integer.valueOf(model.getprice()))) * Integer.valueOf(model.getquantity());
                                 overTotalPrice = overTotalPrice + oneTyprProductTPrice;
-                                productID = model.getPid();
-                                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                                productID = model.getpid();
+                                holder.txtProductName.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
                                         CharSequence options[] = new CharSequence[]
@@ -190,13 +190,13 @@ public class CartActivity extends AppCompatActivity {
                                              public void onClick(DialogInterface dialogInterface, int i) {
                                                  if (i == 0) {
                                                      Intent intent = new Intent(CartActivity.this, ProductDetailsActivity.class);
-                                                     intent.putExtra("pid", model.getPid());
+                                                     intent.putExtra("pid", model.getpid());
                                                      startActivity(intent);
                                                  }
                                                  if (i == 1) {
-                                                     cartListRef.child(cartkey).child(userID)
+                                                     cartListRef.child(cartkey).child("Users").child(userID)
                                                              .child("products")
-                                                             .child(model.getPid())
+                                                             .child(model.getpid())
                                                              .removeValue()
                                                              .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                  @Override
@@ -249,7 +249,7 @@ public class CartActivity extends AppCompatActivity {
                             if (dataSnapshot.exists()) {
                                 String shippingState = dataSnapshot.child("state").getValue().toString();
                                 // CURRENT USERNAME HERE
-                                String userName = dataSnapshot.child("name").getValue().toString();
+                                String userName = dataSnapshot.child("Users").child(userID).child("name").getValue().toString();
 
                                 if (shippingState.equals("shipped")) {
                                            if (txtTotalAmount !=null) {

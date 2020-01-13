@@ -161,7 +161,7 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity
 
                  orderKey =ordersRef.push().getKey();
         final DatabaseReference productRef = FirebaseDatabase.getInstance().getReference()
-                .child("Orders").child(orderKey).child(userID).child("productS").child(productIDHERE);
+                .child("Orders").child(orderKey).child("Users").child(userID).child("productS").child(productIDHERE);
         final DatabaseReference productImageRef = FirebaseDatabase.getInstance().getReference()
                 .child("Product").child(productIDHERE).child("image");
 

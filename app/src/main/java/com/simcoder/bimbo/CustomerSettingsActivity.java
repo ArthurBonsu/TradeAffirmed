@@ -125,8 +125,8 @@ public class CustomerSettingsActivity extends AppCompatActivity {
                         mPhone = map.get("phone").toString();
                         mPhoneField.setText(mPhone);
                     }
-                    if(map.get("profileImageUrl")!=null){
-                        mProfileImageUrl = map.get("profileImageUrl").toString();
+                    if(map.get("image")!=null){
+                        mProfileImageUrl = map.get("image").toString();
                         Glide.with(getApplication()).load(mProfileImageUrl).into(mProfileImage);
                     }
                 }
@@ -154,7 +154,7 @@ public class CustomerSettingsActivity extends AppCompatActivity {
 
             if (resultUri != null) {
 
-                StorageReference filePath = FirebaseStorage.getInstance().getReference().child("profile_images").child(userID);
+                StorageReference filePath = FirebaseStorage.getInstance().getReference().child("image").child(userID);
                 Bitmap bitmap = null;
                 try {
                     bitmap = MediaStore.Images.Media.getBitmap(getApplication().getContentResolver(), resultUri);
@@ -180,7 +180,7 @@ public class CustomerSettingsActivity extends AppCompatActivity {
                         Task<Uri> downloadUrl = taskSnapshot.getStorage().getDownloadUrl();
 
                         Map newImage = new HashMap();
-                        newImage.put("profileImageUrl", downloadUrl.toString());
+                        newImage.put("image", downloadUrl.toString());
                         mCustomerDatabase.updateChildren(newImage);
 
                         finish();

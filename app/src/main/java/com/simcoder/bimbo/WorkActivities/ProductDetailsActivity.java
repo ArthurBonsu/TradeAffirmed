@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -46,6 +47,9 @@ public class ProductDetailsActivity extends AppCompatActivity
     private String productID = "", state = "Normal";
     String cartkey;
     String orderkey;
+    String thetraderkey;
+     String thenameofthetrader;
+    String description;
 
     String traderoruser= "";
     private static final int RC_SIGN_IN = 1;
@@ -150,7 +154,9 @@ public class ProductDetailsActivity extends AppCompatActivity
         saveCurrentTime = currentDate.format(calForDate.getTime());
             final String userID ="";
         final DatabaseReference cartListRef = FirebaseDatabase.getInstance().getReference().child("Cart List");
+
         cartkey = cartListRef.push().getKey();
+
         final HashMap<String, Object> cartMap = new HashMap<>();
         cartMap.put("pid", productID);
         cartMap.put("name", productName.getText().toString());
@@ -159,9 +165,9 @@ public class ProductDetailsActivity extends AppCompatActivity
         cartMap.put("time", saveCurrentTime);
         cartMap.put("quantity", numberButton.getNumber());
         cartMap.put("discount", "");
-
-        cartListRef.child(cartkey).child(userID)
-                .child("Products").child(productID)
+        final DatabaseReference cartintoproductListRef = FirebaseDatabase.getInstance().getReference().child("Cart List").child(cartkey).child("Users").child(userID).child("products");
+        String productinputedkey = cartintoproductListRef.push().getKey();
+         cartListRef.child(cartkey)
                 .updateChildren(cartMap)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
@@ -169,8 +175,7 @@ public class ProductDetailsActivity extends AppCompatActivity
                     {
                         if (task.isSuccessful())
                         {
-                            cartListRef.child(userID)
-                                    .child("products").child(productID)
+                            cartintoproductListRef.child(productID)
                                     .updateChildren(cartMap)
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
@@ -191,51 +196,69 @@ public class ProductDetailsActivity extends AppCompatActivity
     }
 
 
-    private void getProductDetails(String productID)
-    {
-        DatabaseReference productsRef = FirebaseDatabase.getInstance().getReference().child("Products");
+    private void getProductDetails(String productID) {
+        DatabaseReference productsRef = FirebaseDatabase.getInstance().getReference().child("Product").child(productID);
+        DatabaseReference traderinformationreference = FirebaseDatabase.getInstance().getReference().child("Product").child(productID);
 
-        productsRef.child(productID).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot)
-            {
-                if (dataSnapshot.exists())
-                {
-                    final Products products = dataSnapshot.getValue(Products.class);
-
-                    productName.setText(products.getPname());
-                    productPrice.setText(products.getPrice());
-                    productDescription.setText(products.getDescription());
-                    tradername.setText(products.getTrader());
-                    Picasso.get().load(products.getImage()).into(productImage);
-
-                    tradername.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view)
-                        {
-
-                            {
-                                Intent intent = new Intent(ProductDetailsActivity.this, TraderProfile.class);
-                                intent.putExtra("pid", products.getPid());
-                                intent.putExtra("fromhomeactivitytotraderprofile", products.getTrader());
-                                intent.putExtra("fromhomeactivitytotraderprofile", products.getTrader());
-                                startActivity(intent);
-                            }
+        if (traderinformationreference != null) {
+            traderinformationreference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
 
 
-                        }
-                    });
+                    if (dataSnapshot.child("trader") != null) {
+                    }
+                    thetraderkey = dataSnapshot.child("trader").child("traderID").getValue().toString();
+                    thenameofthetrader =  dataSnapshot.child("trader").child(thetraderkey).child("name").getValue().toString();
+                    description = dataSnapshot.child("desc").getValue().toString();
+                }
+
+                ;
+
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
                 }
-            }
+            });
+            productsRef.child(productID).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        final Products products = dataSnapshot.getValue(Products.class);
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                        productName.setText(products.getname());
+                        productPrice.setText(products.getprice());
+                        productDescription.setText(description);
+                        tradername.setText(thenameofthetrader);
+                        Picasso.get().load(products.getimage()).into(productImage);
 
-            }
-        });
+                        tradername.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+
+                                {
+                                    Intent intent = new Intent(ProductDetailsActivity.this, TraderProfile.class);
+                                    intent.putExtra("pid", products.getpid());
+                                    intent.putExtra("fromhomeactivitytotraderprofile", thetraderkey);
+                                    intent.putExtra("fromhomeactivitytotraderprofile",thetraderkey);
+                                    startActivity(intent);
+                                }
+
+
+                            }
+                        });
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
     }
-
     private void CheckOrderState() {
         DatabaseReference ordersRef;
         String userID = "";

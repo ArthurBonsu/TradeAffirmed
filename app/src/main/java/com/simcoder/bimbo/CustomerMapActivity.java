@@ -180,23 +180,25 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         Paper.init(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Customer MapView");
+         if (toolbar != null) {
+             toolbar.setTitle("Customer MapView");
 //        setSupportActionBar(toolbar);
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
+             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+             if (drawer != null) {
+                 ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                         this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                 drawer.addDrawerListener(toggle);
+                 toggle.syncState();
+             }
+         }
+             NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+             navigationView.setNavigationItemSelectedListener(this);
 
+             View headerView = navigationView.getHeaderView(0);
+             TextView userNameTextView = headerView.findViewById(R.id.user_profile_name);
+             CircleImageView profileImageView = headerView.findViewById(R.id.user_profile_image);
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-        View headerView = navigationView.getHeaderView(0);
-        TextView userNameTextView = headerView.findViewById(R.id.user_profile_name);
-        CircleImageView profileImageView = headerView.findViewById(R.id.user_profile_image);
-
-        // USER
+             // USER
 
 
 
@@ -300,6 +302,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
 
             });
+
             if (mLogout != null) {
                 mLogout.setOnClickListener(new View.OnClickListener() {
                     @Override
