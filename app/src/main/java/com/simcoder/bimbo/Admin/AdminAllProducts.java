@@ -1,10 +1,8 @@
 
 package  com.simcoder.bimbo.Admin;
 
-        import android.content.DialogInterface;
         import android.content.Intent;
         import android.support.annotation.NonNull;
-        import android.support.v7.app.AlertDialog;
         import android.support.v7.app.AppCompatActivity;
         import android.os.Bundle;
         import android.support.v7.widget.LinearLayoutManager;
@@ -27,14 +25,12 @@ package  com.simcoder.bimbo.Admin;
         import com.google.firebase.auth.FirebaseUser;
         import com.google.firebase.database.Query;
         import com.rey.material.widget.ImageView;
-        import  com.simcoder.bimbo.Model.AdminOrders;
         import com.simcoder.bimbo.Model.Products;
         import  com.simcoder.bimbo.R;
         import com.firebase.ui.database.FirebaseRecyclerAdapter;
         import com.firebase.ui.database.FirebaseRecyclerOptions;
         import com.google.firebase.database.DatabaseReference;
         import com.google.firebase.database.FirebaseDatabase;
-        import com.simcoder.bimbo.VLayoutActivity;
 
 public class AdminAllProducts extends AppCompatActivity {  //ACTUALLY THIS ACTIVITY IS TO SEE CART ACTIVITY
     private RecyclerView allproductlist;

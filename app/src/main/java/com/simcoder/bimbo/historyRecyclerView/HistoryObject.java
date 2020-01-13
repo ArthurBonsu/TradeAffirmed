@@ -74,7 +74,11 @@ public class HistoryObject
 
     }
 
+    public HistoryObject( String customerRideId, String date) {
+             this.customerRideId = customerRideId;
+             this.date = date;
 
+      }
 
 
 

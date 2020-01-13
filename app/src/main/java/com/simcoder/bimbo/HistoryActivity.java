@@ -230,8 +230,8 @@ e.printStackTrace();
                     // I have to add goods prices here Double Agreed Prices
                     //WE WILL CLEAR OFF PRICE CALCULATIONS
 
-                    if(dataSnapshot.child("timestamp").getValue() != null){
-                        timestamp = Long.valueOf(dataSnapshot.child("timestamp").getValue().toString());
+                    if(dataSnapshot.child("time").getValue() != null){
+                        timestamp = Long.valueOf(dataSnapshot.child("time").getValue().toString());
                     }
 
                     if(dataSnapshot.child("customerPaid").getValue() != null && dataSnapshot.child("driverPaidOut").getValue() == null){

@@ -165,7 +165,7 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
                                 displayCustomerRelatedObjects();
                             }
                         }
-                        if (child.getKey().equals("timestamp")){
+                        if (child.getKey().equals("time")){
                             rideDate.setText(getDate(Long.valueOf(child.getValue().toString())));
                         }
                         if (child.getKey().equals("rating")){
@@ -330,8 +330,8 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
                     if(map.get("phone") != null){
                         userPhone.setText(map.get("phone").toString());
                     }
-                    if(map.get("profileImageUrl") != null){
-                        Glide.with(getApplication()).load(map.get("profileImageUrl").toString()).into(userImage);
+                    if(map.get("image") != null){
+                        Glide.with(getApplication()).load(map.get("image").toString()).into(userImage);
                     }
                 }
 
