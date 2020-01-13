@@ -109,9 +109,26 @@ public class AdminNewOrdersActivity extends AppCompatActivity
             }
         };
         ordersRef = FirebaseDatabase.getInstance().getReference().child("Orders");
+
+        ordersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0) {
+                    orderkey  = dataSnapshot.getKey();
+
+
+
+                }
+            }
+
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
                   if (ordersRef != null) {
                       // that means after the order traderID IS FILLED
-                      MyordersQuery = ordersRef.orderByChild("traderID").equalTo(traderID);
+                      MyordersQuery = ordersRef.orderByChild("tid").equalTo(traderID);
                   }
         ordersList = findViewById(R.id.orders_list);
               if (ordersList != null) {
@@ -153,14 +170,13 @@ public class AdminNewOrdersActivity extends AppCompatActivity
                     @Override
                     protected void onBindViewHolder(@NonNull AdminOrdersViewHolder holder, final int position, @NonNull final AdminOrders model) {
                         holder.userName.setText("Name: " + username);
-                        holder.userPhoneNumber.setText("Phone: " + model.getPhone());
-                        holder.userTotalPrice.setText("Total Amount =  $" + model.getTotalAmount());
-                        holder.userDateTime.setText("Order at: " + model.getDate() + "  " + model.getTime());
-                        holder.userShippingAddress.setText("Shipping Address: " + model.getAddress() + ", " + model.getCity());
-                        holder.productnameordered.setText("Product Orderer" + model.getName());
+                        holder.userPhoneNumber.setText("Phone: " + model.getphone());
+                        holder.userTotalPrice.setText("Total Amount =  $" + model.getamount());
+                        holder.userDateTime.setText("Order at: " + model.getdate() + "  " + model.gettime());
+                        holder.userShippingAddress.setText("Shipping Address: " + model.getaddress() + ", " + model.getcity());
+                        holder.productnameordered.setText("Product Orderer" + model.getname());
 
-                        if (model != null) {
-                            orderkey = model.getUid();
+
 
 
                                 holder.ShowOrdersBtn.setOnClickListener(new View.OnClickListener() {
@@ -223,7 +239,7 @@ public class AdminNewOrdersActivity extends AppCompatActivity
                                     }
                                 });
                             }
-                        }
+
 
                     @NonNull
                     @Override

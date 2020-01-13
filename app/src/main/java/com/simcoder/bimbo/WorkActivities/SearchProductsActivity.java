@@ -138,16 +138,16 @@ public class SearchProductsActivity extends AppCompatActivity
                     @Override
                     protected void onBindViewHolder(@NonNull ProductViewHolder holder, int position, @NonNull final Products model) {
                         if (model != null) {
-                            holder.txtProductName.setText(model.getPname());
-                            holder.txtProductDescription.setText(model.getDescription());
-                            holder.txtProductPrice.setText("Price = " + model.getPrice() + "$");
-                            Picasso.get().load(model.getImage()).into(holder.imageView);
+                            holder.txtProductName.setText(model.getname());
+                            holder.txtProductDescription.setText(model.getdesc());
+                            holder.txtProductPrice.setText("Price = " + model.getprice() + "$");
+                            Picasso.get().load(model.getimage()).into(holder.imageView);
 
                             holder.itemView.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
                                     Intent intent = new Intent(SearchProductsActivity.this, ProductDetailsActivity.class);
-                                    intent.putExtra("pid", model.getPid());
+                                    intent.putExtra("pid", model.getpid());
                                     startActivity(intent);
                                 }
                             });

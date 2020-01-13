@@ -29,6 +29,9 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.simcoder.bimbo.CustomerLoginActivity;
 import com.simcoder.bimbo.CustomerMapActivity;
 import  com.simcoder.bimbo.R;
@@ -57,11 +60,15 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
     private String productRandomKey, downloadImageUrl;
     private StorageReference ProductImagesRef;
     private DatabaseReference ProductsRef;
+    private  DatabaseReference ProductsTraderRef;
     private ProgressDialog loadingBar;
     private static final int RC_SIGN_IN = 1;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
     String traderID;
     String role;
+    String traderkeryhere;
+    FirebaseUser user;
+
     //AUTHENTICATORS
 
     private GoogleMap mMap;
@@ -88,7 +95,24 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
              }
         ProductImagesRef = FirebaseStorage.getInstance().getReference().child("product_images");
         ProductsRef = FirebaseDatabase.getInstance().getReference().child("Product");
+        ProductsTraderRef =FirebaseDatabase.getInstance().getReference().child("Product").child("trader");
+
+
+
+            ;
+
+
+        user = FirebaseAuth.getInstance().getCurrentUser();
+           if (user != null) {
+               traderID = "";
+            traderID = user.getUid();
+           }
+
         productRandomKey = ProductsRef.push().getKey();
+        traderkeryhere = ProductsTraderRef.push().getKey();
+
+
+
 
         AddNewProductButton = (Button) findViewById(R.id.add_new_product);
         InputProductImage = (ImageView) findViewById(R.id.select_product_image);
@@ -299,15 +323,22 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
     private void SaveProductInfoToDatabase()
     {
         HashMap<String, Object> productMap = new HashMap<>();
+        final HashMap<String, Object> traderhashmap = new HashMap<>();
          productMap.put("pid", productRandomKey);
         productMap.put("date", saveCurrentDate);
         productMap.put("time", saveCurrentTime);
-        productMap.put("description", Description);
+        productMap.put("desc", Description);
         productMap.put("image", downloadImageUrl);
         productMap.put("categoryID", CategoryName);
         productMap.put("price", Price);
         productMap.put("name", Pname);
-        productMap.put("tradeID", traderID);
+
+
+
+
+        traderhashmap.put("name",user.getDisplayName()   );
+        traderhashmap.put("tid", user.getUid());
+        traderhashmap.put("image",user.getPhotoUrl() );
 
 
         ProductsRef.child(productRandomKey).updateChildren(productMap)
@@ -317,6 +348,8 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
                     {
                         if (task.isSuccessful())
                         {
+                            ProductsTraderRef.child(traderkeryhere).updateChildren(traderhashmap);
+
                             Intent intent = new Intent(AdminAddNewProductActivity.this, AdminCategoryActivity.class);
                             startActivity(intent);
 

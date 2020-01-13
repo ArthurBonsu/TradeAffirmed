@@ -179,8 +179,8 @@ public class AdminUserCartedActivity extends AppCompatActivity
             protected void onBindViewHolder(@NonNull AdminCartViewHolder holder, int position, @NonNull Cart model) {
                 if (model != null) {
                     holder.admincartimageofprouct.setImageResource(Integer.parseInt(getimage));
-                    holder.admincartquantity.setText("Quantity = " + model.getQuantity());
-                    holder.admincart_price.setText("Price " + model.getPrice() + "$");
+                    holder.admincartquantity.setText("Quantity = " + model.getquantity());
+                    holder.admincart_price.setText("Price " + model.getprice() + "$");
                     holder.admincarttitlehere.setText(model.getname());
 
                     if (admincartimageofprouct != null) {

@@ -45,6 +45,8 @@ public class AdminViewBuyersActivity extends AppCompatActivity {  //ACTUALLY THI
     String role;
     String userID;
     Button viewallcustomers;
+    String theusers;
+    String thetraderinformationandkey;
     // NEW ORDERS RECEIVED FROM THE USERS
 //AUTHENITICATORS
     private static final int RC_SIGN_IN = 1;
@@ -136,9 +138,9 @@ public class AdminViewBuyersActivity extends AppCompatActivity {  //ACTUALLY THI
             thebuyersforthisproduct.setLayoutManager(new LinearLayoutManager(this));
         }
         // WE HAVE TO CHANGE THIS BUTTON TO BACKPRESSED
-        String theusers = MybuyersproductQuery.getRef().getKey();
+         theusers = MybuyersproductQuery.getRef().getKey();
         thebuyersforthisproductdatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(theusers);
-
+        thetraderinformationandkey = thebuyersforthisproductdatabase.getKey();
     }
 
 
@@ -165,22 +167,22 @@ public class AdminViewBuyersActivity extends AppCompatActivity {  //ACTUALLY THI
 
                     @Override
                     protected void onBindViewHolder(@NonNull UserProductViewHolder holder, int position, @NonNull Users model) {
-                        holder.tradersimageonscreen.setImageResource(Integer.parseInt(model.getImage()));
-                        holder.tradersnameafterbuying.setText("Name: " + model.getName());
-                        holder.tradersnameafterbuyingphone.setText("Name: " + model.getPhone());
-                        holder.tradersaddressafterbuying.setText("Address: " + model.getAddress());
+                        holder.tradersimageonscreen.setImageResource(Integer.parseInt(model.getimage()));
+                        holder.tradersnameafterbuying.setText("Name: " + model.getname());
+                        holder.tradersnameafterbuyingphone.setText("Name: " + model.getphone());
+                        holder.tradersaddressafterbuying.setText("Address: " + model.getaddress());
 
 
-                        if (model != null) {
-                            userID = model.getUid();
+
+                            userID = thetraderinformationandkey;
 
 
                             if (tradersimageonscreen != null) {
-                                Glide.with(getApplication()).load((model.getImage())).into(tradersimageonscreen);
+                                Glide.with(getApplication()).load((model.getimage())).into(tradersimageonscreen);
                             }
                         }
 
-                    }
+
 
 
                 };

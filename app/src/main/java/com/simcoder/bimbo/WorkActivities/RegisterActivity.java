@@ -147,7 +147,7 @@ public class RegisterActivity extends AppCompatActivity
                        if (CustomerLink != null) {
                            CustomerLink.setVisibility(View.VISIBLE);
                        }
-                      parentDbName = "Customer";
+                      parentDbName = "Customers";
                   }
               });
           }
@@ -164,7 +164,7 @@ public class RegisterActivity extends AppCompatActivity
                    if (CustomerLink !=null) {
                        CustomerLink.setVisibility(View.INVISIBLE);
                    }
-                    parentDbName = "Driver";
+                    parentDbName = "Drivers";
                 }
             });
 

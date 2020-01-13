@@ -191,7 +191,7 @@ public class TraderProfile extends AppCompatActivity  implements  View.OnClickLi
 
                     traderkey = dataSnapshot.getKey();
                     traderimage = dataSnapshot.child(theProfileID).child("image").getValue().toString();
-                    coverimage = dataSnapshot.child(theProfileID).child("covers").child("coverimage").getValue().toString();
+                    coverimage = dataSnapshot.child(theProfileID).child("coverimage").getValue().toString();
                     traderquote= dataSnapshot.child(theProfileID).child("quote").getValue().toString();
 
                     traderfollowers= dataSnapshot.child(theProfileID).child("followers").child("number").getValue().toString();
@@ -227,7 +227,7 @@ public class TraderProfile extends AppCompatActivity  implements  View.OnClickLi
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if (dataSnapshot.exists()) {
 
-                                if (dataSnapshot.child("followers") != null && dataSnapshot.child("followers").hasChild("numbers")) {
+                                if (dataSnapshot.child("followers") != null && dataSnapshot.child("followers").hasChild("number")) {
                                     Log.i("Number of followers", ".");
                                     mDatabaseReferenceFollowers.child("followers").child(followersID).removeValue();
                                     updateCounter(false);
@@ -262,7 +262,7 @@ public class TraderProfile extends AppCompatActivity  implements  View.OnClickLi
             private void updateCounter(final Boolean increment) {
                 this.increments = increment;
                 DatabaseReference mDatabaseLikeCount;
-                mDatabaseLikeCount = FirebaseDatabase.getInstance().getReference().child("Users").child("traders").child(userID).child("followers").child("numbers");
+                mDatabaseLikeCount = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(theProfileID).child("followers").child("number");
                 mDatabaseLikeCount.runTransaction(new Transaction.Handler() {
                     @Override
                     public Transaction.Result doTransaction(MutableData mutableData) {

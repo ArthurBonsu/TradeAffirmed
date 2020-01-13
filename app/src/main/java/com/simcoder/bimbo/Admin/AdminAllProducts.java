@@ -43,7 +43,7 @@ public class AdminAllProducts extends AppCompatActivity {  //ACTUALLY THIS ACTIV
     String traderID = "";
     String orderkey;
     String userID;
-    String productID;
+
     String role;
     Button viewallcustomers;
     // NEW ORDERS RECEIVED FROM THE USERS
@@ -56,6 +56,7 @@ public class AdminAllProducts extends AppCompatActivity {  //ACTUALLY THIS ACTIV
     public TextView productpriceforadmin;
     public TextView productcategoryforadmin;
     public TextView producttimeuploaded;
+    String productID;
 
     //AUTHENTICATORS
 
@@ -120,6 +121,8 @@ public class AdminAllProducts extends AppCompatActivity {  //ACTUALLY THIS ACTIV
         if (allproductRef != null) {
             // that means after the order traderID IS FILLED
             MyproductsQuery = allproductRef.orderByChild("traderID").equalTo(traderID);
+            productID = MyproductsQuery.getRef().getKey();
+
         }
         allproductlist = findViewById(R.id.allproductlist);
         if (allproductlist != null) {
@@ -155,21 +158,20 @@ public class AdminAllProducts extends AppCompatActivity {  //ACTUALLY THIS ACTIV
 
                     @Override
                     protected void onBindViewHolder(@NonNull AdminProductsViewHolder holder, int position, @NonNull Products model) {
-                        holder.productimagesforname.setImageResource(Integer.parseInt(model.getImage()));
-                        holder.productnameforadmin.setText("Name: " + model.getPname());
-                        holder.productpriceforadmin.setText("Phone: " + model.getPrice());
+                        holder.productimagesforname.setImageResource(Integer.parseInt(model.getimage()));
+                        holder.productnameforadmin.setText("Name: " + model.getname());
+                        holder.productpriceforadmin.setText("Phone: " + model.getprice());
                         holder.productcategoryforadmin.setText("Total Amount =  $" + model.getCategory());
-                        holder.producttimeuploaded.setText("Order at: " + model.getDate() + "  " + model.getTime());
+                        holder.producttimeuploaded.setText("Order at: " + model.getdate() + "  " + model.gettime());
 
 
-                        if (model != null) {
-                            productID = model.getPid();
+
 
 
                         if (productimagesfornamehere != null) {
-                            Glide.with(getApplication()).load((model.getImage())).into(productimagesfornamehere);
+                            Glide.with(getApplication()).load((model.getimage())).into(productimagesfornamehere);
                         }
-                    }}
+                    }
 
                     @NonNull
                     @Override

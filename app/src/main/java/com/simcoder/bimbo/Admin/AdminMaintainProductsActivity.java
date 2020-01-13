@@ -42,7 +42,10 @@ public class AdminMaintainProductsActivity extends AppCompatActivity {
     private String productID = "";
     private DatabaseReference productsRef;
     String role;
-
+    FirebaseUser user;
+    DatabaseReference productTraderReference;
+    HashMap<String, Object> traderMap;
+    HashMap<String, Object> productMap;
     //AUTHENITICATORS
     private static final int RC_SIGN_IN = 1;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
@@ -64,8 +67,8 @@ public class AdminMaintainProductsActivity extends AppCompatActivity {
 
         // WE GET THE PRODUCT ID FROM PREVIOUS ACTIVITIES
         productID = getIntent().getStringExtra("pid");
-        productsRef = FirebaseDatabase.getInstance().getReference().child("Products").child(productID);
-
+        productsRef = FirebaseDatabase.getInstance().getReference().child("Product").child(productID);
+        productTraderReference = FirebaseDatabase.getInstance().getReference().child("Product").child(productID).child("trader");
 
         applyChangesBtn = findViewById(R.id.apply_changes_btn);
         name = findViewById(R.id.product_name_maintain);
@@ -109,7 +112,7 @@ public class AdminMaintainProductsActivity extends AppCompatActivity {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
 
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                 user = FirebaseAuth.getInstance().getCurrentUser();
                 if (user != null) {
                     traderID = "";
                     traderID = user.getUid();
@@ -188,16 +191,26 @@ public class AdminMaintainProductsActivity extends AppCompatActivity {
                         Toast.makeText(this, "Write down Product Description.", Toast.LENGTH_SHORT).show();
                     } else {
                         HashMap<String, Object> productMap = new HashMap<>();
+                        traderMap = new HashMap<>();
                         productMap.put("pid", productID);
-                        productMap.put("description", pDescription);
+                        productMap.put("desc", pDescription);
                         productMap.put("price", pPrice);
                         productMap.put("name", pName);
-                        productMap.put("traderID", traderID);
+
+
+
+                        traderMap.put("tid", traderID);
+                        traderMap.put("image", traderID);
+                        traderMap.put("name", traderID);
+
                         if (productsRef != null) {
                             productsRef.updateChildren(productMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
+                                        productTraderReference.child(traderID).updateChildren(traderMap);
+
+
                                         Toast.makeText(AdminMaintainProductsActivity.this, "Changes applied successfully.", Toast.LENGTH_SHORT).show();
 
                                         Intent intent = new Intent(AdminMaintainProductsActivity.this, AdminCategoryActivity.class);
@@ -224,6 +237,7 @@ public class AdminMaintainProductsActivity extends AppCompatActivity {
                         String pPrice = dataSnapshot.child("price").getValue().toString();
                         String pDescription = dataSnapshot.child("description").getValue().toString();
                         String pImage = dataSnapshot.child("image").getValue().toString();
+
 
                               if (name != null) {
                                   name.setText(pName);

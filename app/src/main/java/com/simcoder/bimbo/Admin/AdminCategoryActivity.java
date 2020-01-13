@@ -42,7 +42,7 @@ public class AdminCategoryActivity extends AppCompatActivity
     private static final int RC_SIGN_IN = 1;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
     String traderID;
-
+    FirebaseUser user;
     //AUTHENTICATORS
 
     private GoogleMap mMap;
@@ -175,7 +175,7 @@ public class AdminCategoryActivity extends AppCompatActivity
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
 
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                user = FirebaseAuth.getInstance().getCurrentUser();
                 if (user != null) {
                     traderID = "";
                     traderID = user.getUid();

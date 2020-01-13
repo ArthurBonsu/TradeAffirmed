@@ -74,7 +74,7 @@ public class SettinsActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settins);
 
-        storageProfilePrictureRef = FirebaseStorage.getInstance().getReference().child("Profile pictures");
+        storageProfilePrictureRef = FirebaseStorage.getInstance().getReference().child("profile_images");
 
         profileImageView = (CircleImageView) findViewById(R.id.settings_profile_image);
         fullNameEditText = (EditText) findViewById(R.id.settings_full_name);
@@ -185,7 +185,7 @@ public class SettinsActivity extends AppCompatActivity
          userMap.put("name", fullNameEditText.getText().toString());
         userMap.put("address", addressEditText.getText().toString());
         userMap.put("phone", userPhoneEditText.getText().toString());
-        ref.child(Prevalent.currentOnlineUser.getPhone()).updateChildren(userMap);
+        ref.child(traderoruser).updateChildren(userMap);
 
         startActivity(new Intent(SettinsActivity.this, HomeActivity.class));
         Toast.makeText(SettinsActivity.this, "Profile Info update successfully.", Toast.LENGTH_SHORT).show();
@@ -247,7 +247,7 @@ public class SettinsActivity extends AppCompatActivity
         }
         if (imageUri != null) {
             final StorageReference fileRef = storageProfilePrictureRef
-                    .child(Prevalent.currentOnlineUser.getPhone() + ".jpg");
+                    .child(imageUri.getLastPathSegment() + ".jpg");
             if (fileRef != null) {
                 uploadTask = fileRef.putFile(imageUri);
 
@@ -266,47 +266,72 @@ public class SettinsActivity extends AppCompatActivity
                             public void onComplete(@NonNull Task<Uri> task) {
                                 if (task.isSuccessful()) {
                                     Uri downloadUrl = task.getResult();
-                                             if (downloadUrl !=null){
-                                    myUrl = downloadUrl.toString();
+                                    if (downloadUrl != null) {
+                                        myUrl = downloadUrl.toString();
 
-                                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Users");
+                                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Users");
+                                        if (role.equals("Trader")) {
+                                            DatabaseReference traderref = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(traderoruser);
+                                            String traderrefkey = traderref.push().getKey();
+                                            HashMap<String, Object> userMap = new HashMap<>();
+                                            userMap.put("name", fullNameEditText.getText().toString());
+                                            userMap.put("address", addressEditText.getText().toString());
+                                            userMap.put("phone", userPhoneEditText.getText().toString());
+                                            userMap.put("image", myUrl);
+                                            traderref.updateChildren(userMap);
 
-                                    HashMap<String, Object> userMap = new HashMap<>();
-                                    userMap.put("name", fullNameEditText.getText().toString());
-                                    userMap.put("address", addressEditText.getText().toString());
-                                    userMap.put("phone", userPhoneEditText.getText().toString());
-                                    userMap.put("image", myUrl);
-                                    ref.child(role).child(traderoruser).updateChildren(userMap);
+                                            progressDialog.dismiss();
 
-                                    progressDialog.dismiss();
-
-                                    startActivity(new Intent(SettinsActivity.this, HomeActivity.class));
-                                    Toast.makeText(SettinsActivity.this, "Profile Info update successfully.", Toast.LENGTH_SHORT).show();
-                                    finish();
-                                } else {
-                                                 progressDialog.dismiss();
-                                                 Toast.makeText(SettinsActivity.this, "Error.", Toast.LENGTH_SHORT).show();
-                                             }                   }
+                                            startActivity(new Intent(SettinsActivity.this, HomeActivity.class));
+                                            Toast.makeText(SettinsActivity.this, "Profile Info update successfully.", Toast.LENGTH_SHORT).show();
+                                            finish();
+                                        } else {
+                                            progressDialog.dismiss();
+                                            Toast.makeText(SettinsActivity.this, "Error.", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                }
                             }
+
+                            ;
                         });
+
             } else {
                 Toast.makeText(this, "image is not selected.", Toast.LENGTH_SHORT).show();
             }
-        }
-    }
+        }else{
 
-    private void userInfoDisplay(final CircleImageView profileImageView, final EditText fullNameEditText, final EditText userPhoneEditText, final EditText addressEditText)
-    {
-        DatabaseReference UsersRef = FirebaseDatabase.getInstance().getReference().child("Users").child(role).child(traderoruser);
+
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Users");
+            if (!role.equals("Trader")) {
+                DatabaseReference customref = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(traderoruser);
+                    String customrefkey = customref.push().getKey();
+                HashMap<String, Object> userMap = new HashMap<>();
+                userMap.put("name", fullNameEditText.getText().toString());
+                userMap.put("address", addressEditText.getText().toString());
+                userMap.put("phone", userPhoneEditText.getText().toString());
+                userMap.put("image", myUrl);
+                customref.updateChildren(userMap);
+
+                progressDialog.dismiss();
+
+                startActivity(new Intent(SettinsActivity.this, HomeActivity.class));
+                Toast.makeText(SettinsActivity.this, "Profile Info update successfully.", Toast.LENGTH_SHORT).show();
+                finish();
+            } else {
+                progressDialog.dismiss();
+                Toast.makeText(SettinsActivity.this, "Error.", Toast.LENGTH_SHORT).show();
+            }}}
+
+                private void userInfoDisplay(final CircleImageView profileImageView, final EditText fullNameEditText, final EditText userPhoneEditText, final EditText addressEditText)
+    {                   if (role.equals("Trader")) {
+        DatabaseReference UsersRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(traderoruser);
 
         UsersRef.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot)
-            {
-                if (dataSnapshot.exists())
-                {
-                    if (dataSnapshot.child("image").exists())
-                    {
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    if (dataSnapshot.child("image").exists()) {
                         String image = dataSnapshot.child("image").getValue().toString();
                         String name = dataSnapshot.child("name").getValue().toString();
                         String phone = dataSnapshot.child("phone").getValue().toString();
@@ -325,6 +350,37 @@ public class SettinsActivity extends AppCompatActivity
 
             }
         });
+    }else{
+
+        DatabaseReference UsersRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(traderoruser);
+
+        UsersRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    if (dataSnapshot.child("image").exists()) {
+                        String image = dataSnapshot.child("image").getValue().toString();
+                        String name = dataSnapshot.child("name").getValue().toString();
+                        String phone = dataSnapshot.child("phone").getValue().toString();
+                        String address = dataSnapshot.child("address").getValue().toString();
+
+                        Picasso.get().load(image).into(profileImageView);
+                        fullNameEditText.setText(name);
+                        userPhoneEditText.setText(phone);
+                        addressEditText.setText(address);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+    }
     }
 
     @Override

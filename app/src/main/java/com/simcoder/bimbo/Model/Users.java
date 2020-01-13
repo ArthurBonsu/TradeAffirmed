@@ -10,7 +10,7 @@ public class Users
     private String  driverFoundID, descriptions,field,followesID, followesname, history;
     private  String customerPaid,driverPaidOut, operations;
     private  String product, productID, productName, reviewBy, text, residences, service,setinformations, baseprice;
-    private  String     subCategory, subcategoryName, SupplementaryCategory,SupplementaryCategoryID, FinalCategory, FinalCategoryID,FinalSubCategoryName, Product, title,categoryID,category, Likes, driversAvailable, driversWorking;
+    private  String     subCategory, subcategoryName, SupplementaryCategory,SupplementaryCategoryID, FinalCategory, FinalCategoryID,FinalSubCategoryName, Product, title,categoryID,category, Likes, driversAvailable, driversWorking, tid;
     public Users() {
     }
     //careful of deliverID and deliveryID
@@ -23,8 +23,8 @@ public class Users
                        String  driverFoundID, String descriptions, String field, String followesID, String followesname, String history,
                        String customerPaid, String driverPaidOut, String operations,
                        String product,String productID, String productName,String reviewBy,String text,String residences, String service, String setinformations,String baseprice,
-                       String subCategory,String subcategoryName,String SupplementaryCategory,String SupplementaryCategoryID, String FinalCategory, String FinalCategoryID,String FinalSubCategoryName,String Product,String title,String categoryID, String category, String Likes,
-                       String driversAvailable,String  driversWorking ) {
+                       String subCategory,String subcategoryName,String SupplementaryCategory,String SupplementaryCategoryID, String FinalCategory, String FinalCategoryID,String FinalSubCategoryName,String Product,String title,String categoryID, String category, String Likes, String desc,
+                       String driversAvailable,String  driversWorking, String tid ) {
 
 
 
@@ -65,12 +65,13 @@ public class Users
         this.triptime = triptime;  this.image = image;  this.job = job; this.jobcategory = jobcategory;this.jobcategoryid = jobcategoryid;this.password = password; this.quote = quote;this.quoteid = quoteid; this.role=role; this.Drivers = Drivers; this.Ads =Ads; this.AdID= AdID;
         this.driverFoundID = driverFoundID; this.descriptions= descriptions; this.field=field; this.followesID=followesID; this.followesname =followesname; this.history= history;
         this.customerPaid= customerPaid; this.driverPaidOut= driverPaidOut; this.operations= operations;
-        this.product = product; this.productID= productID; this.productName = productName;this.reviewBy =reviewBy;this.text =text; this.residences= residences;this.service =service;this.setinformations= setinformations;this.baseprice =baseprice;
+        this.product = product; this.productID= productID; this.productName = productName;this.reviewBy =reviewBy;this.text =text; this.residences= residences;this.service =service;this.setinformations= setinformations;this.baseprice =baseprice;this.desc = desc;
 
 
         //       delivery,products, amount, quantity,shippingcost, trader, Users, price, [deliveryID, distance, mode, number];
         //MORE GET INSTANTIATION
-        this.subCategory = subCategory; this.subcategoryName = subcategoryName; this.SupplementaryCategory = SupplementaryCategory; this.SupplementaryCategoryID =SupplementaryCategoryID; this.FinalCategory = FinalCategory; this.FinalCategoryID= FinalCategoryID; this.FinalSubCategoryName = FinalSubCategoryName;this.Product = Product; this.title =title; this.categoryID = categoryID; this.category = category; this.Likes = Likes;
+        this.subCategory = subCategory; this.subcategoryName = subcategoryName; this.SupplementaryCategory = SupplementaryCategory; this.SupplementaryCategoryID =SupplementaryCategoryID; this.FinalCategory = FinalCategory; this.FinalCategoryID= FinalCategoryID; this.FinalSubCategoryName = FinalSubCategoryName;this.Product = Product; this.title =title; this.categoryID = categoryID; this.category = category; this.Likes = Likes; this.tid= tid;
+
     }
 
 
@@ -769,7 +770,19 @@ public class Users
     }
 
 
+    public String getdesc(){
+        return  desc;
+    }
+    public void setdesc(String desc) {
+        this.desc=desc;
+    }
 
 
+    public String gettid(){
+        return  tid;
+    }
+    public void settid(String tid) {
+        this.tid=tid;
+    }
 
 }
