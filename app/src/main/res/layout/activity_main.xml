@@ -16,7 +16,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="60dp"
         android:src="@drawable/applogo"
-        android:contentDescription="@string/todo" />
+        android:contentDescription="theaapplogoimage" />
 
     <TextView
         android:id="@+id/app_slogan"
@@ -31,7 +31,8 @@
         android:textColor="@color/colorPrimary"
         android:textSize="25sp"
         android:textStyle="italic"
-        />
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="80dp" />
 
 
     <Button

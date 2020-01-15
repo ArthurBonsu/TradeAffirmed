@@ -163,7 +163,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         mCustomerName = findViewById(R.id.customerName);
         mCustomerPhone = findViewById(R.id.customerPhone);
         mCustomerDestination = findViewById(R.id.customerDestination);
-        mydrivernavigations = findViewById(R.id.mydrivernavigation);
+        mydrivernavigations = findViewById(R.id.thepickedcustomerview);
         //HE CAN SWITHCH FROM NON WORK TO WORK
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
         mGoogleSignInClient = GoogleSignIn.getClient(DriverMapActivity.this, gso);
@@ -313,20 +313,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         mydrivernavigations.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverId) != null) {
-
-
-                    Intent intent = new Intent(DriverMapActivity.this, com.simcoder.bimbo.WorkActivities.HomeActivity.class);
-                    intent.putExtra("Trader", role);
-                    startActivity(intent);
-                    finish();
-                    return;
-                } else {
-                    Intent intent = new Intent(DriverMapActivity.this, com.simcoder.bimbo.WorkActivities.MainActivity.class);
-                    startActivity(intent);
-                    finish();
-                    return;
-                }
+                getAssignedCustomerInfo();
             }
         });
 
@@ -958,6 +945,8 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         {
 
         }
+
+
 
 
 

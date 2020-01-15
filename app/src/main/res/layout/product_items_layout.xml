@@ -30,7 +30,7 @@
             android:layout_below="@+id/product_name"
             android:scaleType="centerCrop"
             android:layout_marginTop="2dp"
-            android:contentDescription="@string/todo" />
+            android:contentDescription="product_imagehere" />
 
         <TextView
             android:id="@+id/product_price"

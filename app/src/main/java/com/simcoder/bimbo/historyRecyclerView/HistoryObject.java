@@ -11,6 +11,7 @@ public class HistoryObject
     private  String customerPaid,driverPaidOut, operations;
     private  String product, productID, productName, reviewBy, text, residences, service,setinformations, baseprice;
     private  String     subCategory, subcategoryName, SupplementaryCategory,SupplementaryCategoryID, FinalCategory, FinalCategoryID,FinalSubCategoryName, Product, title,categoryID,category, Likes, driversAvailable, driversWorking, tid;
+
     public HistoryObject() {
     }
     //careful of deliverID and deliveryID
@@ -300,10 +301,10 @@ public class HistoryObject
     public void setCustomers(String Customers) {
         this.Customers =Customers;
     }
-    public String getCategory(){
+    public String getCategoryhere(){
         return  Category;
     }
-    public void setCategory(String  Category) {
+    public void setCategoryhere(String  Category) {
         this.Category= Category;
     }
 
@@ -725,10 +726,10 @@ public class HistoryObject
     public void setFinalSubCategoryName(String FinalSubCategoryName) {
         this.FinalSubCategoryName =FinalSubCategoryName;
     }
-    public String getProduct(){
+    public String getProducthere(){
         return  Product;
     }
-    public void setProduct(String Product) {
+    public void setProducthere(String Product) {
         this.Product=Product;
     }
 

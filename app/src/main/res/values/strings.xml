@@ -157,8 +157,8 @@
     <string name="women_shoes">Women Shoes</string>
 
     <string name="thetradername">thetradername</string>
-    <string name="customerphone">CustomerPhone</string>
-    <string name="order">Order</string>
+
+
     <string name="header">Header</string>
     <string name="SHOES">SHOES</string>
     <string name="shoes">shoes</string>
@@ -196,5 +196,12 @@
     <string name="product_price">Product Price</string>
     <string name="product_description">Product Description</string>
     <string name="the_trader">The Trader</string>
-    <string name="todo">TODO</string>
+    <string name="fromswitchimage">TODO</string>
+    <string name="customerphone">CustomerPhone</string>
+    <string name="order">Order</string>
+    <string name="notfromswithcimage">TODO</string>
+    <string name="getthecustomerinformation">createcustomerinfoirmatio</string>
+    <string name="mobile">Mobile</string>
+    <string name="hybrid">Hybrid</string>
+    <string name="stationary">Stationary</string>
 </resources>

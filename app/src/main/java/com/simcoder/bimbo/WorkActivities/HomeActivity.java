@@ -117,9 +117,9 @@ public class HomeActivity extends AppCompatActivity
                 type = getIntent().getExtras().get("rolefromadmincategory").toString();
             }
         }
-
-        traderoruser = getIntent().getStringExtra("fromadmincategoryactivity");
-
+        if (traderoruser != null) {
+            traderoruser = getIntent().getStringExtra("fromadmincategoryactivity");
+        }
 
         ProductsRef = FirebaseDatabase.getInstance().getReference().child("Product");
         ProductsRefwithproduct = FirebaseDatabase.getInstance().getReference().child("Product");
@@ -127,12 +127,13 @@ public class HomeActivity extends AppCompatActivity
         ProductsRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                if (productkey != null) {
 
-
-                   productkey = dataSnapshot.getKey();
-                thetraderkey = dataSnapshot.child(productkey).child("trader").getKey();
-                thenameofthetrader =  dataSnapshot.child(productkey).child("trader").child(thetraderkey).child("name").getValue().toString();
-                description = dataSnapshot.child(productkey).child("desc").getValue().toString();
+                    productkey = dataSnapshot.getKey();
+                    thetraderkey = dataSnapshot.child(productkey).child("trader").getKey();
+                    thenameofthetrader = dataSnapshot.child(productkey).child("trader").child(thetraderkey).child("name").getValue().toString();
+                    description = dataSnapshot.child(productkey).child("desc").getValue().toString();
+                }
             }
 
             ;
@@ -153,6 +154,7 @@ public class HomeActivity extends AppCompatActivity
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
         if (mGoogleApiClient != null) {
+
             mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         }
 
@@ -182,70 +184,74 @@ public class HomeActivity extends AppCompatActivity
             }
         };
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (!type.equals("Trader")) {
-                            Intent intent = new Intent(HomeActivity.this, CartActivity.class);
-                            startActivity(intent);
+        if (fab != null) {
+            fab.setOnClickListener(
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if (!type.equals("Trader")) {
+                                Intent intent = new Intent(HomeActivity.this, CartActivity.class);
+                                startActivity(intent);
+                            }
                         }
-                    }
-                });
-
+                    });
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
+        if (drawer != null) {
+            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+            drawer.addDrawerListener(toggle);
+           if (toggle != null) {
+               toggle.syncState();
+           }
 
+            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+           if (navigationView != null) {
+               navigationView.setNavigationItemSelectedListener(this);
+           }
+            View headerView = navigationView.getHeaderView(0);
+            TextView userNameTextView = headerView.findViewById(R.id.user_profile_name);
+            CircleImageView profileImageView = headerView.findViewById(R.id.user_profile_image);
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+            // USER
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        View headerView = navigationView.getHeaderView(0);
-        TextView userNameTextView = headerView.findViewById(R.id.user_profile_name);
-        CircleImageView profileImageView = headerView.findViewById(R.id.user_profile_image);
+            if (traderoruser != null) {
+                Userdetails = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(traderoruser);
 
-        // USER
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-        if (traderoruser != null) {
-            Userdetails = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(traderoruser);
-
-        }
-        if (!type.equals("Trader"))
-
-            if (user != null) {
-                traderoruser = "";
-                traderoruser = user.getUid();
             }
+            if (!type.equals("Trader"))
+
+                if (user != null) {
+                    traderoruser = "";
+                    traderoruser = user.getUid();
+                }
 
 
-        {
-            if (user.getDisplayName() != null) {
+            {
                 if (user.getDisplayName() != null) {
-                    userNameTextView.setText(user.getDisplayName());
+                    if (user.getDisplayName() != null) {
+                        userNameTextView.setText(user.getDisplayName());
 
-                    Picasso.get().load(user.getPhotoUrl()).placeholder(R.drawable.profile).into(profileImageView);
+                        Picasso.get().load(user.getPhotoUrl()).placeholder(R.drawable.profile).into(profileImageView);
+                    }
                 }
             }
-        }
 
 
-        recyclerView = findViewById(R.id.recycler_menu);
-        if (recyclerView != null) {
-            recyclerView.setHasFixedSize(true);
+            recyclerView = findViewById(R.id.recycler_menu);
+            if (recyclerView != null) {
+                recyclerView.setHasFixedSize(true);
 
+            }
+            layoutManager = new LinearLayoutManager(this);
+            if (recyclerView != null) {
+                recyclerView.setLayoutManager(layoutManager);
+            }
         }
-        layoutManager = new LinearLayoutManager(this);
-        if (recyclerView != null) {
-            recyclerView.setLayoutManager(layoutManager);
-        }
+
     }
-
-
 
 
 
@@ -263,72 +269,70 @@ public class HomeActivity extends AppCompatActivity
         FirebaseRecyclerAdapter<Products, ProductViewHolder> adapter =
                 new FirebaseRecyclerAdapter<Products, ProductViewHolder>(options) {
                     @Override
-                    protected void onBindViewHolder(@NonNull ProductViewHolder holder, int position, @NonNull final Products model)
-                    {
-                        holder.txtProductName.setText(model.getname());
-                        holder.txtProductDescription.setText(description);
-                        holder.txtProductPrice.setText("Price = " + model.getprice() + "$");
-                        holder.tradername.setText("Trader of Goods+" + thetradername );
-                        Picasso.get().load(model.getimage()).into(holder.imageView);
+                    protected void onBindViewHolder(@NonNull ProductViewHolder holder, int position, @NonNull final Products model) {
+                        if (holder != null) {
+                            holder.txtProductName.setText(model.getname());
+                            holder.txtProductDescription.setText(description);
+                            holder.txtProductPrice.setText("Price = " + model.getprice() + "$");
+                            holder.tradername.setText("Trader of Goods+" + thetradername);
+                        }
+                        if (model != null) {
+                            Picasso.get().load(model.getimage()).into(holder.imageView);
+                        }
 
 
+                        if (holder != null) {
+                            holder.tradername.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    if (type.equals("Trader")) {
+                                        Intent intent = new Intent(HomeActivity.this, TraderProfile.class);
+                                        intent.putExtra("pid", productkey);
+                                        intent.putExtra("fromhomeactivitytotraderprofile", thetraderkey);
 
+                                        startActivity(intent);
+                                    } else {
+                                        Intent intent = new Intent(HomeActivity.this, TraderProfile.class);
+                                        intent.putExtra("pid", productkey);
+                                        intent.putExtra("fromhomeactivitytotraderprofile", thetraderkey);
 
-
-
-                        holder.tradername.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view)
-                            {
-                                if (type.equals("Trader"))
-                                {
-                                    Intent intent = new Intent(HomeActivity.this, TraderProfile.class);
-                                    intent.putExtra("pid", productkey);
-                                    intent.putExtra("fromhomeactivitytotraderprofile",thetraderkey);
-
-                                    startActivity(intent);
+                                        startActivity(intent);
+                                    }
                                 }
-                                else
-                                {
-                                    Intent intent = new Intent(HomeActivity.this, TraderProfile.class);
-                                    intent.putExtra("pid", productkey);
-                                    intent.putExtra("fromhomeactivitytotraderprofile", thetraderkey);
-
-                                    startActivity(intent);
+                            });
+                        }
+                        if (holder != null) {
+                            holder.txtProductName.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    if (type.equals("Trader")) {
+                                        Intent intent = new Intent(HomeActivity.this, ProductDetailsActivity.class);
+                                        if (intent != null) {
+                                            intent.putExtra("pid", productkey);
+                                        }
+                                        startActivity(intent);
+                                    } else {
+                                        Intent intent = new Intent(HomeActivity.this, ProductDetailsActivity.class);
+                                        if (intent != null) {
+                                            intent.putExtra("pid", productkey);
+                                        }
+                                        startActivity(intent);
+                                    }
                                 }
-                            }
-                        });
+                            });
 
-                        holder.txtProductName.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view)
-                            {
-                                if (type.equals("Trader"))
-                                {
-                                    Intent intent = new Intent(HomeActivity.this, ProductDetailsActivity.class);
-                                    intent.putExtra("pid", productkey);
-                                    startActivity(intent);
-                                }
-                                else
-                                {
-                                    Intent intent = new Intent(HomeActivity.this, ProductDetailsActivity.class);
-                                    intent.putExtra("pid", productkey);
-                                    startActivity(intent);
-                                }
-                            }
-                        });
-
+                        }
                     }
 
                     @NonNull
                     @Override
-                    public ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
-                    {
+                    public ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
                         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.product_items_layout, parent, false);
                         ProductViewHolder holder = new ProductViewHolder(view);
                         return holder;
-                    }
-                };
+                    }}
+                    ;
 
         if (recyclerView !=null) {
             recyclerView.setAdapter(adapter);
@@ -340,19 +344,22 @@ public class HomeActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
+        if (drawer != null) {
+            if (drawer.isDrawerOpen(GravityCompat.START)) {
+                drawer.closeDrawer(GravityCompat.START);
+            } else {
+                super.onBackPressed();
+            }
         }
+
     }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.activity_home_drawer, menu);
+         if (getMenuInflater() != null) {
+             getMenuInflater().inflate(R.menu.activity_home_drawer, menu);
+         }
         return true;
     }
 
@@ -389,18 +396,21 @@ public class HomeActivity extends AppCompatActivity
             {
 
                 Intent intent = new Intent(HomeActivity.this, com.simcoder.bimbo.CustomerMapActivity.class);
-                intent.putExtra("roledhomeactivitytocustomermapactivity", type);
-                intent.putExtra("fromhomeactivitytocustomermapactivity", traderoruser);
-                startActivity(intent);
-                finish();
+                     if (intent != null) {
+                         intent.putExtra("roledhomeactivitytocustomermapactivity", type);
+                         intent.putExtra("fromhomeactivitytocustomermapactivity", traderoruser);
+                         startActivity(intent);
+                         finish();
+                     }
             } else{
 
                 Intent intent = new Intent(HomeActivity.this, DriverMapActivity.class);
-                intent.putExtra("rolefromhomeactivitytodrivermapactivity", type);
-                intent.putExtra("fromhomeactivitytodrivermapactivity", traderoruser);
-                startActivity(intent);
-                finish();
-
+                 if (intent != null) {
+                     intent.putExtra("rolefromhomeactivitytodrivermapactivity", type);
+                     intent.putExtra("fromhomeactivitytodrivermapactivity", traderoruser);
+                     startActivity(intent);
+                     finish();
+                 }
             }
 
 
@@ -410,8 +420,9 @@ public class HomeActivity extends AppCompatActivity
             if (!type.equals("Trader"))
             {
                 Intent intent = new Intent(HomeActivity.this, CartActivity.class);
-                startActivity(intent);
-            }
+                 if (intent != null) {
+                     startActivity(intent);
+                 }}
 
     }
 
@@ -420,8 +431,9 @@ public class HomeActivity extends AppCompatActivity
             if (!type.equals("Trader"))
             {
                 Intent intent = new Intent(HomeActivity.this, HomeActivity.class);
-                startActivity(intent);
-            }else{}
+                 if (intent != null) {
+                     startActivity(intent);
+                 }}else{}
 
         }
         if (id == R.id.nav_search)
@@ -429,14 +441,15 @@ public class HomeActivity extends AppCompatActivity
             if (!type.equals("Trader"))
             {
                 Intent intent = new Intent(HomeActivity.this, SearchProductsActivity.class);
-                startActivity(intent);
+                       if (intent != null){
+                startActivity(intent);}
             }else{}
         }
 
         if (id == R.id.nav_logout)
         {
 
-
+                         if (FirebaseAuth.getInstance() != null){
             FirebaseAuth.getInstance().signOut();
             if (mGoogleApiClient != null) {
                 mGoogleSignInClient.signOut().addOnCompleteListener(HomeActivity.this,
@@ -446,27 +459,30 @@ public class HomeActivity extends AppCompatActivity
 
                             }
                         });
-            }
+            }}
             Intent intent = new Intent(HomeActivity.this, com.simcoder.bimbo.MainActivity.class);
-            startActivity(intent);
+             if (intent != null){
+                         startActivity(intent);
             finish();
-        }
+        }}
 
         if (id == R.id.nav_settings)
         {
             if (!type.equals("Trader"))
             {
                 Intent intent = new Intent(HomeActivity.this, com.simcoder.bimbo.WorkActivities.SettinsActivity.class);
+            if (intent != null) {
                 startActivity(intent);
-            }else{}
+            }}else{}
         }
         else if (id == R.id.nav_history)
         {
             if (!type.equals("Trader"))
             {
                 Intent intent = new Intent(HomeActivity.this, HistoryActivity.class);
-                startActivity(intent);
-            }else{}
+              if (intent != null) {
+                  startActivity(intent);
+              }}else{}
         }
         else if (id == R.id.nav_categories)
         {
@@ -474,37 +490,47 @@ public class HomeActivity extends AppCompatActivity
         }
         else if (id == R.id.nav_viewprofilehome)
         {
-            if (!type.equals("Trader"))
-            { FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-               String cusomerId = "";
-                 cusomerId = user.getUid();
-                Intent intent = new Intent(HomeActivity.this, CustomerProfile.class);
-                intent.putExtra("traderorcustomer", traderoruser);
-                intent.putExtra("role", type);
-                startActivity(intent);
-            }
+            if (!type.equals("Trader")) {
+                if (FirebaseAuth.getInstance() != null) {
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                     if (user != null){
+                    String cusomerId = "";
 
+                    cusomerId = user.getUid();
+                    Intent intent = new Intent(HomeActivity.this, CustomerProfile.class);
+                         if (intent != null){
+                    intent.putExtra("traderorcustomer", traderoruser);
+                    intent.putExtra("role", type);
+                    startActivity(intent);
+                }}
+            }}
             else {
+                       if (FirebaseAuth.getInstance() !=null){
 
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                      if (user != null){
                 String cusomerId = "";
                 cusomerId = user.getUid();
-                Intent intent = new Intent(HomeActivity.this, TraderProfile.class);
-                intent.putExtra("traderorcustomer", traderoruser);
-                intent.putExtra("role", type);
-                startActivity(intent);
 
+                Intent intent = new Intent(HomeActivity.this, TraderProfile.class);
+                 if (intent != null) {
+                     intent.putExtra("traderorcustomer", traderoruser);
+                     intent.putExtra("role", type);
+                     startActivity(intent);
+                 }
             }
-        }
+        }}}
         else if (id == R.id.nav_paymenthome)
         {
 
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
+         if (drawer != null) {
+             drawer.closeDrawer(GravityCompat.START);
+         }
+             return true;
+         }
 
     @Override
     protected void onStop() {

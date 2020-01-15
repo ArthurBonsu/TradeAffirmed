@@ -58,13 +58,13 @@ public class CustomerProfile extends AppCompatActivity  implements  View.OnClick
     DatabaseReference mDatabaseLikeCount;
     DatabaseReference mDatabaseCustomerFollowers;
 
-    ImageView customerimageonscreen = (ImageView) findViewById(R.id.customerimageonscreen);
-    ImageView customercoverprofile = (ImageView) findViewById(R.id.customercoverprofile);
-    TextView customerquotes = (TextView) findViewById(R.id.customerquotes);
-    TextView customerprofilename = (TextView) findViewById(R.id.customerprofilename);
-    TextView customerprofilejob = (TextView) findViewById(R.id.customerprofilejob);
-    TextView customernumberoffollowers = (TextView) findViewById(R.id.customernumberoffollowers);
-    TextView customerprofilephoneadress = (TextView)findViewById(R.id.customerprofilephoneadress);
+    ImageView customerimageonscreen;
+    ImageView customercoverprofile;
+    TextView customerquotes;
+    TextView customerprofilename;
+    TextView customerprofilejob;
+    TextView customernumberoffollowers;
+    TextView customerprofilephoneadress;
     String followersID;
 
 
@@ -95,13 +95,12 @@ public class CustomerProfile extends AppCompatActivity  implements  View.OnClick
 
         productID = getIntent().getStringExtra("pid");
 
-
-        ImageView customerimageonscreen = (ImageView) findViewById(R.id.customerimageonscreen);
-        ImageView customercoverprofile = (ImageView) findViewById(R.id.customercoverprofile);
-        TextView customerquotes = (TextView) findViewById(R.id.customerquotes);
-        TextView customerprofilename = (TextView) findViewById(R.id.customerprofilename);
-        TextView customerprofilejob = (TextView) findViewById(R.id.customerprofilejob);
-        TextView customernumberoffollowers = (TextView) findViewById(R.id.customernumberoffollowers);
+        customerimageonscreen = (ImageView) findViewById(R.id.customerimageonscreen);
+         customercoverprofile = (ImageView) findViewById(R.id.customercoverprofile);
+         customerquotes = (TextView) findViewById(R.id.customerquotes);
+        customerprofilename = (TextView) findViewById(R.id.customerprofilename);
+         customerprofilejob = (TextView) findViewById(R.id.customerprofilejob);
+         customernumberoffollowers = (TextView) findViewById(R.id.customernumberoffollowers);
          customerfollowbutton = (Button)findViewById(R.id.customerfollowbutton);
 
         // FROM ADMINVIEWUSERS HERE
@@ -265,46 +264,43 @@ public class CustomerProfile extends AppCompatActivity  implements  View.OnClick
 
     private void getCustomerInformation() {
 
-
-        mDatabaseCustomer.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    Users usershere = dataSnapshot.getValue(Users.class);
-
-
+        if (mDatabaseCustomer != null) {
+            mDatabaseCustomer.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        Users usershere = dataSnapshot.getValue(Users.class);
 
 
-                    customerimageonscreen.setImageResource(Integer.parseInt(customerimage));
-                          customercoverprofile.setImageResource(Integer.parseInt(coverimage));
+                        customerimageonscreen.setImageResource(Integer.parseInt(customerimage));
+                        customercoverprofile.setImageResource(Integer.parseInt(coverimage));
 
 
-                      customerquotes.setText(customerquote);
-                customerprofilename.setText(customername);
-                customerprofilejob.setText(customerjob);
-                customerprofilephoneadress.setText(customerphoneaddress);
+                        customerquotes.setText(customerquote);
+                        customerprofilename.setText(customername);
+                        customerprofilejob.setText(customerjob);
+                        customerprofilephoneadress.setText(customerphoneaddress);
 
-                customernumberoffollowers.setText(customerfollowers);
+                        customernumberoffollowers.setText(customerfollowers);
 
-                    Picasso.get().load(customerimage).into(customerimageonscreen);
+                        Picasso.get().load(customerimage).into(customerimageonscreen);
 
-                    Picasso.get().load(coverimage).into(customercoverprofile);
+                        Picasso.get().load(coverimage).into(customercoverprofile);
 
+
+                    }
 
 
                 }
 
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-            }
+                }
+            });
+        }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
     }
-
-
     @Override
     protected void onStop() {
         super.onStop();

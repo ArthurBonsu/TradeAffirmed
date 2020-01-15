@@ -15,7 +15,6 @@
         android:layout_height="match_parent"
         tools:layout="@layout/simple_gallery_item" />
 
-
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
@@ -35,85 +34,63 @@
                 android:src="@drawable/navigationdrawer"
                 tools:src="@drawable/navigationdrawer" />
 
-            <Button
-                android:id="@+id/logout"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
 
-                android:layout_weight="1"
-                android:text="@string/logout" />
-
-            <Button
-                android:id="@+id/history"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="124dp"
+            <fragment
+                android:id="@+id/place_autocomplete_fragment"
+                android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+                android:layout_width="262dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/history" />
+                android:visibility="visible"
+                tools:layout="@layout/place_autocomplete_fragment" />
 
-            <Button
-                android:id="@+id/settings"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/settings" />
         </LinearLayout>
 
         <android.support.v7.widget.CardView
             android:layout_width="270dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/buttons"
-            android:layout_marginBottom="20sp"
-            android:layout_marginEnd="20sp"
-            android:layout_marginLeft="20sp"
-            android:layout_marginRight="20sp"
             android:layout_marginStart="20sp"
-            android:layout_marginTop="20sp">
+            android:layout_marginLeft="20sp"
+            android:layout_marginTop="20sp"
+            android:layout_marginEnd="20sp"
+            android:layout_marginRight="20sp"
+            android:layout_marginBottom="20sp">
 
             <!--Insert the spinner into the post -->
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
 
-                <fragment
-                    android:id="@+id/place_autocomplete_fragment"
-                    android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
-                    android:layout_width="262dp"
-                    android:layout_height="wrap_content"
-                    tools:layout="@layout/place_autocomplete_fragment" />
-
-                <SearchView
+            <SearchView
                     android:id="@+id/mysearchbox"
                     android:layout_width="262dp"
                     android:layout_height="wrap_content"
 
-                    />
+                    android:layout_toLeftOf="@+id/gosearch"
 
 
+                    android:layout_toStartOf="@+id/gosearch" >
+
+            </SearchView>
 
 
-                <ImageButton
-                    android:id="@+id/gosearch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentTop="true"
-                    android:contentDescription="@string/my_string_mr_chooser_searching"
-                    android:src="@android:drawable/ic_media_play"
-                    tools:ignore="RtlCompat" />
-
-            </RelativeLayout>
         </android.support.v7.widget.CardView>
 
+        <ImageButton
+            android:id="@+id/gosearch"
+            android:layout_width="56dp"
+            android:layout_height="58dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="-3dp"
 
+
+            android:layout_marginEnd="-48dp"
+            android:layout_marginRight="-82dp"
+            android:contentDescription="@string/my_string_mr_chooser_searching"
+            android:scaleType="centerCrop"
+            android:src="@android:drawable/ic_media_play"
+            tools:ignore="RtlCompat"
+            tools:src="@drawable/searchcamerahere" />
     </RelativeLayout>
-
-
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -185,19 +162,19 @@
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/uberx"
+                    android:text="@string/stationary"
                     android:id="@+id/UberX"
                     style="?android:attr/borderlessButtonStyle"/>
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/uberblack"
+                    android:text="@string/mobile"
                     android:id="@+id/UberBlack"
                     style="?android:attr/borderlessButtonStyle"/>
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/uberxl"
+                    android:text="@string/hybrid"
                     android:id="@+id/UberXl"
                     style="?android:attr/borderlessButtonStyle"/>
             </RadioGroup>
@@ -217,36 +194,15 @@
 
     <ImageButton
         android:id="@+id/zoom_in"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="300sp"
+        android:layout_width="60dp"
+        android:layout_height="74dp"
         android:layout_marginStart="300sp"
-
-        android:src="@drawable/quantum_ic_clear_white_24"
-        android:contentDescription="@string/zoom_in_content"
-        android:layout_marginLeft="300sp" />
-
-
-    <ImageButton
-        android:id="@+id/see_full_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_marginLeft="300sp"
-        android:layout_marginStart="300sp"
 
-        android:layout_marginTop="340sp"
+        android:layout_marginTop="300sp"
         android:contentDescription="@string/zoom_in_content"
-        android:src="@drawable/quantum_ic_clear_white_24" />
-    <ImageButton
-        android:id="@+id/change_driver_available"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="370sp"
-        android:layout_marginStart="300sp"
-
-        android:src="@drawable/quantum_ic_clear_white_24"
-        android:contentDescription="@string/changedriveravailable"
-        android:layout_marginLeft="300sp" />
+        android:scaleType="fitCenter"
+        android:src="@drawable/plusiconhere" />
 
 
     <android.support.design.widget.FloatingActionButton
@@ -260,19 +216,55 @@
         android:src="@android:drawable/btn_plus"
         android:focusable="true" />
 
-    <include
-        layout="@layout/app_bar_home"
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="?actionBarSize"
+        android:background="@color/colorPrimary"
+        app:subtitleTextColor="@android:color/white"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:title="样式1"
+        app:titleTextColor="@android:color/white">
+    </android.support.v7.widget.Toolbar>
 
-    <android.support.design.widget.NavigationView
-        android:id="@+id/nav_view"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:fitsSystemWindows="true"
-        app:headerLayout="@layout/nav_header_home"
-        app:menu="@menu/activitycustomermapdrawer" />
+    <!--侧边栏样式-->
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="250dp"
+        android:layout_height="700dp">
 
+        <android.support.v4.widget.DrawerLayout
+            android:id="@+id/drawer_layout"
+            android:layout_width="250dp"
+            android:layout_height="700dp"
+
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            tools:openDrawer="start">
+
+            <!--主页内容-->
+
+
+            <android.support.design.widget.NavigationView
+                android:id="@+id/nav_view"
+                tools="start"
+                android:layout_width="250dp"
+                android:layout_height="700dp"
+                android:layout_gravity="start"
+                android:fitsSystemWindows="true"
+                android:visibility="visible"
+                app:headerLayout="@layout/nav_header_home"
+                app:menu="@menu/activitycustomermapdrawer" />
+
+
+        </android.support.v4.widget.DrawerLayout>
+    </android.support.constraint.ConstraintLayout>
 </FrameLayout>
 

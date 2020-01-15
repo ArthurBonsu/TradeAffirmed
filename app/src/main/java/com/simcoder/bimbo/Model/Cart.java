@@ -296,10 +296,10 @@ public class Cart
     public void setCustomers(String Customers) {
         this.Customers =Customers;
     }
-    public String getCategory(){
+    public String getCategoryhere(){
         return  Category;
     }
-    public void setCategory(String  Category) {
+    public void setCategoryhere(String  Category) {
         this.Category= Category;
     }
 
@@ -721,10 +721,10 @@ public class Cart
     public void setFinalSubCategoryName(String FinalSubCategoryName) {
         this.FinalSubCategoryName =FinalSubCategoryName;
     }
-    public String getProduct(){
+    public String getProducthere(){
         return  Product;
     }
-    public void setProduct(String Product) {
+    public void setProducthere(String Product) {
         this.Product=Product;
     }
 
