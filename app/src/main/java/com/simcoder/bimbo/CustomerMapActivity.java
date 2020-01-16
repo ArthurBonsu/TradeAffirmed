@@ -123,7 +123,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     private LinearLayout mDriverInfo;
 
     private ImageView mDriverProfileImage;
-    private ImageView VlayoutNavigation;
+    private ImageButton VlayoutNavigation;
     private String driverFoundID;
     private static final String TAG = "Google Activity";
     private TextView mDriverName, mDriverPhone, mDriverCar;
@@ -183,6 +183,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
         mRequest = findViewById(R.id.request);
         myvlayoutnavigationalview = findViewById(R.id.myvlayoutnavigationalview);
+
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
         user = FirebaseAuth.getInstance().getCurrentUser();
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -485,7 +486,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
                                     if (dataSnapshot.exists()) {
                                         Users usershere = dataSnapshot.getValue(Users.class);
-                                    Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+                                    Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue(Users.class);
+                                                  service = dataSnapshot.child(customerRequestKey).child("service").getValue(String.class);
                                     Log.d(TAG, "Value is: " + map);
 
                                     if (driverFound) {
