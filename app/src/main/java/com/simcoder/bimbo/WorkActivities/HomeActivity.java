@@ -38,6 +38,7 @@ import com.simcoder.bimbo.Admin.AdminMaintainProductsActivity;
 import com.simcoder.bimbo.DriverMapActivity;
 import com.simcoder.bimbo.HistoryActivity;
 import com.simcoder.bimbo.Model.Products;
+import com.simcoder.bimbo.Model.Users;
 import com.simcoder.bimbo.Prevalent.Prevalent;
 import com.simcoder.bimbo.ViewHolder.ProductViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -47,6 +48,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.simcoder.bimbo.Prevalent.Prevalent;
 import com.simcoder.bimbo.R;
 import com.squareup.picasso.Picasso;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.paperdb.Paper;
@@ -58,6 +62,7 @@ public class HomeActivity extends AppCompatActivity
     private DatabaseReference Userdetails;
     private DatabaseReference ProductsRefwithproduct;
     private RecyclerView recyclerView;
+    DatabaseReference ProductsRefwithproductTrader;
     RecyclerView.LayoutManager layoutManager;
     DatabaseReference TraderDetails;
     String productkey;
@@ -123,21 +128,64 @@ public class HomeActivity extends AppCompatActivity
 
         ProductsRef = FirebaseDatabase.getInstance().getReference().child("Product");
         ProductsRefwithproduct = FirebaseDatabase.getInstance().getReference().child("Product");
-
+        productkey = ProductsRefwithproduct.getKey();
+        ProductsRefwithproductTrader = FirebaseDatabase.getInstance().getReference().child("Product").child(productkey).child("trader");
+        thetraderkey =ProductsRefwithproductTrader.getKey();
         ProductsRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (productkey != null) {
 
-                    productkey = dataSnapshot.getKey();
-                    thetraderkey = dataSnapshot.child(productkey).child("trader").getKey();
-                    thenameofthetrader = dataSnapshot.child(productkey).child("trader").child(thetraderkey).child("name").getValue().toString();
-                    description = dataSnapshot.child(productkey).child("desc").getValue().toString();
-                }
-            }
+                Map<String, Object> map = new HashMap<String, Object>(); //Object is containing String
+                map = (Map<String, Object>) dataSnapshot.getValue();
 
-            ;
 
+                Map<String, Object> traderinfo = new HashMap<String, Object>(); //Object is containing String
+                traderinfo = (Map<String, Object>) dataSnapshot.child(productkey).child("trader").getValue(Users.class);
+
+
+                Map<String, Object> traderdescription = new HashMap<String, Object>(); //Object is containing String
+
+                traderdescription = (Map<String, Object>) dataSnapshot.child(productkey).child("desc").getValue(Users.class);
+
+
+
+                Map<String, String> newMap = new HashMap<String, String>();
+                for (Map.Entry<String, Object> entry : map.entrySet()) {
+                    if (entry.getValue() != null) {
+                        if (entry.getValue() instanceof String) {
+
+                            try {
+                                newMap.put(entry.getKey(), (String) entry.getValue().toString());
+                                traderinfo.put(entry.getKey(), (String) entry.getValue().toString());
+                                traderdescription.put(entry.getKey(), (String) entry.getValue().toString());
+
+
+                            } catch (ClassCastException e) {
+                                System.out.println("ERROR: " + entry.getKey() + " -> " + entry.getValue() +
+                                        " not added, as " + entry.getValue() + " is not a String");
+                            }
+                        }
+                        if (productkey != null) {
+
+
+                            if (traderinfo != null) {
+                                thenameofthetrader = (traderinfo.get("name").toString());
+                            }
+
+                            if (traderdescription != null) {
+                                description = (traderdescription.get("desc").toString());
+                            }
+
+
+                            //       productkey = dataSnapshot.getKey();
+                    //       thetraderkey = dataSnapshot.child(productkey).child("trader").getKey();
+                    //       thenameofthetrader = dataSnapshot.child(productkey).child("trader").child(thetraderkey).child("name").getValue(Products.class).toString();
+                    //        description = dataSnapshot.child(productkey).child("desc").getValue(Products.class).toString();
+                        }
+                    }
+
+                    ;
+                }}
 
             @Override
             public void onCancelled(DatabaseError databaseError) {

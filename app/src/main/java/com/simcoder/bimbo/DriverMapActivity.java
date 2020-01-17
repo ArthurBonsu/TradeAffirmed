@@ -78,6 +78,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.simcoder.bimbo.Model.Users;
 import com.simcoder.bimbo.WorkActivities.CartActivity;
 import com.simcoder.bimbo.WorkActivities.CustomerProfile;
 import com.simcoder.bimbo.WorkActivities.HomeActivity;
@@ -275,7 +276,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
                         if (dataSnapshot != null) {
-                            role = dataSnapshot.getValue().toString();
+                            role = dataSnapshot.getValue(Users.class).toString();
 
                         }
                     }
@@ -307,7 +308,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         if (navigationView != null) {
             navigationView.setNavigationItemSelectedListener(DriverMapActivity.this); }
 
-
+                           if (navigationView !=null){
         View headerView = navigationView.getHeaderView(0);
                    TextView userNameTextView = headerView.findViewById(R.id.user_profile_name);
                    CircleImageView profileImageView = headerView.findViewById(R.id.user_profile_image);
@@ -332,7 +333,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                              });
                          }
                      }
-                 }
+                 }}
         if (mHistory != null) {
             mHistory.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -366,7 +367,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                         if (dataSnapshot.exists()) {
                             status = 1;
                             if (dataSnapshot != null) {
-                                customerId = dataSnapshot.getValue().toString();
+                                customerId = dataSnapshot.getValue(Users.class).toString();
                                 getAssignedCustomerPickupLocation();
                                 getAssignedCustomerDestination();
                                 getAssignedCustomerInfo();
@@ -395,14 +396,34 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists() && !customerId.equals("")) {
                     if (dataSnapshot != null) {
-                        List<Object> map = (List<Object>) dataSnapshot.getValue();
+                      //  List<Object> map = (List<Object>) dataSnapshot.getValue();
+                        Map<String, Object> map = new HashMap<String, Object>(); //Object is containing String
+                        map = (Map<String, Object>) dataSnapshot.getValue(Users.class);
+
+
+
+                        Map<String, String> newMap = (Map) map;
+                        for (Map.Entry<String, Object> entry : map.entrySet()) {
+                            if (entry.getValue() != null) {
+                                if (entry.getValue() instanceof String) {
+                                    try{
+                                        newMap.put(entry.getKey(), (String) entry.getValue().toString());
+                                    }
+                                    catch(ClassCastException e){
+                                        System.out.println("ERROR: "+entry.getKey()+" -> "+entry.getValue()+
+                                                " not added, as "+entry.getValue()+" is not a String");
+                                    }
+
+
+                                }
+                            }
                         double locationLat = 0;
                         double locationLng = 0;
-                        if (map.get(0) != null) {
-                            locationLat = Double.parseDouble(map.get(0).toString());
+                        if (newMap.get("0") != null) {
+                            locationLat = Double.parseDouble(map.get("0").toString());
                         }
-                        if (map.get(1) != null) {
-                            locationLng = Double.parseDouble(map.get(1).toString());
+                        if (newMap.get("1") != null) {
+                            locationLng = Double.parseDouble(map.get("1").toString());
                         }
                         if (pickupLatLng != null) {
                             pickupLatLng = new LatLng(locationLat, locationLng);
@@ -411,7 +432,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                         }
                     }
                 }
-            }
+            }}
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }
@@ -450,8 +471,21 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
                             if (dataSnapshot != null) {
-                                Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
-                                if (map.get("destination") != null) {
+                           //     HashMap<String, Object> map = (HashMap<String, Object>) dataSnapshot.getValue();
+
+                                Map<String, Object> map = new HashMap<String, Object>(); //Object is containing String
+                                map = (Map<String, Object>) dataSnapshot.getValue(Users.class);
+
+
+                                Map<String, String> newMap = (Map) map;
+                                for (Map.Entry<String, Object> entry : map.entrySet()) {
+                                    if (entry.getValue() != null) {
+                                        if (entry.getValue() instanceof String) {
+                                            newMap.put(entry.getKey(), (String) entry.getValue().toString());
+                                        }
+                                    }
+
+                                if (newMap.get("destination") != null) {
                                     destination = map.get("destination").toString();
                                     mCustomerDestination.setText("Destination: " + destination);
                                 } else {
@@ -460,17 +494,17 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
                                 Double destinationLat = 0.0;
                                 Double destinationLng = 0.0;
-                                if (map.get("destinationLat") != null) {
+                                if (newMap.get("destinationLat") != null) {
                                     destinationLat = Double.valueOf(map.get("destinationLat").toString());
                                 }
-                                if (map.get("destinationLng") != null) {
+                                if (newMap.get("destinationLng") != null) {
                                     destinationLng = Double.valueOf(map.get("destinationLng").toString());
                                     destinationLatLng = new LatLng(destinationLat, destinationLng);
                                 }
 
                             }
                         }
-                    }
+                    }}
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
                     }
@@ -488,19 +522,31 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0) {
-                            Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
-                            if (map.get("name") != null) {
-                                mCustomerName.setText(map.get("name").toString());
-                            }
-                            if (map.get("phone") != null) {
-                                mCustomerPhone.setText(map.get("phone").toString());
-                            }
-                            if (map.get("image") != null) {
-                                Glide.with(getApplication()).load(map.get("image").toString()).into(mCustomerProfileImage);
+                          //  Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+                            Map<String, Object> map = new HashMap<String, Object>(); //Object is containing String
+                            map = (Map<String, Object>) dataSnapshot.getValue(Users.class);
+
+
+                            Map<String, String> newMap = (Map) map;
+                            for (Map.Entry<String, Object> entry : map.entrySet()) {
+                                if (entry.getValue() != null) {
+                                    if (entry.getValue() instanceof String) {
+                                        newMap.put(entry.getKey(), (String) entry.getValue().toString());
+                                    }
+                                }
+
+                                if (newMap.get("name") != null) {
+                                    mCustomerName.setText(map.get("name").toString());
+                                }
+                                if (newMap.get("phone") != null) {
+                                    mCustomerPhone.setText(map.get("phone").toString());
+                                }
+                                if (newMap.get("image") != null) {
+                                    Glide.with(getApplication()).load(map.get("image").toString()).into(mCustomerProfileImage);
+                                }
                             }
                         }
                     }
-
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
                     }
@@ -573,7 +619,9 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             //SAME MUST BE DONE FOR HISTORYREF OVERHERE
             // RIDE ID MUST BE STORED
             if (destinationLatLng != null) {
-                HashMap map = new HashMap();
+                HashMap<String, Object> map = new HashMap();
+
+
                 map.put("driver", userId);
                 map.put("customer", customerId);
                 map.put("rating", 0);
@@ -589,7 +637,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                           historyRef.child(requestId).updateChildren(map);
                       }
                     // PUT THIS INTO THE DRIVER CATALOG
-                    HashMap drivemap = new HashMap();
+                    HashMap<String, Object> drivemap = new HashMap();
                     map.put("driver", userId);
                     map.put("customer", customerId);
                     map.put("rating", 0);
@@ -603,7 +651,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                      if (requestId != null) {
                          driverRef.child(requestId).updateChildren(drivemap);
                      }
-                    HashMap drivemapers = new HashMap();
+                    HashMap<String, Object> drivemapers = new HashMap();
                     map.put("driver", userId);
                     map.put("customer", customerId);
                     map.put("rating", 0);
