@@ -19,7 +19,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -34,11 +36,16 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+import com.rey.material.widget.ImageView;
 import com.simcoder.bimbo.Admin.AdminMaintainProductsActivity;
+import com.simcoder.bimbo.CustomerMapActivity;
 import com.simcoder.bimbo.DriverMapActivity;
 import com.simcoder.bimbo.HistoryActivity;
+import com.simcoder.bimbo.Model.DriverLocation;
+import com.simcoder.bimbo.Model.ProductHere;
 import com.simcoder.bimbo.Model.Products;
-import com.simcoder.bimbo.Model.Users;
+import com.simcoder.bimbo.Model.ProductsInformationModel;
+import com.simcoder.bimbo.Model.TraderWhoPostedProductModel;
 import com.simcoder.bimbo.Prevalent.Prevalent;
 import com.simcoder.bimbo.ViewHolder.ProductViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -47,10 +54,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.simcoder.bimbo.Prevalent.Prevalent;
 import com.simcoder.bimbo.R;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.Iterator;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.paperdb.Paper;
@@ -62,10 +72,11 @@ public class HomeActivity extends AppCompatActivity
     private DatabaseReference Userdetails;
     private DatabaseReference ProductsRefwithproduct;
     private RecyclerView recyclerView;
-    DatabaseReference ProductsRefwithproductTrader;
     RecyclerView.LayoutManager layoutManager;
     DatabaseReference TraderDetails;
     String productkey;
+    ArrayList<ProductsInformationModel> ProductsInformationList = new ArrayList<>();
+    ArrayList<TraderWhoPostedProductModel> TraderWhoPostedProductModerList = new ArrayList<>();
 
     private String type = "";
     String traderoruser = "";
@@ -74,17 +85,18 @@ public class HomeActivity extends AppCompatActivity
     String ProductID;
 
     String thetraderkey;
-     String thenameofthetrader;
+    String thenameofthetrader;
     String description;
- String thetradername;
+    String thetradername;
     //AUTHENTICATORS
-
+ArrayList<ProductHere> productHeres;
     private GoogleMap mMap;
     GoogleApiClient mGoogleApiClient;
     private static final String TAG = "Google Activity";
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
-
+    String productdescription;
+     ImageView theproductimageview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +104,7 @@ public class HomeActivity extends AppCompatActivity
         setContentView(
                 R.layout.activity_home);
 
-
+        theproductimageview = (ImageView)findViewById(R.id.product_image);
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         if (bundle != null)
@@ -127,65 +139,50 @@ public class HomeActivity extends AppCompatActivity
         }
 
         ProductsRef = FirebaseDatabase.getInstance().getReference().child("Product");
-        ProductsRefwithproduct = FirebaseDatabase.getInstance().getReference().child("Product");
-        productkey = ProductsRefwithproduct.getKey();
-        ProductsRefwithproductTrader = FirebaseDatabase.getInstance().getReference().child("Product").child(productkey).child("trader");
-        thetraderkey =ProductsRefwithproductTrader.getKey();
+
+        productkey = ProductsRef.getKey();
+        ProductsRefwithproduct = FirebaseDatabase.getInstance().getReference().child("Product").child(productkey).child("trader");
         ProductsRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                if (productkey != null) {
+                    ArrayList<ProductsInformationModel> ProductsInformationList = new ArrayList<>();
+                    ArrayList<TraderWhoPostedProductModel> TraderWhoPostedProductModerList = new ArrayList<>();
 
-                Map<String, Object> map = new HashMap<String, Object>(); //Object is containing String
-                map = (Map<String, Object>) dataSnapshot.getValue();
+                    Iterator<DataSnapshot> items = dataSnapshot.getChildren().iterator();
+                    Toast.makeText(HomeActivity.this, "Total Location Count:"+ dataSnapshot.getChildrenCount(),Toast.LENGTH_LONG).show();
+                    ProductsInformationList .clear();
 
+                    HashMap<String, Object> locationmap = null;
+                          if (locationmap != null){
+                    while (items.hasNext()) {
+                        DataSnapshot item = items.next();
 
-                Map<String, Object> traderinfo = new HashMap<String, Object>(); //Object is containing String
-                traderinfo = (Map<String, Object>) dataSnapshot.child(productkey).child("trader").getValue(Users.class);
+                        ProductsInformationModel myuser = item.getValue(ProductsInformationModel.class);
+                        if (locationmap.get("name")!= null && locationmap.get("time")!= null && locationmap.get("price")!= null && locationmap.get("pid")!= null && locationmap.get("image")!= null ) {
+                            if (locationmap.get("one") != null) {
+                                ProductsInformationList.add(new ProductsInformationModel(locationmap.get("name").toString(), locationmap.get("time").toString(),  locationmap.get("price").toString(), locationmap.get("pid").toString(), locationmap.get("image").toString()));
+                              String productdescription = ProductsInformationList.get(0).getdesc().toString();
 
-
-                Map<String, Object> traderdescription = new HashMap<String, Object>(); //Object is containing String
-
-                traderdescription = (Map<String, Object>) dataSnapshot.child(productkey).child("desc").getValue(Users.class);
-
-
-
-                Map<String, String> newMap = new HashMap<String, String>();
-                for (Map.Entry<String, Object> entry : map.entrySet()) {
-                    if (entry.getValue() != null) {
-                        if (entry.getValue() instanceof String) {
-
-                            try {
-                                newMap.put(entry.getKey(), (String) entry.getValue().toString());
-                                traderinfo.put(entry.getKey(), (String) entry.getValue().toString());
-                                traderdescription.put(entry.getKey(), (String) entry.getValue().toString());
+                            }}}}
 
 
-                            } catch (ClassCastException e) {
-                                System.out.println("ERROR: " + entry.getKey() + " -> " + entry.getValue() +
-                                        " not added, as " + entry.getValue() + " is not a String");
-                            }
-                        }
-                        if (productkey != null) {
 
 
-                            if (traderinfo != null) {
-                                thenameofthetrader = (traderinfo.get("name").toString());
+                //    thetraderkey = dataSnapshot.child(productkey).child("trader").getKey();
+                 //   thenameofthetrader = dataSnapshot.child(productkey).child("trader").child(thetraderkey).child("name").getValue().toString();
+                 //   description = dataSnapshot.child(productkey).child("desc").getValue().toString();
+
+
+
+
                             }
 
-                            if (traderdescription != null) {
-                                description = (traderdescription.get("desc").toString());
                             }
 
 
-                            //       productkey = dataSnapshot.getKey();
-                    //       thetraderkey = dataSnapshot.child(productkey).child("trader").getKey();
-                    //       thenameofthetrader = dataSnapshot.child(productkey).child("trader").child(thetraderkey).child("name").getValue(Products.class).toString();
-                    //        description = dataSnapshot.child(productkey).child("desc").getValue(Products.class).toString();
-                        }
-                    }
+            ;
 
-                    ;
-                }}
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -194,9 +191,61 @@ public class HomeActivity extends AppCompatActivity
         });
 
 
+        ProductsRefwithproduct.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (productkey != null) {
+
+                    ArrayList<ProductsInformationModel> ProductsInformationList = new ArrayList<>();
+                    ArrayList<TraderWhoPostedProductModel> TraderWhoPostedProductModerList = new ArrayList<>();
+
+                    Iterator<DataSnapshot> items = dataSnapshot.getChildren().iterator();
+                    Toast.makeText(HomeActivity.this, "Total Location Count:"+ dataSnapshot.getChildrenCount(),Toast.LENGTH_LONG).show();
+                    TraderWhoPostedProductModerList .clear();
+
+                    HashMap<String, Object> locationmap = null;
+
+                    while (items.hasNext()) {
+                        DataSnapshot item = items.next();
+
+                        TraderWhoPostedProductModel myuser = item.getValue(TraderWhoPostedProductModel.class);
+                        if (locationmap.get("name")!= null && locationmap.get("image")!= null && locationmap.get("tid")!= null && locationmap.get("pid")!= null && locationmap.get("image")!= null ) {
+                            if (locationmap.get("one") != null) {
+                                TraderWhoPostedProductModerList.add(new TraderWhoPostedProductModel(locationmap.get("name").toString(), locationmap.get("image").toString(),  locationmap.get("tid").toString()));
+                                    int i=0;
+                                String traderimage = TraderWhoPostedProductModerList.get(0).getimage().toString();
+                                String tradername = TraderWhoPostedProductModerList.get(0).getname().toString();
+                                String traderID = TraderWhoPostedProductModerList.get(0).gettid().toString();
+                            }}}
+
+
+
+                    //    thetraderkey = dataSnapshot.child(productkey).child("trader").getKey();
+                    //   thenameofthetrader = dataSnapshot.child(productkey).child("trader").child(thetraderkey).child("name").getValue().toString();
+                    //   description = dataSnapshot.child(productkey).child("desc").getValue().toString();
+
+
+
+
+                }
+
+            }
+
+
+            ;
+
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
         Paper.init(this);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.hometoolbar);
         toolbar.setTitle("Home");
 //        setSupportActionBar(toolbar);
 
@@ -250,14 +299,14 @@ public class HomeActivity extends AppCompatActivity
             ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                     this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
             drawer.addDrawerListener(toggle);
-           if (toggle != null) {
-               toggle.syncState();
-           }
+            if (toggle != null) {
+                toggle.syncState();
+            }
 
             NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-           if (navigationView != null) {
-               navigationView.setNavigationItemSelectedListener(this);
-           }
+            if (navigationView != null) {
+                navigationView.setNavigationItemSelectedListener(this);
+            }
             View headerView = navigationView.getHeaderView(0);
             TextView userNameTextView = headerView.findViewById(R.id.user_profile_name);
             CircleImageView profileImageView = headerView.findViewById(R.id.user_profile_image);
@@ -310,8 +359,8 @@ public class HomeActivity extends AppCompatActivity
 
         FirebaseRecyclerOptions<Products> options =
                 new FirebaseRecyclerOptions.Builder<Products>()
-                .setQuery(ProductsRef, Products.class)
-                .build();
+                        .setQuery(ProductsRef, Products.class)
+                        .build();
 
 
         FirebaseRecyclerAdapter<Products, ProductViewHolder> adapter =
@@ -319,14 +368,36 @@ public class HomeActivity extends AppCompatActivity
                     @Override
                     protected void onBindViewHolder(@NonNull ProductViewHolder holder, int position, @NonNull final Products model) {
                         if (holder != null) {
+
                             holder.txtProductName.setText(model.getname());
-                            holder.txtProductDescription.setText(description);
+
+                            holder.txtProductDescription.setText(model.getdesc());
                             holder.txtProductPrice.setText("Price = " + model.getprice() + "$");
+                            
                             holder.tradername.setText("Trader of Goods+" + thetradername);
                         }
                         if (model != null) {
-                            Picasso.get().load(model.getimage()).into(holder.imageView);
-                        }
+                            if (theproductimageview != null) {
+                                Picasso.get().load(Integer.parseInt(model.getimage())).resize(400, 0).networkPolicy(NetworkPolicy.OFFLINE).into(theproductimageview, new Callback() {
+
+
+                                    @Override
+                                    public void onSuccess() {
+
+                                    }
+
+                                    @Override
+                                    public void onError(Exception e) {
+                                        Picasso.get().load(Integer.parseInt(model.getimage())).resize(100,0).into(theproductimageview);
+                                    }
+
+                                });
+
+
+                            }
+
+
+                             }
 
 
                         if (holder != null) {
@@ -380,7 +451,7 @@ public class HomeActivity extends AppCompatActivity
                         ProductViewHolder holder = new ProductViewHolder(view);
                         return holder;
                     }}
-                    ;
+                ;
 
         if (recyclerView !=null) {
             recyclerView.setAdapter(adapter);
@@ -405,9 +476,9 @@ public class HomeActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-         if (getMenuInflater() != null) {
-             getMenuInflater().inflate(R.menu.activity_home_drawer, menu);
-         }
+        if (getMenuInflater() != null) {
+            getMenuInflater().inflate(R.menu.activity_home_drawer, menu);
+        }
         return true;
     }
 
@@ -444,21 +515,21 @@ public class HomeActivity extends AppCompatActivity
             {
 
                 Intent intent = new Intent(HomeActivity.this, com.simcoder.bimbo.CustomerMapActivity.class);
-                     if (intent != null) {
-                         intent.putExtra("roledhomeactivitytocustomermapactivity", type);
-                         intent.putExtra("fromhomeactivitytocustomermapactivity", traderoruser);
-                         startActivity(intent);
-                         finish();
-                     }
+                if (intent != null) {
+                    intent.putExtra("roledhomeactivitytocustomermapactivity", type);
+                    intent.putExtra("fromhomeactivitytocustomermapactivity", traderoruser);
+                    startActivity(intent);
+                    finish();
+                }
             } else{
 
                 Intent intent = new Intent(HomeActivity.this, DriverMapActivity.class);
-                 if (intent != null) {
-                     intent.putExtra("rolefromhomeactivitytodrivermapactivity", type);
-                     intent.putExtra("fromhomeactivitytodrivermapactivity", traderoruser);
-                     startActivity(intent);
-                     finish();
-                 }
+                if (intent != null) {
+                    intent.putExtra("rolefromhomeactivitytodrivermapactivity", type);
+                    intent.putExtra("fromhomeactivitytodrivermapactivity", traderoruser);
+                    startActivity(intent);
+                    finish();
+                }
             }
 
 
@@ -468,20 +539,20 @@ public class HomeActivity extends AppCompatActivity
             if (!type.equals("Trader"))
             {
                 Intent intent = new Intent(HomeActivity.this, CartActivity.class);
-                 if (intent != null) {
-                     startActivity(intent);
-                 }}
+                if (intent != null) {
+                    startActivity(intent);
+                }}
 
-    }
+        }
 
         if (id == R.id.viewproducts)
         {
             if (!type.equals("Trader"))
             {
                 Intent intent = new Intent(HomeActivity.this, HomeActivity.class);
-                 if (intent != null) {
-                     startActivity(intent);
-                 }}else{}
+                if (intent != null) {
+                    startActivity(intent);
+                }}else{}
 
         }
         if (id == R.id.nav_search)
@@ -489,48 +560,48 @@ public class HomeActivity extends AppCompatActivity
             if (!type.equals("Trader"))
             {
                 Intent intent = new Intent(HomeActivity.this, SearchProductsActivity.class);
-                       if (intent != null){
-                startActivity(intent);}
+                if (intent != null){
+                    startActivity(intent);}
             }else{}
         }
 
         if (id == R.id.nav_logout)
         {
 
-                         if (FirebaseAuth.getInstance() != null){
-            FirebaseAuth.getInstance().signOut();
-            if (mGoogleApiClient != null) {
-                mGoogleSignInClient.signOut().addOnCompleteListener(HomeActivity.this,
-                        new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
+            if (FirebaseAuth.getInstance() != null){
+                FirebaseAuth.getInstance().signOut();
+                if (mGoogleApiClient != null) {
+                    mGoogleSignInClient.signOut().addOnCompleteListener(HomeActivity.this,
+                            new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
 
-                            }
-                        });
-            }}
+                                }
+                            });
+                }}
             Intent intent = new Intent(HomeActivity.this, com.simcoder.bimbo.MainActivity.class);
-             if (intent != null){
-                         startActivity(intent);
-            finish();
-        }}
+            if (intent != null){
+                startActivity(intent);
+                finish();
+            }}
 
         if (id == R.id.nav_settings)
         {
             if (!type.equals("Trader"))
             {
                 Intent intent = new Intent(HomeActivity.this, com.simcoder.bimbo.WorkActivities.SettinsActivity.class);
-            if (intent != null) {
-                startActivity(intent);
-            }}else{}
+                if (intent != null) {
+                    startActivity(intent);
+                }}else{}
         }
         else if (id == R.id.nav_history)
         {
             if (!type.equals("Trader"))
             {
                 Intent intent = new Intent(HomeActivity.this, HistoryActivity.class);
-              if (intent != null) {
-                  startActivity(intent);
-              }}else{}
+                if (intent != null) {
+                    startActivity(intent);
+                }}else{}
         }
         else if (id == R.id.nav_categories)
         {
@@ -541,49 +612,49 @@ public class HomeActivity extends AppCompatActivity
             if (!type.equals("Trader")) {
                 if (FirebaseAuth.getInstance() != null) {
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                     if (user != null){
-                    String cusomerId = "";
+                    if (user != null){
+                        String cusomerId = "";
 
-                    cusomerId = user.getUid();
-                    Intent intent = new Intent(HomeActivity.this, CustomerProfile.class);
-                         if (intent != null){
-                    intent.putExtra("traderorcustomer", traderoruser);
-                    intent.putExtra("role", type);
-                    startActivity(intent);
+                        cusomerId = user.getUid();
+                        Intent intent = new Intent(HomeActivity.this, CustomerProfile.class);
+                        if (intent != null){
+                            intent.putExtra("traderorcustomer", traderoruser);
+                            intent.putExtra("role", type);
+                            startActivity(intent);
+                        }}
                 }}
-            }}
             else {
-                       if (FirebaseAuth.getInstance() !=null){
+                if (FirebaseAuth.getInstance() !=null){
 
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                      if (user != null){
-                String cusomerId = "";
-                cusomerId = user.getUid();
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    if (user != null){
+                        String cusomerId = "";
+                        cusomerId = user.getUid();
 
-                Intent intent = new Intent(HomeActivity.this, TraderProfile.class);
-                 if (intent != null) {
-                     intent.putExtra("traderorcustomer", traderoruser);
-                     intent.putExtra("role", type);
-                     startActivity(intent);
-                 }
-            }
-        }}}
+                        Intent intent = new Intent(HomeActivity.this, TraderProfile.class);
+                        if (intent != null) {
+                            intent.putExtra("traderorcustomer", traderoruser);
+                            intent.putExtra("role", type);
+                            startActivity(intent);
+                        }
+                    }
+                }}}
         else if (id == R.id.nav_paymenthome)
         {
 
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-         if (drawer != null) {
-             drawer.closeDrawer(GravityCompat.START);
-         }
-             return true;
-         }
+        if (drawer != null) {
+            drawer.closeDrawer(GravityCompat.START);
+        }
+        return true;
+    }
 
     @Override
     protected void onStop() {
         super.onStop();
-         //     mProgress.hide();
+        //     mProgress.hide();
         if (mAuth != null) {
             mAuth.removeAuthStateListener(firebaseAuthListener);
         }

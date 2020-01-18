@@ -157,7 +157,7 @@ public class AdminAllProducts extends AppCompatActivity {  //ACTUALLY THIS ACTIV
                         holder.productimagesforname.setImageResource(Integer.parseInt(model.getimage()));
                         holder.productnameforadmin.setText("Name: " + model.getname());
                         holder.productpriceforadmin.setText("Phone: " + model.getprice());
-                        holder.productcategoryforadmin.setText("Total Amount =  $" + model.getcategory());
+
                         holder.producttimeuploaded.setText("Order at: " + model.getdate() + "  " + model.gettime());
 
 

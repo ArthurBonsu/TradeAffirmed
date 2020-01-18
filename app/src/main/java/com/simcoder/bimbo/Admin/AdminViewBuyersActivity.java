@@ -170,7 +170,7 @@ public class AdminViewBuyersActivity extends AppCompatActivity {  //ACTUALLY THI
                     protected void onBindViewHolder(@NonNull UserProductViewHolder holder, int position, @NonNull Users model) {
                         holder.tradersimageonscreen.setImageResource(Integer.parseInt(model.getimage()));
                         holder.tradersnameafterbuying.setText("Name: " + model.getname());
-                        holder.tradersnameafterbuyingphone.setText("Name: " + model.getphone());
+                        holder.tradersnameafterbuyingphone.setText("Name: " + model.getPhone());
                         holder.tradersaddressafterbuying.setText("Address: " + model.getaddress());
 
 

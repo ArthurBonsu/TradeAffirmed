@@ -217,16 +217,7 @@
         android:focusable="true" />
 
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?actionBarSize"
-        android:background="@color/colorPrimary"
-        app:subtitleTextColor="@android:color/white"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:title="样式1"
-        app:titleTextColor="@android:color/white">
-    </android.support.v7.widget.Toolbar>
+
 
     <!--侧边栏样式-->
     <android.support.constraint.ConstraintLayout
@@ -266,5 +257,16 @@
 
         </android.support.v4.widget.DrawerLayout>
     </android.support.constraint.ConstraintLayout>
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/customertoolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:background="@color/colorPrimary"
+        app:subtitleTextColor="@android:color/white"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:title=""
+        app:titleTextColor="@android:color/white">
+    </android.support.v7.widget.Toolbar>
 </FrameLayout>
 

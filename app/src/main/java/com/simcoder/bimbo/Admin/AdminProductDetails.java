@@ -281,7 +281,7 @@ public class AdminProductDetails extends AppCompatActivity  implements  View.OnC
                     adminproductdetailsimage.setImageResource(Integer.parseInt(products.getimage()));
                     adminproductimageproductname.setText(products.getname());
                     adminproductimagedescription.setText(products.getdesc());
-                    adminproductimagenumberoflikes.setText(products.getLikes());
+                    adminproductimagenumberoflikes.setText(products.getnumber());
                     Picasso.get().load(products.getimage()).into(adminproductdetailsimage);
                 }
 

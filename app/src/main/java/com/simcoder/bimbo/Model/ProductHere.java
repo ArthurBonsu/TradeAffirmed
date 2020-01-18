@@ -1,6 +1,6 @@
 package com.simcoder.bimbo.Model;
 
-public class Products {
+public class ProductHere {
 
     private String desc, image, title, name, phone, discount, pid, price, quantity, tid, traderID;
 
@@ -18,10 +18,10 @@ public class Products {
     private String timestamp, operations, reviewBy, residences, service, setinformations;
     private String baseprice;
 
-    public Products() {
+    public ProductHere() {
     }
 
-    public Products(
+    public ProductHere(
             String desc, String image, String title, String name, String phone, String discount, String pid, String price, String quantity, String tid, String traderID,
 
             String address, String amount, String city, String date, String state, String distance, String mode, String number, String shippingcost, String time,

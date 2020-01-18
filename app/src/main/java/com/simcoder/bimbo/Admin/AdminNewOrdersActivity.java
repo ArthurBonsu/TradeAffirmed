@@ -170,7 +170,7 @@ public class AdminNewOrdersActivity extends AppCompatActivity
                     @Override
                     protected void onBindViewHolder(@NonNull AdminOrdersViewHolder holder, final int position, @NonNull final AdminOrders model) {
                         holder.userName.setText("Name: " + username);
-                        holder.userPhoneNumber.setText("Phone: " + model.getphone());
+                        holder.userPhoneNumber.setText("Phone: " + model.getPhone());
                         holder.userTotalPrice.setText("Total Amount =  $" + model.getamount());
                         holder.userDateTime.setText("Order at: " + model.getdate() + "  " + model.gettime());
                         holder.userShippingAddress.setText("Shipping Address: " + model.getaddress() + ", " + model.getcity());

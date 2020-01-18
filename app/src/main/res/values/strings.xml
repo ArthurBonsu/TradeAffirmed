@@ -204,4 +204,5 @@
     <string name="mobile">Mobile</string>
     <string name="hybrid">Hybrid</string>
     <string name="stationary">Stationary</string>
+    <string name="product_imagehere">product_imagehere</string>
 </resources>

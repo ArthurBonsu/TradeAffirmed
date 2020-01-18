@@ -55,19 +55,19 @@
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/uberx"
+            android:text="STATIONARY"
             android:id="@+id/UberX"
             style="?android:attr/borderlessButtonStyle"/>
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/uberblackS"
+            android:text="MOBILE "
             android:id="@+id/UberBlack"
             style="?android:attr/borderlessButtonStyle"/>
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/uberblackxiSS"
+            android:text="HYBRID"
             android:id="@+id/UberXl"
             style="?android:attr/borderlessButtonStyle"/>
     </RadioGroup>
