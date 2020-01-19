@@ -98,6 +98,7 @@ public class HomeActivity extends AppCompatActivity
     private GoogleSignInClient mGoogleSignInClient;
     String productdescription;
     ImageView theproductimageview;
+    TextView  thetraderview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,7 +145,7 @@ public class HomeActivity extends AppCompatActivity
         productkey = ProductsRef.getKey();
         ProductsRefwithproduct = FirebaseDatabase.getInstance().getReference().child("Product").child(productkey).child("trader");
         thetraderkey = ProductsRefwithproduct.getKey().toString();
-
+        thetraderview = findViewById(R.id.thetrader);
 
         ProductsRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -338,9 +339,10 @@ public class HomeActivity extends AppCompatActivity
                             holder.txtProductDescription.setText(model.getdesc());
                             holder.txtProductPrice.setText("Price = " + model.getprice() + "$");
                             holder.setImage(getApplicationContext(), model.getimage());
-                            holder.tradername.setText( thenameofthetrader);
-                        }
-
+                              if (thetraderview != null) {
+                                  thetraderview.setText(thenameofthetrader);
+                              }
+                              }
 
 
 

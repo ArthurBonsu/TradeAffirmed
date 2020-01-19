@@ -237,4 +237,12 @@
     <string name="your_home_addresss">your Home Address</string>
     <string name="your_city_names">your City Name</string>
     <string name="your_phone_numbers">your Phone Number</string>
+    <string name="i_am_a_trader">I AM A TRADER</string>
+    <string name="michael_steelgard">Michael Steelgard</string>
+    <string name="grilled_chicken_vendors">Grilled Chicken Vendor</string>
+    <string name="life_is_a_marathon_not_a_sprints">Life is a marathon not a sprint</string>
+    <string name="_0557154235s">0557154235</string>
+    <string name="follows">FOLLOW</string>
+    <string name="_23s">23</string>
+    <string name="customerimages">customerimage</string>
 </resources>

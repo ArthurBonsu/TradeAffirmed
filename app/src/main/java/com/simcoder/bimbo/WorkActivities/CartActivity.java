@@ -151,6 +151,10 @@ public class CartActivity extends AppCompatActivity {
             final DatabaseReference cartListRef = FirebaseDatabase.getInstance().getReference().child("Cart List");
             if (userID != null) {
                 if (cartkey != null) {
+                    DatabaseReference theProductRef = FirebaseDatabase.getInstance().getReference().child("Cart List");
+
+
+
                     FirebaseRecyclerOptions<Cart> options =
                             new FirebaseRecyclerOptions.Builder<Cart>()
                                     .setQuery(cartListRef.child(cartkey).child("Users").child(userID)

@@ -145,7 +145,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     String name;
     String phone;
     String image;
-
+      ImageButton serchbutton;
 
     private GoogleSignInClient mGoogleSignInClient;
     private ImageView mCustomerProfileImage;
@@ -181,17 +181,30 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         FirebaseAuth.getInstance();
         mCustomerProfileImage = findViewById(R.id.customerProfileImage);
 
+
+
+
         mCustomerName = findViewById(R.id.customerName);
         mCustomerPhone = findViewById(R.id.customerPhone);
         mCustomerDestination = findViewById(R.id.customerDestination);
         mydrivernavigations = findViewById(R.id.thepickedcustomerview);
+        serchbutton = findViewById(R.id.gosearch_2);
         //HE CAN SWITHCH FROM NON WORK TO WORK
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
         mGoogleSignInClient = GoogleSignIn.getClient(DriverMapActivity.this, gso);
 
         mWorkingSwitch = findViewById(R.id.workingSwitch);
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
+         serchbutton.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 Intent intent = new Intent(DriverMapActivity.this, SearchProductsActivity.class);
+                 if (intent != null) {
+                     startActivity(intent);
+                     finish();
+                 }
+             }
+         });
 
         if (user != null) {
             driverId = "";
@@ -327,7 +340,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.drivertoolbar);
         if (toolbar != null) {
-            toolbar.setTitle("Driver MapView");
+            toolbar.setTitle("Trader MapView");
 //        setSupportActionBar(toolbar);
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
             ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(

@@ -23,6 +23,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+import com.simcoder.bimbo.HistoryActivity;
 import com.simcoder.bimbo.Model.Cart;
 import com.simcoder.bimbo.Prevalent.Prevalent;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -173,9 +174,12 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity
                 if (dataSnapshot.exists()) {
 
                     // CURRENT USERNAME HERE
-                    productImage = dataSnapshot.child("image").getValue().toString();
-                    productname = dataSnapshot.child("name").getValue().toString();
-
+                         if (dataSnapshot.child("image").getValue() != null) {
+                             productImage = dataSnapshot.child("image").getValue().toString();
+                         }
+                         if (dataSnapshot.child("name").getValue() != null) {
+                             productname = dataSnapshot.child("name").getValue().toString();
+                         }
 
                     }
                 }
@@ -234,7 +238,7 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity
                                     {
                                         Toast.makeText(ConfirmFinalOrderActivity.this, "your final order has been placed successfully.", Toast.LENGTH_SHORT).show();
 
-                                        Intent intent = new Intent(ConfirmFinalOrderActivity.this, HomeActivity.class);
+                                        Intent intent = new Intent(ConfirmFinalOrderActivity.this, HistoryActivity.class);
                                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                         startActivity(intent);
                                         finish();

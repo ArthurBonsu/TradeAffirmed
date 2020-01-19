@@ -222,6 +222,8 @@ public class ProductDetailsActivity extends AppCompatActivity
 
                 }
             });
+
+
             productsRef.child(productID).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {

@@ -164,6 +164,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     String latvalues;
     String longvalues;
     PlaceAutocompleteFragment autocompleteFragment;
+    ImageButton serchbutton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -189,6 +190,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         mAuth = FirebaseAuth.getInstance();
         mRadioGroup = findViewById(R.id.radioGroup);
         mRadioGroup.check(R.id.UberX);
+        serchbutton = findViewById(R.id.gosearch);
 
 
         mRequest = findViewById(R.id.request);
@@ -224,6 +226,18 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             if (headerView != null) {
                 TextView userNameTextView = headerView.findViewById(R.id.user_profile_name);
                 CircleImageView profileImageView = headerView.findViewById(R.id.user_profile_image);
+
+
+                serchbutton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(CustomerMapActivity.this, SearchProductsActivity.class);
+                        if (intent != null) {
+                            startActivity(intent);
+                            finish();
+                        }
+                    }
+                });
 
 
                 // USER

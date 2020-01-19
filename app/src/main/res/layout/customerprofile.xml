@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <LinearLayout
@@ -20,55 +22,94 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <ImageView
-                    android:id="@+id/customerimageonscreen"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:background="#2d2d2d"
-                    android:contentDescription=""
-                    android:scaleType="centerCrop" />
 
-
-                <ImageView
-                    android:id="@+id/customercoverprofile"
-                    android:layout_width="310dp"
-                    android:layout_height="113dp"
-                    android:background="#2d2d2d"
-                    android:contentDescription="@string/tradersimageonscreen"
-                    android:scaleType="centerCrop" />
-
-
-
-
-
-                <TextView
-                    android:textSize="18sp"
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:text="the number of likes"
-                    android:id="@+id/customerquotes"
-                    android:background="#ecedec"
-                    android:padding="8dp"
-                    android:layout_marginTop="10dp" />
-
-
-                <TextView
-                    android:textSize="18sp"
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:text="Phone"
-                    android:id="@+id/customerprofilephoneadress"
-                    android:background="#ecedec"
-                    android:padding="8dp"
-                    android:layout_marginTop="10dp" />
                 <TextView
                     android:id="@+id/customerprofilename"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:padding="8dp"
-                    android:text="theproductname"
-                    android:textSize="18sp" />
+                    android:text="@string/michael_steelgard"
+                    android:textColor="@color/authui_colorPrimaryDark"
+                    android:textSize="24sp"
+                    android:textStyle="bold|italic" />
+
+                <ImageView
+                    android:id="@+id/customerimageonscreen"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:background="#2d2d2d"
+                    android:contentDescription="@string/customerimages"
+                    android:paddingBottom="@dimen/activity_vertical_margin"
+                    android:scaleType="centerCrop"
+                    app:srcCompat="@drawable/profilepicturesecond" />
+
+
+                <ImageView
+                    android:id="@+id/customercoverprofile"
+                    android:layout_width="match_parent"
+                    android:layout_height="174dp"
+                    android:background="#2d2d2d"
+                    android:contentDescription="@string/tradersimageonscreen"
+                    android:scaleType="centerCrop"
+                    app:srcCompat="@drawable/grilledbeefagain" />
+
+                <TextView
+                    android:id="@+id/customerquotes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="#ecedec"
+                    android:padding="8dp"
+                    android:paddingBottom="@dimen/auth_method_button_marginBottom"
+                    android:text="@string/life_is_a_marathon_not_a_sprints"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <Button
+                        android:id="@+id/customerfollowbutton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginLeft="150dp"
+
+                        android:layout_marginTop="5dp"
+
+
+                        android:background="#ecedec"
+                        android:padding="8dp"
+                        android:text="@string/follows"
+                        android:textSize="18sp"
+                        android:layout_marginStart="150dp" />
+
+                    <TextView
+                        android:id="@+id/customernumberoffollowers"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="260dp"
+                        android:layout_marginTop="5dp"
+                        android:background="#ecedec"
+                        android:padding="8dp"
+                        android:text="@string/_23s"
+                        android:textSize="18sp"
+                        android:layout_marginStart="260dp" />
+
+                    <TextView
+                        android:id="@+id/customerprofilephoneadress"
+                        android:layout_width="164dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:background="#ecedec"
+                        android:padding="8dp"
+                        android:text="@string/_0557154235s"
+                        android:textSize="18sp" />
+
+                </RelativeLayout>
 
                 <TextView
                     android:id="@+id/customerprofilejob"
@@ -77,29 +118,8 @@
                     android:layout_marginTop="10dp"
                     android:background="#ecedec"
                     android:padding="8dp"
-                    android:text="ProductPrice" />
+                    android:text="@string/grilled_chicken_vendors" />
 
-                <TextView
-                    android:id="@+id/customernumberoffollowers"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="#ecedec"
-                    android:padding="8dp"
-                    android:text="@string/thetradername"
-                    android:textSize="18sp" />
-
-
-
-                <Button
-                    android:textSize="18sp"
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:text="the number of likes"
-                    android:id="@+id/customerfollowbutton"
-                    android:background="#ecedec"
-                    android:padding="8dp"
-                    android:layout_marginTop="10dp" />
 
             </LinearLayout>
 

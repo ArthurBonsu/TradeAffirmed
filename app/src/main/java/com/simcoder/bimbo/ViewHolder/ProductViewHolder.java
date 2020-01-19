@@ -35,6 +35,11 @@ public class ProductViewHolder extends RecyclerView.ViewHolder implements View.O
         this.listner = listner;
     }
 
+    public  void setTrader(String trader){
+        tradername = (TextView)itemView.findViewById(R.id.thetrader);
+        tradername.setText(trader);
+    }
+
 
     public void setImage(final Context ctx, final String image) {
         final ImageView Productimage = (ImageView) itemView.findViewById(R.id.product_imagehere);

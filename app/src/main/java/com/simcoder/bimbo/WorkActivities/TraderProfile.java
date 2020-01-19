@@ -58,13 +58,13 @@ public class TraderProfile extends AppCompatActivity  implements  View.OnClickLi
     DatabaseReference mDatabaseLikeCount;
     DatabaseReference mDatabaseTraderFollowers;
 
-    ImageView traderimageonscreen = (ImageView) findViewById(R.id.traderimageonscreen);
-    ImageView tradercoverprofile = (ImageView) findViewById(R.id.tradercoverprofile);
-    TextView traderquotes = (TextView) findViewById(R.id.traderquotes);
-    TextView traderprofilename = (TextView) findViewById(R.id.traderprofilename);
-    TextView traderprofilejob = (TextView) findViewById(R.id.traderprofilejob);
-    TextView tradernumberoffollowers = (TextView) findViewById(R.id.tradernumberoffollowers);
-    TextView traderprofilephoneadress = (TextView)findViewById(R.id.traderprofilephoneadress);
+    ImageView traderimageonscreen;
+    ImageView tradercoverprofile;
+    TextView traderquotes;
+    TextView traderprofilename;
+    TextView traderprofilejob;
+    TextView tradernumberoffollowers;
+    TextView traderprofilephoneadress;
 
 
 

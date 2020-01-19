@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
-        android:text="@string/i_m_a_driver"
+        android:text="@string/i_am_a_trader"
         android:textColor="@color/cast_expanded_controller_progress_text_color"
         android:textColorHighlight="@color/colorPrimary"
         android:textSize="18sp" />
