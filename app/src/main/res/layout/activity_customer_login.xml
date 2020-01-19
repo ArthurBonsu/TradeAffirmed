@@ -10,36 +10,45 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/emailss"
-        android:id="@+id/email"
-        android:inputType="textEmailAddress" />
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/password"
-        android:id="@+id/password"
-        android:inputType="textPassword" />
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/login"
-        android:id="@+id/login"/>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/registration"
-        android:id="@+id/registration"/>
+        android:background="@drawable/thebackgrounddesign"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/customersigninbtngoogle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="120dp"
-        android:layout_marginStart="120dp"
-        android:layout_marginTop="5dp"></com.google.android.gms.common.SignInButton>
+        <EditText
+            android:id="@+id/email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/emailss"
+            android:inputType="textEmailAddress" />
+
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/password"
+            android:inputType="textPassword" />
+
+        <Button
+            android:id="@+id/login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/login" />
+
+        <Button
+            android:id="@+id/registration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/registration" />
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/customersigninbtngoogle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="120dp"
+            android:layout_marginLeft="120dp"
+            android:layout_marginTop="5dp"></com.google.android.gms.common.SignInButton>
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

@@ -4,19 +4,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.simcoder.bimbo.MainActivity"
-    android:orientation="vertical">
+    android:background="@drawable/traders_sign_in"
+    android:orientation="vertical"
+    tools:context="com.simcoder.bimbo.MainActivity">
 
 
     <Button
+        android:id="@+id/driver"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
         android:text="@string/i_m_a_driver"
-        android:id="@+id/driver"/>
+        android:textColor="@color/cast_expanded_controller_progress_text_color"
+        android:textColorHighlight="@color/colorPrimary"
+        android:textSize="18sp" />
+
     <Button
+        android:id="@+id/customer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/colorAccent"
         android:text="@string/i_m_a_customer"
-        android:id="@+id/customer"/>
+        android:textColor="@color/authui_inputTextColor"
+        android:textSize="18sp" />
 
 </LinearLayout>

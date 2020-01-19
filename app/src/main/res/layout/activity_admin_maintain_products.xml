@@ -22,9 +22,9 @@
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:layout_below="@+id/product_name"
-            android:scaleType="centerCrop"
             android:layout_marginTop="2dp"
-            />
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/grillledbeefinherent" />
 
         <EditText
             android:id="@+id/product_name_maintain"

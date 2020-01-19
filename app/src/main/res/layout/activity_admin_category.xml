@@ -13,7 +13,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
-        android:text="Add New Product"
+        android:text="@string/add_new_product"
         android:textAlignment="center"
         android:textSize="26sp"
         android:textStyle="bold"
@@ -80,21 +80,21 @@
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:src="@drawable/glasses"
-            />
+            android:contentDescription="TODO" />
 
         <ImageView
             android:id="@+id/purses_bags_wallets"
             android:layout_width="90dp"
             android:layout_height="80dp"
             android:src="@drawable/purses_bags"
-            />
+            android:contentDescription="TODO" />
 
         <ImageView
             android:id="@+id/hats_caps"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:src="@drawable/hats"
-            />
+            android:contentDescription="TODO" />
 
         <ImageView
             android:id="@+id/shoes"
@@ -103,7 +103,7 @@
             android:src="@drawable/shoess"
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
-            />
+            android:contentDescription="TODO" />
 
     </LinearLayout>
 
@@ -124,21 +124,21 @@
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:src="@drawable/headphoness"
-            />
+            android:contentDescription="TODO" />
 
         <ImageView
             android:id="@+id/laptop_pc"
             android:layout_width="90dp"
             android:layout_height="80dp"
             android:src="@drawable/laptops"
-            />
+            android:contentDescription="@string/todoHERE" />
 
         <ImageView
             android:id="@+id/watches"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:src="@drawable/watches"
-            />
+            android:contentDescription="TODO" />
 
         <ImageView
             android:id="@+id/mobilephones"
@@ -146,7 +146,7 @@
             android:layout_height="80dp"
             android:src="@drawable/mobiles"
             android:layout_marginStart="16dp"
-            />
+            android:contentDescription="@string/todoHER" />
 
     </LinearLayout>
 
@@ -158,12 +158,12 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="10dp"
-        android:background="@color/colorPrimaryDark"
-        android:text="View All Products"
-        android:textColor="@android:color/white"
-        android:textSize="20dp"
+        android:background="#FFA500"
+        android:text="@string/view_all_products"
         android:textAllCaps="false"
-        />
+        android:textColor="@android:color/white"
+        android:textSize="20sp" />
+
     <Button
         android:id="@+id/homebuttonhere"
         android:layout_width="match_parent"
@@ -172,12 +172,11 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="10dp"
-        android:background="@color/colorPrimaryDark"
-        android:text="Home Button"
-        android:textColor="@android:color/white"
-        android:textSize="20dp"
+        android:background="#FFA500"
+        android:text="@string/home_button"
         android:textAllCaps="false"
-        />
+        android:textColor="@android:color/white"
+        android:textSize="20sp" />
    <!-- android:layout_above="@+id/check_orders_btn" -->
 
     <Button
@@ -188,12 +187,11 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="10dp"
-        android:background="@color/colorPrimaryDark"
-        android:text="Maintain Products"
-        android:textColor="@android:color/white"
-        android:textSize="20dp"
+        android:background="#FFA500"
+        android:text="@string/maintain_products"
         android:textAllCaps="false"
-        />
+        android:textColor="@android:color/white"
+        android:textSize="20sp" />
 
     <Button
         android:id="@+id/check_orders_btn"
@@ -203,12 +201,11 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="10dp"
-        android:background="@color/colorPrimaryDark"
-        android:text="Check New Orders"
-        android:textColor="@android:color/white"
-        android:textSize="20dp"
+        android:background="#FFA500"
+        android:text="@string/check_new_orders"
         android:textAllCaps="false"
-        />
+        android:textColor="@android:color/white"
+        android:textSize="20sp" />
 
 
     <Button
@@ -219,12 +216,11 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="15dp"
-        android:background="@color/colorPrimaryDark"
-        android:text="Logout"
-        android:textColor="@android:color/white"
-        android:textSize="20dp"
+        android:background="#FFA500"
+        android:text="@string/logoutERRT"
         android:textAllCaps="false"
-        />
+        android:textColor="@android:color/white"
+        android:textSize="20sp" />
 
 
 </RelativeLayout>

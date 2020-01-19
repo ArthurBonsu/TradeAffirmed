@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/login"
+    android:background="@drawable/thebackgrounddesign"
     tools:context=".WorkActivities.LoginActivity">
 
     <ImageView
         android:id="@+id/login_applogo"
         android:layout_width="300dp"
         android:layout_height="100dp"
-        android:src="@drawable/applogo"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="195dp"
-        android:contentDescription="loginlogoofapp" />
+        android:contentDescription="loginlogoofapp"
+        android:src="@drawable/applogo"
+        android:visibility="invisible" />
 
 
     <EditText
@@ -23,16 +23,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/login_applogo"
-        android:background="@drawable/input_design"
-        android:padding="20dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
+        android:autofillHints=""
+        android:background="@drawable/input_design"
         android:hint="@string/emailcommerce"
         android:inputType="textEmailAddress"
+        android:padding="20dp"
         android:textColor="@color/colorPrimaryDark"
-        android:textColorHint="@color/colorPrimaryDark"
-        android:textSize="19sp"
-        android:autofillHints="" />
+        android:textColorHint="@color/cast_expanded_controller_text_color"
+        android:textSize="19sp" />
 
 
     <EditText
@@ -40,16 +40,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/login_email_input"
-        android:background="@drawable/input_design"
-        android:padding="20dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
+        android:autofillHints=""
+        android:background="@drawable/input_design"
         android:hint="@string/phone_number"
         android:inputType="phone"
+        android:padding="20dp"
         android:textColor="@color/colorPrimaryDark"
-        android:textColorHint="@color/colorPrimaryDark"
-        android:textSize="19sp"
-        android:autofillHints="" />
+        android:textColorHint="@color/cast_expanded_controller_text_color"
+        android:textSize="19sp" />
 
 
     <EditText
@@ -57,49 +57,46 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/login_phone_number_input"
-        android:background="@drawable/input_design"
-        android:padding="20dp"
         android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
         android:layout_marginTop="6dp"
+        android:layout_marginRight="15dp"
+        android:autofillHints=""
+        android:background="@drawable/input_design"
         android:hint="@string/passwordcommerce"
         android:inputType="textPassword"
+        android:padding="20dp"
         android:textColor="@color/colorPrimaryDark"
-        android:textColorHint="@color/colorPrimaryDark"
-        android:textSize="19sp"
-        android:autofillHints="" />
+        android:textColorHint="@color/cast_expanded_controller_text_color"
+        android:textSize="19sp" />
 
     <LinearLayout
         android:id="@+id/linear_layout_1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_below="@+id/login_password_input"
         android:layout_marginTop="5dp"
-        >
+        android:orientation="horizontal">
 
         <com.rey.material.widget.CheckBox
             android:id="@+id/remember_me_chkb"
+            style="@style/Material.Drawable.CheckBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/Material.Drawable.CheckBox"
+            android:layout_marginLeft="17dp"
+            android:gravity="center_vertical"
             android:text="Remember me"
             android:textColor="@color/colorPrimaryDark"
-            app:cbd_strokeColor="@color/colorPrimaryDark"
-            android:gravity="center_vertical"
             android:textSize="18sp"
-            android:layout_marginLeft="17dp"
-            />
+            app:cbd_strokeColor="@color/colorPrimaryDark" />
 
         <TextView
             android:id="@+id/forget_password_link"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="70dp"
             android:text="Forget Password?"
             android:textColor="@color/colorPrimaryDark"
-            android:textSize="19sp"
-            android:layout_marginLeft="70dp"
-            />
+            android:textSize="19sp" />
 
     </LinearLayout>
 
@@ -109,55 +106,55 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/linear_layout_1"
-        android:layout_marginTop="5dp"
         android:layout_marginLeft="15dp"
+        android:layout_marginTop="5dp"
         android:layout_marginRight="15dp"
         android:background="@drawable/buttons"
         android:padding="17dp"
-        android:textAllCaps="false"
-        android:textSize="18sp"
         android:text="Login"
+        android:textAllCaps="false"
         android:textColor="@android:color/white"
-        />
+        android:textSize="18sp" />
 
     <com.google.android.gms.common.SignInButton
+        android:id="@+id/eccommercegooglelogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="120dp"
-        android:layout_marginTop="5dp"
-        android:id="@+id/eccommercegooglelogin"
         android:layout_below="@+id/login_btn"
-        android:layout_marginStart="120dp"></com.google.android.gms.common.SignInButton>
+        android:layout_marginStart="120dp"
+        android:layout_marginLeft="120dp"
+        android:layout_marginTop="5dp"></com.google.android.gms.common.SignInButton>
+
     <TextView
-    android:id="@+id/admin_panel_link"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="I'm a Trader?"
-    android:layout_alignParentEnd="true"
-    android:layout_below="@+id/eccommercegooglelogin"
-    android:textColor="@color/colorPrimaryDark"
-    android:textSize="20sp"
-    android:textStyle="bold"
-    android:layout_marginLeft="80dp"
-    android:layout_marginEnd="23dp"
+        android:id="@+id/admin_panel_link"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/eccommercegooglelogin"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
+        android:layout_marginStart="80dp"
+        android:layout_marginLeft="80dp"
+        android:layout_marginEnd="23dp"
         android:layout_marginRight="23dp"
-        android:layout_marginStart="80dp" />
+        android:text="I'm a Trader?"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
 
     <TextView
         android:id="@+id/not_admin_panel_link"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="I'm a Customer"
-        android:layout_alignParentStart="true"
         android:layout_below="@+id/eccommercegooglelogin"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginStart="25dp"
+        android:layout_marginLeft="80dp"
+        android:text="I'm a Customer"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:layout_marginLeft="80dp"
-        android:layout_marginStart="25dp"
-        android:visibility="invisible"
-        android:layout_alignParentLeft="true" />
+        android:visibility="invisible" />
 
 </RelativeLayout>

@@ -10,21 +10,20 @@
         android:id="@+id/alltheproductshereokayy"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@color/colorPrimaryDark"
+        android:layout_alignParentTop="true"
 
-        android:layout_alignParentTop="true">
+        android:background="@color/com_smart_login_code">
 
         <TextView
             android:id="@+id/allproductforadmin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/all_products"
-            android:textColor="@android:color/white"
-            android:textSize="25sp"
-
-            android:textAlignment="center"
             android:layout_marginTop="10dp"
-            />
+            android:text="@string/all_products"
+            android:textAlignment="center"
+
+            android:textColor="@android:color/white"
+            android:textSize="25sp" />
 
         <Button
             android:id="@+id/viewallyourcustomers"

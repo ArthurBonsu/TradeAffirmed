@@ -205,4 +205,12 @@
     <string name="hybrid">Hybrid</string>
     <string name="stationary">Stationary</string>
     <string name="product_imagehere">product_imagehere</string>
+    <string name="add_new_product">Add New Product</string>
+    <string name="home_button">Home Button</string>
+    <string name="view_all_products">View All Products</string>
+    <string name="check_new_orders">Check New Orders</string>
+    <string name="maintain_products">Maintain Products</string>
+    <string name="logoutERRT">Logout</string>
+    <string name="todoHERE">TODO</string>
+    <string name="todoHER">TODO</string>
 </resources>

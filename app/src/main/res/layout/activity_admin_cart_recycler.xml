@@ -10,18 +10,17 @@
         android:id="@+id/admincartitemtitle"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@color/colorPrimaryDark"
-        android:layout_alignParentTop="true">
+        android:layout_alignParentTop="true"
+        android:background="#FFA500">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="THESE ARE THE PRODUCTS IN USER CARTS"
-            android:textColor="@android:color/white"
-            android:textSize="25dp"
-            android:textAlignment="center"
             android:layout_marginTop="10dp"
-            />
+            android:text="Cart List"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textSize="25dp" />
 
     </RelativeLayout>
 
@@ -29,8 +28,8 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/theadmincartrecycler"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/ir3">
-    </android.support.v7.widget.RecyclerView>
+        android:layout_height="wrap_content"
+           android:layout_marginTop="50dp"
+         android:layout_below="@+id/ir3"></android.support.v7.widget.RecyclerView>
 
 </RelativeLayout>
