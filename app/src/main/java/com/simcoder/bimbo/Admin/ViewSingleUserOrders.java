@@ -152,32 +152,40 @@ public  class ViewSingleUserOrders extends AppCompatActivity
 
         singleuserordertListRef = FirebaseDatabase.getInstance().getReference()
                 .child("Orders");
-        myQuery = singleuserordertListRef.child("trader").orderByChild(traderID);
-        myUserQuery = myQuery.getRef().child("Users").child(userID).child("products");
+        if (singleuserordertListRef != null) {
+            if (traderID != null) {
+                myQuery = singleuserordertListRef.child("trader").orderByChild(traderID);
+                if (userID != null) {
+                    myUserQuery = myQuery.getRef().child("Users").child(userID).child("products");
+                }
+            }
+                                    if (myUserQuery != null) {
+                                        DatabaseReference getthequatityreference = myUserQuery.getRef().child("").child("quantity");
 
-        DatabaseReference getthequatityreference = myUserQuery.getRef().child("").child("quantity");
+
+            getthequatityreference.addValueEventListener(new ValueEventListener() {
+
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0) {
+
+                        quantity = dataSnapshot.getValue().toString();
+                    }
+                    }
 
 
-        getthequatityreference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0) {
-                    quantity = dataSnapshot.getValue().toString();
+
+
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
                 }
 
 
-            }
+            });
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-
-
-        });
-
-
-    }
+    }}}
             @Override
     protected void onStart()
     {
@@ -215,10 +223,7 @@ public  class ViewSingleUserOrders extends AppCompatActivity
         if (productsList != null) {
             productsList.setAdapter(adapter);
         }
-        if (adapter != null) {
-            adapter.startListening();
-
-        }}
+        }
 
     @Override
     protected void onStop() {

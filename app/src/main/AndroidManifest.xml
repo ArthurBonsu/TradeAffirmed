@@ -103,6 +103,7 @@
         <activity android:name=".WorkActivities.SettinsActivity" />
         <activity android:name=".WorkActivities.CustomerProfile" />
         <activity android:name=".WorkActivities.TraderProfile" />
+
         <activity android:name=".Admin.ViewSingleUserOrders" />
         <activity android:name=".Admin.AdminViewBuyersActivity" />
         <activity android:name=".Admin.AdminUserCartedActivity" />
@@ -112,6 +113,8 @@
         <activity android:name=".Admin.AdminCategoryActivity" />
         <activity android:name=".Admin.AdminAllProducts" />
         <activity android:name=".Admin.AdminAllCustomers" />
+        <activity android:name=".Admin.AdminAddNewProductActivity" />
+
 
 
 

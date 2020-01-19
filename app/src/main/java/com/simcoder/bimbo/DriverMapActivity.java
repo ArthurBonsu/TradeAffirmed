@@ -117,6 +117,9 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     Button mHistory;
     String role;
     ImageButton mydrivernavigations;
+    String destinationvalue;
+    String destinationLatvalue;
+    String destinationLngvalue;
 
     ArrayList<DriverRole> driverRoles = new ArrayList<>();
     ArrayList<CustomerRequester> CustomerRequestList = new ArrayList<>();
@@ -139,6 +142,10 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     private LinearLayout mCustomerInfo;
     private FirebaseAuth mAuth;
+    String name;
+    String phone;
+    String image;
+
 
     private GoogleSignInClient mGoogleSignInClient;
     private ImageView mCustomerProfileImage;
@@ -288,6 +295,9 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                     if (dataSnapshot.exists()) {
                         if (dataSnapshot != null) {
                             role = dataSnapshot.getValue().toString();
+
+
+                         /*
                             Iterator<DataSnapshot> items = dataSnapshot.getChildren().iterator();
                             Toast.makeText(DriverMapActivity.this, "Total Location Count:" + dataSnapshot.child("l").getChildrenCount(), Toast.LENGTH_LONG).show();
                             driverRoles.clear();
@@ -305,7 +315,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                                     }
                                 }
                             }
-                        }
+                    */    }
                     }
                 }
                 @Override
@@ -393,7 +403,10 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
                             status = 1;
-                            if (dataSnapshot != null) {
+                              if (customerId != null) {
+                                  customerId = dataSnapshot.getValue().toString();
+                              }
+                            /* if (dataSnapshot != null) {
                             //    customerId = dataSnapshot.getValue().toString();
 
 
@@ -413,6 +426,8 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                                             CustomerRequestList.add(new CustomerRequester(customeridmap.get("customerId").toString()));
                                             customerId =  CustomerRequestList.get(0).getCustomerId().toString();
                                         }}}
+
+                            */
                                 getAssignedCustomerPickupLocation();
                                 getAssignedCustomerDestination();
                                 getAssignedCustomerInfo();
@@ -420,11 +435,13 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                                 endRide();
                             }
                         }
-                    }
+
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
+
                     }
                 });
+
             }
         }
     }
@@ -440,7 +457,10 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists() && !customerId.equals("")) {
-                    if (dataSnapshot != null) {
+
+                    String zero = dataSnapshot.child("zero").getValue().toString();
+                    String one = dataSnapshot.child("one").getValue().toString();
+                   /* if (dataSnapshot != null) {
                       //  List<Object> map = (List<Object>) dataSnapshot.getValue();
 
                         Iterator<DataSnapshot> items = dataSnapshot.getChildren().iterator();
@@ -459,19 +479,19 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
 
                                 }}}
-
+*/
 
                         double locationLat = 0;
                         double locationLng = 0;
 
 
-                        if (locationmap.get(0) != null) {
-                            locationLat = Double.parseDouble(CustomerLocationInfo.get(0).getZero().toString());
-                        }
 
-                        if (locationmap.get(1) != null) {
-                            locationLng = Double.parseDouble(CustomerLocationInfo.get(0).getOne().toString());
-                        }
+                            locationLat = Double.parseDouble(zero);
+
+
+
+                            locationLng = Double.parseDouble(one);
+
 
                         if (pickupLatLng != null) {
                             pickupLatLng = new LatLng(locationLat, locationLng);
@@ -480,9 +500,10 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                         }
                     }
                 }
-            }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
+
             }
         });
     }
@@ -518,7 +539,12 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
-                            if (dataSnapshot != null) {
+                            destinationvalue = dataSnapshot.child("destination").getValue().toString();
+                            destinationLatvalue = dataSnapshot.child("destinationLat").getValue().toString();
+                            destinationLngvalue = dataSnapshot.child("destinationLng").getValue().toString();
+
+
+                         /*   if (dataSnapshot != null) {
                             //    Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
 
                                 Iterator<DataSnapshot> items = dataSnapshot.getChildren().iterator();
@@ -531,207 +557,217 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                                     DataSnapshot item = items.next();
 
                                     CustomerSearchedlocation myuser = item.getValue(CustomerSearchedlocation.class);
+
                                     if (locmap.get("zero") != null) {
                                         if (locmap.get("one") != null) {
                                             CustomerSearchedLocationList.add(new CustomerSearchedlocation(locmap.get("zero").toString(), locmap.get("one").toString(), locmap.get("destination").toString(), locmap.get("destinationLat").toString(), locmap.get("destinationLng").toString()));
-
-                                            if (locmap.get("destination") != null) {
-                                                destination = CustomerSearchedLocationList.get(0).getdestination().toString();
-                                                mCustomerDestination.setText("Destination: " + destination);
-                                            } else {
-                                                mCustomerDestination.setText("Destination: --");
-                                            }
-
-                                            Double destinationLat = 0.0;
-                                            Double destinationLng = 0.0;
-                                            if (locmap.get("destinationLat") != null) {
-                                                destinationLat = Double.valueOf(CustomerSearchedLocationList.get(0).getdestinationLat().toString());
-                                            }
-                                            if (locmap.get("destinationLng") != null) {
-                                                destinationLng = Double.valueOf(CustomerSearchedLocationList.get(0).getdestinationLng());
-                                                destinationLatLng = new LatLng(destinationLat, destinationLng);
-                                            }
-
-                                        }}}}}}
-
-
-
+                   */
+                        }
+                    }
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
+
                     }
                 });
+                destination = destinationvalue;
+                mCustomerDestination.setText("Destination: " + destination);
+            } else {
+                mCustomerDestination.setText("Destination: --");
             }
+
+            Double destinationLat = 0.0;
+            Double destinationLng = 0.0;
+
+            destinationLat = Double.valueOf(destinationLatvalue);
+
+
+            destinationLng = Double.valueOf(destinationLngvalue);
+            destinationLatLng = new LatLng(destinationLat, destinationLng);
+
         }
+
+
     }
-    // GET THE ASSIGNED CUSTOMER INFORMATION
-    private void getAssignedCustomerInfo() {
-        if (mCustomerInfo != null) {
-            mCustomerInfo.setVisibility(View.VISIBLE);
-            DatabaseReference mCustomerDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(customerId);
-            if (mCustomerDatabase != null) {
-                mCustomerDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0) {
-                      //      Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
 
-                            Iterator<DataSnapshot> items = dataSnapshot.getChildren().iterator();
-                            Toast.makeText(DriverMapActivity.this, "Total Location Count:" + dataSnapshot.child("l").getChildrenCount(), Toast.LENGTH_LONG).show();
-                            CustomerLocationAndInfoList.clear();
+                    // GET THE ASSIGNED CUSTOMER INFORMATION
+                    private void getAssignedCustomerInfo() {
+                        if (mCustomerInfo != null) {
+                            mCustomerInfo.setVisibility(View.VISIBLE);
+                            DatabaseReference mCustomerDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(customerId);
+                            if (mCustomerDatabase != null) {
+                                mCustomerDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        if (dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0) {
 
-                            HashMap<String, Object> locmap = null;
+                         name = dataSnapshot.child("name").getValue().toString();
+                        phone = dataSnapshot.child("phone").getValue().toString();
+                         image = dataSnapshot.child("image").getValue().toString();
 
-                            while (items.hasNext()) {
-                                DataSnapshot item = items.next();
+                                            //      Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+/*
+                                            Iterator<DataSnapshot> items = dataSnapshot.getChildren().iterator();
+                                            Toast.makeText(DriverMapActivity.this, "Total Location Count:" + dataSnapshot.child("l").getChildrenCount(), Toast.LENGTH_LONG).show();
+                                            CustomerLocationAndInfoList.clear();
 
-                                CustomerLocationAndInfo myuser = item.getValue(CustomerLocationAndInfo.class);
-                                if (locmap.get("zero") != null) {
-                                    if (locmap.get("one") != null) {
-                                        CustomerLocationAndInfoList.add(new CustomerLocationAndInfo(locmap.get("name").toString(), locmap.get("phone").toString(), locmap.get("image").toString()));
+                                            HashMap<String, Object> locmap = null;
 
+                                            while (items.hasNext()) {
+                                                DataSnapshot item = items.next();
+
+                                                CustomerLocationAndInfo myuser = item.getValue(CustomerLocationAndInfo.class);
+                                                if (locmap.get("zero") != null) {
+                                                    if (locmap.get("one") != null) {
+                                                        CustomerLocationAndInfoList.add(new CustomerLocationAndInfo(locmap.get("name").toString(), locmap.get("phone").toString(), locmap.get("image").toString()));
+
+                                                    */}
+
+
+
+
+
+                                                        mCustomerName.setText(name);
+
+
+                                                        mCustomerPhone.setText(phone);
+
+
+                                                        Glide.with(getApplication()).load(image).into(mCustomerProfileImage);
+
+                                                }
+
+
+
+
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
                                     }
-                                    int position = 0;
-                                    if (locmap.get("name") != null) {
-                                        mCustomerName.setText(CustomerLocationAndInfoList.get(position).getname().toString());
+                                });
+                            }
+                        }
+                    }
+
+                    // HERE I  CAN END THE DRIVER CAN END THE RIDE
+                    private void endRide() {
+                        mRideStatus.setText("picked customer");
+                        erasePolylines();
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        if (user != null) {
+                            String userId = "";
+
+
+                            userId = user.getUid();
+
+                            DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(userId).child("customerRequest");
+                            if (driverRef != null) {
+                                driverRef.removeValue();
+                            }
+                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
+                            GeoFire geoFire = new GeoFire(ref);
+                            if (geoFire != null) {
+                                geoFire.removeLocation(customerId);
+                            }
+                            customerId = "";
+                            rideDistance = 0;
+
+                            if (pickupMarker != null) {
+                                pickupMarker.remove();
+                            }
+                            if (assignedCustomerPickupLocationRefListener != null) {
+                                assignedCustomerPickupLocationRef.removeEventListener(assignedCustomerPickupLocationRefListener);
+                            }
+                            if (mCustomerInfo != null) {
+                                mCustomerInfo.setVisibility(View.GONE);
+                            }
+                            if (mCustomerName != null) {
+                                mCustomerName.setText("");
+                            }
+                            if (mCustomerPhone != null) {
+                                mCustomerPhone.setText("");
+                            }
+                            if (mCustomerDestination != null) {
+                                mCustomerDestination.setText("Destination: --");
+                            }
+                            if (mCustomerProfileImage != null) {
+                                mCustomerProfileImage.setImageResource(R.mipmap.ic_default_user);
+                            }
+                        }
+                    }
+
+                    private void recordRide() {
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        if (user != null) {
+                            String userId = "";
+
+
+                            userId = user.getUid();
+                            DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(userId).child("history");
+                            DatabaseReference customerRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(customerId).child("history");
+                            DatabaseReference historyRef = FirebaseDatabase.getInstance().getReference().child("history");
+                            String requestId = historyRef.push().getKey();
+                            if (requestId != null) {
+                                driverRef.child(requestId).setValue(true);
+                                customerRef.child(requestId).setValue(true);
+                            }
+                            //SAME MUST BE DONE FOR HISTORYREF OVERHERE
+                            // RIDE ID MUST BE STORED
+                            if (destinationLatLng != null) {
+                                HashMap map = new HashMap();
+                                map.put("driver", userId);
+                                map.put("customer", customerId);
+                                map.put("rating", 0);
+                                map.put("timestamp", getCurrentTimestamp());
+                                map.put("destination", destination);
+                                if (pickupLatLng != null) {
+                                    map.put("location/from/lat", pickupLatLng.latitude);
+                                    map.put("location/from/lng", pickupLatLng.longitude);
+                                    map.put("location/to/lat", destinationLatLng.latitude);
+                                    map.put("location/to/lng", destinationLatLng.longitude);
+                                    map.put("distance", rideDistance);
+                                    if (requestId != null) {
+                                        historyRef.child(requestId).updateChildren(map);
                                     }
-                                    if (locmap.get("phone") != null) {
-                                        mCustomerPhone.setText(CustomerLocationAndInfoList.get(position).getphone().toString());
+                                    // PUT THIS INTO THE DRIVER CATALOG
+                                    HashMap drivemap = new HashMap();
+                                    map.put("driver", userId);
+                                    map.put("customer", customerId);
+                                    map.put("rating", 0);
+                                    map.put("timestamp", getCurrentTimestamp());
+                                    map.put("destination", destination);
+                                    map.put("location/from/lat", pickupLatLng.latitude);
+                                    map.put("location/from/lng", pickupLatLng.longitude);
+                                    map.put("location/to/lat", destinationLatLng.latitude);
+                                    map.put("location/to/lng", destinationLatLng.longitude);
+                                    map.put("distance", rideDistance);
+                                    if (requestId != null) {
+                                        driverRef.child(requestId).updateChildren(drivemap);
                                     }
-                                    if (locmap.get("image") != null) {
-                                        Glide.with(getApplication()).load(CustomerLocationAndInfoList.get(position).getimage().toString()).into(mCustomerProfileImage);
+                                    HashMap drivemapers = new HashMap();
+                                    map.put("driver", userId);
+                                    map.put("customer", customerId);
+                                    map.put("rating", 0);
+                                    map.put("timestamp", getCurrentTimestamp());
+                                    map.put("destination", destination);
+                                    map.put("location/from/lat", pickupLatLng.latitude);
+                                    map.put("location/from/lng", pickupLatLng.longitude);
+                                    map.put("location/to/lat", destinationLatLng.latitude);
+                                    map.put("location/to/lng", destinationLatLng.longitude);
+                                    map.put("distance", rideDistance);
+                                    if (customerRef != null) {
+                                        customerRef.child(requestId).updateChildren(drivemapers);
                                     }
                                 }
                             }
-
-                        }}
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
+                        }
                     }
-                });
-            }
-        }
-    }
-    // HERE I  CAN END THE DRIVER CAN END THE RIDE
-    private void endRide() {
-        mRideStatus.setText("picked customer");
-        erasePolylines();
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            String userId = "";
 
-
-            userId = user.getUid();
-
-            DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(userId).child("customerRequest");
-            if (driverRef !=null) {
-                driverRef.removeValue();
-            }
-            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("customerRequest");
-            GeoFire geoFire = new GeoFire(ref);
-            if (geoFire != null) {
-                geoFire.removeLocation(customerId);
-            }
-            customerId = "";
-            rideDistance = 0;
-
-            if (pickupMarker != null) {
-                pickupMarker.remove();
-            }
-            if (assignedCustomerPickupLocationRefListener != null) {
-                assignedCustomerPickupLocationRef.removeEventListener(assignedCustomerPickupLocationRefListener);
-            }
-            if (mCustomerInfo != null) {
-                mCustomerInfo.setVisibility(View.GONE);
-            }
-            if (mCustomerName != null) {
-                mCustomerName.setText("");
-            }
-            if (mCustomerPhone != null) {
-                mCustomerPhone.setText("");
-            }
-            if (mCustomerDestination != null) {
-                mCustomerDestination.setText("Destination: --");
-            }
-            if (mCustomerProfileImage != null) {
-                mCustomerProfileImage.setImageResource(R.mipmap.ic_default_user);
-            }
-        }
-    }
-
-    private void recordRide() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            String userId = "";
-
-
-            userId = user.getUid();
-            DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(userId).child("history");
-            DatabaseReference customerRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(customerId).child("history");
-            DatabaseReference historyRef = FirebaseDatabase.getInstance().getReference().child("history");
-            String requestId = historyRef.push().getKey();
-            if (requestId !=null) {
-                driverRef.child(requestId).setValue(true);
-                customerRef.child(requestId).setValue(true);
-            }
-            //SAME MUST BE DONE FOR HISTORYREF OVERHERE
-            // RIDE ID MUST BE STORED
-            if (destinationLatLng != null) {
-                HashMap map = new HashMap();
-                map.put("driver", userId);
-                map.put("customer", customerId);
-                map.put("rating", 0);
-                map.put("timestamp", getCurrentTimestamp());
-                map.put("destination", destination);
-                if (pickupLatLng != null) {
-                    map.put("location/from/lat", pickupLatLng.latitude);
-                    map.put("location/from/lng", pickupLatLng.longitude);
-                    map.put("location/to/lat", destinationLatLng.latitude);
-                    map.put("location/to/lng", destinationLatLng.longitude);
-                    map.put("distance", rideDistance);
-                    if (requestId != null) {
-                        historyRef.child(requestId).updateChildren(map);
+                    // GET CURRENTTIMESTAMP
+                    private Long getCurrentTimestamp() {
+                        Long timestamp = System.currentTimeMillis() / 1000;
+                        return timestamp;
                     }
-                    // PUT THIS INTO THE DRIVER CATALOG
-                    HashMap drivemap = new HashMap();
-                    map.put("driver", userId);
-                    map.put("customer", customerId);
-                    map.put("rating", 0);
-                    map.put("timestamp", getCurrentTimestamp());
-                    map.put("destination", destination);
-                    map.put("location/from/lat", pickupLatLng.latitude);
-                    map.put("location/from/lng", pickupLatLng.longitude);
-                    map.put("location/to/lat", destinationLatLng.latitude);
-                    map.put("location/to/lng", destinationLatLng.longitude);
-                    map.put("distance", rideDistance);
-                    if (requestId != null) {
-                        driverRef.child(requestId).updateChildren(drivemap);
-                    }
-                    HashMap drivemapers = new HashMap();
-                    map.put("driver", userId);
-                    map.put("customer", customerId);
-                    map.put("rating", 0);
-                    map.put("timestamp", getCurrentTimestamp());
-                    map.put("destination", destination);
-                    map.put("location/from/lat", pickupLatLng.latitude);
-                    map.put("location/from/lng", pickupLatLng.longitude);
-                    map.put("location/to/lat", destinationLatLng.latitude);
-                    map.put("location/to/lng", destinationLatLng.longitude);
-                    map.put("distance", rideDistance);
-                    if (customerRef != null) {
-                        customerRef.child(requestId).updateChildren(drivemapers);
-                    }
-                }
-            }
-        }
-    }
-
-    // GET CURRENTTIMESTAMP
-    private Long getCurrentTimestamp() {
-        Long timestamp = System.currentTimeMillis() / 1000;
-        return timestamp;
-    }
 
 
     @Override

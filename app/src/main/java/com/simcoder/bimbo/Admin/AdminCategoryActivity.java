@@ -63,93 +63,98 @@ public class AdminCategoryActivity extends AppCompatActivity
         maintainProductsBtn = (Button) findViewById(R.id.maintain_btn);
         HomeBtn = (Button) findViewById(R.id.homebuttonhere);
         AllProducts = (Button)findViewById(R.id.allproducts);
-        RoleReference = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(traderID).child("role");
 
-        if (RoleReference != null) {
-            RoleReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0) {
-                        role = dataSnapshot.getValue().toString();
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                     if (user != null) {
+                          traderID = "";
+                          traderID = user.getUid();
+                         RoleReference = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(traderID).child("role");
 
-                    }
-                }
+                         if (RoleReference != null) {
+                             RoleReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                                 @Override
+                                 public void onDataChange(DataSnapshot dataSnapshot) {
+                                     if (dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0) {
+                                         role = dataSnapshot.getValue().toString();
 
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                }
-            });
-        }
-
-        if (maintainProductsBtn != null) {
-            maintainProductsBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    //SHOULD HAVE TRADER ID  AND PASS IT TO TYPE TO SEE WHETHER ADMIN OR NOT, SO WE HAVE TO SET A PARAMETER
-                    Intent intent = new Intent(AdminCategoryActivity.this, AdminMaintainProductsActivity.class);
-                    intent.putExtra("maintainrolefromadmincategory", role);
-                    intent.putExtra("maintainfromadmincategoryactivity", traderID);
-                    startActivity(intent);
-                }
-            });
-
-        }
-        if (LogoutBtn != null) {
-            LogoutBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(AdminCategoryActivity.this, MainActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
-                    startActivity(intent);
-                    finish();
-                }
-            });
-        }
-        if (CheckOrdersBtn != null) {
-            CheckOrdersBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(AdminCategoryActivity.this, AdminNewOrdersActivity.class);
-                    intent.putExtra("rolefromadmincategorytoadminneworder", role);
-                    intent.putExtra("fromadmincategoryactivityadminnewordder", traderID);
+                                     }
+                                 }
 
 
-                    startActivity(intent);
-                }
-            });
+                                 @Override
+                                 public void onCancelled(DatabaseError databaseError) {
+                                 }
+                             });
+                         }
 
-        }
+                         if (maintainProductsBtn != null) {
+                             maintainProductsBtn.setOnClickListener(new View.OnClickListener() {
+                                 @Override
+                                 public void onClick(View view) {
+                                     //SHOULD HAVE TRADER ID  AND PASS IT TO TYPE TO SEE WHETHER ADMIN OR NOT, SO WE HAVE TO SET A PARAMETER
+                                     Intent intent = new Intent(AdminCategoryActivity.this, AdminMaintainProductsActivity.class);
+                                     intent.putExtra("maintainrolefromadmincategory", role);
+                                     intent.putExtra("maintainfromadmincategoryactivity", traderID);
+                                     startActivity(intent);
+                                 }
+                             });
 
-        if (AllProducts != null) {
-            AllProducts.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(AdminCategoryActivity.this, AdminAllProducts.class);
-                    intent.putExtra("rolefromadmincategorytoallproducts", role);
-                    intent.putExtra("fromadmincategorytoallproducts", traderID);
+                         }
+                         if (LogoutBtn != null) {
+                             LogoutBtn.setOnClickListener(new View.OnClickListener() {
+                                 @Override
+                                 public void onClick(View view) {
+                                     Intent intent = new Intent(AdminCategoryActivity.this, MainActivity.class);
+                                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                                     startActivity(intent);
+                                     finish();
+                                 }
+                             });
+                         }
+                         if (CheckOrdersBtn != null) {
+                             CheckOrdersBtn.setOnClickListener(new View.OnClickListener() {
+                                 @Override
+                                 public void onClick(View view) {
+                                     Intent intent = new Intent(AdminCategoryActivity.this, AdminNewOrdersActivity.class);
+                                     intent.putExtra("rolefromadmincategorytoadminneworder", role);
+                                     intent.putExtra("fromadmincategoryactivityadminnewordder", traderID);
 
 
-                    startActivity(intent);
-                }
-            });
+                                     startActivity(intent);
+                                 }
+                             });
 
-        }
-        if (HomeBtn != null) {
-            HomeBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    //SHOULD HAVE TRADER ID  AND PASS IT TO TYPE TO SEE WHETHER ADMIN OR NOT, SO WE HAVE TO SET A PARAMETER
-                    Intent intent = new Intent(AdminCategoryActivity.this, HomeActivity.class);
-                    intent.putExtra("rolefromadmincategory", role);
-                    intent.putExtra("fromadmincategoryactivity", traderID);
-                    startActivity(intent);
-                }
-            });
+                         }
 
-        }
+                         if (AllProducts != null) {
+                             AllProducts.setOnClickListener(new View.OnClickListener() {
+                                 @Override
+                                 public void onClick(View view) {
+                                     Intent intent = new Intent(AdminCategoryActivity.this, AdminAllProducts.class);
+                                     intent.putExtra("rolefromadmincategorytoallproducts", role);
+                                     intent.putExtra("fromadmincategorytoallproducts", traderID);
 
+
+                                     startActivity(intent);
+                                 }
+                             });
+
+                         }
+                         if (HomeBtn != null) {
+                             HomeBtn.setOnClickListener(new View.OnClickListener() {
+                                 @Override
+                                 public void onClick(View view) {
+                                     //SHOULD HAVE TRADER ID  AND PASS IT TO TYPE TO SEE WHETHER ADMIN OR NOT, SO WE HAVE TO SET A PARAMETER
+                                     Intent intent = new Intent(AdminCategoryActivity.this, HomeActivity.class);
+                                     intent.putExtra("rolefromadmincategory", role);
+                                     intent.putExtra("fromadmincategoryactivity", traderID);
+                                     startActivity(intent);
+                                 }
+                             });
+
+                         }
+                     }
 
         //AUTHENTICATORS
         FirebaseAuth.getInstance();
@@ -175,7 +180,7 @@ public class AdminCategoryActivity extends AppCompatActivity
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
 
-                user = FirebaseAuth.getInstance().getCurrentUser();
+            FirebaseUser    user = FirebaseAuth.getInstance().getCurrentUser();
                 if (user != null) {
                     traderID = "";
                     traderID = user.getUid();

@@ -2,11 +2,14 @@ package com.simcoder.bimbo;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
+import android.os.Build;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -158,6 +161,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     ImageButton myvlayoutnavigationalview;
     String thelocationkey;
     String service;
+    String latvalues;
+    String longvalues;
+    PlaceAutocompleteFragment autocompleteFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -187,6 +193,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
         mRequest = findViewById(R.id.request);
         myvlayoutnavigationalview = findViewById(R.id.myvlayoutnavigationalview);
+        autocompleteFragment = (PlaceAutocompleteFragment)
+                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -199,6 +207,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         if (toolbar != null) {
             toolbar.setTitle("Customer MapView");
             toolbar.collapseActionView();
+            PlaceAutocompleteFragment autocompleteFragment;
 
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
             if (drawer != null) {
@@ -379,8 +388,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
                                 if (driverFoundID == null) {
                                     driverFoundID = "No Trader";
-                                    requestBol =false;
-                                    Toast.makeText(getApplicationContext(), "No Driver Found Yet", Toast.LENGTH_LONG).show();
+
+                                    Toast.makeText(getApplicationContext(), "No Trader Found Yet", Toast.LENGTH_LONG).show();
                                     return;
 
                                 }
@@ -416,7 +425,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                 }}
                             getClosestDriver();
                             //CREATING NULL IN CLOSEST DRIVER
-                            requestBol = false;
+
                         }
 
                         //HOW DOES HE ACCEPT AND THEN COMMUNICATION WIL TAKE PLACE
@@ -430,9 +439,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     }
     //THE CUSTOMER USES THE PLACE AUTOOOMPLETE FRAGMENT TO SET THE DESTINATION
 
-    /*
-        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
-                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+
+    {
         if (autocompleteFragment != null) {
             autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
                 @Override
@@ -452,7 +460,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             });
 
         }
-*/
+    }
 
     private void setActionBar(Toolbar toolbar) {
     }
@@ -489,7 +497,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                             mDriversDatabase.addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
-
+                                     service =      dataSnapshot.child("service").getValue().toString();
+                                    /*
                                     Iterator<DataSnapshot> items = dataSnapshot.getChildren().iterator();
                                     Toast.makeText(CustomerMapActivity.this, "Total Traders:"+ dataSnapshot.getChildrenCount(),Toast.LENGTH_LONG).show();
                                           enteries.clear();
@@ -500,7 +509,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                               enteries.add(new DriverSearch(ourmap.get("phone").toString()));
 
                                           }
-
+*/
 
 
                                         if (driverFound) {
@@ -652,8 +661,14 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists() && requestBol) {
+                     String zero = (String) dataSnapshot.child("l").child("zero").getValue();
+                    String one = (String) dataSnapshot.child("l").child("one").getValue();
+
+
                 //    List<Users> map = (List<Users>) dataSnapshot.child("l").getValue();
-                    Iterator<DataSnapshot> items = dataSnapshot.child("l").getChildren().iterator();
+
+
+                 /*   Iterator<DataSnapshot> items = dataSnapshot.child("l").getChildren().iterator();
                     Toast.makeText(CustomerMapActivity.this, "Total Location Count:"+ dataSnapshot.child("l").getChildrenCount(),Toast.LENGTH_LONG).show();
                     locationenteries.clear();
                     HashMap<String, Object> locmap = null;
@@ -665,20 +680,21 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                                           if (locmap.get("one") != null){
                         locationenteries.add(new DriverLocation(locmap.get("zero").toString(),locmap.get("one").toString() ));
 
+                       */
+
+
 
                         double locationLat = 0;
                     double locationLng = 0;
                     //WE NEED TO ONLY GET THE PARAMETER OF THE TYPE OF ID ;
 
                     // THIS IS WHERE YOU GET THE LONGITUDE AND LATITUDE OF THE DRIVER LOCATIONN
-                    if (locmap.get("zero") != null) {
 
                                int position =0;
-                        locationLat = Double.parseDouble(locationenteries.get(0).getZero().toString());
-                    }           int latindex= 1;
-                    if (locmap.get("one") != null) {
-                        locationLng = Double.parseDouble(locationenteries.get(0).getOne().toString());
-                    }
+                        locationLat = Double.parseDouble(zero);
+                               int latindex= 1;
+                        locationLng = Double.parseDouble(one);
+
                     LatLng driverLatLng = new LatLng(locationLat, locationLng);
                     if (mDriverMarker != null) {
                         mDriverMarker.remove();
@@ -715,12 +731,14 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     }
 
                 }
-            }}}}
+            }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+
             }
-        });
+
+});
 
 
 
@@ -963,18 +981,18 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
 
 
-        /*
-            *
-            *  if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+
+          //  *
+              if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             if(ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
 
             }else{
                 checkLocationPermission();
             }
         }
-             */
+
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-      /*  fusedLocationProviderClient.requestLocationUpdates(mLocationRequest, new LocationCallback() {
+      fusedLocationProviderClient.requestLocationUpdates(mLocationRequest, new LocationCallback() {
 
             @Override
             public void onLocationResult(LocationResult locationResult) {
@@ -982,13 +1000,13 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                 Log.e(TAG, "lat:" + locationResult.getLastLocation().getLatitude() + locationResult.getLastLocation().getLongitude());
             }
         }, getMainLooper());
-    */
+
         }
 
-    /*
-        *
-        * WE CAN USE FUSED API CLIENT IF THERE IS AN ISSUE TO
-        *  mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
+
+      //  *
+     //   * WE CAN USE FUSED API CLIENT IF THERE IS AN ISSUE TO
+        fusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
             mMap.setMyLocationEnabled(true);
         }
 
@@ -1001,15 +1019,15 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
                         LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
 
-                        //mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-                        //mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
+                        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                        mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
                         if(!getDriversAroundStarted)
                             getDriversAround();
                     }
                 }
             }
-        };*/
-    }
+        };
+
 
     @Override
     public void onConnectionSuspended(int i) {
@@ -1019,6 +1037,27 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
     }
 
+
+    private void checkLocationPermission() {
+        if(ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_FINE_LOCATION)) {
+                new android.app.AlertDialog.Builder(this)
+                        .setTitle("give permission")
+                        .setMessage("give permission message")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                ActivityCompat.requestPermissions(CustomerMapActivity.this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                            }
+                        })
+                        .create()
+                        .show();
+            }
+            else{
+                ActivityCompat.requestPermissions(CustomerMapActivity.this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            }
+        }
+    }
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
     }
@@ -1080,6 +1119,12 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     if (dataSnapshot.exists() && !customerId.equals("")) {
                      //   List<Users> map = (List<Users>) dataSnapshot.getValue();
 
+
+                        latvalues = dataSnapshot.child("zero").getValue().toString();
+                        longvalues = dataSnapshot.child("one").getValue().toString();
+
+
+                        /*
                         Iterator<DataSnapshot> items = dataSnapshot.getChildren().iterator();
                         Toast.makeText(CustomerMapActivity.this, "Total Location Count:"+ dataSnapshot.child("l").getChildrenCount(),Toast.LENGTH_LONG).show();
                         locationenteries.clear();
@@ -1093,16 +1138,15 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                             if (locmap.get("zero") != null) {
                                 if (locmap.get("one") != null) {
                                     locationenteries.add(new DriverLocation(locmap.get("zero").toString(), locmap.get("one").toString()));
-
+*/
 
                                     double locationLat = 0;
                                     double locationLng = 0;
-                                    if (locationenteries.get(0) != null) {
-                                        locationLat = Double.parseDouble(locationenteries.get(0).getZero().toString());
-                                    }
-                                    if (locationenteries.get(1) != null) {
-                                        locationLng = Double.parseDouble(locationenteries.get(0).getOne().toString());
-                                    }
+
+                                        locationLat = Double.parseDouble(latvalues);
+
+                                        locationLng = Double.parseDouble(longvalues);
+
 
                                     if (DriverLocationPoint != null) {
                                         DriverLocationPoint = new LatLng(locationLat, locationLng);
@@ -1125,16 +1169,16 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                         }
                                         if (distance < 100) {
                                             if (mRequest != null) {
-                                                mRequest.setText("Driver's Here");
+                                                mRequest.setText("Trader's Here");
                                             } else {
-                                                mRequest.setText("Driver Found: " + distance);
+                                                mRequest.setText("Trader Found: " + distance);
                                             }
                                         }
 
 
                                     }
                                 }
-                            }}}}
+                            }
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
@@ -1198,6 +1242,17 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                                 }
 
 
+                                            }
+
+
+                                        }
+
+
+                                        if (dataSnapshot.child(key).child("l").child("zero") != null) {
+                                            myTradersPic = dataSnapshot.getValue().toString();
+                                            Glide.with(getApplication()).load(dataSnapshot.child("image").getValue().toString()).into(mDriverProfileImage);
+                                            if (mDriverProfileImage != null) {
+                                                mydriverbitmap = ((BitmapDrawable) mDriverProfileImage.getDrawable()).getBitmap();
                                             }
 
 

@@ -15,6 +15,15 @@
         android:layout_height="match_parent"
         tools:layout="@layout/simple_gallery_item" />
 
+    <fragment
+        android:id="@+id/place_autocomplete_fragment"
+        android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+        android:layout_width="262dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        tools:layout="@layout/place_autocomplete_fragment"
+        tools:visibility="gone" />
+
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
@@ -34,14 +43,6 @@
                 android:src="@drawable/navigationdrawer"
                 tools:src="@drawable/navigationdrawer" />
 
-
-            <fragment
-                android:id="@+id/place_autocomplete_fragment"
-                android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
-                android:layout_width="262dp"
-                android:layout_height="wrap_content"
-                android:visibility="visible"
-                tools:layout="@layout/place_autocomplete_fragment" />
 
         </LinearLayout>
 
@@ -90,6 +91,7 @@
             android:src="@android:drawable/ic_media_play"
             tools:ignore="RtlCompat"
             tools:src="@drawable/searchcamerahere" />
+
     </RelativeLayout>
 
     <LinearLayout
@@ -113,6 +115,7 @@
                 android:contentDescription="@string/i_m_a_driver"
                 android:padding="20sp"
                 android:src="@mipmap/ic_default_user" />
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -220,6 +223,7 @@
 
 
     <!--侧边栏样式-->
+
     <android.support.constraint.ConstraintLayout
         android:layout_width="250dp"
         android:layout_height="700dp">

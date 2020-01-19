@@ -304,6 +304,8 @@ public class SettinsActivity extends AppCompatActivity
 
             DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Users");
             if (!role.equals("Trader")) {
+
+                      if (traderoruser != null){
                 DatabaseReference customref = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(traderoruser);
                     String customrefkey = customref.push().getKey();
                 HashMap<String, Object> userMap = new HashMap<>();
@@ -321,68 +323,68 @@ public class SettinsActivity extends AppCompatActivity
             } else {
                 progressDialog.dismiss();
                 Toast.makeText(SettinsActivity.this, "Error.", Toast.LENGTH_SHORT).show();
-            }}}
+            }}}}
 
-                private void userInfoDisplay(final CircleImageView profileImageView, final EditText fullNameEditText, final EditText userPhoneEditText, final EditText addressEditText)
-    {                   if (role.equals("Trader")) {
-        DatabaseReference UsersRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(traderoruser);
+                private void userInfoDisplay(final CircleImageView profileImageView, final EditText fullNameEditText, final EditText userPhoneEditText, final EditText addressEditText) {
+                    if (role != null) {
+                        if (role.equals("Trader")) {
+                            DatabaseReference UsersRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(traderoruser);
 
-        UsersRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    if (dataSnapshot.child("image").exists()) {
-                        String image = dataSnapshot.child("image").getValue().toString();
-                        String name = dataSnapshot.child("name").getValue().toString();
-                        String phone = dataSnapshot.child("phone").getValue().toString();
-                        String address = dataSnapshot.child("address").getValue().toString();
+                            UsersRef.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    if (dataSnapshot.exists()) {
+                                        if (dataSnapshot.child("image").exists()) {
+                                            String image = dataSnapshot.child("image").getValue().toString();
+                                            String name = dataSnapshot.child("name").getValue().toString();
+                                            String phone = dataSnapshot.child("phone").getValue().toString();
+                                            String address = dataSnapshot.child("address").getValue().toString();
 
-                        Picasso.get().load(image).into(profileImageView);
-                        fullNameEditText.setText(name);
-                        userPhoneEditText.setText(phone);
-                        addressEditText.setText(address);
+                                            Picasso.get().load(image).into(profileImageView);
+                                            fullNameEditText.setText(name);
+                                            userPhoneEditText.setText(phone);
+                                            addressEditText.setText(address);
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+                        } else {
+                                           if (traderoruser != null){
+                            DatabaseReference UsersRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(traderoruser);
+
+                            UsersRef.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    if (dataSnapshot.exists()) {
+                                        if (dataSnapshot.child("image").exists()) {
+                                            String image = dataSnapshot.child("image").getValue().toString();
+                                            String name = dataSnapshot.child("name").getValue().toString();
+                                            String phone = dataSnapshot.child("phone").getValue().toString();
+                                            String address = dataSnapshot.child("address").getValue().toString();
+                                            if (profileImageView != null) {
+                                                Picasso.get().load(image).into(profileImageView);
+                                                fullNameEditText.setText(name);
+                                                userPhoneEditText.setText(phone);
+                                                addressEditText.setText(address);
+                                            }
+                                        }
+                                    }
+                                }
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+
+
+                        }
                     }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }else{
-
-        DatabaseReference UsersRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(traderoruser);
-
-        UsersRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    if (dataSnapshot.child("image").exists()) {
-                        String image = dataSnapshot.child("image").getValue().toString();
-                        String name = dataSnapshot.child("name").getValue().toString();
-                        String phone = dataSnapshot.child("phone").getValue().toString();
-                        String address = dataSnapshot.child("address").getValue().toString();
-
-                        Picasso.get().load(image).into(profileImageView);
-                        fullNameEditText.setText(name);
-                        userPhoneEditText.setText(phone);
-                        addressEditText.setText(address);
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-
-
-    }
-    }
-
+                }}
     @Override
     protected void onStop() {
         super.onStop();

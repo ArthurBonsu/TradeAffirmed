@@ -34,6 +34,8 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.EventListener;
+
 public class AdminUserCartedActivity extends AppCompatActivity
 {
     private RecyclerView productsList;
@@ -129,32 +131,39 @@ public class AdminUserCartedActivity extends AppCompatActivity
         cartListRef = FirebaseDatabase.getInstance().getReference()
                 .child("Cart List");
 
-        mQueryTraderandUserCart= cartListRef.orderByChild(traderID);
-        QueryUser = mQueryTraderandUserCart.orderByChild(userID);
+             if (traderID != null) {
+                 mQueryTraderandUserCart = cartListRef.orderByChild(traderID);
+                 if (userID != null) {
+                     QueryUser = mQueryTraderandUserCart.orderByChild(userID);
+                 }
+             }
+                    if(QueryUser != null) {
+                        myreferencetoimage = QueryUser.getRef().child("User").child("products");
+                    }
+            if (myreferencetoimage != null) {
+                myreferencetoimage.addValueEventListener(new ValueEventListener() {
 
-         myreferencetoimage = QueryUser.getRef().child("User").child("products");
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0) {
 
-        myreferencetoimage.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0) {
-
-                     productkey = dataSnapshot.getKey();
-                    getimage = dataSnapshot.child(productkey).child("image").getValue().toString();
-
-                }
+                            productkey = dataSnapshot.getKey();
+                            if (productkey != null) {
+                                getimage = dataSnapshot.child(productkey).child("image").getValue().toString();
+                            }
+                        }
 
 
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+
+
+                });
             }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-
-
-        });
-
         FirebaseAuth.getInstance();
         mAuth = FirebaseAuth.getInstance();
 
@@ -201,11 +210,12 @@ public class AdminUserCartedActivity extends AppCompatActivity
 
             if (productsList !=null) {
                 productsList.setAdapter(adapter);
-            }
-            if (adapter != null) {
-                adapter.startListening();
-            }}
 
+          //  if (adapter != null) {
+       //         adapter.startListening();
+       //    // }
+                    }
+    }
     @Override
     protected void onStop() {
         super.onStop();

@@ -208,12 +208,13 @@ public class ProductDetailsActivity extends AppCompatActivity
 
                     if (dataSnapshot.child("trader") != null) {
                     }
+                     if(thetraderkey != null){
                     thetraderkey = dataSnapshot.child("trader").getKey();
                     thenameofthetrader =  dataSnapshot.child("trader").child(thetraderkey).child("name").getValue().toString();
                     description = dataSnapshot.child("desc").getValue().toString();
                 }
 
-                ;
+                ;}
 
 
                 @Override

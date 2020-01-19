@@ -161,11 +161,12 @@ public class AdminProductDetails extends AppCompatActivity  implements  View.OnC
                 // PULLING DATABASE REFERENCE IS NULL, WE CHANGE BACK TO THE SETUP PAGE ELSE WE GO STRAIGHT TO MAP PAGE
             }
         };
-        getProductDetails(productID);
+              if (productID != null) {
+                  getProductDetails(productID);
 
         mDatabaseLikeCount = FirebaseDatabase.getInstance().getReference().child("Product").child(productID).child("Likes").child("count");
 
-
+              }
         if (ViewBuyers != null) {
             ViewBuyers.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -264,37 +265,37 @@ public class AdminProductDetails extends AppCompatActivity  implements  View.OnC
 
     private void getProductDetails(String productID) {
         productsRef = FirebaseDatabase.getInstance().getReference().child("Products");
-
-        productsRef.child(productID).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    Products products = dataSnapshot.getValue(Products.class);
-
-
-                    ImageView adminproductdetailsimage = (ImageView) findViewById(R.id.adminproductdetailsimage);
-                    TextView adminproductimageproductname = (TextView) findViewById(R.id.adminproductimageproductname);
-                    TextView adminproductimagedescription = (TextView) findViewById(R.id.adminproductimagedescription);
-                    TextView adminproductimagenumberoflikes = (TextView) findViewById(R.id.adminproductimagenumberoflikes);
+        if (productID != null) {
+            productsRef.child(productID).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        Products products = dataSnapshot.getValue(Products.class);
 
 
-                    adminproductdetailsimage.setImageResource(Integer.parseInt(products.getimage()));
-                    adminproductimageproductname.setText(products.getname());
-                    adminproductimagedescription.setText(products.getdesc());
-                    adminproductimagenumberoflikes.setText(products.getnumber());
-                    Picasso.get().load(products.getimage()).into(adminproductdetailsimage);
+                        ImageView adminproductdetailsimage = (ImageView) findViewById(R.id.adminproductdetailsimage);
+                        TextView adminproductimageproductname = (TextView) findViewById(R.id.adminproductimageproductname);
+                        TextView adminproductimagedescription = (TextView) findViewById(R.id.adminproductimagedescription);
+                        TextView adminproductimagenumberoflikes = (TextView) findViewById(R.id.adminproductimagenumberoflikes);
+
+
+                        adminproductdetailsimage.setImageResource(Integer.parseInt(products.getimage()));
+                        adminproductimageproductname.setText(products.getname());
+                        adminproductimagedescription.setText(products.getdesc());
+                        adminproductimagenumberoflikes.setText(products.getnumber());
+                        Picasso.get().load(products.getimage()).into(adminproductdetailsimage);
+                    }
+
+
                 }
 
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+                }
+            });
+        }
     }
-
 
     @Override
     protected void onStop() {

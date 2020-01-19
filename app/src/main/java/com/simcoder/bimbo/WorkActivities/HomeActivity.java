@@ -500,7 +500,7 @@ public class HomeActivity extends AppCompatActivity
                         String cusomerId = "";
 
                         cusomerId = user.getUid();
-                        Intent intent = new Intent(HomeActivity.this, HomeActivity.class);
+                        Intent intent = new Intent(HomeActivity.this, AdminAllCustomers.class);
                         if (intent != null) {
                             intent.putExtra("traderorcustomer", traderoruser);
                             intent.putExtra("role", type);
@@ -537,7 +537,7 @@ public class HomeActivity extends AppCompatActivity
                         String cusomerId = "";
 
                         cusomerId = user.getUid();
-                        Intent intent = new Intent(HomeActivity.this, HomeActivity.class);
+                        Intent intent = new Intent(HomeActivity.this, AdminAddNewProductActivity.class);
                         if (intent != null) {
                             intent.putExtra("traderorcustomer", traderoruser);
                             intent.putExtra("role", type);
@@ -574,7 +574,7 @@ public class HomeActivity extends AppCompatActivity
                         String cusomerId = "";
 
                         cusomerId = user.getUid();
-                        Intent intent = new Intent(HomeActivity.this, HomeActivity.class);
+                        Intent intent = new Intent(HomeActivity.this, ViewSingleUserOrders.class);
                         if (intent != null) {
                             intent.putExtra("traderorcustomer", traderoruser);
                             intent.putExtra("role", type);
@@ -611,7 +611,7 @@ public class HomeActivity extends AppCompatActivity
                         String cusomerId = "";
 
                         cusomerId = user.getUid();
-                        Intent intent = new Intent(HomeActivity.this, HomeActivity.class);
+                        Intent intent = new Intent(HomeActivity.this, AdminViewBuyersActivity.class);
                         if (intent != null) {
                             intent.putExtra("traderorcustomer", traderoruser);
                             intent.putExtra("role", type);
@@ -648,7 +648,7 @@ public class HomeActivity extends AppCompatActivity
                         String cusomerId = "";
 
                         cusomerId = user.getUid();
-                        Intent intent = new Intent(HomeActivity.this, HomeActivity.class);
+                        Intent intent = new Intent(HomeActivity.this, AdminUserCartedActivity.class);
                         if (intent != null) {
                             intent.putExtra("traderorcustomer", traderoruser);
                             intent.putExtra("role", type);
@@ -684,7 +684,7 @@ public class HomeActivity extends AppCompatActivity
                         String cusomerId = "";
 
                         cusomerId = user.getUid();
-                        Intent intent = new Intent(HomeActivity.this, HomeActivity.class);
+                        Intent intent = new Intent(HomeActivity.this, AdminProductDetails.class);
                         if (intent != null) {
                             intent.putExtra("traderorcustomer", traderoruser);
                             intent.putExtra("role", type);
@@ -720,7 +720,7 @@ public class HomeActivity extends AppCompatActivity
                         String cusomerId = "";
 
                         cusomerId = user.getUid();
-                        Intent intent = new Intent(HomeActivity.this, HomeActivity.class);
+                        Intent intent = new Intent(HomeActivity.this, AdminMaintainProductsActivity.class);
                         if (intent != null) {
                             intent.putExtra("traderorcustomer", traderoruser);
                             intent.putExtra("role", type);
@@ -757,7 +757,7 @@ public class HomeActivity extends AppCompatActivity
                         String cusomerId = "";
 
                         cusomerId = user.getUid();
-                        Intent intent = new Intent(HomeActivity.this, HomeActivity.class);
+                        Intent intent = new Intent(HomeActivity.this, AdminCategoryActivity.class);
                         if (intent != null) {
                             intent.putExtra("traderorcustomer", traderoruser);
                             intent.putExtra("role", type);
@@ -793,7 +793,7 @@ public class HomeActivity extends AppCompatActivity
                         String cusomerId = "";
 
                         cusomerId = user.getUid();
-                        Intent intent = new Intent(HomeActivity.this, HomeActivity.class);
+                        Intent intent = new Intent(HomeActivity.this, AdminAllCustomers.class);
                         if (intent != null) {
                             intent.putExtra("traderorcustomer", traderoruser);
                             intent.putExtra("role", type);

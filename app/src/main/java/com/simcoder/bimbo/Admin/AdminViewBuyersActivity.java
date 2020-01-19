@@ -23,7 +23,10 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.rey.material.widget.ImageView;
 import com.simcoder.bimbo.Model.Users;
 import  com.simcoder.bimbo.R;
@@ -32,6 +35,8 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.simcoder.bimbo.WorkActivities.CustomerProfile;
+
+import java.util.EventListener;
 
 public class AdminViewBuyersActivity extends AppCompatActivity {  //ACTUALLY THIS ACTIVITY IS TO SEE CART ACTIVITY
     private RecyclerView thebuyersforthisproduct;
@@ -131,20 +136,48 @@ public class AdminViewBuyersActivity extends AppCompatActivity {  //ACTUALLY THI
         if (thestateofproductquery != null) {
             // that means after the order traderID IS FILLED
             String theuserskey = thestateofproductquery.getRef().getKey();
-            MybuyersproductQuery = thestateofproductquery.getRef().child(theuserskey).child("products").orderByChild(productID);
 
+            if (theuserskey != null) {
+                if (productID != null) {
+                    MybuyersproductQuery = thestateofproductquery.getRef().child(theuserskey).child("products").orderByChild(productID);
+                }
+            }
         }
         thebuyersforthisproduct = findViewById(R.id.thebuyersforthisproductlist);
         if (thebuyersforthisproduct != null) {
             thebuyersforthisproduct.setLayoutManager(new LinearLayoutManager(this));
         }
         // WE HAVE TO CHANGE THIS BUTTON TO BACKPRESSED
-         theusers = MybuyersproductQuery.getRef().getKey();
-        thebuyersforthisproductdatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(theusers);
-        thetraderinformationandkey = thebuyersforthisproductdatabase.getKey();
+        if (MybuyersproductQuery != null) {
+            theusers = MybuyersproductQuery.getRef().getKey();
+            if (theusers != null) {
+                thebuyersforthisproductdatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(theusers);
+
+
+                thetraderinformationandkey = thebuyersforthisproductdatabase.getKey();
+
+                thebuyersforthisproductdatabase.addValueEventListener(new ValueEventListener() {
+
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0) {
+
+
+                        }
+
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+
+
+                });
+            }
+        }
     }
-
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -190,9 +223,9 @@ public class AdminViewBuyersActivity extends AppCompatActivity {  //ACTUALLY THI
         if (thebuyersforthisproduct != null) {
             thebuyersforthisproduct.setAdapter(adapter);
         }
-        if (adapter != null) {
-            adapter.startListening();
-        }
+     //   if (adapter != null) {
+    //        adapter.startListening();
+    //    }
     }
 
 
