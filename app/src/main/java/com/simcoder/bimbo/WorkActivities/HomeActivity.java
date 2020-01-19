@@ -147,6 +147,8 @@ public class HomeActivity extends AppCompatActivity
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (productkey != null) {
+
+                    
                     ArrayList<ProductsInformationModel> ProductsInformationList = new ArrayList<>();
                     ArrayList<TraderWhoPostedProductModel> TraderWhoPostedProductModerList = new ArrayList<>();
 

@@ -33,7 +33,7 @@
         android:layout_marginRight="20dp"
         android:hint="@string/your_names"
         android:autofillHints=""
-        android:inputType="text" tools:targetApi="o" />
+        android:inputType="text" />
 
     <EditText
         android:id="@+id/shippment_phone_number"
@@ -55,7 +55,7 @@
         android:layout_marginTop="5dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:hint="@string/your_home_addresss"
+        android:hint="your Home Address"
         android:autofillHints=""
         android:inputType="textPostalAddress" />
 
@@ -67,9 +67,9 @@
         android:layout_marginTop="5dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:hint="@string/your_city_names"
+        android:hint="your City Name"
         android:autofillHints=""
-        android:inputType="text" tools:targetApi="o" />
+        android:inputType="text" />
 
 
     <Button

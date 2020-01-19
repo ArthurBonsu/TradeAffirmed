@@ -21,11 +21,11 @@
             android:id="@+id/product_image_maintain"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:layout_below="@+id/product_name"
+
             android:layout_marginTop="2dp"
             android:scaleType="fitCenter"
             app:srcCompat="@drawable/grillledbeefinherent"
-            android:contentDescription="imagetobemaint" />
+            android:contentDescription="@string/imagetobemaint" />
 
         <EditText
             android:id="@+id/product_name_maintain"
@@ -60,7 +60,7 @@
             android:padding="12dp"
             android:textAlignment="center"
             android:textColor="@color/colorPrimaryDark"
-            android:textSize="18dp" />
+            android:textSize="18sp" />
 
         <EditText
             android:id="@+id/product_description_maintain"

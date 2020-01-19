@@ -213,4 +213,28 @@
     <string name="logoutERRT">Logout</string>
     <string name="todoHERE">TODO</string>
     <string name="todoHER">TODO</string>
+    <string name="product_nameXX">Product Name...</string>
+    <string name="product_descriptionSS">Product Description...</string>
+    <string name="product_pricesd">Product Price...</string>
+    <string name="add_productd">Add Product</string>
+    <string name="image1s">image1</string>
+    <string name="product_namedd">Product Name</string>
+    <string name="product_descriptionnb">Product Description</string>
+    <string name="product_priceqw">Product Price</string>
+    <string name="apply_changesddd">Apply Changes</string>
+    <string name="delete_this_productxx">Delete This Product</string>
+    <string name="imagetobemaint">imagetobemaint</string>
+    <string name="productsff">Products</string>
+    <string name="total_priceff">Total Price =</string>
+    <string name="congratulations_your_final_order_has_been_placed_successfully_soon_it_will_be_verifieds">Congratulations, your final order has been placed successfully. Soon it will be verified.</string>
+    <string name="nexts">Next</string>
+    <string name="productsss">Products</string>
+    <string name="new_orderss">New Orders</string>
+    <string name="please_write_your_shipment_detailss">Please write your Shipment Details</string>
+    <string name="your_names">your Name</string>
+    <string name="confirmd">Confirm</string>
+    <string name="your_phone_numberso">your Phone Number</string>
+    <string name="your_home_addresss">your Home Address</string>
+    <string name="your_city_names">your City Name</string>
+    <string name="your_phone_numbers">your Phone Number</string>
 </resources>
