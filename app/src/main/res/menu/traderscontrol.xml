@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+    <group
+        android:id="@+id/homegroup"
+
+        android:checkableBehavior="single"
+        >
+
+        <item
+            android:id="@+id/addnewproducthere"
+            android:icon="@drawable/ic_apple_fill"
+            android:title="Add New Product"
+            app:actionLayout="@layout/vip_view"/>
+
+
+
+        <item
+            android:id="@+id/viewallcustomershere"
+            android:icon="@drawable/ic_android_fill"
+            android:title="All Customers"
+            app:actionLayout="@layout/bage_hint"/>
+
+        <item
+            android:id="@+id/allproductshere"
+            android:icon="@drawable/ic_apple_fill"
+            android:title="All Products"
+            app:actionLayout="@layout/vip_view"/>
+
+
+        <item
+            android:id="@+id/allcategorieshere"
+            android:icon="@drawable/ic_apple_fill"
+            android:title="Categories"
+            app:actionLayout="@layout/vip_view"/>
+
+
+        <group
+            android:id="@+id/Maintainnewordershere"
+            android:checkableBehavior="single">
+            <item
+                android:id="@+id/Maintainnewproducts"
+                android:icon="@drawable/ic_github_line"
+                android:title="Maintain New Products"/>
+
+
+
+
+
+
+
+        </group>
+
+        <item
+            android:title="More">
+            <menu>
+                <item
+                    android:id="@+id/newproductdetailshere"
+                    android:icon="@drawable/ic_taobao_fill"
+                    android:title="Product Details"/>
+
+                <item
+                    android:id="@+id/usercartedactivityhere"
+                    android:icon="@drawable/ic_wechat_fill"
+                    android:title="View Your Customers Cart"/>
+                <item
+                    android:id="@+id/viewbuyershere"
+                    android:icon="@drawable/ic_github_line"
+                    android:title="View Buyers Activity"/>
+                <item
+                    android:id="@+id/singeuserorderhere"
+                    android:icon="@drawable/ic_github_line"
+                    android:title="View For Single USer "/>
+
+
+
+
+
+
+
+            </menu>
+        </item>
+    </group>
+</menu>

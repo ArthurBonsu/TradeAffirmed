@@ -24,19 +24,20 @@
             />
 
         <ImageView
-            android:id="@+id/product_image"
+            android:id="@+id/product_imagehere"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:layout_below="@+id/product_name"
             android:layout_marginTop="2dp"
             android:contentDescription="@string/product_imagehere"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/chickend" />
 
         <TextView
             android:id="@+id/product_price"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/product_image"
+            android:layout_below="@+id/product_imagehere"
             android:text="@string/product_price"
             android:textAlignment="center"
             android:textColor="@color/colorPrimaryDark"

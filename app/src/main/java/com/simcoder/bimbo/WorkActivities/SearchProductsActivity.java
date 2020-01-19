@@ -20,6 +20,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.rey.material.widget.ImageView;
 import com.simcoder.bimbo.Model.Products;
 import com.simcoder.bimbo.ViewHolder.ProductViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -28,6 +29,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.rey.material.widget.EditText;
 import com.simcoder.bimbo.R;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 public class SearchProductsActivity extends AppCompatActivity
@@ -51,7 +54,7 @@ public class SearchProductsActivity extends AppCompatActivity
     private static final String TAG = "Google Activity";
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
-
+           ImageView theproductimageview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -59,7 +62,7 @@ public class SearchProductsActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_products);
 
-
+        theproductimageview = (ImageView)findViewById(R.id.product_imagehere);
         inputText = findViewById(R.id.search_product_name);
         SearchBtn = findViewById(R.id.search_btn);
         searchList = findViewById(R.id.search_list);
@@ -141,9 +144,27 @@ public class SearchProductsActivity extends AppCompatActivity
                             holder.txtProductName.setText(model.getname());
                             holder.txtProductDescription.setText(model.getdesc());
                             holder.txtProductPrice.setText("Price = " + model.getprice() + "$");
-                            Picasso.get().load(model.getimage()).into(holder.imageView);
+                            if (model != null) {
+                                if (theproductimageview != null) {
+                                    Picasso.get().load(Integer.parseInt(model.getimage())).resize(400, 0).networkPolicy(NetworkPolicy.OFFLINE).into(theproductimageview, new Callback() {
 
-                            holder.itemView.setOnClickListener(new View.OnClickListener() {
+
+                                        @Override
+                                        public void onSuccess() {
+
+                                        }
+
+                                        @Override
+                                        public void onError(Exception e) {
+                                            Picasso.get().load(Integer.parseInt(model.getimage())).resize(100,0).into(theproductimageview);
+                                        }
+
+                                    });
+
+
+                                }}
+
+                                holder.itemView.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
                                     Intent intent = new Intent(SearchProductsActivity.this, ProductDetailsActivity.class);

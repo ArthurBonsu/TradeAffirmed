@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -21,7 +20,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -37,22 +35,25 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.rey.material.widget.ImageView;
+import com.simcoder.bimbo.Admin.AdminAddNewProductActivity;
+import com.simcoder.bimbo.Admin.AdminAllCustomers;
+import com.simcoder.bimbo.Admin.AdminCategoryActivity;
 import com.simcoder.bimbo.Admin.AdminMaintainProductsActivity;
-import com.simcoder.bimbo.CustomerMapActivity;
+import com.simcoder.bimbo.Admin.AdminProductDetails;
+import com.simcoder.bimbo.Admin.AdminUserCartedActivity;
+import com.simcoder.bimbo.Admin.AdminViewBuyersActivity;
+import com.simcoder.bimbo.Admin.ViewSingleUserOrders;
 import com.simcoder.bimbo.DriverMapActivity;
 import com.simcoder.bimbo.HistoryActivity;
-import com.simcoder.bimbo.Model.DriverLocation;
 import com.simcoder.bimbo.Model.ProductHere;
 import com.simcoder.bimbo.Model.Products;
 import com.simcoder.bimbo.Model.ProductsInformationModel;
 import com.simcoder.bimbo.Model.TraderWhoPostedProductModel;
-import com.simcoder.bimbo.Prevalent.Prevalent;
 import com.simcoder.bimbo.ViewHolder.ProductViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.simcoder.bimbo.Prevalent.Prevalent;
 import com.simcoder.bimbo.R;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
@@ -89,14 +90,14 @@ public class HomeActivity extends AppCompatActivity
     String description;
     String thetradername;
     //AUTHENTICATORS
-ArrayList<ProductHere> productHeres;
+    ArrayList<ProductHere> productHeres;
     private GoogleMap mMap;
     GoogleApiClient mGoogleApiClient;
     private static final String TAG = "Google Activity";
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
     String productdescription;
-     ImageView theproductimageview;
+    ImageView theproductimageview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,7 +105,7 @@ ArrayList<ProductHere> productHeres;
         setContentView(
                 R.layout.activity_home);
 
-        theproductimageview = (ImageView)findViewById(R.id.product_image);
+        theproductimageview = (ImageView) findViewById(R.id.product_imagehere);
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         if (bundle != null)
@@ -150,35 +151,34 @@ ArrayList<ProductHere> productHeres;
                     ArrayList<TraderWhoPostedProductModel> TraderWhoPostedProductModerList = new ArrayList<>();
 
                     Iterator<DataSnapshot> items = dataSnapshot.getChildren().iterator();
-                    Toast.makeText(HomeActivity.this, "Total Location Count:"+ dataSnapshot.getChildrenCount(),Toast.LENGTH_LONG).show();
-                    ProductsInformationList .clear();
+                    Toast.makeText(HomeActivity.this, "Total Location Count:" + dataSnapshot.getChildrenCount(), Toast.LENGTH_LONG).show();
+                    ProductsInformationList.clear();
 
                     HashMap<String, Object> locationmap = null;
-                          if (locationmap != null){
-                    while (items.hasNext()) {
-                        DataSnapshot item = items.next();
+                    if (locationmap != null) {
+                        while (items.hasNext()) {
+                            DataSnapshot item = items.next();
 
-                        ProductsInformationModel myuser = item.getValue(ProductsInformationModel.class);
-                        if (locationmap.get("name")!= null && locationmap.get("time")!= null && locationmap.get("price")!= null && locationmap.get("pid")!= null && locationmap.get("image")!= null ) {
-                            if (locationmap.get("one") != null) {
-                                ProductsInformationList.add(new ProductsInformationModel(locationmap.get("name").toString(), locationmap.get("time").toString(),  locationmap.get("price").toString(), locationmap.get("pid").toString(), locationmap.get("image").toString()));
-                              String productdescription = ProductsInformationList.get(0).getdesc().toString();
+                            ProductsInformationModel myuser = item.getValue(ProductsInformationModel.class);
+                            if (locationmap.get("name") != null && locationmap.get("time") != null && locationmap.get("price") != null && locationmap.get("pid") != null && locationmap.get("image") != null) {
+                                if (locationmap.get("one") != null) {
+                                    ProductsInformationList.add(new ProductsInformationModel(locationmap.get("name").toString(), locationmap.get("time").toString(), locationmap.get("price").toString(), locationmap.get("pid").toString(), locationmap.get("image").toString()));
+                                    String productdescription = ProductsInformationList.get(0).getdesc().toString();
 
-                            }}}}
-
-
-
-
-                //    thetraderkey = dataSnapshot.child(productkey).child("trader").getKey();
-                 //   thenameofthetrader = dataSnapshot.child(productkey).child("trader").child(thetraderkey).child("name").getValue().toString();
-                 //   description = dataSnapshot.child(productkey).child("desc").getValue().toString();
-
-
-
-
+                                }
                             }
+                        }
+                    }
 
-                            }
+
+                    //    thetraderkey = dataSnapshot.child(productkey).child("trader").getKey();
+                    //   thenameofthetrader = dataSnapshot.child(productkey).child("trader").child(thetraderkey).child("name").getValue().toString();
+                    //   description = dataSnapshot.child(productkey).child("desc").getValue().toString();
+
+
+                }
+
+            }
 
 
             ;
@@ -200,8 +200,8 @@ ArrayList<ProductHere> productHeres;
                     ArrayList<TraderWhoPostedProductModel> TraderWhoPostedProductModerList = new ArrayList<>();
 
                     Iterator<DataSnapshot> items = dataSnapshot.getChildren().iterator();
-                    Toast.makeText(HomeActivity.this, "Total Location Count:"+ dataSnapshot.getChildrenCount(),Toast.LENGTH_LONG).show();
-                    TraderWhoPostedProductModerList .clear();
+                    Toast.makeText(HomeActivity.this, "Total Location Count:" + dataSnapshot.getChildrenCount(), Toast.LENGTH_LONG).show();
+                    TraderWhoPostedProductModerList.clear();
 
                     HashMap<String, Object> locationmap = null;
 
@@ -209,22 +209,21 @@ ArrayList<ProductHere> productHeres;
                         DataSnapshot item = items.next();
 
                         TraderWhoPostedProductModel myuser = item.getValue(TraderWhoPostedProductModel.class);
-                        if (locationmap.get("name")!= null && locationmap.get("image")!= null && locationmap.get("tid")!= null && locationmap.get("pid")!= null && locationmap.get("image")!= null ) {
+                        if (locationmap.get("name") != null && locationmap.get("image") != null && locationmap.get("tid") != null && locationmap.get("pid") != null && locationmap.get("image") != null) {
                             if (locationmap.get("one") != null) {
-                                TraderWhoPostedProductModerList.add(new TraderWhoPostedProductModel(locationmap.get("name").toString(), locationmap.get("image").toString(),  locationmap.get("tid").toString()));
-                                    int i=0;
+                                TraderWhoPostedProductModerList.add(new TraderWhoPostedProductModel(locationmap.get("name").toString(), locationmap.get("image").toString(), locationmap.get("tid").toString()));
+                                int i = 0;
                                 String traderimage = TraderWhoPostedProductModerList.get(0).getimage().toString();
                                 String tradername = TraderWhoPostedProductModerList.get(0).getname().toString();
                                 String traderID = TraderWhoPostedProductModerList.get(0).gettid().toString();
-                            }}}
-
+                            }
+                        }
+                    }
 
 
                     //    thetraderkey = dataSnapshot.child(productkey).child("trader").getKey();
                     //   thenameofthetrader = dataSnapshot.child(productkey).child("trader").child(thetraderkey).child("name").getValue().toString();
                     //   description = dataSnapshot.child(productkey).child("desc").getValue().toString();
-
-
 
 
                 }
@@ -240,7 +239,6 @@ ArrayList<ProductHere> productHeres;
 
             }
         });
-
 
 
         Paper.init(this);
@@ -351,10 +349,8 @@ ArrayList<ProductHere> productHeres;
     }
 
 
-
     @Override
-    protected void onStart()
-    {
+    protected void onStart() {
         super.onStart();
 
         FirebaseRecyclerOptions<Products> options =
@@ -373,10 +369,14 @@ ArrayList<ProductHere> productHeres;
 
                             holder.txtProductDescription.setText(model.getdesc());
                             holder.txtProductPrice.setText("Price = " + model.getprice() + "$");
-                            
+                            holder.setImage(getApplicationContext(), model.getimage());
                             holder.tradername.setText("Trader of Goods+" + thetradername);
                         }
-                        if (model != null) {
+
+
+
+
+                        /*if (model != null) {
                             if (theproductimageview != null) {
                                 Picasso.get().load(Integer.parseInt(model.getimage())).resize(400, 0).networkPolicy(NetworkPolicy.OFFLINE).into(theproductimageview, new Callback() {
 
@@ -396,8 +396,7 @@ ArrayList<ProductHere> productHeres;
 
                             }
 
-
-                             }
+*/
 
 
                         if (holder != null) {
@@ -450,15 +449,16 @@ ArrayList<ProductHere> productHeres;
                         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.product_items_layout, parent, false);
                         ProductViewHolder holder = new ProductViewHolder(view);
                         return holder;
-                    }}
-                ;
+                    }
+                };
 
-        if (recyclerView !=null) {
+        if (recyclerView != null) {
             recyclerView.setAdapter(adapter);
         }
         if (adapter != null) {
             adapter.startListening();
-        }}
+        }
+    }
 
     @Override
     public void onBackPressed() {
@@ -477,16 +477,14 @@ ArrayList<ProductHere> productHeres;
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         if (getMenuInflater() != null) {
-            getMenuInflater().inflate(R.menu.activity_home_drawer, menu);
+            getMenuInflater().inflate(R.menu.traderscontrol, menu);
         }
         return true;
     }
 
 
-
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
+    public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
 //        if (id == R.id.action_settings)
@@ -494,144 +492,324 @@ ArrayList<ProductHere> productHeres;
 //            return true;
 //        }
 
-        return super.onOptionsItemSelected(item);
-    }
-
-
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item)
-    {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-
-
-
-        if (id == R.id.viewmap)
-        {
-            if (!type.equals("Trader"))
-            {
-
-                Intent intent = new Intent(HomeActivity.this, com.simcoder.bimbo.CustomerMapActivity.class);
-                if (intent != null) {
-                    intent.putExtra("roledhomeactivitytocustomermapactivity", type);
-                    intent.putExtra("fromhomeactivitytocustomermapactivity", traderoruser);
-                    startActivity(intent);
-                    finish();
-                }
-            } else{
-
-                Intent intent = new Intent(HomeActivity.this, DriverMapActivity.class);
-                if (intent != null) {
-                    intent.putExtra("rolefromhomeactivitytodrivermapactivity", type);
-                    intent.putExtra("fromhomeactivitytodrivermapactivity", traderoruser);
-                    startActivity(intent);
-                    finish();
-                }
-            }
-
-
-        }
-        if (id == R.id.nav_cart)
-        {
-            if (!type.equals("Trader"))
-            {
-                Intent intent = new Intent(HomeActivity.this, CartActivity.class);
-                if (intent != null) {
-                    startActivity(intent);
-                }}
-
-        }
-
-        if (id == R.id.viewproducts)
-        {
-            if (!type.equals("Trader"))
-            {
-                Intent intent = new Intent(HomeActivity.this, HomeActivity.class);
-                if (intent != null) {
-                    startActivity(intent);
-                }}else{}
-
-        }
-        if (id == R.id.nav_search)
-        {
-            if (!type.equals("Trader"))
-            {
-                Intent intent = new Intent(HomeActivity.this, SearchProductsActivity.class);
-                if (intent != null){
-                    startActivity(intent);}
-            }else{}
-        }
-
-        if (id == R.id.nav_logout)
-        {
-
-            if (FirebaseAuth.getInstance() != null){
-                FirebaseAuth.getInstance().signOut();
-                if (mGoogleApiClient != null) {
-                    mGoogleSignInClient.signOut().addOnCompleteListener(HomeActivity.this,
-                            new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-
-                                }
-                            });
-                }}
-            Intent intent = new Intent(HomeActivity.this, com.simcoder.bimbo.MainActivity.class);
-            if (intent != null){
-                startActivity(intent);
-                finish();
-            }}
-
-        if (id == R.id.nav_settings)
-        {
-            if (!type.equals("Trader"))
-            {
-                Intent intent = new Intent(HomeActivity.this, com.simcoder.bimbo.WorkActivities.SettinsActivity.class);
-                if (intent != null) {
-                    startActivity(intent);
-                }}else{}
-        }
-        else if (id == R.id.nav_history)
-        {
-            if (!type.equals("Trader"))
-            {
-                Intent intent = new Intent(HomeActivity.this, HistoryActivity.class);
-                if (intent != null) {
-                    startActivity(intent);
-                }}else{}
-        }
-        else if (id == R.id.nav_categories)
-        {
-
-        }
-        else if (id == R.id.nav_viewprofilehome)
-        {
+        if (id == R.id.viewallcustomershere) {
             if (!type.equals("Trader")) {
                 if (FirebaseAuth.getInstance() != null) {
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                    if (user != null){
+                    if (user != null) {
                         String cusomerId = "";
 
                         cusomerId = user.getUid();
-                        Intent intent = new Intent(HomeActivity.this, CustomerProfile.class);
-                        if (intent != null){
+                        Intent intent = new Intent(HomeActivity.this, HomeActivity.class);
+                        if (intent != null) {
                             intent.putExtra("traderorcustomer", traderoruser);
                             intent.putExtra("role", type);
                             startActivity(intent);
-                        }}
-                }}
-            else {
-                if (FirebaseAuth.getInstance() !=null){
+                        }
+                    }
+                }
+            } else {
+                if (FirebaseAuth.getInstance() != null) {
 
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                    if (user != null){
+                    if (user != null) {
                         String cusomerId = "";
                         cusomerId = user.getUid();
 
-                        Intent intent = new Intent(HomeActivity.this, TraderProfile.class);
+                        Intent intent = new Intent(HomeActivity.this, AdminAllCustomers.class);
+                        if (intent != null) {
+                            intent.putExtra("traderorcustomer", traderoruser);
+                            intent.putExtra("role", type);
+                            startActivity(intent);
+                        }
+                    }
+                }
+            }
+        }
+
+
+        if (id == R.id.addnewproducthere) {
+
+            if (!type.equals("Trader")) {
+                if (FirebaseAuth.getInstance() != null) {
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    if (user != null) {
+                        String cusomerId = "";
+
+                        cusomerId = user.getUid();
+                        Intent intent = new Intent(HomeActivity.this, HomeActivity.class);
+                        if (intent != null) {
+                            intent.putExtra("traderorcustomer", traderoruser);
+                            intent.putExtra("role", type);
+                            startActivity(intent);
+                        }
+                    }
+                }
+            } else {
+                if (FirebaseAuth.getInstance() != null) {
+
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    if (user != null) {
+                        String cusomerId = "";
+                        cusomerId = user.getUid();
+
+                        Intent intent = new Intent(HomeActivity.this, AdminAddNewProductActivity.class);
+                        if (intent != null) {
+                            intent.putExtra("traderorcustomer", traderoruser);
+                            intent.putExtra("role", type);
+                            startActivity(intent);
+                        }
+                    }
+                }
+            }
+        }
+
+
+        if (id == R.id.singeuserorderhere) {
+
+            if (!type.equals("Trader")) {
+                if (FirebaseAuth.getInstance() != null) {
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    if (user != null) {
+                        String cusomerId = "";
+
+                        cusomerId = user.getUid();
+                        Intent intent = new Intent(HomeActivity.this, HomeActivity.class);
+                        if (intent != null) {
+                            intent.putExtra("traderorcustomer", traderoruser);
+                            intent.putExtra("role", type);
+                            startActivity(intent);
+                        }
+                    }
+                }
+            } else {
+                if (FirebaseAuth.getInstance() != null) {
+
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    if (user != null) {
+                        String cusomerId = "";
+                        cusomerId = user.getUid();
+
+                        Intent intent = new Intent(HomeActivity.this, ViewSingleUserOrders.class);
+                        if (intent != null) {
+                            intent.putExtra("traderorcustomer", traderoruser);
+                            intent.putExtra("role", type);
+                            startActivity(intent);
+                        }
+                    }
+                }
+            }
+        }
+
+
+        if (id == R.id.viewbuyershere) {
+
+            if (!type.equals("Trader")) {
+                if (FirebaseAuth.getInstance() != null) {
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    if (user != null) {
+                        String cusomerId = "";
+
+                        cusomerId = user.getUid();
+                        Intent intent = new Intent(HomeActivity.this, HomeActivity.class);
+                        if (intent != null) {
+                            intent.putExtra("traderorcustomer", traderoruser);
+                            intent.putExtra("role", type);
+                            startActivity(intent);
+                        }
+                    }
+                }
+            } else {
+                if (FirebaseAuth.getInstance() != null) {
+
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    if (user != null) {
+                        String cusomerId = "";
+                        cusomerId = user.getUid();
+
+                        Intent intent = new Intent(HomeActivity.this, AdminViewBuyersActivity.class);
+                        if (intent != null) {
+                            intent.putExtra("traderorcustomer", traderoruser);
+                            intent.putExtra("role", type);
+                            startActivity(intent);
+                        }
+                    }
+                }
+            }
+        }
+
+
+        if (id == R.id.usercartedactivityhere) {
+
+            if (!type.equals("Trader")) {
+                if (FirebaseAuth.getInstance() != null) {
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    if (user != null) {
+                        String cusomerId = "";
+
+                        cusomerId = user.getUid();
+                        Intent intent = new Intent(HomeActivity.this, HomeActivity.class);
+                        if (intent != null) {
+                            intent.putExtra("traderorcustomer", traderoruser);
+                            intent.putExtra("role", type);
+                            startActivity(intent);
+                        }
+                    }
+                }
+            } else {
+                if (FirebaseAuth.getInstance() != null) {
+
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    if (user != null) {
+                        String cusomerId = "";
+                        cusomerId = user.getUid();
+
+                        Intent intent = new Intent(HomeActivity.this, AdminUserCartedActivity.class);
+                        if (intent != null) {
+                            intent.putExtra("traderorcustomer", traderoruser);
+                            intent.putExtra("role", type);
+                            startActivity(intent);
+                        }
+                    }
+                }
+            }
+        }
+
+
+        if (id == R.id.newproductdetailshere) {
+            if (!type.equals("Trader")) {
+                if (FirebaseAuth.getInstance() != null) {
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    if (user != null) {
+                        String cusomerId = "";
+
+                        cusomerId = user.getUid();
+                        Intent intent = new Intent(HomeActivity.this, HomeActivity.class);
+                        if (intent != null) {
+                            intent.putExtra("traderorcustomer", traderoruser);
+                            intent.putExtra("role", type);
+                            startActivity(intent);
+                        }
+                    }
+                }
+            } else {
+                if (FirebaseAuth.getInstance() != null) {
+
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    if (user != null) {
+                        String cusomerId = "";
+                        cusomerId = user.getUid();
+
+                        Intent intent = new Intent(HomeActivity.this, AdminProductDetails.class);
+                        if (intent != null) {
+                            intent.putExtra("traderorcustomer", traderoruser);
+                            intent.putExtra("role", type);
+                            startActivity(intent);
+                        }
+                    }
+                }
+            }
+        }
+
+
+        if (id == R.id.Maintainnewproducts) {
+            if (!type.equals("Trader")) {
+                if (FirebaseAuth.getInstance() != null) {
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    if (user != null) {
+                        String cusomerId = "";
+
+                        cusomerId = user.getUid();
+                        Intent intent = new Intent(HomeActivity.this, HomeActivity.class);
+                        if (intent != null) {
+                            intent.putExtra("traderorcustomer", traderoruser);
+                            intent.putExtra("role", type);
+                            startActivity(intent);
+                        }
+                    }
+                }
+            } else {
+                if (FirebaseAuth.getInstance() != null) {
+
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    if (user != null) {
+                        String cusomerId = "";
+                        cusomerId = user.getUid();
+
+                        Intent intent = new Intent(HomeActivity.this, AdminMaintainProductsActivity.class);
+                        if (intent != null) {
+                            intent.putExtra("traderorcustomer", traderoruser);
+                            intent.putExtra("role", type);
+                            startActivity(intent);
+                        }
+                    }
+                }
+            }
+        }
+
+
+        if (id == R.id.allcategorieshere) {
+
+            if (!type.equals("Trader")) {
+                if (FirebaseAuth.getInstance() != null) {
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    if (user != null) {
+                        String cusomerId = "";
+
+                        cusomerId = user.getUid();
+                        Intent intent = new Intent(HomeActivity.this, HomeActivity.class);
+                        if (intent != null) {
+                            intent.putExtra("traderorcustomer", traderoruser);
+                            intent.putExtra("role", type);
+                            startActivity(intent);
+                        }
+                    }
+                }
+            } else {
+                if (FirebaseAuth.getInstance() != null) {
+
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    if (user != null) {
+                        String cusomerId = "";
+                        cusomerId = user.getUid();
+
+                        Intent intent = new Intent(HomeActivity.this, AdminCategoryActivity.class);
+                        if (intent != null) {
+                            intent.putExtra("traderorcustomer", traderoruser);
+                            intent.putExtra("role", type);
+                            startActivity(intent);
+                        }
+                    }
+                }
+            }
+        }
+
+
+        if (id == R.id.allproductshere) {
+            if (!type.equals("Trader")) {
+                if (FirebaseAuth.getInstance() != null) {
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    if (user != null) {
+                        String cusomerId = "";
+
+                        cusomerId = user.getUid();
+                        Intent intent = new Intent(HomeActivity.this, HomeActivity.class);
+                        if (intent != null) {
+                            intent.putExtra("traderorcustomer", traderoruser);
+                            intent.putExtra("role", type);
+                            startActivity(intent);
+                        }
+                    }
+                }
+            } else {
+                if (FirebaseAuth.getInstance() != null) {
+
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    if (user != null) {
+                        String cusomerId = "";
+                        cusomerId = user.getUid();
+
+                        Intent intent = new Intent(HomeActivity.this, AdminAllCustomers.class);
                         if (intent != null) {
                             intent.putExtra("traderorcustomer", traderoruser);
                             intent.putExtra("role", type);
@@ -639,24 +817,488 @@ ArrayList<ProductHere> productHeres;
                         }
                     }
                 }}}
-        else if (id == R.id.nav_paymenthome)
+
+            return super.onOptionsItemSelected(item);
+        }
+
+
+        public boolean onNavigationItemSelected (MenuItem item)
         {
+            // Handle navigation view item clicks here.
 
+            int id = item.getItemId();
+
+            if (id == R.id.viewmap) {
+                if (!type.equals("Trader")) {
+
+                    Intent intent = new Intent(HomeActivity.this, com.simcoder.bimbo.CustomerMapActivity.class);
+                    if (intent != null) {
+                        intent.putExtra("roledhomeactivitytocustomermapactivity", type);
+                        intent.putExtra("fromhomeactivitytocustomermapactivity", traderoruser);
+                        startActivity(intent);
+                        finish();
+                    }
+                } else {
+
+                    Intent intent = new Intent(HomeActivity.this, DriverMapActivity.class);
+                    if (intent != null) {
+                        intent.putExtra("rolefromhomeactivitytodrivermapactivity", type);
+                        intent.putExtra("fromhomeactivitytodrivermapactivity", traderoruser);
+                        startActivity(intent);
+                        finish();
+                    }
+                }
+
+
+            }
+            if (id == R.id.nav_cart) {
+                if (!type.equals("Trader")) {
+                    Intent intent = new Intent(HomeActivity.this, CartActivity.class);
+                    if (intent != null) {
+                        startActivity(intent);
+                    }
+                }
+
+            }
+
+            if (id == R.id.viewproducts) {
+                if (!type.equals("Trader")) {
+                    Intent intent = new Intent(HomeActivity.this, HomeActivity.class);
+                    if (intent != null) {
+                        startActivity(intent);
+                    }
+                } else {
+                }
+
+            }
+            if (id == R.id.nav_search) {
+                if (!type.equals("Trader")) {
+                    Intent intent = new Intent(HomeActivity.this, SearchProductsActivity.class);
+                    if (intent != null) {
+                        startActivity(intent);
+                    }
+                } else {
+                }
+            }
+
+            if (id == R.id.nav_logout) {
+
+                if (FirebaseAuth.getInstance() != null) {
+                    FirebaseAuth.getInstance().signOut();
+                    if (mGoogleApiClient != null) {
+                        mGoogleSignInClient.signOut().addOnCompleteListener(HomeActivity.this,
+                                new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+
+                                    }
+                                });
+                    }
+                }
+                Intent intent = new Intent(HomeActivity.this, com.simcoder.bimbo.MainActivity.class);
+                if (intent != null) {
+                    startActivity(intent);
+                    finish();
+                }
+            }
+
+            if (id == R.id.nav_settings) {
+                if (!type.equals("Trader")) {
+                    Intent intent = new Intent(HomeActivity.this, com.simcoder.bimbo.WorkActivities.SettinsActivity.class);
+                    if (intent != null) {
+                        startActivity(intent);
+                    }
+                } else {
+                }
+            }
+            if (id == R.id.nav_history) {
+                if (!type.equals("Trader")) {
+                    Intent intent = new Intent(HomeActivity.this, HistoryActivity.class);
+                    if (intent != null) {
+                        startActivity(intent);
+                    }
+                } else {
+                }
+            }
+            if (id == R.id.nav_categories) {
+
+            }
+            if (id == R.id.nav_viewprofilehome) {
+                if (!type.equals("Trader")) {
+                    if (FirebaseAuth.getInstance() != null) {
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        if (user != null) {
+                            String cusomerId = "";
+
+                            cusomerId = user.getUid();
+                            Intent intent = new Intent(HomeActivity.this, CustomerProfile.class);
+                            if (intent != null) {
+                                intent.putExtra("traderorcustomer", traderoruser);
+                                intent.putExtra("role", type);
+                                startActivity(intent);
+                            }
+                        }
+                    }
+                } else {
+                    if (FirebaseAuth.getInstance() != null) {
+
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        if (user != null) {
+                            String cusomerId = "";
+                            cusomerId = user.getUid();
+
+                            Intent intent = new Intent(HomeActivity.this, TraderProfile.class);
+                            if (intent != null) {
+                                intent.putExtra("traderorcustomer", traderoruser);
+                                intent.putExtra("role", type);
+                                startActivity(intent);
+                            }
+                        }
+                    }
+                }
+            }
+            if (id == R.id.viewallcustomershere) {
+                if (!type.equals("Trader")) {
+                    if (FirebaseAuth.getInstance() != null) {
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        if (user != null) {
+                            String cusomerId = "";
+
+                            cusomerId = user.getUid();
+                            Intent intent = new Intent(HomeActivity.this, HomeActivity.class);
+                            if (intent != null) {
+                                intent.putExtra("traderorcustomer", traderoruser);
+                                intent.putExtra("role", type);
+                                startActivity(intent);
+                            }
+                        }
+                    }
+                } else {
+                    if (FirebaseAuth.getInstance() != null) {
+
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        if (user != null) {
+                            String cusomerId = "";
+                            cusomerId = user.getUid();
+
+                            Intent intent = new Intent(HomeActivity.this, AdminAllCustomers.class);
+                            if (intent != null) {
+                                intent.putExtra("traderorcustomer", traderoruser);
+                                intent.putExtra("role", type);
+                                startActivity(intent);
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            if (id == R.id.addnewproducthere) {
+
+                if (!type.equals("Trader")) {
+                    if (FirebaseAuth.getInstance() != null) {
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        if (user != null) {
+                            String cusomerId = "";
+
+                            cusomerId = user.getUid();
+                            Intent intent = new Intent(HomeActivity.this, HomeActivity.class);
+                            if (intent != null) {
+                                intent.putExtra("traderorcustomer", traderoruser);
+                                intent.putExtra("role", type);
+                                startActivity(intent);
+                            }
+                        }
+                    }
+                } else {
+                    if (FirebaseAuth.getInstance() != null) {
+
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        if (user != null) {
+                            String cusomerId = "";
+                            cusomerId = user.getUid();
+
+                            Intent intent = new Intent(HomeActivity.this, AdminAddNewProductActivity.class);
+                            if (intent != null) {
+                                intent.putExtra("traderorcustomer", traderoruser);
+                                intent.putExtra("role", type);
+                                startActivity(intent);
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            if (id == R.id.singeuserorderhere) {
+
+                if (!type.equals("Trader")) {
+                    if (FirebaseAuth.getInstance() != null) {
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        if (user != null) {
+                            String cusomerId = "";
+
+                            cusomerId = user.getUid();
+                            Intent intent = new Intent(HomeActivity.this, HomeActivity.class);
+                            if (intent != null) {
+                                intent.putExtra("traderorcustomer", traderoruser);
+                                intent.putExtra("role", type);
+                                startActivity(intent);
+                            }
+                        }
+                    }
+                } else {
+                    if (FirebaseAuth.getInstance() != null) {
+
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        if (user != null) {
+                            String cusomerId = "";
+                            cusomerId = user.getUid();
+
+                            Intent intent = new Intent(HomeActivity.this, ViewSingleUserOrders.class);
+                            if (intent != null) {
+                                intent.putExtra("traderorcustomer", traderoruser);
+                                intent.putExtra("role", type);
+                                startActivity(intent);
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            if (id == R.id.viewbuyershere) {
+
+                if (!type.equals("Trader")) {
+                    if (FirebaseAuth.getInstance() != null) {
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        if (user != null) {
+                            String cusomerId = "";
+
+                            cusomerId = user.getUid();
+                            Intent intent = new Intent(HomeActivity.this, HomeActivity.class);
+                            if (intent != null) {
+                                intent.putExtra("traderorcustomer", traderoruser);
+                                intent.putExtra("role", type);
+                                startActivity(intent);
+                            }
+                        }
+                    }
+                } else {
+                    if (FirebaseAuth.getInstance() != null) {
+
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        if (user != null) {
+                            String cusomerId = "";
+                            cusomerId = user.getUid();
+
+                            Intent intent = new Intent(HomeActivity.this, AdminViewBuyersActivity.class);
+                            if (intent != null) {
+                                intent.putExtra("traderorcustomer", traderoruser);
+                                intent.putExtra("role", type);
+                                startActivity(intent);
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            if (id == R.id.usercartedactivityhere) {
+
+                if (!type.equals("Trader")) {
+                    if (FirebaseAuth.getInstance() != null) {
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        if (user != null) {
+                            String cusomerId = "";
+
+                            cusomerId = user.getUid();
+                            Intent intent = new Intent(HomeActivity.this, HomeActivity.class);
+                            if (intent != null) {
+                                intent.putExtra("traderorcustomer", traderoruser);
+                                intent.putExtra("role", type);
+                                startActivity(intent);
+                            }
+                        }
+                    }
+                } else {
+                    if (FirebaseAuth.getInstance() != null) {
+
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        if (user != null) {
+                            String cusomerId = "";
+                            cusomerId = user.getUid();
+
+                            Intent intent = new Intent(HomeActivity.this, AdminUserCartedActivity.class);
+                            if (intent != null) {
+                                intent.putExtra("traderorcustomer", traderoruser);
+                                intent.putExtra("role", type);
+                                startActivity(intent);
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            if (id == R.id.newproductdetailshere) {
+                if (!type.equals("Trader")) {
+                    if (FirebaseAuth.getInstance() != null) {
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        if (user != null) {
+                            String cusomerId = "";
+
+                            cusomerId = user.getUid();
+                            Intent intent = new Intent(HomeActivity.this, HomeActivity.class);
+                            if (intent != null) {
+                                intent.putExtra("traderorcustomer", traderoruser);
+                                intent.putExtra("role", type);
+                                startActivity(intent);
+                            }
+                        }
+                    }
+                } else {
+                    if (FirebaseAuth.getInstance() != null) {
+
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        if (user != null) {
+                            String cusomerId = "";
+                            cusomerId = user.getUid();
+
+                            Intent intent = new Intent(HomeActivity.this, AdminProductDetails.class);
+                            if (intent != null) {
+                                intent.putExtra("traderorcustomer", traderoruser);
+                                intent.putExtra("role", type);
+                                startActivity(intent);
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            if (id == R.id.Maintainnewproducts) {
+                if (!type.equals("Trader")) {
+                    if (FirebaseAuth.getInstance() != null) {
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        if (user != null) {
+                            String cusomerId = "";
+
+                            cusomerId = user.getUid();
+                            Intent intent = new Intent(HomeActivity.this, HomeActivity.class);
+                            if (intent != null) {
+                                intent.putExtra("traderorcustomer", traderoruser);
+                                intent.putExtra("role", type);
+                                startActivity(intent);
+                            }
+                        }
+                    }
+                } else {
+                    if (FirebaseAuth.getInstance() != null) {
+
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        if (user != null) {
+                            String cusomerId = "";
+                            cusomerId = user.getUid();
+
+                            Intent intent = new Intent(HomeActivity.this, AdminMaintainProductsActivity.class);
+                            if (intent != null) {
+                                intent.putExtra("traderorcustomer", traderoruser);
+                                intent.putExtra("role", type);
+                                startActivity(intent);
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            if (id == R.id.allcategorieshere) {
+
+                if (!type.equals("Trader")) {
+                    if (FirebaseAuth.getInstance() != null) {
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        if (user != null) {
+                            String cusomerId = "";
+
+                            cusomerId = user.getUid();
+                            Intent intent = new Intent(HomeActivity.this, HomeActivity.class);
+                            if (intent != null) {
+                                intent.putExtra("traderorcustomer", traderoruser);
+                                intent.putExtra("role", type);
+                                startActivity(intent);
+                            }
+                        }
+                    }
+                } else {
+                    if (FirebaseAuth.getInstance() != null) {
+
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        if (user != null) {
+                            String cusomerId = "";
+                            cusomerId = user.getUid();
+
+                            Intent intent = new Intent(HomeActivity.this, AdminCategoryActivity.class);
+                            if (intent != null) {
+                                intent.putExtra("traderorcustomer", traderoruser);
+                                intent.putExtra("role", type);
+                                startActivity(intent);
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            if (id == R.id.allproductshere) {
+                if (!type.equals("Trader")) {
+                    if (FirebaseAuth.getInstance() != null) {
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        if (user != null) {
+                            String cusomerId = "";
+
+                            cusomerId = user.getUid();
+                            Intent intent = new Intent(HomeActivity.this, HomeActivity.class);
+                            if (intent != null) {
+                                intent.putExtra("traderorcustomer", traderoruser);
+                                intent.putExtra("role", type);
+                                startActivity(intent);
+                            }
+                        }
+                    }
+                } else {
+                    if (FirebaseAuth.getInstance() != null) {
+
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        if (user != null) {
+                            String cusomerId = "";
+                            cusomerId = user.getUid();
+
+                            Intent intent = new Intent(HomeActivity.this, AdminAllCustomers.class);
+                            if (intent != null) {
+                                intent.putExtra("traderorcustomer", traderoruser);
+                                intent.putExtra("role", type);
+                                startActivity(intent);
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            if (drawer != null) {
+                drawer.closeDrawer(GravityCompat.START);
+            }
+            return true;
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer != null) {
-            drawer.closeDrawer(GravityCompat.START);
+        @Override
+        protected void onStop () {
+            super.onStop();
+            //     mProgress.hide();
+            if (mAuth != null) {
+                mAuth.removeAuthStateListener(firebaseAuthListener);
+            }
         }
-        return true;
     }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        //     mProgress.hide();
-        if (mAuth != null) {
-            mAuth.removeAuthStateListener(firebaseAuthListener);
-        }
-    }
-}
