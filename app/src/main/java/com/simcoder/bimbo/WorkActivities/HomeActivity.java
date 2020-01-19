@@ -143,12 +143,22 @@ public class HomeActivity extends AppCompatActivity
 
         productkey = ProductsRef.getKey();
         ProductsRefwithproduct = FirebaseDatabase.getInstance().getReference().child("Product").child(productkey).child("trader");
+        thetraderkey = ProductsRefwithproduct.getKey().toString();
+
+
         ProductsRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (productkey != null) {
-
-                    
+                          if (thetraderkey != null) {
+                              if (dataSnapshot.child(productkey).child("trader").child(thetraderkey).child("name").getValue() != null) {
+                                  thenameofthetrader = dataSnapshot.child(productkey).child("trader").child(thetraderkey).child("name").getValue().toString();
+                                  if (dataSnapshot.child(productkey).child("desc").getValue() != null) {
+                                      description = dataSnapshot.child(productkey).child("desc").getValue().toString();
+                                  }
+                              }
+                          }
+                    /*
                     ArrayList<ProductsInformationModel> ProductsInformationList = new ArrayList<>();
                     ArrayList<TraderWhoPostedProductModel> TraderWhoPostedProductModerList = new ArrayList<>();
 
@@ -169,8 +179,11 @@ public class HomeActivity extends AppCompatActivity
 
                                 }
                             }
+
                         }
+                    */
                     }
+
 
 
                     //    thetraderkey = dataSnapshot.child(productkey).child("trader").getKey();
@@ -180,60 +193,10 @@ public class HomeActivity extends AppCompatActivity
 
                 }
 
-            }
 
 
-            ;
 
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-
-        ProductsRefwithproduct.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (productkey != null) {
-
-                    ArrayList<ProductsInformationModel> ProductsInformationList = new ArrayList<>();
-                    ArrayList<TraderWhoPostedProductModel> TraderWhoPostedProductModerList = new ArrayList<>();
-
-                    Iterator<DataSnapshot> items = dataSnapshot.getChildren().iterator();
-                    Toast.makeText(HomeActivity.this, "Total Location Count:" + dataSnapshot.getChildrenCount(), Toast.LENGTH_LONG).show();
-                    TraderWhoPostedProductModerList.clear();
-
-                    HashMap<String, Object> locationmap = null;
-
-                    while (items.hasNext()) {
-                        DataSnapshot item = items.next();
-
-                        TraderWhoPostedProductModel myuser = item.getValue(TraderWhoPostedProductModel.class);
-                        if (locationmap.get("name") != null && locationmap.get("image") != null && locationmap.get("tid") != null && locationmap.get("pid") != null && locationmap.get("image") != null) {
-                            if (locationmap.get("one") != null) {
-                                TraderWhoPostedProductModerList.add(new TraderWhoPostedProductModel(locationmap.get("name").toString(), locationmap.get("image").toString(), locationmap.get("tid").toString()));
-                                int i = 0;
-                                String traderimage = TraderWhoPostedProductModerList.get(0).getimage().toString();
-                                String tradername = TraderWhoPostedProductModerList.get(0).getname().toString();
-                                String traderID = TraderWhoPostedProductModerList.get(0).gettid().toString();
-                            }
-                        }
-                    }
-
-
-                    //    thetraderkey = dataSnapshot.child(productkey).child("trader").getKey();
-                    //   thenameofthetrader = dataSnapshot.child(productkey).child("trader").child(thetraderkey).child("name").getValue().toString();
-                    //   description = dataSnapshot.child(productkey).child("desc").getValue().toString();
-
-
-                }
-
-            }
-
-
-            ;
+    ;
 
 
             @Override
@@ -241,6 +204,9 @@ public class HomeActivity extends AppCompatActivity
 
             }
         });
+
+
+
 
 
         Paper.init(this);
@@ -372,7 +338,7 @@ public class HomeActivity extends AppCompatActivity
                             holder.txtProductDescription.setText(model.getdesc());
                             holder.txtProductPrice.setText("Price = " + model.getprice() + "$");
                             holder.setImage(getApplicationContext(), model.getimage());
-                            holder.tradername.setText("Trader of Goods+" + thetradername);
+                            holder.tradername.setText( thenameofthetrader);
                         }
 
 
