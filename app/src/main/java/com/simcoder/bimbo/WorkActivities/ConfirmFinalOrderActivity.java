@@ -224,7 +224,7 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity
             public void onComplete(@NonNull Task<Void> task)
             {
                 if (task.isSuccessful())
-                {
+                {       if (cartkey != null) {
                     FirebaseDatabase.getInstance().getReference()
                             .child("Cart List").child(cartkey)
 
@@ -232,10 +232,8 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity
                             .removeValue()
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
-                                public void onComplete(@NonNull Task<Void> task)
-                                {
-                                    if (task.isSuccessful())
-                                    {
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
                                         Toast.makeText(ConfirmFinalOrderActivity.this, "your final order has been placed successfully.", Toast.LENGTH_SHORT).show();
 
                                         Intent intent = new Intent(ConfirmFinalOrderActivity.this, HistoryActivity.class);
@@ -245,7 +243,7 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity
                                     }
                                 }
                             });
-                }
+                }            }
             }
         });
     }
