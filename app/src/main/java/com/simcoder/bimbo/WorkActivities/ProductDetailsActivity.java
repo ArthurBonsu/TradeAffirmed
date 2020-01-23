@@ -3,16 +3,27 @@ package com.simcoder.bimbo.WorkActivities;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -32,13 +43,19 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.simcoder.bimbo.R;
+import com.simcoder.bimbo.ViewHolder.ProductDetailsViewHolders;
+import com.simcoder.bimbo.ViewHolder.ProductViewHolder;
 import com.squareup.picasso.Picasso;
+
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 
-public class ProductDetailsActivity extends AppCompatActivity
+import de.hdodenhof.circleimageview.CircleImageView;
+import io.paperdb.Paper;
+
+public class ProductDetailsActivity extends AppCompatActivity   implements NavigationView.OnNavigationItemSelectedListener
 {
     private Button addToCartButton;
     private ImageView productImage;
@@ -48,14 +65,15 @@ public class ProductDetailsActivity extends AppCompatActivity
     String cartkey;
     String orderkey;
     String thetraderkey;
-     String thenameofthetrader;
+    String thenameofthetrader;
     String description;
-
+    String thetraderhere;
+     DatabaseReference userDetails;
     String traderoruser= "";
     private static final int RC_SIGN_IN = 1;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
-
-
+     RecyclerView productdetailsRecycler;
+    RecyclerView.LayoutManager layoutManager;
     //AUTHENTICATORS
 
     private GoogleMap mMap;
@@ -63,13 +81,77 @@ public class ProductDetailsActivity extends AppCompatActivity
     private static final String TAG = "Google Activity";
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
+    DatabaseReference ProductRef;
 
+    String traderkey;
+
+
+    String traderkeyhere;
+    String theproductname;
+    String suchtheprice;
+    String thedescription;
+    String thetraderwehave;
+    String imagehere;
+    String key;
+    ImageView theproductimageview;
+    String describe;
+    String theprice;
+    String productname;
+    String userID;
+   DatabaseReference  cartintoproductListRef;
+    DatabaseReference cartforuser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_product_details);
+        setContentView(R.layout.activity_home);
 
-        productID = getIntent().getStringExtra("pid");
+        theproductimageview = (ImageView) findViewById(R.id.product_image_details);
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        if (bundle != null)
+        // TYPE IS THE SAME AS ROLE
+
+
+        {  if (getIntent().getStringExtra("pid") != null) {
+                productID = getIntent().getStringExtra("pid");
+            }
+        }
+        traderoruser = getIntent().getStringExtra("fromcustomermapactivitytohomeactivity");
+
+
+        {
+            if (getIntent().getStringExtra("fromthehomeactivitytraderkey")!= null) {
+                traderkeyhere = getIntent().getStringExtra("fromthehomeactivitytraderkey");
+            }
+        }
+
+
+        traderoruser = getIntent().getStringExtra("fromdrivermapactivitytohomeactivity");
+
+
+        //KEY PASSESS FOR TRADER
+
+        {
+            if ( getIntent().getStringExtra("fromthehomeactivityname") != null) {
+                theproductname =  getIntent().getStringExtra("fromthehomeactivityname");
+            }
+        }
+        if (getIntent().getStringExtra("fromthehomeactivityprice") != null) {
+            theprice =  getIntent().getStringExtra("fromthehomeactivityprice");
+        }
+
+        if ( getIntent().getStringExtra("fromthehomeactivitydesc") != null) {
+            thedescription =   getIntent().getStringExtra("fromthehomeactivitydesc");
+        }
+
+        if ( getIntent().getStringExtra("fromthehomeactivityname") != null) {
+
+            thetraderwehave =  getIntent().getStringExtra("fromthehomeactivityname");
+        }
+
+        if (getIntent().getStringExtra("fromthehomeactivityimage") != null) {
+            imagehere = getIntent().getStringExtra("fromthehomeactivityimage");
+        }
 
         addToCartButton = (Button) findViewById(R.id.pd_add_to_cart_button);
         numberButton = (ElegantNumberButton) findViewById(R.id.number_btn);
@@ -77,7 +159,9 @@ public class ProductDetailsActivity extends AppCompatActivity
         productName = (TextView) findViewById(R.id.product_name_details);
         productDescription = (TextView) findViewById(R.id.product_description_details);
         productPrice = (TextView) findViewById(R.id.product_price_details);
-        tradername = (TextView)findViewById(R.id.thetrader);
+        tradername = (TextView)findViewById(R.id.product_tradername);
+
+
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
         if (mGoogleApiClient != null) {
@@ -93,6 +177,7 @@ public class ProductDetailsActivity extends AppCompatActivity
                         }
                     }).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
         }
+
 
         firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -110,16 +195,80 @@ public class ProductDetailsActivity extends AppCompatActivity
             }
         };
 
+        Paper.init(this);
 
-        Intent intent = new Intent(ProductDetailsActivity.this, ConfirmFinalOrderActivity.class);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.hometoolbar);
+           if (toolbar != null) {
+               toolbar.setTitle("Home");
+           }
+//        setSupportActionBar(toolbar);
 
-        intent.putExtra("cartkey", cartkey);
+
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer != null) {
+            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+            drawer.addDrawerListener(toggle);
+            if (toggle != null) {
+                toggle.syncState();
+            }
+
+            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+            if (navigationView != null) {
+                navigationView.setNavigationItemSelectedListener(this);
+            }
+            View headerView = navigationView.getHeaderView(0);
+            TextView userNameTextView = headerView.findViewById(R.id.user_profile_name);
+            CircleImageView profileImageView = headerView.findViewById(R.id.user_profile_image);
+
+            // USER
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+
+
+            {
+                if (user.getDisplayName() != null) {
+                    if (user.getDisplayName() != null) {
+                        userNameTextView.setText(user.getDisplayName());
+
+                        Picasso.get().load(user.getPhotoUrl()).placeholder(R.drawable.profile).into(profileImageView);
+                    }
+                }
+            }
+
+
+            productdetailsRecycler = findViewById(R.id.recycler_menu);
+            if (productdetailsRecycler != null) {
+                productdetailsRecycler.setHasFixedSize(true);
+
+            }
+            layoutManager = new LinearLayoutManager(this);
+            if (productdetailsRecycler != null) {
+                productdetailsRecycler.setLayoutManager(layoutManager);
+            }
+        }
+
+
+
+
+        if (productID != null) {
+
+            ProductRef = FirebaseDatabase.getInstance().getReference().child("Product");
+        }
+         Log.d("TAG", productID);
+     //   DatabaseReference productRef = FirebaseDatabase.getInstance().getReference().child("Product");
+
+        thetraderkey = getIntent().getStringExtra("fromthehomeactivitytoproductdetails");
+        Intent intents = new Intent(ProductDetailsActivity.this, ConfirmFinalOrderActivity.class);
+
+        intents.putExtra("cartkey", cartkey);
         if (getIntent() != null) {
             orderkey = getIntent().getStringExtra("orderkey");
 
-            getProductDetails(productID);
+                      getProductDetails();
 
-            if (addToCartButton != null) {
+            if (addToCartButton != null)  {
                 addToCartButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -127,6 +276,7 @@ public class ProductDetailsActivity extends AppCompatActivity
                             Toast.makeText(ProductDetailsActivity.this, "you can add purchase more products, once your order is shipped or confirmed.", Toast.LENGTH_LONG).show();
                         } else {
                             addingToCartList();
+                            Toast.makeText(ProductDetailsActivity.this, "adding your product to cart.", Toast.LENGTH_LONG).show();
                         }
                     }
                 });
@@ -141,8 +291,7 @@ public class ProductDetailsActivity extends AppCompatActivity
         CheckOrderState();
     }
 
-    private void addingToCartList()
-    {
+    private void addingToCartList() {
         String saveCurrentTime, saveCurrentDate;
 
         Calendar calForDate = Calendar.getInstance();
@@ -152,37 +301,61 @@ public class ProductDetailsActivity extends AppCompatActivity
 
         SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss a");
         saveCurrentTime = currentDate.format(calForDate.getTime());
-            final String userID ="";
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+             userID = "";
+
+            userID = user.getUid();
+
+        }
         final DatabaseReference cartListRef = FirebaseDatabase.getInstance().getReference().child("Cart List");
 
-        cartkey = cartListRef.push().getKey();
-
+        if (cartListRef.getKey() == "") {
+            cartkey = cartListRef.push().getKey();
+            //cartListRef.setValue(cartkey);
+        } else {
+            cartkey = cartListRef.getKey();
+        }
         final HashMap<String, Object> cartMap = new HashMap<>();
-        cartMap.put("pid", productID);
-        cartMap.put("name", productName.getText().toString());
-        cartMap.put("price", productPrice.getText().toString());
+
+
+        cartMap.put("pid", key);
+        cartMap.put("name", productname);
+        cartMap.put("price", suchtheprice);
         cartMap.put("date", saveCurrentDate);
         cartMap.put("time", saveCurrentTime);
-        cartMap.put("quantity", numberButton.getNumber());
+        if (numberButton != null) {
+            cartMap.put("quantity", numberButton.getNumber());
+        }
         cartMap.put("discount", "");
-        final DatabaseReference cartintoproductListRef = FirebaseDatabase.getInstance().getReference().child("Cart List").child(cartkey).child("Users").child(userID).child("products");
-        String productinputedkey = cartintoproductListRef.push().getKey();
-         cartListRef.child(cartkey)
-                .updateChildren(cartMap)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task)
-                    {
-                        if (task.isSuccessful())
-                        {
-                            cartintoproductListRef.child(productID)
+
+        if (cartkey != null) {
+            cartforuser = FirebaseDatabase.getInstance().getReference().child("Cart List").child(cartkey).child("Users");
+                    user = FirebaseAuth.getInstance().getCurrentUser();
+                       if (user != null){
+                           userID = "";
+                           userID = user.getUid();
+                       }
+
+            cartforuser.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.hasChild(userID)) {
+
+                         cartintoproductListRef = FirebaseDatabase.getInstance().getReference().child("Cart List").child(cartkey).child("Users").child(userID).child("products");
+                        //    String productinputedkey = cartintoproductListRef.push().getKey();
+
+                        cartintoproductListRef.setValue(key);
+                        if (key != null) {
+                            cartintoproductListRef.child(key)
+                                    .updateChildren(cartMap);
+                            cartListRef.child(cartkey)
                                     .updateChildren(cartMap)
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
-                                        public void onComplete(@NonNull Task<Void> task)
-                                        {
-                                            if (task.isSuccessful())
-                                            {
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
                                                 Toast.makeText(ProductDetailsActivity.this, "Added to Cart List.", Toast.LENGTH_SHORT).show();
 
                                                 Intent intent = new Intent(ProductDetailsActivity.this, HomeActivity.class);
@@ -190,81 +363,230 @@ public class ProductDetailsActivity extends AppCompatActivity
                                             }
                                         }
                                     });
-                        }
+
+                    } else {
+
+
+                            cartforuser.setValue(userID);
+                             DatabaseReference cartintoproductListRef = FirebaseDatabase.getInstance().getReference().child("Cart List").child(cartkey).child("Users").child(userID).child("products");
+                            //    String productinputedkey = cartintoproductListRef.push().getKey();
+
+                            cartintoproductListRef.setValue(key);
+                            if (key != null) {
+                                cartintoproductListRef.child(key)
+                                        .updateChildren(cartMap);
+                                cartListRef.child(cartkey)
+                                        .updateChildren(cartMap)
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    Toast.makeText(ProductDetailsActivity.this, "Added to Cart List.", Toast.LENGTH_SHORT).show();
+
+                                                    Intent intent = new Intent(ProductDetailsActivity.this, HomeActivity.class);
+                                                    startActivity(intent);
+                                                }
+                                            }
+                                        });
                     }
-                });
-    }
-
-
-    private void getProductDetails(String productID) {
-        DatabaseReference productsRef = FirebaseDatabase.getInstance().getReference().child("Product").child(productID);
-        DatabaseReference traderinformationreference = FirebaseDatabase.getInstance().getReference().child("Product").child(productID);
-
-        if (traderinformationreference != null) {
-            traderinformationreference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-
-
-                    if (dataSnapshot.child("trader") != null) {
-                    }
-                     if(thetraderkey != null){
-                    thetraderkey = dataSnapshot.child("trader").getKey();
-                    thenameofthetrader =  dataSnapshot.child("trader").child(thetraderkey).child("name").getValue().toString();
-                    description = dataSnapshot.child("desc").getValue().toString();
                 }
 
-                ;}
 
+
+            }
+
+
+
+
+
+
+            }
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
 
-                }
-            });
+                };
+        });
+
+    }
+    }
+    private void getProductDetails() {
 
 
-            productsRef.child(productID).addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.exists()) {
-                        final Products products = dataSnapshot.getValue(Products.class);
 
-                        productName.setText(products.getname());
-                        productPrice.setText(products.getprice());
-                        productDescription.setText(description);
-                        tradername.setText(thenameofthetrader);
-                        Picasso.get().load(products.getimage()).into(productImage);
+        FirebaseRecyclerOptions<Products> options =
+                new FirebaseRecyclerOptions.Builder<Products>()
+                        .setQuery(ProductRef, Products.class)
+                        .build();
 
-                        tradername.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
 
-                                {
-                                    Intent intent = new Intent(ProductDetailsActivity.this, TraderProfile.class);
-                                    intent.putExtra("pid", products.getpid());
-                                    intent.putExtra("fromhomeactivitytotraderprofile", thetraderkey);
-                                    intent.putExtra("fromhomeactivitytotraderprofile",thetraderkey);
-                                    startActivity(intent);
-                                }
+        FirebaseRecyclerAdapter<Products, ProductDetailsViewHolders> adapter =
+                new FirebaseRecyclerAdapter<Products, ProductDetailsViewHolders>(options) {
+                    @Override
+                    protected void onBindViewHolder(@NonNull ProductDetailsViewHolders holder, int position, @NonNull final Products model) {
+                        if (holder != null) {
+
+                            holder.txtProductName.setText(model.getname());
+                           key = model.getpid();
+                            traderkey = model.gettid();
+                             describe = model.getdesc();
+                             suchtheprice = model.getprice();
+                             productname = model.getname();
+                            model.setTrader(traderkey);
+
+                            holder.txtProductDescription.setText(model.getdesc());
+                            holder.txtProductPrice.setText("Price = " + model.getprice() + "$");
+                            holder.setImage(getApplicationContext(), model.getimage());
+
+
+                            if (ProductRef != null) {
+                                ProductRef.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        if (dataSnapshot.exists()) {
+                                            if (key != null) {
+                                                if (traderkey != null) {
+                                                    if (dataSnapshot.child("trader").child(traderkey).child("name").getValue() != null) {
+                                                        thetraderhere = dataSnapshot.child("trader").child(traderkey).child("name").getValue().toString();
+
+
+                                                    }
+                                                    ;
+                                                }
+
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+
+                                holder.settrader(thetraderhere);
+                            }
+
+
+                        }
+
+                         holder.addthenumbersbutton.setOnClickListener(new View.OnClickListener() {
+                             @Override
+                             public void onClick(View v) {
+                                 numberButton.getNumber();
+                             }
+                         });
+
+                              holder.AddtoCartButton.setOnClickListener(new View.OnClickListener() {
+                                  @Override
+                                  public void onClick(View v) {
+                                      if (state.equals("Order Placed") || state.equals("Order Shipped")) {
+                                          Toast.makeText(ProductDetailsActivity.this, "you can add purchase more products, once your order is shipped or confirmed.", Toast.LENGTH_LONG).show();
+                                      } else {
+                                          addingToCartList();
+                                          Toast.makeText(ProductDetailsActivity.this, "adding your product to cart.", Toast.LENGTH_LONG).show();
+                                      }
+                                  }
+                              });
+
+                        /*if (model != null) {
+                            if (theproductimageview != null) {
+                                Picasso.get().load(Integer.parseInt(model.getimage())).resize(400, 0).networkPolicy(NetworkPolicy.OFFLINE).into(theproductimageview, new Callback() {
+
+
+                                    @Override
+                                    public void onSuccess() {
+
+                                    }
+
+                                    @Override
+                                    public void onError(Exception e) {
+                                        Picasso.get().load(Integer.parseInt(model.getimage())).resize(100,0).into(theproductimageview);
+                                    }
+
+                                });
 
 
                             }
-                        });
+
+*/
+
+
+                        if (holder != null) {
+                            holder.tradername.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+
+                                        Intent intent = new Intent(ProductDetailsActivity.this, TraderProfile.class);
+                                        intent.putExtra("pid", key);
+                                        intent.putExtra("fromhomeactivitytotraderprofile", traderkey);
+
+                                        startActivity(intent);
+                                    }
+                            });
+                        }
 
                     }
+
+                    @NonNull
+                    @Override
+                    public ProductDetailsViewHolders onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
+                        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_product_details, parent, false);
+                        ProductDetailsViewHolders holder = new ProductDetailsViewHolders(view);
+                        return holder;
+                    }
+
+
+
+                };
+
+/*
+
+        productName.setText(theproductname);
+        productPrice.setText(theprice);
+        productDescription.setText(thedescription);
+        tradername.setText(thetraderwehave );
+              if (productImage != null) {
+                  Picasso.get().load(imagehere).into(productImage);
+              }
+        tradername.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                {
+                    Intent intent = new Intent(ProductDetailsActivity.this, TraderProfile.class);
+                    intent.putExtra("pid", productID);
+                    intent.putExtra("fromhomeactivitytotraderprofile", traderkeyhere);
+
+
+
+
+                    startActivity(intent);
                 }
 
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
 
-                }
-            });
+            }
+        });
+
+  */
+        if (productdetailsRecycler != null) {
+            productdetailsRecycler.setAdapter(adapter);
         }
-    }
+        if (adapter != null) {
+            adapter.startListening();
+        }     }
+
+
     private void CheckOrderState() {
         DatabaseReference ordersRef;
-        String userID = "";
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+         if (user != null) {
+              userID = "";
+              userID = user.getUid();
+
+         }
         if (orderkey != null) {
             ordersRef = FirebaseDatabase.getInstance().getReference().child("Orders").child(orderkey);
 
@@ -290,13 +612,19 @@ public class ProductDetailsActivity extends AppCompatActivity
         }
     }
 
+
+
     @Override
     protected void onStop() {
         super.onStop();
         //     mProgress.hide();
-       if (mAuth != null) {
-           mAuth.removeAuthStateListener(firebaseAuthListener);
-       }
+        if (mAuth != null) {
+            mAuth.removeAuthStateListener(firebaseAuthListener);
+        }
     }
 
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        return false;
+    }
 }

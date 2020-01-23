@@ -30,7 +30,7 @@
         android:hint="@string/name"
         android:layout_marginBottom="20sp"
         android:inputType=""
-        android:autofillHints="" />
+        android:autofillHints="" tools:targetApi="o" />
     <EditText
         android:id="@+id/phone"
         android:layout_width="match_parent"
@@ -39,7 +39,7 @@
         android:hint="@string/phone"
         android:layout_marginBottom="20sp"
         android:inputType="phone"
-        android:autofillHints="" />
+        android:autofillHints="" tools:targetApi="o" />
     <EditText
         android:id="@+id/car"
         android:layout_width="match_parent"
@@ -48,7 +48,7 @@
         android:hint="@string/car"
         android:inputType="text"
         android:layout_marginBottom="20sp"
-        android:autofillHints="" />
+        android:autofillHints="" tools:targetApi="o" />
     <RadioGroup
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -57,19 +57,19 @@
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="STATIONARY"
+            android:text="@string/stationary2"
             android:id="@+id/UberX"
             style="?android:attr/borderlessButtonStyle"/>
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="MOBILE "
+            android:text="@string/mobileS"
             android:id="@+id/UberBlack"
             style="?android:attr/borderlessButtonStyle"/>
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="HYBRID"
+            android:text="@string/hybridS"
             android:id="@+id/UberXl"
             style="?android:attr/borderlessButtonStyle"/>
     </RadioGroup>

@@ -17,7 +17,7 @@ public class Products {
     private String field, followersname, customerPaid, driverPaidOut;
     private String timestamp, operations, reviewBy, residences, service, setinformations;
     private String baseprice;
-
+       String trader;
     public Products() {
     }
 
@@ -27,7 +27,7 @@ public class Products {
             String address, String amount, String city, String date, String state, String distance, String mode, String number, String shippingcost, String time,
 
             String count, String condition, String uid,
-            String password,
+            String password, String trader,
             String coverimage, String g, String one, String zero, String customerId, String customerRideId, String destination, String destinationLat, String destinationLng,
             String driverFoundID, String customer, String driver, String predictDistance, String lat, String lng, String rating, String triptime,
             String job, String quote, String role, String car, String descriptions, String field, String followersname, String customerPaid, String driverPaidOut,
@@ -95,7 +95,7 @@ public class Products {
         this.service = service;
         this.setinformations = setinformations;
         this.baseprice = baseprice;
-
+        this.trader = trader;
     }
 
     public String getPhone() {
@@ -567,4 +567,13 @@ public class Products {
         this.followersname = followersname;
     }
 
-}
+
+  public String setTrader(String trader) {
+
+        return trader;
+    }
+    public  String SetAnImage(String image){
+        return  image;
+    }
+  }
+

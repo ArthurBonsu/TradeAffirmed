@@ -8,13 +8,13 @@
         <item
             android:id="@+id/nav_cart"
             android:icon="@drawable/ic_android_fill"
-            android:title="安卓"
+            android:title=""
             app:actionLayout="@layout/bage_hint"/>
 
         <item
             android:id="@+id/nav_search"
             android:icon="@drawable/ic_apple_fill"
-            android:title="苹果"
+            android:title=""
             app:actionLayout="@layout/vip_view"/>
 
 
@@ -33,12 +33,12 @@
     </group>
 
     <item
-        android:title="子菜单">
+        android:title="">
         <menu>
             <item
                 android:id="@+id/nav_logout"
                 android:icon="@drawable/ic_taobao_fill"
-                android:title="淘宝"/>
+                android:title=""/>
 
         </menu>
     </item>

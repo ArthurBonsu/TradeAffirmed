@@ -54,24 +54,27 @@
         android:layout_height="wrap_content"
         android:id="@+id/radioGroup"
         android:orientation="horizontal">
+
         <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/uberx"
             android:id="@+id/UberX"
-            style="?android:attr/borderlessButtonStyle"/>
-        <RadioButton
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/uberblackS"
+            android:text="@string/stationary" />
+
+        <RadioButton
             android:id="@+id/UberBlack"
-            style="?android:attr/borderlessButtonStyle"/>
-        <RadioButton
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/uberblackxiSS"
+            android:text="@string/mobile" />
+
+        <RadioButton
             android:id="@+id/UberXl"
-            style="?android:attr/borderlessButtonStyle"/>
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/hybrid" />
     </RadioGroup>
 
         <Button

@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -78,7 +79,7 @@ public class HomeActivity extends AppCompatActivity
     String productkey;
     ArrayList<ProductsInformationModel> ProductsInformationList = new ArrayList<>();
     ArrayList<TraderWhoPostedProductModel> TraderWhoPostedProductModerList = new ArrayList<>();
-
+    String traderkeyhere;
     private String type = "";
     String traderoruser = "";
     private static final int RC_SIGN_IN = 1;
@@ -99,7 +100,11 @@ public class HomeActivity extends AppCompatActivity
     String productdescription;
     ImageView theproductimageview;
     TextView  thetraderview;
-
+    String keyhere;
+   String  thetraderhere;
+String traderkey;
+    String key;
+    String tradename;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -143,22 +148,34 @@ public class HomeActivity extends AppCompatActivity
         ProductsRef = FirebaseDatabase.getInstance().getReference().child("Product");
 
         productkey = ProductsRef.getKey();
-        ProductsRefwithproduct = FirebaseDatabase.getInstance().getReference().child("Product").child(productkey).child("trader");
-        thetraderkey = ProductsRefwithproduct.getKey().toString();
-        thetraderview = findViewById(R.id.thetrader);
 
-        ProductsRef.addValueEventListener(new ValueEventListener() {
+
+        if (ProductsRefwithproduct != null) {
+
+        thetraderkey = ProductsRefwithproduct.getKey().toString();
+        thetraderview = findViewById(R.id.thetraderiknow);
+        }
+
+         if (ProductsRefwithproduct != null){
+        ProductsRefwithproduct.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (productkey != null) {
-                          if (thetraderkey != null) {
-                              if (dataSnapshot.child(productkey).child("trader").child(thetraderkey).child("name").getValue() != null) {
-                                  thenameofthetrader = dataSnapshot.child(productkey).child("trader").child(thetraderkey).child("name").getValue().toString();
-                                  if (dataSnapshot.child(productkey).child("desc").getValue() != null) {
-                                      description = dataSnapshot.child(productkey).child("desc").getValue().toString();
-                                  }
-                              }
-                          }
+                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                        traderkeyhere = dataSnapshot1.getKey();
+                        Log.d("TAG", traderkeyhere);
+
+                        if (thetraderkey != null) {
+                            if (traderkeyhere != null) {
+                                if (dataSnapshot.child(traderkeyhere).child("trader").child(thetraderkey).child("name").getValue() != null) {
+                                    thenameofthetrader = dataSnapshot.child(traderkeyhere).child("trader").child(thetraderkey).child("name").getValue().toString();
+                                    if (dataSnapshot.child(traderkeyhere).child("desc").getValue() != null) {
+                                        description = dataSnapshot.child(traderkeyhere).child("desc").getValue().toString();
+                                    }
+                                }
+                            }
+                        }
+
                     /*
                     ArrayList<ProductsInformationModel> ProductsInformationList = new ArrayList<>();
                     ArrayList<TraderWhoPostedProductModel> TraderWhoPostedProductModerList = new ArrayList<>();
@@ -186,7 +203,6 @@ public class HomeActivity extends AppCompatActivity
                     }
 
 
-
                     //    thetraderkey = dataSnapshot.child(productkey).child("trader").getKey();
                     //   thenameofthetrader = dataSnapshot.child(productkey).child("trader").child(thetraderkey).child("name").getValue().toString();
                     //   description = dataSnapshot.child(productkey).child("desc").getValue().toString();
@@ -195,20 +211,88 @@ public class HomeActivity extends AppCompatActivity
                 }
 
 
+                ;
 
 
-    ;
-
+            }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
+
+            ;
+
+
         });
+         }
+        ProductsRef.addValueEventListener(new ValueEventListener() {
+                                              @Override
+                                              public void onDataChange(DataSnapshot dataSnapshot) {
+                                                  if (productkey != null) {
+                                                      for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                                                           keyhere = dataSnapshot1.getKey();
+                                                          Log.d("TAG", keyhere);
+
+                                                          if (thetraderkey != null) {
+                                                              if (keyhere != null) {
+                                                                  if (dataSnapshot.child(keyhere).child("trader").child(thetraderkey).child("name").getValue() != null) {
+                                                                      thenameofthetrader = dataSnapshot.child(keyhere).child("trader").child(thetraderkey).child("name").getValue().toString();
+                                                                      if (dataSnapshot.child(keyhere).child("desc").getValue() != null) {
+                                                                          description = dataSnapshot.child(keyhere).child("desc").getValue().toString();
+                                                                      }
+                                                                  }
+                                                              }
+                                                          }
+                    /*
+                    ArrayList<ProductsInformationModel> ProductsInformationList = new ArrayList<>();
+                    ArrayList<TraderWhoPostedProductModel> TraderWhoPostedProductModerList = new ArrayList<>();
+
+                    Iterator<DataSnapshot> items = dataSnapshot.getChildren().iterator();
+                    Toast.makeText(HomeActivity.this, "Total Location Count:" + dataSnapshot.getChildrenCount(), Toast.LENGTH_LONG).show();
+                    ProductsInformationList.clear();
+
+                    HashMap<String, Object> locationmap = null;
+                    if (locationmap != null) {
+                        while (items.hasNext()) {
+                            DataSnapshot item = items.next();
+
+                            ProductsInformationModel myuser = item.getValue(ProductsInformationModel.class);
+                            if (locationmap.get("name") != null && locationmap.get("time") != null && locationmap.get("price") != null && locationmap.get("pid") != null && locationmap.get("image") != null) {
+                                if (locationmap.get("one") != null) {
+                                    ProductsInformationList.add(new ProductsInformationModel(locationmap.get("name").toString(), locationmap.get("time").toString(), locationmap.get("price").toString(), locationmap.get("pid").toString(), locationmap.get("image").toString()));
+                                    String productdescription = ProductsInformationList.get(0).getdesc().toString();
+
+                                }
+                            }
+
+                        }
+                    */
+                                                      }
 
 
+                                                      //    thetraderkey = dataSnapshot.child(productkey).child("trader").getKey();
+                                                      //   thenameofthetrader = dataSnapshot.child(productkey).child("trader").child(thetraderkey).child("name").getValue().toString();
+                                                      //   description = dataSnapshot.child(productkey).child("desc").getValue().toString();
 
 
+                                                  }
+
+
+                                                  ;
+
+
+                                              }
+
+                                              @Override
+                                              public void onCancelled(DatabaseError databaseError) {
+
+                                              }
+
+                                              ;
+
+
+                                          });
 
         Paper.init(this);
 
@@ -335,13 +419,46 @@ public class HomeActivity extends AppCompatActivity
                         if (holder != null) {
 
                             holder.txtProductName.setText(model.getname());
+                              key = model.getpid();
+                          traderkey = model.gettid();
+                           model.setTrader(traderkey);
 
                             holder.txtProductDescription.setText(model.getdesc());
                             holder.txtProductPrice.setText("Price = " + model.getprice() + "$");
                             holder.setImage(getApplicationContext(), model.getimage());
-                              if (thetraderview != null) {
-                                  thetraderview.setText(thenameofthetrader);
-                              }
+
+
+
+
+                                if (ProductsRef != null) {
+                                    ProductsRef.addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            if (dataSnapshot.exists()) {
+                                                if (key != null) {
+                                                    if (traderkey != null) {
+                                                        if (dataSnapshot.child(key).child("trader").child(traderkey).child("name").getValue() != null) {
+                                                            thetraderhere = dataSnapshot.child(key).child("trader").child(traderkey).child("name").getValue().toString();
+
+
+                                                        }
+                                                        ;
+                                                    }
+
+                                                }
+                                            }
+                                        }
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });
+
+                                    holder.settrader(thetraderhere);
+                                }
+
+
+
                               }
 
 
@@ -375,14 +492,14 @@ public class HomeActivity extends AppCompatActivity
                                 public void onClick(View view) {
                                     if (type.equals("Trader")) {
                                         Intent intent = new Intent(HomeActivity.this, TraderProfile.class);
-                                        intent.putExtra("pid", productkey);
-                                        intent.putExtra("fromhomeactivitytotraderprofile", thetraderkey);
+                                        intent.putExtra("pid", key);
+                                        intent.putExtra("fromhomeactivitytotraderprofile", traderkey);
 
                                         startActivity(intent);
                                     } else {
                                         Intent intent = new Intent(HomeActivity.this, TraderProfile.class);
-                                        intent.putExtra("pid", productkey);
-                                        intent.putExtra("fromhomeactivitytotraderprofile", thetraderkey);
+                                        intent.putExtra("pid", key);
+                                        intent.putExtra("fromhomeactivitytotraderprofile", traderkey);
 
                                         startActivity(intent);
                                     }
@@ -396,13 +513,20 @@ public class HomeActivity extends AppCompatActivity
                                     if (type.equals("Trader")) {
                                         Intent intent = new Intent(HomeActivity.this, ProductDetailsActivity.class);
                                         if (intent != null) {
-                                            intent.putExtra("pid", productkey);
+                                            intent.putExtra("pid", key);
+                                            intent.putExtra("fromthehomeactivitytraderkey", traderkey);
+                                            intent.putExtra("fromthehomeactivityname", model.getname());
+                                            intent.putExtra("fromthehomeactivityprice", model.getprice());
+                                            intent.putExtra("fromthehomeactivitydesc", model.getdesc());
+                                            intent.putExtra("fromthehomeactivityname", thetraderhere);
+                                                intent.putExtra("fromthehomeactivityimage", model.getimage() );
+
                                         }
                                         startActivity(intent);
                                     } else {
                                         Intent intent = new Intent(HomeActivity.this, ProductDetailsActivity.class);
                                         if (intent != null) {
-                                            intent.putExtra("pid", productkey);
+                                            intent.putExtra("fromthehomeactivitytoproductdetails", traderkey);
                                         }
                                         startActivity(intent);
                                     }

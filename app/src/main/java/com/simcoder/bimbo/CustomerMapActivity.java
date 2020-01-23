@@ -603,10 +603,10 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                                 // WE CHECK TO SEE IF DRIVER HAS ENDED
                                                 getHasRideEnded();
                                                 if (mRequest != null) {
-                                                    mRequest.setText("Looking for Driver Location....");
+                                                    mRequest.setText("Looking for Trader Location....");
                                                 }
                                             } else {
-                                                mRequest.setText("No Driver found yet");
+                                                mRequest.setText("No Trader found yet");
                                             }
                                         }
                                     }
@@ -740,7 +740,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     }
 
                     if (mMap != null) {
-                        mDriverMarker = mMap.addMarker(new MarkerOptions().position(driverLatLng).title("your driver").icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_car)));
+                        mDriverMarker = mMap.addMarker(new MarkerOptions().position(driverLatLng).title("your Trader").icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_car)));
                         //we will pass the driver info and product to this function
                     }
 
@@ -854,9 +854,12 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         requestBol = false;
         if (geoQuery != null) {
             geoQuery.removeAllListeners();
-            driverLocationRef.removeEventListener(driverLocationRefListener);
-            driveHasEndedRef.removeEventListener(driveHasEndedRefListener);
-
+             if (driverLocationRef != null) {
+                 driverLocationRef.removeEventListener(driverLocationRefListener);
+                 if (driveHasEndedRef != null) {
+                     driveHasEndedRef.removeEventListener(driveHasEndedRefListener);
+                 }
+             }
             if (driverFoundID != null) {
                 driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverFoundID).child("customerRequest");
                 if (driverRef != null) {
@@ -1250,7 +1253,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
                                             if (dataSnapshot.child(key).child("image") != null) {
                                                 myTradersPic = dataSnapshot.getValue().toString();
-                                                Glide.with(getApplication()).load(dataSnapshot.child("image").getValue().toString()).into(mDriverProfileImage);
+                                                if (mDriverProfileImage !=null) {
+                                                    Glide.with(getApplication()).load(dataSnapshot.child("image").getValue().toString()).into(mDriverProfileImage);
+                                                }
                                                 if (mDriverProfileImage != null) {
                                                     mydriverbitmap = ((BitmapDrawable) mDriverProfileImage.getDrawable()).getBitmap();
                                                 }
@@ -1264,7 +1269,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
                                         if (dataSnapshot.child(key).child("l").child("zero") != null) {
                                             myTradersPic = dataSnapshot.getValue().toString();
-                                            Glide.with(getApplication()).load(dataSnapshot.child("image").getValue().toString()).into(mDriverProfileImage);
+                                            if (mDriverProfileImage != null) {
+                                                Glide.with(getApplication()).load(dataSnapshot.child("image").getValue().toString()).into(mDriverProfileImage);
+                                            }
                                             if (mDriverProfileImage != null) {
                                                 mydriverbitmap = ((BitmapDrawable) mDriverProfileImage.getDrawable()).getBitmap();
                                             }
@@ -1372,7 +1379,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
                     super.onDrawerClosed(drawerView);
                     invalidateOptionsMenu();
-
+                    drawer.setVisibility(View.GONE);
 
                 }
 
@@ -1381,7 +1388,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     super.onDrawerOpened(drawerView);
                     invalidateOptionsMenu();
 
-                    drawer.setVisibility(View.GONE);
+
                     //  drawer.closeDrawer(View.VISIBLE);
                 }
             };

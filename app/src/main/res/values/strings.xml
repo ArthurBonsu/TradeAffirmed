@@ -245,4 +245,7 @@
     <string name="follows">FOLLOW</string>
     <string name="_23s">23</string>
     <string name="customerimages">customerimage</string>
+    <string name="stationary2">STATIONARY</string>
+    <string name="mobileS">MOBILE</string>
+    <string name="hybridS">HYBRID</string>
 </resources>

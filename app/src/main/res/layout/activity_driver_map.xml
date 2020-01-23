@@ -22,7 +22,18 @@
 
         tools:layout="@layout/place_autocomplete_fragment"
         tools:visibility="gone" />
+    <Switch
+        android:id="@+id/workingSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
 
+
+        android:layout_marginLeft="250sp"
+        android:layout_marginTop="500sp"
+
+        android:layout_marginBottom="5sp"
+        android:padding="5dp"
+        android:text="@string/working" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -60,15 +71,6 @@
                 android:id="@+id/settings"
                 android:text="@string/settings"/>
 
-            <Switch
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/working"
-                android:layout_margin="5sp"
-                android:padding="5dp"
-
-                android:id="@+id/workingSwitch" />
-
 
         </LinearLayout>
 
@@ -79,33 +81,39 @@
 
             <SearchView
                 android:id="@+id/mysearchbox_2"
-                android:layout_width="310dp"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="35dp"
                 android:layout_marginTop="70dp"
                 android:layout_marginEnd="30dp"
-                android:layout_marginLeft="35dp"
 
 
                 android:layout_marginRight="100dp"
-                android:autofillHints="Search for Customer" />
+                android:autofillHints="Search for Customer"
+                android:visibility="visible"
+                tools:visibility="visible" />
 
             <ImageButton
                 android:id="@+id/gosearch_2"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_marginLeft="80dp"
                 android:layout_marginTop="70dp"
-                android:layout_marginEnd="23dp"
+
                 android:layout_marginRight="23dp"
 
                 android:layout_toRightOf="@+id/mysearchbox"
                 android:contentDescription="@string/my_string_mr_chooser_searching"
                 android:scaleType="fitCenter"
                 android:src="@drawable/searchcamerahere"
-                tools:ignore="RtlCompat" />
+                tools:ignore="RtlCompat"
+
+                android:layout_toEndOf="@+id/mysearchbox" />
+
+
 
         </RelativeLayout>
 
@@ -188,17 +196,6 @@
 
     </LinearLayout>
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/drivertoolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?actionBarSize"
-        android:background="@color/colorPrimary"
-        app:subtitleTextColor="@android:color/white"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:title="Driver Map"
-        app:titleTextColor="@android:color/white">
-    </android.support.v7.widget.Toolbar>
-
     <!--侧边栏样式-->
     <android.support.constraint.ConstraintLayout
         android:layout_width="250dp"
@@ -245,11 +242,12 @@
 
 
         android:id="@+id/thepickedcustomerview"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginStart="336dp"
-        android:layout_marginLeft="270dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+
+        android:layout_marginLeft="250sp"
         android:layout_marginTop="316dp"
+
         android:background="@drawable/searchcamerahere"
         android:contentDescription="@string/getthecustomerinformation"
         android:scaleType="fitCenter"
@@ -257,7 +255,18 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.116" />
+        app:layout_constraintVertical_bias="0.116"
+        android:layout_marginRight="100dp" />
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/drivertoolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:background="@color/colorPrimary"
+        app:subtitleTextColor="@android:color/white"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:title="Trader Map View"
+        app:titleTextColor="@android:color/white"></android.support.v7.widget.Toolbar>
 
 </FrameLayout>
 

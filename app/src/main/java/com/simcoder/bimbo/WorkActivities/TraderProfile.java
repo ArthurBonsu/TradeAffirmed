@@ -98,8 +98,9 @@ public class TraderProfile extends AppCompatActivity  implements  View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.traderprofile);
 
-        productID = getIntent().getStringExtra("pid");
-
+        if (getIntent() != null) {
+            productID = getIntent().getStringExtra("pid");
+        }
         ImageView traderimageonscreen = (ImageView) findViewById(R.id.traderimageonscreen);
         ImageView tradercoverprofile = (ImageView) findViewById(R.id.tradercoverprofile);
         TextView traderquotes = (TextView) findViewById(R.id.traderquotes);
@@ -190,15 +191,17 @@ public class TraderProfile extends AppCompatActivity  implements  View.OnClickLi
                 if (dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0) {
 
                     traderkey = dataSnapshot.getKey();
-                    traderimage = dataSnapshot.child(theProfileID).child("image").getValue().toString();
-                    coverimage = dataSnapshot.child(theProfileID).child("coverimage").getValue().toString();
-                    traderquote= dataSnapshot.child(theProfileID).child("quote").getValue().toString();
+                    if (theProfileID != null) {
+                        traderimage = dataSnapshot.child(theProfileID).child("image").getValue().toString();
+                        coverimage = dataSnapshot.child(theProfileID).child("coverimage").getValue().toString();
+                        traderquote = dataSnapshot.child(theProfileID).child("quote").getValue().toString();
 
-                    traderfollowers= dataSnapshot.child(theProfileID).child("followers").child("number").getValue().toString();
-                    tradername= dataSnapshot.child(theProfileID).child("name").getValue().toString();
-                    traderphoneaddress = dataSnapshot.child(theProfileID).child("address").getValue().toString();
-                    traderjob= dataSnapshot.child(theProfileID).child("job").getValue().toString(); }
-
+                        traderfollowers = dataSnapshot.child(theProfileID).child("followers").child("number").getValue().toString();
+                        tradername = dataSnapshot.child(theProfileID).child("name").getValue().toString();
+                        traderphoneaddress = dataSnapshot.child(theProfileID).child("address").getValue().toString();
+                        traderjob = dataSnapshot.child(theProfileID).child("job").getValue().toString();
+                    }
+                }
 
 
 
@@ -220,73 +223,74 @@ public class TraderProfile extends AppCompatActivity  implements  View.OnClickLi
         traderfollowbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mDatabaseReferenceFollowers =  FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(theProfileID);
-                if (mDatabaseReferenceFollowers != null) {
-                    mDatabaseReferenceFollowers.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            if (dataSnapshot.exists()) {
+                if (theProfileID != null) {
+                    mDatabaseReferenceFollowers = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(theProfileID);
+                    if (mDatabaseReferenceFollowers != null) {
+                        mDatabaseReferenceFollowers.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                if (dataSnapshot.exists()) {
 
-                                if (dataSnapshot.child("followers") != null && dataSnapshot.child("followers").hasChild("number")) {
-                                    Log.i("Number of followers", ".");
-                                    mDatabaseReferenceFollowers.child("followers").child(followersID).removeValue();
-                                    updateCounter(false);
-                                    mProcessLike = false;
-                                } else {
-                                    Log.i("Number of follwowers", "Followers liked");
-                                    mDatabaseReferenceFollowers.child("followers").child(followersID).setValue(mAuth.getCurrentUser().getUid());
-                                    updateCounter(true);
-                                    Log.i(dataSnapshot.getKey(), dataSnapshot.getChildrenCount() + "Count");
-                                    mProcessLike = false;
+                                    if (dataSnapshot.child("followers") != null && dataSnapshot.child("followers").hasChild("number")) {
+                                        Log.i("Number of followers", ".");
+                                        mDatabaseReferenceFollowers.child("followers").child(followersID).removeValue();
+                                        updateCounter(false);
+                                        mProcessLike = false;
+                                    } else {
+                                        Log.i("Number of follwowers", "Followers liked");
+                                        mDatabaseReferenceFollowers.child("followers").child(followersID).setValue(mAuth.getCurrentUser().getUid());
+                                        updateCounter(true);
+                                        Log.i(dataSnapshot.getKey(), dataSnapshot.getChildrenCount() + "Count");
+                                        mProcessLike = false;
+                                    }
                                 }
+                                ;
+
+
                             }
-                            ;
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
 
 
-
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
                 }
-
-
             }
-
 
             Boolean increments;
 
             private void updateCounter(final Boolean increment) {
                 this.increments = increment;
                 DatabaseReference mDatabaseLikeCount;
-                mDatabaseLikeCount = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(theProfileID).child("followers").child("number");
-                mDatabaseLikeCount.runTransaction(new Transaction.Handler() {
-                    @Override
-                    public Transaction.Result doTransaction(MutableData mutableData) {
-                        if (mutableData.getValue() != null) {
-                            int value = mutableData.getValue(Integer.class);
-                            if (increment) {
-                                value++;
-                            } else {
-                                value--;
+                if (theProfileID != null) {
+                    mDatabaseLikeCount = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(theProfileID).child("followers").child("number");
+                    mDatabaseLikeCount.runTransaction(new Transaction.Handler() {
+                        @Override
+                        public Transaction.Result doTransaction(MutableData mutableData) {
+                            if (mutableData.getValue() != null) {
+                                int value = mutableData.getValue(Integer.class);
+                                if (increment) {
+                                    value++;
+                                } else {
+                                    value--;
+                                }
+                                mutableData.setValue(value);
                             }
-                            mutableData.setValue(value);
+                            return Transaction.success(mutableData);
                         }
-                        return Transaction.success(mutableData);
-                    }
 
-                    @Override
-                    public void onComplete(DatabaseError databaseError, boolean b,
-                                           DataSnapshot dataSnapshot) {
-                        // Transaction completed
-                        Log.d(TAG, "likeTransaction:onComplete:" + databaseError);
-                    }
-                });
+                        @Override
+                        public void onComplete(DatabaseError databaseError, boolean b,
+                                               DataSnapshot dataSnapshot) {
+                            // Transaction completed
+                            Log.d(TAG, "likeTransaction:onComplete:" + databaseError);
+                        }
+                    });
+                }
             }
-
 
         });
     }
@@ -301,47 +305,77 @@ public class TraderProfile extends AppCompatActivity  implements  View.OnClickLi
 
     private void getTraderInformation() {
 
+        if (mDatabaseReferenceFollowers != null) {
+            mDatabaseReferenceFollowers.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
 
-        mDatabaseReferenceFollowers.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    Users usershere = dataSnapshot.getValue(Users.class);
+                        Users usershere = dataSnapshot.getValue(Users.class);
 
+                                if (traderimageonscreen != null) {
+                                    if (traderimage != null) {
+                                        traderimageonscreen.setImageResource(Integer.parseInt(traderimage));
+                                    }
+                                }
 
+                                if (tradercoverprofile != null) {
+                                    if (coverimage != null) {
+                                        tradercoverprofile.setImageResource(Integer.parseInt(coverimage));
+                                    }
+                                }
+                         if (traderquotes != null) {
+                             if (traderquote != null) {
+                                 traderquotes.setText(traderquote);
+                             }
+                         }
 
+                         if (tradername != null) {
+                             if (traderprofilename != null) {
+                                 traderprofilename.setText(tradername);
+                             }
+                         }
 
-                    traderimageonscreen.setImageResource(Integer.parseInt(traderimage));
-                    tradercoverprofile.setImageResource(Integer.parseInt(coverimage));
+                          if(traderjob != null) {
+                              if (traderprofilejob != null) {
+                                  traderprofilejob.setText(traderjob);
+                              }
+                          }
+                          if (traderphoneaddress != null) {
+                              if (traderprofilephoneadress != null) {
+                                  traderprofilephoneadress.setText(traderphoneaddress);
+                              }
+                          }
 
+                                   if (traderfollowers != null) {
+                                       if (tradernumberoffollowers != null) {
+                                           tradernumberoffollowers.setText(traderfollowers);
+                                       }
+                                   }
 
-                    traderquotes.setText(traderquote);
-                    traderprofilename.setText(tradername);
-                    traderprofilejob.setText(traderjob);
-                    traderprofilephoneadress.setText(traderphoneaddress);
+                                    if (traderimage != null) {
+                                        if (traderimage != null) {
+                                            if (traderimageonscreen != null) {
+                                                Picasso.get().load(traderimage).into(traderimageonscreen);
+                                            }
+                                        }}
+                                    if (tradercoverprofile != null){
+                         if (coverimage != null) {
+                             Picasso.get().load(coverimage).into(tradercoverprofile);
+                         }
 
-                    tradernumberoffollowers.setText(traderfollowers);
-
-                    Picasso.get().load(traderimage).into(traderimageonscreen);
-
-                    Picasso.get().load(coverimage).into(tradercoverprofile);
-
-
-
+                    } }
 
 
                 }
 
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+                }
+            });
+        }
     }
-
 
     @Override
     protected void onStop() {
