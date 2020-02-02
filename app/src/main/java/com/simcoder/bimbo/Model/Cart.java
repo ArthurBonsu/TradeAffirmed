@@ -16,7 +16,7 @@ public class Cart {
 
     private String field, followersname, customerPaid, driverPaidOut;
     private String timestamp, operations, reviewBy, residences, service, setinformations;
-    private String baseprice;
+    private String baseprice,commentkey,  likeid;
 
     public Cart() {
     }
@@ -31,7 +31,7 @@ public class Cart {
             String coverimage, String g, String one, String zero, String customerId, String customerRideId, String destination, String destinationLat, String destinationLng,
             String driverFoundID, String customer, String driver, String predictDistance, String lat, String lng, String rating, String triptime,
             String job, String quote, String role, String car, String descriptions, String field, String followersname, String customerPaid, String driverPaidOut,
-            String timestamp, String operations, String reviewBy, String residences, String service, String setinformations, String baseprice
+            String timestamp, String operations, String reviewBy, String residences, String service, String setinformations, String baseprice,String commentkey, String likeid
     ) {
 
 
@@ -95,8 +95,26 @@ public class Cart {
         this.service = service;
         this.setinformations = setinformations;
         this.baseprice = baseprice;
+        this.commentkey = commentkey;
+        this. likeid = likeid;
 
     }
+
+    public String getCommentkey() {
+        return commentkey;
+    }
+    public void setCommentkey(String commentkey) {
+        this.commentkey = commentkey;
+    }
+
+    public String getLikeid(String likeid) {
+        return likeid;
+    }
+    public void setLikeid(String likeid) {
+        this.likeid = likeid;
+    }
+
+
 
     public String getPhone() {
         return phone;
@@ -567,4 +585,10 @@ public class Cart {
         this.followersname = followersname;
     }
 
+    public String getuid(String uid) {
+        return uid;
+    }
+    public void setuid(String uid) {
+        this.uid = uid;
+    }
 }

@@ -1,6 +1,7 @@
 package com.simcoder.bimbo.historyRecyclerView;
 import com.simcoder.*;
 import com.simcoder.bimbo.*;
+import com.simcoder.bimbo.Model.HistoryObject;
 import  com.simcoder.bimbo.historyRecyclerView.*;
 
 

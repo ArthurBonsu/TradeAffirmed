@@ -2,7 +2,7 @@ package com.simcoder.bimbo.Model;
 
 public class ProductHere {
 
-    private String desc, image, title, name, phone, discount, pid, price, quantity, tid, traderID;
+    private String desc, image, title, name, phone, discount, pid, price, quantity, tid, traderID, commentkey, likeid;
 
     private String address, amount, city, date, state, distance, mode, number, shippingcost, time;
 
@@ -31,7 +31,7 @@ public class ProductHere {
             String coverimage, String g, String one, String zero, String customerId, String customerRideId, String destination, String destinationLat, String destinationLng,
             String driverFoundID, String customer, String driver, String predictDistance, String lat, String lng, String rating, String triptime,
             String job, String quote, String role, String car, String descriptions, String field, String followersname, String customerPaid, String driverPaidOut,
-            String timestamp, String operations, String reviewBy, String residences, String service, String setinformations, String baseprice
+            String timestamp, String operations, String reviewBy, String residences, String service, String setinformations, String baseprice, String commentkey, String likeid
     ) {
 
 
@@ -95,8 +95,26 @@ public class ProductHere {
         this.service = service;
         this.setinformations = setinformations;
         this.baseprice = baseprice;
+        this.commentkey = commentkey;
+        this. likeid = likeid;
+
 
     }
+
+    public String getCommentkey() {
+        return commentkey;
+    }
+    public void setCommentkey(String commentkey) {
+        this.commentkey = commentkey;
+    }
+
+    public String getLikeid(String likeid) {
+        return likeid;
+    }
+    public void setLikeid(String likeid) {
+        this.likeid = likeid;
+    }
+
 
     public String getPhone() {
         return phone;
@@ -111,6 +129,8 @@ public class ProductHere {
     public void setdiscount(String discount) {
         this.discount = discount;
     }
+
+
 
 
     public String  getcity() {
@@ -566,5 +586,10 @@ public class ProductHere {
     public void setfollowersname(String followersname) {
         this.followersname = followersname;
     }
-
+    public String getuid(String uid) {
+        return uid;
+    }
+    public void setuid(String uid) {
+        this.uid = uid;
+    }
 }

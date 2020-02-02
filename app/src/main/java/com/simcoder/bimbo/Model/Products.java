@@ -566,6 +566,12 @@ public class Products {
     public void setfollowersname(String followersname) {
         this.followersname = followersname;
     }
+    public String getuid(String uid) {
+        return uid;
+    }
+    public void setuid(String uid) {
+        this.uid = uid;
+    }
 
 
   public String setTrader(String trader) {
