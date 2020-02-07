@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -62,7 +63,8 @@ public class MainfeedListAdapter extends ArrayAdapter<Photo> {
     private Context mContext;
     private DatabaseReference mReference;
     private String currentUsername = "";
-
+   String saveCurrentDate, saveCurrentTime;
+   String followingkey;
     public MainfeedListAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull List<Photo> objects) {
         super(context, resource, objects);
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -134,7 +136,8 @@ public class MainfeedListAdapter extends ArrayAdapter<Photo> {
         holder.comments.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick: loading comment thread for " + getItem(position).getPhoto_id());
+                Log.d(TAG, "onClick: loading comment thread for " + getItem(position).getphotoid());
+
                 ((InstagramHomeActivity)mContext).onCommentThreadSelected(getItem(position),
                         mContext.getString(R.string.home_activity));
 
@@ -144,41 +147,58 @@ public class MainfeedListAdapter extends ArrayAdapter<Photo> {
             }
         });
 
-        //set the time it was posted
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat currentDate = new SimpleDateFormat("MMM dd, yyyy");
+
+        if (currentDate != null) {
+            saveCurrentDate = currentDate.format(calendar.getTime());
+
+            SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss a");
+            if (currentTime != null) {
+                saveCurrentTime = currentTime.format(calendar.getTime());
+
+            }
+        }    //set the time it was posted
         String timestampDifference = getTimestampDifference(getItem(position));
+
+
+
+
         if(!timestampDifference.equals("0")){
             holder.timeDetla.setText(timestampDifference + " DAYS AGO");
         }else{
-            holder.timeDetla.setText("TODAY");
+            holder.timeDetla.setText(saveCurrentTime + saveCurrentDate);
         }
 
         //set the profile image
         final ImageLoader imageLoader = ImageLoader.getInstance();
-        imageLoader.displayImage(getItem(position).getImage_path(), holder.image);
+        imageLoader.displayImage(getItem(position).getimage(), holder.image);
 
 
         //get the profile image and username
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
         Query query = reference
-                .child(mContext.getString(R.string.dbname_user_account_settings))
-                .orderByChild(mContext.getString(R.string.field_user_id))
-                .equalTo(getItem(position).getUser_id());
+                .child("Users").child("Drivers")
+                .orderByChild("tid")
+                .equalTo(getItem(position).gettid());
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
 
+                              String thedriverkey = singleSnapshot.getKey();
+
                     // currentUsername = singleSnapshot.getValue(UserAccountSettings.class).getUsername();
 
                     Log.d(TAG, "onDataChange: found user: "
-                            + singleSnapshot.getValue(UserAccountSettings.class).getUsername());
+                            + singleSnapshot.child(thedriverkey).child("name").getValue(UserAccountSettings.class).getname());
 
-                    holder.username.setText(singleSnapshot.getValue(UserAccountSettings.class).getUsername());
+                    holder.username.setText(singleSnapshot.child(thedriverkey).child("name").getValue(UserAccountSettings.class).getname());
                     holder.username.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             Log.d(TAG, "onClick: navigating to profile of: " +
-                                    holder.user.getUsername());
+                                    holder.user.getname());
 
                             Intent intent = new Intent(mContext, ProfileActivity.class);
                             intent.putExtra(mContext.getString(R.string.calling_activity),
@@ -188,13 +208,13 @@ public class MainfeedListAdapter extends ArrayAdapter<Photo> {
                         }
                     });
 
-                    imageLoader.displayImage(singleSnapshot.getValue(UserAccountSettings.class).getProfile_photo(),
+                    imageLoader.displayImage(singleSnapshot.child(thedriverkey).child("image").getValue(UserAccountSettings.class).getimage(),
                             holder.mprofileImage);
                     holder.mprofileImage.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             Log.d(TAG, "onClick: navigating to profile of: " +
-                                    holder.user.getUsername());
+                                    holder.user.getname());
 
                             Intent intent = new Intent(mContext, ProfileActivity.class);
                             intent.putExtra(mContext.getString(R.string.calling_activity),
@@ -229,17 +249,18 @@ public class MainfeedListAdapter extends ArrayAdapter<Photo> {
 
         //get the user object
         Query userQuery = mReference
-                .child(mContext.getString(R.string.dbname_users))
-                .orderByChild(mContext.getString(R.string.field_user_id))
-                .equalTo(getItem(position).getUser_id());
+                .child("Users").child("Drivers")
+                .orderByChild("tid")
+                .equalTo(getItem(position).gettid());
         userQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
+                    String thesinglesnapshot = dataSnapshot.getKey();
                     Log.d(TAG, "onDataChange: found user: " +
-                            singleSnapshot.getValue(User.class).getUsername());
+                            singleSnapshot.child(thesinglesnapshot).child("name").getValue(User.class).getname());
 
-                    holder.user = singleSnapshot.getValue(User.class);
+                    holder.user = singleSnapshot.child(thesinglesnapshot).child("name").getValue(User.class);
                 }
 
             }
@@ -292,35 +313,57 @@ public class MainfeedListAdapter extends ArrayAdapter<Photo> {
         public boolean onDoubleTap(MotionEvent e) {
             Log.d(TAG, "onDoubleTap: double tap detected.");
 
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            if (user != null) {
+                String userid= "";
+                userid = user.getUid();
+                DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+                Query query = reference
+                        .child("Users").child("Customers").child(userid)
+                        .child("following");
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+
+                            followingkey = singleSnapshot.getKey();
+                            Log.d(TAG, "onDataChange: found user: " +
+
+                                    singleSnapshot.child(followingkey).child("name").getValue());
+
+
+                        }
+                        }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
             DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
             Query query = reference
-                    .child(mContext.getString(R.string.dbname_photos))
-                    .child(mHolder.photo.getPhoto_id())
-                    .child(mContext.getString(R.string.field_likes));
+                    .child("Photos").orderByChild("tid").equalTo(followingkey);
+
             query.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
 
                         String keyID = singleSnapshot.getKey();
-
+                          String theUSerkey = singleSnapshot.child(keyID).child("Users").getKey();
                         //case1: Then user already liked the photo
                         if(mHolder.likeByCurrentUser &&
-                                singleSnapshot.getValue(Like.class).getUser_id()
+                                singleSnapshot.child(keyID).child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).getValue(Like.class).getuid()
                                         .equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){
 
-                            mReference.child(mContext.getString(R.string.dbname_photos))
-                                    .child(mHolder.photo.getPhoto_id())
-                                    .child(mContext.getString(R.string.field_likes))
-                                    .child(keyID)
+                            mReference.child("Photos")
+                                    .child(mHolder.photo.getphotoid())
+                                    .child("Likes")
+                                    .child(keyID).child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                     .removeValue();
 ///
-                            mReference.child(mContext.getString(R.string.dbname_user_photos))
-                                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                    .child(mHolder.photo.getPhoto_id())
-                                    .child(mContext.getString(R.string.field_likes))
-                                    .child(keyID)
-                                    .removeValue();
 
                             mHolder.heart.toggleLike();
                             getLikesString(mHolder);
@@ -351,22 +394,27 @@ public class MainfeedListAdapter extends ArrayAdapter<Photo> {
     private void addNewLike(final ViewHolder holder){
         Log.d(TAG, "addNewLike: adding new like");
 
-        String newLikeID = mReference.push().getKey();
+
         Like like = new Like();
-        like.setUser_id(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        like.setuid(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
-        mReference.child(mContext.getString(R.string.dbname_photos))
-                .child(holder.photo.getPhoto_id())
-                .child(mContext.getString(R.string.field_likes))
-                .child(newLikeID)
+        String newLikeID = mReference.child("Photos").child(holder.photo.getphotoid()).child("Likes").push().getKey();
+        mReference.child("Photos").child(holder.photo.getphotoid()).child("Likes").child("likeid").setValue(newLikeID);
+        String newUserLikeID = mReference.child("Photos").child(holder.photo.getphotoid()).child("Likes").child(newLikeID).child("Users").push().getKey();
+
+        mReference.child("Photos")
+                .child(holder.photo.getphotoid())
+                .child("Likes").child(newLikeID).child("Users")
                 .setValue(like);
 
-        mReference.child(mContext.getString(R.string.dbname_user_photos))
-                .child(holder.photo.getUser_id())
-                .child(holder.photo.getPhoto_id())
-                .child(mContext.getString(R.string.field_likes))
+        mReference.child("Likes")
+                .setValue(newLikeID);
+        mReference.child("Likes")
                 .child(newLikeID)
-                .setValue(like);
+                .child("Users").setValue(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        mReference.child("Likes").child(newLikeID).child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("pid").setValue(holder.photo.getphotoid());
+
+
 
         holder.heart.toggleLike();
         getLikesString(holder);
@@ -376,14 +424,14 @@ public class MainfeedListAdapter extends ArrayAdapter<Photo> {
         Log.d(TAG, "getCurrentUsername: retrieving user account settings");
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
         Query query = reference
-                .child(mContext.getString(R.string.dbname_users))
-                .orderByChild(mContext.getString(R.string.field_user_id))
+                .child("Users").child("Customers")
+                .orderByChild("uid")
                 .equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid());
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
-                    currentUsername = singleSnapshot.getValue(UserAccountSettings.class).getUsername();
+                    currentUsername = singleSnapshot.child("name").getValue(UserAccountSettings.class).getname();
                 }
 
             }
@@ -401,28 +449,31 @@ public class MainfeedListAdapter extends ArrayAdapter<Photo> {
         try{
             DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
             Query query = reference
-                    .child(mContext.getString(R.string.dbname_photos))
-                    .child(holder.photo.getPhoto_id())
-                    .child(mContext.getString(R.string.field_likes));
+                    .child("Photos")
+                    .child(holder.photo.getphotoid())
+                    .child("Likes");
             query.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     holder.users = new StringBuilder();
                     for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
-
+                                  final String thekeyhere = singleSnapshot.getKey();
+                                  String theuserid = singleSnapshot.child(thekeyhere).child("Users").getKey();
                         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
                         Query query = reference
-                                .child(mContext.getString(R.string.dbname_users))
-                                .orderByChild(mContext.getString(R.string.field_user_id))
-                                .equalTo(singleSnapshot.getValue(Like.class).getUser_id());
+                                .child("Users").child("Customers")
+                                .orderByChild("uid")
+                                .equalTo(singleSnapshot.child(thekeyhere).child("Users").getValue(Like.class).getuid());
                         query.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
+                                     String thesingleSnapshot = singleSnapshot.getKey();
                                     Log.d(TAG, "onDataChange: found like: " +
-                                            singleSnapshot.getValue(User.class).getUsername());
 
-                                    holder.users.append(singleSnapshot.getValue(User.class).getUsername());
+                                            singleSnapshot.child(thesingleSnapshot).child("name").getValue(User.class).getname());
+
+                                    holder.users.append(singleSnapshot.child(thesingleSnapshot).child("name").getValue(User.class).getname());
                                     holder.users.append(",");
                                 }
 
@@ -534,7 +585,7 @@ public class MainfeedListAdapter extends ArrayAdapter<Photo> {
         Date today = c.getTime();
         sdf.format(today);
         Date timestamp;
-        final String photoTimestamp = photo.getDate_created();
+        final String photoTimestamp = photo.getdate();
         try{
             timestamp = sdf.parse(photoTimestamp);
             difference = String.valueOf(Math.round(((today.getTime() - timestamp.getTime()) / 1000 / 60 / 60 / 24 )));

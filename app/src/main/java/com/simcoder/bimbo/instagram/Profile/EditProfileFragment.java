@@ -118,6 +118,7 @@ public class EditProfileFragment extends Fragment implements
     private DatabaseReference myRef;
     private FirebaseMethods mFirebaseMethods;
     private String userID;
+    String userid;
 
     //Edit Profile Fragment Widgets
     private EditText mDisplayName, mUsername, mWebsite, mDescription, mEmail, mPhoneNumber;
@@ -179,15 +180,15 @@ public class EditProfileFragment extends Fragment implements
         final String description = mDescription.getText().toString();
         final String website = mWebsite.getText().toString();
         final String email = mEmail.getText().toString();
-        final long phoneNumber = Long.parseLong(mPhoneNumber.getText().toString());
+        final String phoneNumber = mPhoneNumber.getText().toString();
 
 
         // case1: if user changed to same name.
-        if (!mUserSettings.getUser().getUsername().equals(username)) {
+        if (!mUserSettings.getUser().getname().equals(username)) {
             checkIfUsernameExists(username);
         }
         // case2: if user change their email
-        if (!mUserSettings.getUser().getEmail().equals(email)) {
+        if (!mUserSettings.getUser().getemail().equals(email)) {
             //step1 Re-Auth
             //      - Confirm password and email
             ConfirmPasswordDialog dialog = new ConfirmPasswordDialog();
@@ -206,18 +207,18 @@ public class EditProfileFragment extends Fragment implements
         /**
          * Change fields in Settings that doesn't require unique values
          */
-        if (!mUserSettings.getSettings().getDisplay_name().equals(displayName)) {
-            mFirebaseMethods.updateUserAccountSettings(displayName, null, null ,0);
+        if (!mUserSettings.getSettings().getname().equals(displayName)) {
+            mFirebaseMethods.updateUserAccountSettings(displayName, null, null ,null);
         }
         if (!mUserSettings.getSettings().getWebsite().equals(website)) {
-            mFirebaseMethods.updateUserAccountSettings(null, website, null ,0);
+            mFirebaseMethods.updateUserAccountSettings(null, website, null ,null);
         }
 
-        if (!mUserSettings.getSettings().getDescription().equals(description)) {
-            mFirebaseMethods.updateUserAccountSettings(null, website, description ,0);
+        if (!mUserSettings.getSettings().getdesc().equals(description)) {
+            mFirebaseMethods.updateUserAccountSettings(null, website, description ,null);
         }
 
-        if (!mUserSettings.getSettings().getProfile_photo().equals(phoneNumber)) {
+        if (!mUserSettings.getSettings().getimage().equals(phoneNumber)) {
             mFirebaseMethods.updateUserAccountSettings(null, website, null ,phoneNumber);
         }
     }
@@ -229,36 +230,40 @@ public class EditProfileFragment extends Fragment implements
     private void checkIfUsernameExists(final String username) {
         Log.d(TAG, "checkIfUsernameExists: Checking if " + username + " already exists");
 
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-        Query query = reference
-                .child(getString(R.string.dbname_users))
-                .orderByChild(getString(R.string.field_username))
-                .equalTo(username);
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+             userid = "";
+             userid = user.getUid();
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+            Query query = reference
+                    .child("Users").child("Customers")
+                    .orderByChild("name")
+                    .equalTo(username);
 
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (!dataSnapshot.exists()) {
-                    // add the username
-                    mFirebaseMethods.updateUsername(username);
-                    Toast.makeText(getActivity(), "saved username.", Toast.LENGTH_SHORT).show();
-                }
-                for (DataSnapshot singleSnapshot: dataSnapshot.getChildren()) {
-                    if (singleSnapshot.exists()) {
-                        Log.d(TAG, "checkIfUsernameExists: FOUND A MATCH" + singleSnapshot.getValue(User.class).getUsername());
-                        Toast.makeText(getActivity(), "That username already exists.", Toast.LENGTH_SHORT).show();
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (!dataSnapshot.exists()) {
+                        // add the username
+                        mFirebaseMethods.updateUsername(username);
+                        Toast.makeText(getActivity(), "saved username.", Toast.LENGTH_SHORT).show();
+                    }
+                    for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                        if (singleSnapshot.exists()) {
+                            Log.d(TAG, "checkIfUsernameExists: FOUND A MATCH" + singleSnapshot.child(userid).child("name").getValue(User.class).getname());
+                            Toast.makeText(getActivity(), "That username already exists.", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-            }
-        });
+                }
+            });
 
+        }
     }
-
 
     private void setProfileWidgets(UserSettings userSettings) {
 //        Log.d(TAG, "SetProfileWidgets: setting widgets with data retrieving from firebase database: " + userSettings.toString());
@@ -270,14 +275,14 @@ public class EditProfileFragment extends Fragment implements
         //User user = userSettings.getUser();
         UserAccountSettings settings = userSettings.getSettings();
 
-        UniversalImageLoader.setImage(settings.getProfile_photo(), mProfilePhoto, null, "");
+        UniversalImageLoader.setImage(settings.getimage(), mProfilePhoto, null, "");
 
-        mDisplayName.setText(settings.getDisplay_name());
-        mUsername.setText(settings.getUsername());
+        mDisplayName.setText(settings.getname());
+        mUsername.setText(settings.getname());
         mWebsite.setText(settings.getWebsite());
-        mDescription.setText(settings.getDescription());
-        mEmail.setText(userSettings.getUser().getEmail());
-        mPhoneNumber.setText(String.valueOf(userSettings.getUser().getPhone_number()));
+        mDescription.setText(settings.getdesc());
+        mEmail.setText(userSettings.getUser().getemail());
+        mPhoneNumber.setText(String.valueOf(userSettings.getUser().getphone()));
 
         mChangeProfilePhoto.setOnClickListener(new View.OnClickListener() {
             @Override

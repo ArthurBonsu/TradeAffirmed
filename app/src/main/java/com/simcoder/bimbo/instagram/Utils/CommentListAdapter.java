@@ -18,6 +18,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.simcoder.bimbo.Model.Users;
 import com.simcoder.bimbo.instagram.Models.Comment;
 import com.simcoder.bimbo.instagram.Models.User;
 import com.simcoder.bimbo.instagram.Models.UserAccountSettings;
@@ -40,12 +41,24 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
     private LayoutInflater mLayoutInflater;
     private int layoutResource;
     private Context mContext;
+    String saveCurrentDate;
+    String saveCurrentTime;
+    String getcommentername;
+    String gethecomment;
+    String thetimestampforcomment;
+    String thecommentkey;
+    String theuserkey;
+    String commentkey;
+    String thereplythatwehave;
+    String commentreply;
+    String thelikethatwehave;
+     String likeshere;
 
     public CommentListAdapter(@NonNull Context context, int resource, @NonNull List<Comment> objects) {
         super(context, resource, objects);
         mLayoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mContext = context;
-        layoutResource = resource;
+        layoutResource = resource;;
     }
 
     private static class ViewHolder {
@@ -54,6 +67,7 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
         ImageView like;
     }
 
+    //if (dataSnapshot.child(postkey).hasChild(mAuth.getCurrentUser().getUid()))
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -79,32 +93,63 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
 
         //set values
         holder.comment.setText(getItem(position).getComment());
+        Calendar calendar = Calendar.getInstance();
 
-        //set timestamp difference
-        String timestampDifference = getTimestampDifference(getItem(position));
-        if (!timestampDifference.equals("0")) {
-            holder.timestamp.setText(timestampDifference + " d");
-        } else {
-            holder.timestamp.setText("today");
-        }
+        SimpleDateFormat currentDate = new SimpleDateFormat("MMM dd, yyyy");
+        if (currentDate != null) {
+            saveCurrentDate = currentDate.format(calendar.getTime());
+
+            SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss a");
+            if (currentTime != null) {
+                saveCurrentTime = currentTime.format(calendar.getTime());
+            }}
+
+
+                //set timestamp difference
+                String timestampDifference = getTimestampDifference(getItem(position));
+                if (!timestampDifference.equals("0")) {
+                    holder.timestamp.setText(timestampDifference + " d");
+                } else {
+                    holder.timestamp.setText(thetimestampforcomment);
+                }
 
         //set username and profile image.
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference      photosreferece = FirebaseDatabase.getInstance().getReference().child("Photos");
+         String referencekey = photosreferece.getKey();
         Query query = reference
-                .child(mContext.getString(R.string.dbname_user_account_settings))
-                .orderByChild(mContext.getString(R.string.field_user_id))
-                .equalTo(getItem(position).getUser_id());
+                .child("Photos")
+                .orderByChild("photoid")
+                .equalTo(getItem(position).getphotoid());
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
-                    holder.username.setText(singleSnapshot.getValue(UserAccountSettings.class).getUsername());
+                         thecommentkey = singleSnapshot.child("Comments").getKey();
+                          theuserkey = singleSnapshot.child("Comments").child("Users").getKey();
+                     commentkey = singleSnapshot.child("Comments").child("Users").child("comments").getKey();
+                     commentreply = singleSnapshot.child("Comments").child("Users").child("comments").child("replies").getKey();
+                    likeshere = singleSnapshot.child("Comments").child("Users").child("comments").child("likes").getKey();
+
+                    getcommentername = singleSnapshot.child("Comments").child(thecommentkey).child("Users").child(theuserkey).child("name").getValue(Comment.class).getname();
+                    gethecomment =   singleSnapshot.child("Comments").child(thecommentkey).child("Users").child(theuserkey).child("comments").child(commentkey).child("comment").getValue(Comment.class).getname();
+                    thetimestampforcomment = singleSnapshot.child("Comments").child(thecommentkey).child("Users").child(theuserkey).child("comments").child(commentkey).child("time").getValue(Comment.class).gettime();
+                    thereplythatwehave = singleSnapshot.child("Comments").child(thecommentkey).child("Users").child(theuserkey).child("comments").child(commentkey).child("replies").child(commentreply).child("number").getValue(Comment.class).getnumber();
+                    thelikethatwehave = singleSnapshot.child("Comments").child(thecommentkey).child("Users").child(theuserkey).child("comments").child(commentkey).child("likes").child(likeshere).child("number").getValue(Comment.class).getnumber();
+
+                    holder.username.setText(getcommentername);
+                    holder.comment.setText(gethecomment);
+                    holder.timestamp.setText(thetimestampforcomment);
+                    holder.reply.setText(thereplythatwehave);
+                    holder.likes.setText(thelikethatwehave);
 
                     ImageLoader imageLoader = ImageLoader.getInstance();
 
                     imageLoader.displayImage(
-                            singleSnapshot.getValue(UserAccountSettings.class).getProfile_photo(),
+                            singleSnapshot.child("Comments").child(thecommentkey).child("Users").child(theuserkey).child("image").getValue(UserAccountSettings.class).getimage(),
                             holder.profileImage);
+
+
                 }
             }
 
@@ -140,7 +185,7 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
         Date today = c.getTime();
         sdf.format(today);
         Date timestamp;
-        final String photoTimestamp = comment.getDate_created();
+        final String photoTimestamp = comment.getdate();
         try {
             timestamp = sdf.parse(photoTimestamp);
             difference = String.valueOf(Math.round(((today.getTime() - timestamp.getTime()) / 1000 / 60 / 60 / 24)));

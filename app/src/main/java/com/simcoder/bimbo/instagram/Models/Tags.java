@@ -2,12 +2,13 @@ package com.simcoder.bimbo.instagram.Models;
 
 import java.util.List;
 
-public class Comment {
+public class Tags {
 
     private  String commentkey;
     private String comment;
     private String uid;
     private List<Like> likes;
+    private List<Tags> tags;
     private String date;
     private  String time;
     String likeid;
@@ -16,14 +17,14 @@ public class Comment {
     String number;
     String subject;
     String pid;
-    String photoid;
+    String image;
 
 
 
-    public Comment() {
+    public Tags() {
     }
 
-    public Comment(String comment, String uid, List<Like> likes, String date, String time, String tid, String name, String number, String subject, String likeid, String pid, String commentkey,  String photoid) {
+    public Tags(String comment, String uid, List<Like> likes, String date, String time, String tid, String name, String number, String subject, String likeid, String pid, String commentkey, List<Tags> tags, String image) {
         this.comment = comment;
         this.uid = uid;
         this.likes = likes;
@@ -33,10 +34,11 @@ public class Comment {
         this.tid = tid;
         this.name = name;
         this.number = number;
-          this.subject = subject;
-          this.pid = pid;
-          this.commentkey = commentkey;
-          this.photoid = photoid;
+        this.subject = subject;
+        this.pid = pid;
+        this.commentkey = commentkey;
+        this.tags = tags;
+        this.image = image;
 
     }
 
@@ -70,6 +72,14 @@ public class Comment {
 
     public void setLikes(List<Like> likes) {
         this.likes = likes;
+    }
+
+    public List<Tags> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tags> tags) {
+        this.tags = tags;
     }
 
     public String getLikeid(String likeid) {
@@ -136,14 +146,14 @@ public class Comment {
         this.pid = pid;
     }
 
-    public String getphotoid() {
-        return photoid;
+
+    public String getimage() {
+        return image;
     }
 
-    public void setphotoid(String photoid) {
-        this.photoid = photoid;
+    public void setimage(String image) {
+        this.image = image;
     }
-
 
     @Override
     public String toString() {
@@ -152,7 +162,6 @@ public class Comment {
                 ", user_id='" + uid + '\'' +
                 ", likes=" + likes +
                 ", date_created='" + date + '\'' +
-                ", photoid'" + photoid + '\'' +
                 '}';
     }
 }

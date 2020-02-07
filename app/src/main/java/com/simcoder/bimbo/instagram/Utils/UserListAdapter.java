@@ -71,24 +71,25 @@ public class UserListAdapter extends ArrayAdapter<User>{
         }
 
 
-        holder.username.setText(getItem(position).getUsername());
-        holder.email.setText(getItem(position).getEmail());
+        holder.username.setText(getItem(position).getname());
+        holder.email.setText(getItem(position).getemail());
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-        Query query = reference.child(mContext.getString(R.string.dbname_user_account_settings))
-                .orderByChild(mContext.getString(R.string.field_user_id))
-                .equalTo(getItem(position).getUser_id());
+        Query query = reference.child("Users")
+                .orderByChild("Customers")
+                .equalTo(getItem(position).getuid());
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot singleSnapshot: dataSnapshot.getChildren()){
+                       String thekey =       singleSnapshot.getKey();
                     Log.d(TAG, "onDataChange: found user: " +
-                            singleSnapshot.getValue(UserAccountSettings.class).toString());
+                            singleSnapshot.child(thekey).child("name").getValue(UserAccountSettings.class).toString());
 
                     ImageLoader imageLoader = ImageLoader.getInstance();
 
 
-                    imageLoader.displayImage(singleSnapshot.getValue(UserAccountSettings.class).getProfile_photo(),
+                    imageLoader.displayImage(singleSnapshot.child(thekey).child("image").getValue(UserAccountSettings.class).getimage(),
                             holder.profileImage);
                 }
             }

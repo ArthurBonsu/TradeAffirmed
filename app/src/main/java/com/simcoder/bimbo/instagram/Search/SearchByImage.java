@@ -33,11 +33,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class SearchActivity extends AppCompatActivity{
+public class SearchByImage extends AppCompatActivity{
     private static final String TAG = "SearchActivity";
     private static final int ACTIVITY_NUM = 1;
 
-    private Context mContext = SearchActivity.this;
+    private Context mContext = SearchByImage.this;
 
     //widgets
     private EditText mSearchParam;
@@ -93,13 +93,13 @@ public class SearchActivity extends AppCompatActivity{
 
         }else{
             DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-            Query query = reference.child("Product")
-                    .orderByChild("name").equalTo(keyword);
+            Query query = reference.child("Photos")
+                    .orderByChild("caption").equalTo(keyword);
             query.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     for(DataSnapshot singleSnapshot :  dataSnapshot.getChildren()){
-                        Log.d(TAG, "onDataChange: found user:" + singleSnapshot.child("name").getValue(User.class).toString());
+                        Log.d(TAG, "onDataChange: found user:" + singleSnapshot.getValue(User.class).toString());
 
                         mUserList.add(singleSnapshot.getValue(User.class));
                         //update the users list view
@@ -118,7 +118,7 @@ public class SearchActivity extends AppCompatActivity{
     private void updateUsersList(){
         Log.d(TAG, "updateUsersList: updating users list");
 
-        mAdapter = new UserListAdapter(SearchActivity.this, R.layout.layout_user_listitem, mUserList);
+        mAdapter = new UserListAdapter(SearchByImage.this, R.layout.layout_user_listitem, mUserList);
 
         mListView.setAdapter(mAdapter);
 
@@ -128,7 +128,9 @@ public class SearchActivity extends AppCompatActivity{
                 Log.d(TAG, "onItemClick: selected user: " + mUserList.get(position).toString());
 
                 //navigate to profile activity
-                Intent intent = new Intent(SearchActivity.this, ProfileActivity.class);
+                       // HAS TO CHANGE TO THE PROFILE ACTIVITY
+
+                Intent intent = new Intent(SearchByImage.this, ProfileActivity.class);
                 intent.putExtra(getString(R.string.calling_activity), getString(R.string.search_activity));
                 intent.putExtra(getString(R.string.intent_user), mUserList.get(position));
                 startActivity(intent);

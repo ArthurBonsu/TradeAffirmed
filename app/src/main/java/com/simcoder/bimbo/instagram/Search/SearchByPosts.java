@@ -33,11 +33,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class SearchActivity extends AppCompatActivity{
+public class SearchByPosts extends AppCompatActivity{
     private static final String TAG = "SearchActivity";
     private static final int ACTIVITY_NUM = 1;
 
-    private Context mContext = SearchActivity.this;
+    private Context mContext = SearchByPosts.this;
 
     //widgets
     private EditText mSearchParam;
@@ -93,7 +93,7 @@ public class SearchActivity extends AppCompatActivity{
 
         }else{
             DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-            Query query = reference.child("Product")
+            Query query = reference.child("Photos").child("products")
                     .orderByChild("name").equalTo(keyword);
             query.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -118,7 +118,7 @@ public class SearchActivity extends AppCompatActivity{
     private void updateUsersList(){
         Log.d(TAG, "updateUsersList: updating users list");
 
-        mAdapter = new UserListAdapter(SearchActivity.this, R.layout.layout_user_listitem, mUserList);
+        mAdapter = new UserListAdapter(SearchByPosts.this, R.layout.layout_user_listitem, mUserList);
 
         mListView.setAdapter(mAdapter);
 
@@ -128,7 +128,7 @@ public class SearchActivity extends AppCompatActivity{
                 Log.d(TAG, "onItemClick: selected user: " + mUserList.get(position).toString());
 
                 //navigate to profile activity
-                Intent intent = new Intent(SearchActivity.this, ProfileActivity.class);
+                Intent intent = new Intent(SearchByPosts.this, ProfileActivity.class);
                 intent.putExtra(getString(R.string.calling_activity), getString(R.string.search_activity));
                 intent.putExtra(getString(R.string.intent_user), mUserList.get(position));
                 startActivity(intent);

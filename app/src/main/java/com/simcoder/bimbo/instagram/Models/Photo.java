@@ -21,12 +21,15 @@ public class Photo implements Parcelable{
     String number;
     String pid;
     String tid;
+    String price;
     private List<Like> likes;
     private List<Comment> comments;
+    private List<Tags>tags;
+
 
     public Photo() {
     }
-    public Photo(String caption, String date, String image, String time, String uid, String name, List<Like> likes, List<Comment> comments, String photoid, String commentkey, String likeid, String comment,String number, String tid, String pid) {
+    public Photo(String caption, String date, String image, String time, String uid, String name, List<Like> likes, List<Comment> comments, String photoid, String commentkey, String likeid, String comment,String number, String tid, String pid,List<Tags>tags, String price) {
         this.caption = caption;
         this.date = date;
         this.image = image;
@@ -41,6 +44,8 @@ public class Photo implements Parcelable{
         this.number = number;
         this.tid = tid ;
         this.pid = pid;
+        this.tags = tags;
+        this.price = price;
     }
 
     protected Photo(Parcel in) {
@@ -57,6 +62,7 @@ public class Photo implements Parcelable{
         number = in.readString();
         tid = in.readString() ;
         pid = in.readString();
+        price = in.readString();
 
        /* caption = in.readString();
         date = in.readString();
@@ -97,7 +103,15 @@ public class Photo implements Parcelable{
     }
 
 
-    public String getuid(String uid) {
+    public String getprice() {
+        return price;
+    }
+
+    public void setprice(String price) {
+        this.price = price;
+    }
+
+    public String getuid() {
         return uid;
     }
     public void setuid(String uid) {
@@ -202,6 +216,14 @@ public class Photo implements Parcelable{
         this.likes = likes;
     }
 
+    public List<Tags> getTag() {
+        return tags ;
+    }
+
+    public void setTag(List<Tags> tags) {
+        this.tags = tags;
+    }
+
     public List<Comment> getComments() {
         return comments;
     }
@@ -248,7 +270,7 @@ public class Photo implements Parcelable{
         dest.writeString(comment);
         dest.writeString(number);
         dest.writeString(tid);
-
+        dest.writeString(price);
 
     }
 }

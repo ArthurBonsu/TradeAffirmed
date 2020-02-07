@@ -153,25 +153,48 @@ public class ViewCommentsFragment extends Fragment {
         Log.d(TAG, "addNewComment: adding new comment: " + newComment);
 
         String commentID = myRef.push().getKey();
+        myRef.child("Photos")
+                .child(mPhoto.getphotoid())
+                .child("Comments")
+                .child(commentID).child("comment")
+                .setValue(commentID);
+      String thecommentgetkey =   myRef.child("Photos")
+                .child(mPhoto.getphotoid()) //should be mphoto.getUser_id()
+                .child("Comments")
+                .child(commentID).child("Users")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("comments").push().getKey();
+
 
         Comment comment = new Comment();
         comment.setComment(newComment);
-        comment.setDate_created(getTimestamp());
-        comment.setUser_id(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        comment.setdate(getTimestamp());
+        comment.setuid(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
         //insert into photos node
-        myRef.child(getString(R.string.dbname_photos))
-                .child(mPhoto.getPhoto_id())
-                .child(getString(R.string.field_comments))
-                .child(commentID)
+        String commentkey  = myRef.child("Comments").push().getKey();
+        myRef.child("Comments")
+                .child(commentkey)
+                .child("comments")
                 .setValue(comment);
 
+
+        myRef.child("Comments")
+                .child(commentkey)
+                .child("commentkey")
+                .setValue(commentkey);
+
+        myRef.child("Comments")
+                .child(commentkey)
+                .child("Users")
+                .setValue(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+
         //insert into user_photos node
-        myRef.child(getString(R.string.dbname_user_photos))
-                .child(mPhoto.getUser_id()) //should be mphoto.getUser_id()
-                .child(mPhoto.getPhoto_id())
-                .child(getString(R.string.field_comments))
-                .child(commentID)
+        myRef.child("Photos")
+                .child(mPhoto.getphotoid()) //should be mphoto.getUser_id()
+                .child("Comments")
+                .child(commentID).child("Users")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("comments").child(thecommentgetkey)
                 .setValue(comment);
 
     }
@@ -247,26 +270,26 @@ public class ViewCommentsFragment extends Fragment {
             mComments.clear();
             Comment firstComment = new Comment();
             firstComment.setComment(mPhoto.getCaption());
-            firstComment.setUser_id(mPhoto.getUser_id());
-            firstComment.setDate_created(mPhoto.getDate_created());
+            firstComment.setuid(mPhoto.getuid());
+            firstComment.setuid(mPhoto.getdate());
             mComments.add(firstComment);
             mPhoto.setComments(mComments);
             setupWidgets();
         }
 
 
-        myRef.child(mContext.getString(R.string.dbname_photos))
-                .child(mPhoto.getPhoto_id())
-                .child(mContext.getString(R.string.field_comments))
+        myRef.child("Photos")
+                .child(mPhoto.getphotoid())
+                .child("Comments")
                 .addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                         Log.d(TAG, "onChildAdded: child added.");
 
                         Query query = myRef
-                                .child(mContext.getString(R.string.dbname_photos))
-                                .orderByChild(mContext.getString(R.string.field_photo_id))
-                                .equalTo(mPhoto.getPhoto_id());
+                                .child("Photos")
+                                .orderByChild("photoid")
+                                .equalTo(mPhoto.getphotoid());
                         query.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -277,25 +300,28 @@ public class ViewCommentsFragment extends Fragment {
 
                                     photo.setCaption(objectMap.get(mContext.getString(R.string.field_caption)).toString());
                                     photo.setTags(objectMap.get(mContext.getString(R.string.field_tags)).toString());
-                                    photo.setPhoto_id(objectMap.get(mContext.getString(R.string.field_photo_id)).toString());
-                                    photo.setUser_id(objectMap.get(mContext.getString(R.string.field_user_id)).toString());
-                                    photo.setDate_created(objectMap.get(mContext.getString(R.string.field_date_created)).toString());
-                                    photo.setImage_path(objectMap.get(mContext.getString(R.string.field_image_path)).toString());
+                                    photo.setphotoid(objectMap.get("photoid").toString());
+                                    photo.setuid(objectMap.get("uid").toString());
+                                    photo.setdate(String.valueOf(objectMap.get("date")));
+                                    photo.setimage(String.valueOf(objectMap.get("image")));
 
 
                                     mComments.clear();
                                     Comment firstComment = new Comment();
                                     firstComment.setComment(mPhoto.getCaption());
-                                    firstComment.setUser_id(mPhoto.getUser_id());
-                                    firstComment.setDate_created(mPhoto.getDate_created());
+                                    firstComment.setuid(mPhoto.getuid());
+                                    firstComment.setdate(mPhoto.getdate());
                                     mComments.add(firstComment);
 
                                     for (DataSnapshot dSnapshot : singleSnapshot
-                                            .child(mContext.getString(R.string.field_comments)).getChildren()){
+                                            .child("Comments").getChildren()){
+                                  String thecommentkey =               dSnapshot.getKey();
+                                  String thecommentuser = dSnapshot.child(thecommentkey).child("Users").getKey();
+                                  String ourcomment =dSnapshot.child("Comments").child(thecommentkey).child("Users").child(thecommentuser).child("comments").getKey();
                                         Comment comment = new Comment();
-                                        comment.setUser_id(dSnapshot.getValue(Comment.class).getUser_id());
-                                        comment.setComment(dSnapshot.getValue(Comment.class).getComment());
-                                        comment.setDate_created(dSnapshot.getValue(Comment.class).getDate_created());
+                                        comment.setuid(dSnapshot.child("Comments").child(thecommentkey).child("Users").child(thecommentuser).child("uid").getValue(Comment.class).getuid());
+                                        comment.setComment(dSnapshot.child("Comments").child(thecommentkey).child("Users").child(thecommentuser).child("comments").child(ourcomment).child("comment").getValue(Comment.class).getComment());
+                                        comment.setdate(dSnapshot.child("Comments").child(thecommentkey).child("Users").child(thecommentuser).child("comments").child(ourcomment).child("date").getValue(Comment.class).getdate());
                                         mComments.add(comment);
                                     }
 

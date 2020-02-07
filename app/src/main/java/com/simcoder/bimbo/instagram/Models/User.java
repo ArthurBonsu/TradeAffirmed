@@ -9,23 +9,50 @@ public class User implements Parcelable{
     private String phone;
     private String email;
     private String name;
+    private  String posts;
+    private  String desc;
+    private  String website;
+    private  String image;
+    String photoid;
+    String tid;
 
-    public User(String uid, String phone, String email, String name) {
+
+    public User(String email, String name, String desc, String website, String image) {
+        this.email = email;
+        this.name = name;
+        this.desc = desc;
+        this.website = website;
+        this.image = image;
+        this.photoid = photoid;
+        this.tid = tid;
+       }
+
+
+    public User(String email, String name, String desc, String website, String image, String uid, String phone,String posts, String photoid,String tid) {
         this.uid = uid;
         this.phone = phone;
         this.email = email;
         this.name = name;
+        this.posts = posts;
+        this.desc = desc;
+        this.website = website;
+        this.image = image;
+        this.photoid = photoid;
+        this.tid = tid;
     }
+
 
     public User() {
     }
-
 
     protected User(Parcel in) {
         uid = in.readString();
         phone = in.readString();
         email = in.readString();
         name = in.readString();
+        posts = in.readString();
+        photoid = in.readString();
+        tid = in.readString();
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {
@@ -39,6 +66,26 @@ public class User implements Parcelable{
             return new User[size];
         }
     };
+
+
+
+
+    public String gettid() {
+        return tid;
+    }
+
+    public void settid(String tid) {
+        this.tid = tid;
+    }
+
+
+    public String getphotoid() {
+        return photoid;
+    }
+
+    public void setphotoid(String photoid) {
+        this.photoid = photoid;
+    }
 
     public String getuid() {
         return uid;
@@ -72,6 +119,15 @@ public class User implements Parcelable{
         this.name = name;
     }
 
+    public String getPosts() {
+        return posts;
+    }
+
+    public void setPosts(String posts) {
+        this.posts = posts;
+    }
+
+
     @Override
     public String toString() {
         return "User{" +
@@ -79,6 +135,7 @@ public class User implements Parcelable{
                 ", phone_number='" + phone + '\'' +
                 ", email='" + email + '\'' +
                 ", username='" + name + '\'' +
+                ", posts='" + posts + '\'' +
                 '}';
     }
 
@@ -93,5 +150,6 @@ public class User implements Parcelable{
         dest.writeString(phone);
         dest.writeString(email);
         dest.writeString(name);
+        dest.writeString(posts);
     }
 }

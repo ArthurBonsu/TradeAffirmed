@@ -46,7 +46,7 @@ public class Like {
 
 
 
-    public String getuid(String uid) {
+    public String getuid() {
         return uid;
     }
     public void setuid(String uid) {
@@ -61,7 +61,7 @@ public class Like {
         this.likes = likes;
     }
 
-    public String getLikeid(String likeid) {
+    public String getLikeid() {
         return likeid;
     }
     public void setLikeid(String likeid) {

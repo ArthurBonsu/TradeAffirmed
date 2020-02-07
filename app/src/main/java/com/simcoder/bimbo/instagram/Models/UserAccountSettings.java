@@ -3,6 +3,8 @@ package com.simcoder.bimbo.instagram.Models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.simcoder.bimbo.instagram.Utils.StringManipulation;
+
 public class UserAccountSettings implements Parcelable {
 
     private String desc;
@@ -25,12 +27,19 @@ public class UserAccountSettings implements Parcelable {
         this.image = image;
         this.website = website;
         this.uid = uid;
+        this.posts = posts;
 
 
     }
 
     public UserAccountSettings() {
     }
+    public UserAccountSettings(String desc,   String image,String name,String website,
+                               String uid  ) {
+    }
+
+
+
 
     protected UserAccountSettings(Parcel in) {
 
@@ -43,6 +52,7 @@ public class UserAccountSettings implements Parcelable {
         image = in.readString();
         website = in.readString();
         uid = in.readString();
+        posts = in.readString();
 
     }
 
@@ -119,6 +129,8 @@ public class UserAccountSettings implements Parcelable {
     public void setimage(String image) {
         this.image = image;
     }
+
+
 
 
     public String getWebsite() {

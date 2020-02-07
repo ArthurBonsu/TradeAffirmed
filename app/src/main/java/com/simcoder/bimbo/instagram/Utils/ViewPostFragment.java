@@ -120,13 +120,13 @@ public class ViewPostFragment extends Fragment {
     private void init(){
         try{
             //mPhoto = getPhotoFromBundle();
-            UniversalImageLoader.setImage(getPhotoFromBundle().getImage_path(), mPostImage, null, "");
+            UniversalImageLoader.setImage(getPhotoFromBundle().getimage(), mPostImage, null, "");
             mActivityNumber = getActivityNumFromBundle();
-            String photo_id = getPhotoFromBundle().getPhoto_id();
+            final String photo_id = getPhotoFromBundle().getphotoid();
 
             Query query = FirebaseDatabase.getInstance().getReference()
-                    .child(getString(R.string.dbname_photos))
-                    .orderByChild(getString(R.string.field_photo_id))
+                    .child("Photos")
+                    .orderByChild("photoid")
                     .equalTo(photo_id);
             query.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -137,18 +137,23 @@ public class ViewPostFragment extends Fragment {
 
                         newPhoto.setCaption(objectMap.get(getString(R.string.field_caption)).toString());
                         newPhoto.setTags(objectMap.get(getString(R.string.field_tags)).toString());
-                        newPhoto.setPhoto_id(objectMap.get(getString(R.string.field_photo_id)).toString());
-                        newPhoto.setUser_id(objectMap.get(getString(R.string.field_user_id)).toString());
-                        newPhoto.setDate_created(objectMap.get(getString(R.string.field_date_created)).toString());
-                        newPhoto.setImage_path(objectMap.get(getString(R.string.field_image_path)).toString());
+                        newPhoto.setphotoid((String) objectMap.get("photoid"));
+                        newPhoto.setuid(objectMap.get("uid").toString());
+                        newPhoto.setdate(objectMap.get("date").toString());
+                        newPhoto.setimage(objectMap.get("image").toString());
 
                         List<Comment> commentsList = new ArrayList<Comment>();
                         for (DataSnapshot dSnapshot : singleSnapshot
-                                .child(getString(R.string.field_comments)).getChildren()){
+                                .child("Comments").getChildren()){
+
+                          String thefirstcommentkey = dSnapshot.child(photo_id).child("Comments").getKey();
+                          String theuserkey = dSnapshot.child(photo_id).child("Comments").child(thefirstcommentkey).child("Users").getKey();
+                          String thefinalcommentkey = dSnapshot.child(photo_id).child("Comments").child(thefirstcommentkey).child("Users").child(theuserkey).child("comments").getKey();
+
                             Comment comment = new Comment();
-                            comment.setUser_id(dSnapshot.getValue(Comment.class).getUser_id());
-                            comment.setComment(dSnapshot.getValue(Comment.class).getComment());
-                            comment.setDate_created(dSnapshot.getValue(Comment.class).getDate_created());
+                            comment.setuid(dSnapshot.child(photo_id).child("Comments").child(thefirstcommentkey).child("Users").child(theuserkey).child("uid").getValue(Comment.class).getuid());
+                            comment.setComment(dSnapshot.child(photo_id).child("Comments").child(thefirstcommentkey).child("Users").child(theuserkey).child("comment").getValue(Comment.class).getComment());
+                            comment.setdate(dSnapshot.child(photo_id).child("Comments").child(thefirstcommentkey).child("Users").child(theuserkey).child("date").getValue(Comment.class).getdate());
                             commentsList.add(comment);
                         }
                         newPhoto.setComments((ArrayList<Comment>) commentsList);
@@ -197,34 +202,39 @@ public class ViewPostFragment extends Fragment {
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
         Query query = reference
-                .child(getString(R.string.dbname_photos))
-                .child(mPhoto.getPhoto_id())
-                .child(getString(R.string.field_likes));
+                .child("Photos")
+                .child(mPhoto.getphotoid())
+                .child("Likes");
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mUsers = new StringBuilder();
                 for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
+                           final String likeid = singleSnapshot.getKey();
+                           String userid = singleSnapshot.child(likeid).child("Users").getKey();
 
                     DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
                     Query query = reference
-                            .child(getString(R.string.dbname_users))
-                            .orderByChild(getString(R.string.field_user_id))
-                            .equalTo(singleSnapshot.getValue(Like.class).getUser_id());
+                            .child("Users").child("Drivers")
+                            .orderByChild("tid")
+                            .equalTo(singleSnapshot.child(likeid).child("Users").child("uid").getValue(Like.class).getuid());
+
+                    final String uid = singleSnapshot.child(likeid).child("Users").child("uid").getValue(Like.class).getuid();
                     query.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
                                 Log.d(TAG, "onDataChange: found like: " +
-                                        singleSnapshot.getValue(User.class).getUsername());
 
-                                mUsers.append(singleSnapshot.getValue(User.class).getUsername());
+                                        singleSnapshot.child(uid).child("name").getValue(User.class).getname());
+
+                                mUsers.append(singleSnapshot.getValue(User.class).getname());
                                 mUsers.append(",");
                             }
 
                             String[] splitUsers = mUsers.toString().split(",");
 
-                            if(mUsers.toString().contains(mCurrentUser.getUsername() + ",")){//mitch, mitchell.tabian
+                            if(mUsers.toString().contains(mCurrentUser.getname() + ",")){//mitch, mitchell.tabian
                                 mLikedByCurrentUser = true;
                             }else{
                                 mLikedByCurrentUser = false;
@@ -284,14 +294,14 @@ public class ViewPostFragment extends Fragment {
     private void getCurrentUser(){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
         Query query = reference
-                .child(getString(R.string.dbname_users))
-                .orderByChild(getString(R.string.field_user_id))
+                .child("Users").child("Customers")
+                .orderByChild("uid")
                 .equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid());
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for ( DataSnapshot singleSnapshot :  dataSnapshot.getChildren()){
-                    mCurrentUser = singleSnapshot.getValue(User.class);
+                    mCurrentUser = singleSnapshot.child("uid").child("name").getValue(User.class);
                 }
                 getLikesString();
             }
@@ -315,9 +325,9 @@ public class ViewPostFragment extends Fragment {
 
             DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
             Query query = reference
-                    .child(getString(R.string.dbname_photos))
-                    .child(mPhoto.getPhoto_id())
-                    .child(getString(R.string.field_likes));
+                    .child("Photos")
+                    .child(mPhoto.getphotoid())
+                    .child("Likes");
             query.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -327,21 +337,15 @@ public class ViewPostFragment extends Fragment {
 
                         //case1: Then user already liked the photo
                         if(mLikedByCurrentUser &&
-                                singleSnapshot.getValue(Like.class).getUser_id()
+                                singleSnapshot.child(keyID).child("Users").child("uid").getValue(Like.class).getuid()
                                         .equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){
 
-                            myRef.child(getString(R.string.dbname_photos))
-                                    .child(mPhoto.getPhoto_id())
-                                    .child(getString(R.string.field_likes))
-                                    .child(keyID)
+                            myRef.child("Photos")
+                                    .child(mPhoto.getphotoid())
+                                    .child("Likes")
+                                    .child(keyID).child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                     .removeValue();
 ///
-                            myRef.child(getString(R.string.dbname_user_photos))
-                                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                    .child(mPhoto.getPhoto_id())
-                                    .child(getString(R.string.field_likes))
-                                    .child(keyID)
-                                    .removeValue();
 
                             mHeart.toggleLike();
                             getLikesString();
@@ -374,20 +378,28 @@ public class ViewPostFragment extends Fragment {
 
         String newLikeID = myRef.push().getKey();
         Like like = new Like();
-        like.setUser_id(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        like.setuid(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
-        myRef.child(getString(R.string.dbname_photos))
-                .child(mPhoto.getPhoto_id())
-                .child(getString(R.string.field_likes))
+        myRef.child("Photos")
+                .child(mPhoto.getphotoid())
+                .child("Likes")
                 .child(newLikeID)
                 .setValue(like);
 
-        myRef.child(getString(R.string.dbname_user_photos))
-                .child(mPhoto.getUser_id()) //////////////////***************// was FirebaseAuth
-                .child(mPhoto.getPhoto_id())
-                .child(getString(R.string.field_likes))
+        myRef.child("Photos")
+                .child(mPhoto.getphotoid()) //////////////////***************// was FirebaseAuth
+                .child("Likes")
                 .child(newLikeID)
+                .child("Users")
                 .setValue(like);
+
+        myRef.child("Photos")
+                .child(mPhoto.getphotoid()) //////////////////***************// was FirebaseAuth
+                .child("Likes")
+                .child(newLikeID)
+                .child("Users").child("uid")
+                .setValue(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
 
         mHeart.toggleLike();
         getLikesString();
@@ -397,14 +409,29 @@ public class ViewPostFragment extends Fragment {
         Log.d(TAG, "getPhotoDetails: retrieving photo details.");
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
         Query query = reference
-                .child(getString(R.string.dbname_user_account_settings))
-                .orderByChild(getString(R.string.field_user_id))
-                .equalTo(mPhoto.getUser_id());
+                .child("Photos")
+                .orderByChild("tid")
+                .equalTo(mPhoto.gettid());
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for ( DataSnapshot singleSnapshot :  dataSnapshot.getChildren()){
                     mUserAccountSettings = singleSnapshot.getValue(UserAccountSettings.class);
+
+                        String caption =  singleSnapshot.child(mPhoto.getphotoid()).child("caption").getValue(Photo.class).getCaption();
+                        String date =  singleSnapshot.child(mPhoto.getphotoid()).child("date").getValue(Photo.class).getdate();
+                        String image = singleSnapshot.child(mPhoto.getphotoid()).child("image").getValue(Photo.class).getimage();
+
+                        String price = singleSnapshot.child(mPhoto.getphotoid()).child("price").getValue(Photo.class).getprice();
+                        String tags = singleSnapshot.child(mPhoto.getphotoid()).child("tags").getValue(Photo.class).getTags();
+                         String tagkey  = singleSnapshot.child(mPhoto.getphotoid()).child("tags").getKey();
+                        String tid = singleSnapshot.child(mPhoto.getphotoid()).child("tags").child(tagkey).child("name").getValue(Photo.class).getname();
+                        String time = singleSnapshot.child(mPhoto.getphotoid()).child("time").getValue(Photo.class).gettime();
+                        String likekey = singleSnapshot.child(mPhoto.getphotoid()).child("Likes").getKey();
+                        String likesnumber = singleSnapshot.child(mPhoto.getphotoid()).child("Likes").child("number").getValue(Photo.class).getnumber();
+
+
+
                 }
                 //setupWidgets();
             }
@@ -425,8 +452,8 @@ public class ViewPostFragment extends Fragment {
         }else{
             mTimestamp.setText("TODAY");
         }
-        UniversalImageLoader.setImage(mUserAccountSettings.getProfile_photo(), mProfileImage, null, "");
-        mUsername.setText(mUserAccountSettings.getUsername());
+        UniversalImageLoader.setImage(mUserAccountSettings.getimage(), mProfileImage, null, "");
+        mUsername.setText(mUserAccountSettings.getname());
         mLikes.setText(mLikesString);
         mCaption.setText(mPhoto.getCaption());
 
@@ -504,7 +531,7 @@ public class ViewPostFragment extends Fragment {
         Date today = c.getTime();
         sdf.format(today);
         Date timestamp;
-        final String photoTimestamp = mPhoto.getDate_created();
+        final String photoTimestamp = mPhoto.getdate();
         try{
             timestamp = sdf.parse(photoTimestamp);
             difference = String.valueOf(Math.round(((today.getTime() - timestamp.getTime()) / 1000 / 60 / 60 / 24 )));

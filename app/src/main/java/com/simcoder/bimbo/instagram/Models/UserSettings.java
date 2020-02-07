@@ -3,12 +3,20 @@ package com.simcoder.bimbo.instagram.Models;
 public class UserSettings {
     private User user;
     private UserAccountSettings settings;
+   //private User user;
+    //    private UserAccountSettings settings;
+    //
+
     public UserSettings(User user, UserAccountSettings settings) {
         this.user = user;
         this.settings = settings;
     }
     public UserSettings() {
     }
+
+
+
+
     public User getUser() {
         return user;
     }

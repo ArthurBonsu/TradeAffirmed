@@ -138,8 +138,8 @@ public class InstagramRegisterActivity extends AppCompatActivity {
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
         Query query = reference
-                .child(getString(R.string.dbname_users))
-                .orderByChild(getString(R.string.field_username))
+                .child("Users").child("Customers")
+                .orderByChild("name")
                 .equalTo(username);
 
         query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -148,7 +148,7 @@ public class InstagramRegisterActivity extends AppCompatActivity {
 
                 for (DataSnapshot singleSnapshot: dataSnapshot.getChildren()) {
                     if (singleSnapshot.exists()) {
-                        Log.d(TAG, "checkIfUsernameExists: FOUND A MATCH" + singleSnapshot.getValue(User.class).getUsername());
+                        Log.d(TAG, "checkIfUsernameExists: FOUND A MATCH" + singleSnapshot.getValue(User.class).getname());
                         append = myRef.push().getKey().substring(3,10);
                         Log.d(TAG, "onDataChange: username already exists. Appending random string to name: " + append);
                     }
@@ -187,7 +187,7 @@ public class InstagramRegisterActivity extends AppCompatActivity {
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
+                FirebaseUser user = firebaseAuth.getInstance().getCurrentUser();
 
                 if (user != null) {
                     // User is signed in
