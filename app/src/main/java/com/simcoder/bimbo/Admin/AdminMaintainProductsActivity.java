@@ -2,6 +2,7 @@ package  com.simcoder.bimbo.Admin;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -16,6 +17,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -34,7 +36,7 @@ import java.util.HashMap;
 
 
 
-public class AdminMaintainProductsActivity extends AppCompatActivity {
+public class AdminMaintainProductsActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private Button applyChangesBtn, deleteBtn;
     private EditText name, price, description;
     private ImageView imageView;
@@ -87,12 +89,16 @@ public class AdminMaintainProductsActivity extends AppCompatActivity {
 
         // KEYS PASSED IN FROM ADMINCATEGORY
 
-        { if (getIntent().getExtras().get("maintainrolefromadmincategory") != null) {
-            role = getIntent().getExtras().get("maintainrolefromadmincategory").toString();     } }
+             if (getIntent() != null) {
 
-        if (getIntent() != null) {
-            traderID = getIntent().getStringExtra("maintainfromadmincategoryactivity");
-        }
+                 if (getIntent().getStringExtra("maintainrolefromadmincategory") != null) {
+                     role = getIntent().getStringExtra("maintainrolefromadmincategory").toString();
+                 }
+
+                 if (getIntent().getStringExtra("maintainfromadmincategoryactivity") != null) {
+                     traderID = getIntent().getStringExtra("maintainfromadmincategoryactivity");
+                 }
+             }
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
         if (mGoogleApiClient != null) {
             mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
@@ -107,7 +113,7 @@ public class AdminMaintainProductsActivity extends AppCompatActivity {
                         }
                     }).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
         }
-
+        buildGoogleApiClient();
         firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -147,14 +153,6 @@ public class AdminMaintainProductsActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        //     mProgress.hide();
-        if (mAuth != null) {
-            mAuth.removeAuthStateListener(firebaseAuthListener);
-        }
-    }
 
 
     private void deleteThisProduct() {
@@ -261,4 +259,43 @@ public class AdminMaintainProductsActivity extends AppCompatActivity {
             });
         }
     }
+
+
+    protected synchronized void buildGoogleApiClient() {
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(AdminMaintainProductsActivity.this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+            mGoogleApiClient.connect();
+        }
+    }
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.connect();
+        }
+
+    }
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        //     mProgress.hide();
+        if (mAuth != null) {
+            mAuth.removeAuthStateListener(firebaseAuthListener);
+        }
+    }
+
+
 }

@@ -61,104 +61,128 @@ public class SearchActivityPeople extends AppCompatActivity{
         initTextListener();
     }
 
-    private void initTextListener(){
+    private void initTextListener() {
         Log.d(TAG, "initTextListener: initializing");
 
         mUserList = new ArrayList<>();
 
-        mSearchParam.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-                String text = mSearchParam.getText().toString().toLowerCase(Locale.getDefault());
-                searchForMatch(text);
-            }
-        });
-    }
-
-    private void searchForMatch(String keyword){
-        Log.d(TAG, "searchForMatch: searching for a match: " + keyword);
-        mUserList.clear();
-        //update the users list view
-        if(keyword.length() ==0){
-
-        }else{
-            //Customeror Trader should be established here
-            DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-            Query query = reference.child("Users").child("Drivers")
-                    .orderByChild("name").equalTo(keyword);
-            query.addListenerForSingleValueEvent(new ValueEventListener() {
+        if (mSearchParam != null) {
+            mSearchParam.addTextChangedListener(new TextWatcher() {
                 @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    for(DataSnapshot singleSnapshot :  dataSnapshot.getChildren()){
-                        String key = dataSnapshot.getKey();
-                        Log.d(TAG, "onDataChange: found user:" + singleSnapshot.child(key).child("name").getValue(User.class).toString());
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-                        mUserList.add(singleSnapshot.getValue(User.class));
-                        //update the users list view
-                        updateUsersList();
-                    }
                 }
 
                 @Override
-                public void onCancelled(DatabaseError databaseError) {
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
 
                 }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                     if (mSearchParam.getText().toString() != null){
+                    String text = mSearchParam.getText().toString().toLowerCase(Locale.getDefault());
+                    searchForMatch(text);
+                }}
             });
         }
     }
+    private void searchForMatch(String keyword) {
+        Log.d(TAG, "searchForMatch: searching for a match: " + keyword);
+        if (mUserList != null) {
+            mUserList.clear();
+            //update the users list view
+           if (keyword != null){
+             if (keyword.length() == 0) {
 
-    private void updateUsersList(){
-        Log.d(TAG, "updateUsersList: updating users list");
+            } else {
+                                  if (FirebaseDatabase.getInstance() != null){
+                //Customeror Trader should be established here
+                DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+                                 if (keyword != null){
+                Query query = reference.child("Users").child("Drivers")
+                        .orderByChild("name").equalTo(keyword);
+              if (query != null){
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                         if (dataSnapshot != null){
+                        for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
 
-        mAdapter = new UserListAdapter(SearchActivityPeople.this, R.layout.layout_user_listitem, mUserList);
+                            String key = dataSnapshot.getKey();
+                            if (key != null){
+                                if (singleSnapshot.child(key).child("name").getValue(User.class) != null){
+                            Log.d(TAG, "onDataChange: found user:" + singleSnapshot.child(key).child("name").getValue(User.class).toString());
+            if (mUserList != null){
+                          if (singleSnapshot.getValue(User.class) != null){
+                            mUserList.add(singleSnapshot.getValue(User.class));
+                            //update the users list view
+                            updateUsersList();
+                        }
+                    }}}}}}
 
-        mListView.setAdapter(mAdapter);
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
 
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d(TAG, "onItemClick: selected user: " + mUserList.get(position).toString());
-
-                //navigate to profile activity
-                Intent intent = new Intent(SearchActivityPeople.this, ProfileActivity.class);
-                intent.putExtra(getString(R.string.calling_activity), getString(R.string.search_activity));
-                intent.putExtra(getString(R.string.intent_user), mUserList.get(position));
-                startActivity(intent);
-
+                    }
+                });
             }
-        });
-    }
+        }
+    }}}}}
+    private void updateUsersList() {
+        Log.d(TAG, "updateUsersList: updating users list");
+        if (mAdapter != null) {
+            mAdapter = new UserListAdapter(SearchActivityPeople.this, R.layout.layout_user_listitem, mUserList);
+            if (mListView != null) {
+                mListView.setAdapter(mAdapter);
 
+                mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Log.d(TAG, "onItemClick: selected user: " + mUserList.get(position).toString());
 
-    private void hideSoftKeyboard(){
-        if(getCurrentFocus() != null){
-            InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                        //navigate to profile activity
+                        Intent intent = new Intent(SearchActivityPeople.this, ProfileActivity.class);
+      if (intent != null){
+                        intent.putExtra(getString(R.string.calling_activity), getString(R.string.search_activity));
+         if (mUserList.get(position) != null){
+                        intent.putExtra(getString(R.string.intent_user), mUserList.get(position));
+                        startActivity(intent);
+      }}
+                    }
+                });
+            }
         }
     }
+    private void hideSoftKeyboard() {
+        if (getCurrentFocus() != null) {
+                     if (INPUT_METHOD_SERVICE != null){
+            if (getSystemService(INPUT_METHOD_SERVICE) != null) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+              if (imm != null) {
+                  if (getCurrentFocus().getWindowToken() != null){
 
+                  imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+              }
+            }}
+        }
 
+    }}
     /**
      * BottomNavigationView setup
      */
     private void setupBottomNavigationView(){
         Log.d(TAG, "setupBottomNavigationView: setting up BottomNavigationView");
         BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.bottomNavViewBar);
-        BottomNavigationViewHelper.setupBottomNavigationView(bottomNavigationViewEx);
-        BottomNavigationViewHelper.enableNavigation(mContext, this,bottomNavigationViewEx);
-        Menu menu = bottomNavigationViewEx.getMenu();
-        MenuItem menuItem = menu.getItem(ACTIVITY_NUM);
-        menuItem.setChecked(true);
-    }
-}
+            if (bottomNavigationViewEx != null) {
+                BottomNavigationViewHelper.setupBottomNavigationView(bottomNavigationViewEx);
+                BottomNavigationViewHelper.enableNavigation(mContext, this, bottomNavigationViewEx);
+                Menu menu = bottomNavigationViewEx.getMenu();
+                         if (ACTIVITY_NUM != 0){
+                            if (menu != null){
+                MenuItem menuItem = menu.getItem(ACTIVITY_NUM);
+     if (menuItem != null) {
+         menuItem.setChecked(true);
+     }
+            }}
+}}}

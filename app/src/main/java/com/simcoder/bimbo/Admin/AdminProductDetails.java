@@ -4,6 +4,7 @@ package com.simcoder.bimbo.Admin;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -19,6 +20,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -34,7 +36,7 @@ import com.simcoder.bimbo.Model.Products;
 import com.simcoder.bimbo.R;
 import com.squareup.picasso.Picasso;
 
-public class AdminProductDetails extends AppCompatActivity  implements  View.OnClickListener{
+public class AdminProductDetails extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private Button ViewBuyers;
     private ImageView productImage;
     private ElegantNumberButton numberButton;
@@ -80,56 +82,55 @@ public class AdminProductDetails extends AppCompatActivity  implements  View.OnC
 
 
          // FROM ALL PRODUCTS
-        {
-            if (getIntent().getExtras().get("rolefromsingleusertoadminproductdetails") != null) {
-                role = getIntent().getExtras().get("rolefromsingleusertoadminproductdetails").toString();
-            }
-        }
-
-        if (getIntent() != null) {
-            traderID = getIntent().getStringExtra("fromadminsingleusertoadminproductdetails");
-        }
-        if (getIntent() != null) {
-            userID = getIntent().getStringExtra("neworderUserID");
-        }
+                    if (getIntent() != null) {
+                        if (getIntent().getStringExtra("rolefromsingleusertoadminproductdetails") != null) {
+                            role = getIntent().getStringExtra("rolefromsingleusertoadminproductdetails").toString();
+                        }
 
 
-
-         // FROM ALL PRODUCTS
-
-        if (getIntent() != null) {
-            productID = getIntent().getStringExtra("productIDfromallproducttoproductdetails");
-        }
-
-        {
-            if (getIntent().getExtras().get("rolefromallproductdetails") != null) {
-                role = getIntent().getExtras().get("rolefromallproductdetails").toString();
-            }
-        }
-
-        if (getIntent() != null) {
-            traderID = getIntent().getStringExtra("fromtheallproducttoadmiproductdetails");
-        }
+                        if (getIntent().getStringExtra("fromadminsingleusertoadminproductdetails") != null) {
+                            traderID = getIntent().getStringExtra("fromadminsingleusertoadminproductdetails");
+                        }
+                        if (getIntent().getStringExtra("neworderUserID") != null) {
+                            userID = getIntent().getStringExtra("neworderUserID");
+                        }
 
 
-         // FROM CART ACTIVITY
-        if (getIntent() != null) {
-            productID = getIntent().getStringExtra("fromusercartactivitydminproductdetails");
-        }
-        if (getIntent() != null) {
-            userID = getIntent().getStringExtra("fromuserTHEIDcartactivitydminproductdetails");
-        }
+                        // FROM ALL PRODUCTS
 
-        {
-            if (getIntent().getExtras().get("rolefromadmincartadminproductdetails") != null) {
-                role = getIntent().getExtras().get("rolefromadmincartadminproductdetails").toString();
-            }
-        }
+                        if (getIntent().getStringExtra("productIDfromallproducttoproductdetails") != null) {
+                            productID = getIntent().getStringExtra("productIDfromallproducttoproductdetails");
+                        }
 
-        if (getIntent() != null) {
-            traderID = getIntent().getStringExtra("fromadmintcatactivitytoadminproductdetails");
-        }
 
+                        if (getIntent().getStringExtra("rolefromallproductdetails") != null) {
+                            role = getIntent().getStringExtra("rolefromallproductdetails").toString();
+                        }
+
+
+                        if (getIntent().getStringExtra("fromtheallproducttoadmiproductdetails") != null) {
+                            traderID = getIntent().getStringExtra("fromtheallproducttoadmiproductdetails");
+                        }
+
+
+                        // FROM CART ACTIVITY
+                        if (getIntent().getStringExtra("fromusercartactivitydminproductdetails") != null) {
+                            productID = getIntent().getStringExtra("fromusercartactivitydminproductdetails");
+                        }
+                        if (getIntent().getStringExtra("fromuserTHEIDcartactivitydminproductdetails") != null) {
+                            userID = getIntent().getStringExtra("fromuserTHEIDcartactivitydminproductdetails");
+                        }
+
+
+                        if (getIntent().getStringExtra("rolefromadmincartadminproductdetails") != null) {
+                            role = getIntent().getStringExtra("rolefromadmincartadminproductdetails").toString();
+                        }
+
+
+                        if (getIntent().getStringExtra("fromadmintcatactivitytoadminproductdetails") != null) {
+                            traderID = getIntent().getStringExtra("fromadmintcatactivitytoadminproductdetails");
+                        }
+                    }
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
         if (mGoogleApiClient != null) {
@@ -145,7 +146,7 @@ public class AdminProductDetails extends AppCompatActivity  implements  View.OnC
                         }
                     }).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
         }
-
+        buildGoogleApiClient();
         firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -296,6 +297,40 @@ public class AdminProductDetails extends AppCompatActivity  implements  View.OnC
             });
         }
     }
+    protected synchronized void buildGoogleApiClient() {
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(AdminProductDetails.this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+            mGoogleApiClient.connect();
+        }
+    }
+
+
+    @Override
+    public void onClick(View v) {
+
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.connect();
+        }
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
 
     @Override
     protected void onStop() {
@@ -306,8 +341,5 @@ public class AdminProductDetails extends AppCompatActivity  implements  View.OnC
         }
     }
 
-    @Override
-    public void onClick(View v) {
 
-    }
 }

@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -50,7 +51,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 
-public class AdminAddNewProductActivity extends AppCompatActivity {
+public class AdminAddNewProductActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private String CategoryName, Description, Price, Pname, saveCurrentDate, saveCurrentTime;
     private Button AddNewProductButton;
     private ImageView InputProductImage;
@@ -68,7 +69,8 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
     String role;
     String traderkeryhere;
     FirebaseUser user;
-
+    Uri ImageStore;
+    Intent intent;
     //AUTHENTICATORS
 
     private GoogleMap mMap;
@@ -76,23 +78,26 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
     private static final String TAG = "Google Activity";
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
+    ImageView setimagebutton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_add_new_product);
+                   if (getIntent() != null) {
+                       if (getIntent().getStringExtra("category") != null) {
+                           CategoryName = getIntent().getStringExtra("category").toString();
+                       }
+                       // KEYS PASSED IN FROM ADMINCATEGORY
 
-             if (getIntent().getExtras().get("category") != null) {
-            CategoryName = getIntent().getExtras().get("category").toString();
-        }
-             // KEYS PASSED IN FROM ADMINCATEGORY
+                       if (getIntent().getStringExtra("rolefromadmincategorytoaddadmin") != null) {
+                           role = getIntent().getStringExtra("rolefromadmincategorytoaddadmin").toString();
+                       }
 
-        { if (getIntent().getExtras().get("rolefromadmincategorytoaddadmin") != null) {
-            role = getIntent().getExtras().get("rolefromadmincategorytoaddadmin").toString();     } }
-
-             if (getIntent() != null) {
-                 traderID = getIntent().getStringExtra("fromadmincategoryactivitytoaddadmin");
-             }
+                       if (getIntent() != null) {
+                           traderID = getIntent().getStringExtra("fromadmincategoryactivitytoaddadmin");
+                       }
+                   }
         ProductImagesRef = FirebaseStorage.getInstance().getReference().child("product_images");
         ProductsRef = FirebaseDatabase.getInstance().getReference().child("Product");
         ProductsTraderRef =FirebaseDatabase.getInstance().getReference().child("Product").child("trader");
@@ -120,13 +125,14 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
         InputProductName = (EditText) findViewById(R.id.product_name);
         InputProductDescription = (EditText) findViewById(R.id.product_description);
         InputProductPrice = (EditText) findViewById(R.id.product_price);
+        setimagebutton = (ImageView)findViewById(R.id.setimagebutton);
         loadingBar = new ProgressDialog(this);
 
         FirebaseAuth.getInstance();
         mAuth = FirebaseAuth.getInstance();
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
         if (mGoogleApiClient != null) {
-            mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+                        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         }
 
         if (mGoogleApiClient != null) {
@@ -138,7 +144,7 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
                         }
                     }).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
         }
-
+        buildGoogleApiClient();
 
 
         firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -176,25 +182,20 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
     }
 
 
-
-
-
-
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (mAuth != null) {
-            mAuth.addAuthStateListener(firebaseAuthListener);
+    protected synchronized void buildGoogleApiClient() {
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(AdminAddNewProductActivity.this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+            mGoogleApiClient.connect();
         }
     }
-    @Override
-    protected void onStop() {
-        super.onStop();
-       if (mAuth !=null) {
-           mAuth.removeAuthStateListener(firebaseAuthListener);
-       }
-       }
+
+
+
+
 
 
 
@@ -215,10 +216,13 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
             if (ImageUri != null) {
                 if (data != null) {
                     ImageUri = data.getData();
+                    ImageStore = ImageUri;
+                    setimagebutton.setImageURI(ImageUri);
 
                     if (InputProductImage != null) {
                         InputProductImage.setImageURI(ImageUri);
                     }
+
                 }
             }
 
@@ -228,15 +232,17 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
 
 
     private void ValidateProductData() {
-        if (InputProductDescription != null) {
+        if (InputProductDescription != null ) {
             Description = InputProductDescription.getText().toString();
-            if (InputProductPrice != null) {
-                Price = InputProductPrice.getText().toString();
             if (InputProductName != null){
-                Pname = InputProductName.getText().toString();
+                if (InputProductPrice != null) {
+                    if (InputProductPrice.getText() !=null) {
+                        Price = InputProductPrice.getText().toString();
+                    }       if (InputProductName != null) {
+                        Pname = InputProductName.getText().toString();
 
-
-                if (ImageUri == null) {
+                    }
+                if (ImageStore == null) {
                     Toast.makeText(this, "Product image is mandatory...", Toast.LENGTH_SHORT).show();
                 } else if (TextUtils.isEmpty(Description)) {
                     Toast.makeText(this, "Please write product description...", Toast.LENGTH_SHORT).show();
@@ -352,7 +358,7 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
                         {
                             ProductsTraderRef.child(traderkeryhere).updateChildren(traderhashmap);
 
-                            Intent intent = new Intent(AdminAddNewProductActivity.this, AdminCategoryActivity.class);
+                             intent = new Intent(AdminAddNewProductActivity.this, AdminCategoryActivity.class);
                             startActivity(intent);
 
                             loadingBar.dismiss();
@@ -369,5 +375,40 @@ public class AdminAddNewProductActivity extends AppCompatActivity {
                     }}
                 });
 
+    }
+
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.connect();
+        }
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (mAuth != null) {
+            mAuth.addAuthStateListener(firebaseAuthListener);
+        }
+    }
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mAuth !=null) {
+            mAuth.removeAuthStateListener(firebaseAuthListener);
+        }
     }
 }

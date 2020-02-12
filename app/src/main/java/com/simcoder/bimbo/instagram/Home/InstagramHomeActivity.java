@@ -83,77 +83,135 @@ public class InstagramHomeActivity extends AppCompatActivity implements
         Log.d(TAG, "onCommentThreadSelected: selected a coemment thread");
 
         ViewCommentsFragment fragment  = new ViewCommentsFragment();
+
         Bundle args = new Bundle();
-        args.putParcelable(getString(R.string.photo), photo);
-        args.putString(getString(R.string.home_activity), getString(R.string.home_activity));
-        fragment.setArguments(args);
+         if (args != null) {
+             if (photo != null) {
+                 args.putParcelable(getString(R.string.photo), photo);
+                 args.putString(getString(R.string.instagramhomeactivity), getString(R.string.instagramhomeactivity
+                 ));
+                 if (fragment != null) {
+                     fragment.setArguments(args);
+                 }
+             }
+         }
+             if(getSupportFragmentManager() != null) {
+                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                 if (transaction != null) {
+                     transaction.replace(R.id.container, fragment);
+                     transaction.addToBackStack(getString(R.string.view_comments_fragment));
+                     transaction.commit();
+                 }
 
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.container, fragment);
-        transaction.addToBackStack(getString(R.string.view_comments_fragment));
-        transaction.commit();
-
-    }
+             }}
 
     public void hideLayout(){
         Log.d(TAG, "hideLayout: hiding layout");
-        mRelativeLayout.setVisibility(View.GONE);
-        mFrameLayout.setVisibility(View.VISIBLE);
-    }
+         if (mRelativeLayout != null){        mRelativeLayout.setVisibility(View.GONE);}
+         if (mFrameLayout != null) {
+             mFrameLayout.setVisibility(View.VISIBLE);
+         }
+         }
 
 
     public void showLayout(){
         Log.d(TAG, "hideLayout: showing layout");
-        mRelativeLayout.setVisibility(View.VISIBLE);
-        mFrameLayout.setVisibility(View.GONE);
-    }
+         if (mRelativeLayout != null) {
+             mRelativeLayout.setVisibility(View.VISIBLE);
+         }
+         if (mFrameLayout != null) {
+             mFrameLayout.setVisibility(View.GONE);
+
+         }}
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        if(mFrameLayout.getVisibility() == View.VISIBLE){
+                 if (mFrameLayout != null){
+        if(mFrameLayout.getVisibility() == View.VISIBLE) {
+        }
             showLayout();
         }
     }
 
 
-    private void initImageLoader(){
-        UniversalImageLoader universalImageLoader = new UniversalImageLoader(mContext);
-        ImageLoader.getInstance().init(universalImageLoader.getConfig());
-    }
+    private void initImageLoader() {
+        if (mContext != null) {
 
+            UniversalImageLoader universalImageLoader = new UniversalImageLoader(mContext);
+            if (ImageLoader.getInstance() != null) {
+                if (universalImageLoader.getConfig() != null) {
+                    ImageLoader.getInstance().init(universalImageLoader.getConfig());
+                }
+            }
+        }
+    }
     /**
      * Responsible for adding the 3 tabs: Camera, Home, Messages
      */
-    private void setupViewPager(){
-        SectionsPagerAdapter adapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new CameraFragment()); //index 0
-        adapter.addFragment(new HomeFragment()); //index 1
-        adapter.addFragment(new MessagesFragment()); //index 2
-        mViewPager.setAdapter(adapter);
-
+    private void setupViewPager() {
+        if (getSupportFragmentManager() != null) {
+            SectionsPagerAdapter adapter = new SectionsPagerAdapter(getSupportFragmentManager());
+            if (adapter != null) {
+                if (new CameraFragment() != null) {
+                    adapter.addFragment(new CameraFragment()); //index 0
+                }
+                if (new HomeFragment() != null) {
+                    adapter.addFragment(new HomeFragment()); //index 1
+                }
+                if (new MessagesFragment() != null) {
+                    adapter.addFragment(new MessagesFragment()); //index 2
+                }
+                if (mViewPager != null) {
+                    mViewPager.setAdapter(adapter);
+                }
+            }
+        }
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(mViewPager);
+        if (tabLayout != null) {
+               if (mViewPager != null) {
+                   tabLayout.setupWithViewPager(mViewPager);
+               }
+                  if (tabLayout.getTabAt(0) != null) {
 
-        tabLayout.getTabAt(0).setIcon(R.drawable.ic_camera);
-        tabLayout.getTabAt(1).setIcon(R.drawable.ic_instagram_black);
-        tabLayout.getTabAt(2).setIcon(R.drawable.ic_arrow);
+                      tabLayout.getTabAt(0).setIcon(R.drawable.ic_camera);
+                  }
+                  if (tabLayout.getTabAt(1) != null) {
+                      tabLayout.getTabAt(1).setIcon(R.drawable.ic_instagram_black);
+                  }
+                  if (tabLayout.getTabAt(2) != null) {
+                      tabLayout.getTabAt(2).setIcon(R.drawable.ic_arrow);
+                  }
+                  }
     }
-
     /**
      * BottomNavigationView setup
      */
-    private void setupBottomNavigationView(){
+    private void setupBottomNavigationView() {
         Log.d(TAG, "setupBottomNavigationView: setting up BottomNavigationView");
         BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.bottomNavViewBar);
-        BottomNavigationViewHelper.setupBottomNavigationView(bottomNavigationViewEx);
-        BottomNavigationViewHelper.enableNavigation(mContext, this,bottomNavigationViewEx);
-        Menu menu = bottomNavigationViewEx.getMenu();
-        MenuItem menuItem = menu.getItem(ACTIVITY_NUM);
-        menuItem.setChecked(true);
+        if (bottomNavigationViewEx != null) {
+
+            {
+                BottomNavigationViewHelper.setupBottomNavigationView(bottomNavigationViewEx);
+            }
+            if (mContext != null) {
+
+                BottomNavigationViewHelper.enableNavigation(mContext, this, bottomNavigationViewEx);
+
+                if (bottomNavigationViewEx != null) {
+                    ;
+                    Menu menu = bottomNavigationViewEx.getMenu();
+                    if (menu != null) {
+                        MenuItem menuItem = menu.getItem(ACTIVITY_NUM);
+                        if (menuItem != null) {
+                            menuItem.setChecked(true);
+                        }
+                    }
+                }
+            }
+        }
     }
-
-
      /*
     ------------------------------------ Firebase ---------------------------------------------
      */
@@ -165,11 +223,12 @@ public class InstagramHomeActivity extends AppCompatActivity implements
     private void checkCurrentUser(FirebaseUser user){
         Log.d(TAG, "checkCurrentUser: checking if user is logged in.");
 
-        if(user == null){
-            Intent intent = new Intent(mContext, InstagramLoginActivity.class);
-            startActivity(intent);
-        }
-    }
+        if(user == null) {
+            if (mContext != null) {
+                Intent intent = new Intent(mContext, InstagramLoginActivity.class);
+                startActivity(intent);
+            }
+        }}
     /**
      * Setup the firebase auth object
      */
@@ -184,8 +243,9 @@ public class InstagramHomeActivity extends AppCompatActivity implements
                 FirebaseUser user = firebaseAuth.getCurrentUser();
 
                 //check if the user is logged in
-                checkCurrentUser(user);
-
+          if (user != null) {
+              checkCurrentUser(user);
+          }
                 if (user != null) {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
@@ -201,17 +261,27 @@ public class InstagramHomeActivity extends AppCompatActivity implements
     @Override
     public void onStart() {
         super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
-        mViewPager.setCurrentItem(HOME_FRAGMENT);
-        checkCurrentUser(mAuth.getCurrentUser());
+        if (mAuth != null) {
+            if (mAuthListener != null) {
+                mAuth.addAuthStateListener(mAuthListener);
+            }
+        }
+        if (mViewPager != null) {
+
+            mViewPager.setCurrentItem(HOME_FRAGMENT);
+        }
+        if (mAuth.getCurrentUser() != null) {
+            checkCurrentUser(mAuth.getCurrentUser());
+        }
     }
 
     @Override
     public void onStop() {
         super.onStop();
         if (mAuthListener != null) {
-            mAuth.removeAuthStateListener(mAuthListener);
-        }
+          if (mAuth != null) {
+              mAuth.removeAuthStateListener(mAuthListener);
+          }    }
     }
 
 

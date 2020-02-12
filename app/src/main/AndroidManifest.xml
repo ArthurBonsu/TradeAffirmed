@@ -8,22 +8,44 @@
          Google Maps Android API v2, but you must specify either coarse or fine
          location permissions for the 'MyLocation' functionality. 
     -->
+
+
+
+
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.READ_PROFILE"/>
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+
+
+
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
 
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true"/>
+
+
+
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <permission android:name="com.simcoder.bimbo.permission.C2D_MESSAGE"
+        tools:ignore="ProtectedPermissions"
+        android:protectionLevel="signature" />
+    <uses-permission android:name="com.simcoder.bimbo.permission.C2D_MESSAGE"
+        tools:ignore="ProtectedPermissions"  />
+
+    ...
+
+
 
     <application
         android:allowBackup="true"
@@ -33,6 +55,16 @@
         android:roundIcon="@mipmap/tradexlogo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <receiver
+            android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="com.simcoder.bimbo.gcm" />
+            </intent-filter>
+        </receiver>
         <service
             android:name=".onAppKilled"
             android:stopWithTask="false" />
@@ -49,6 +81,9 @@
         </activity>
         <activity android:name=".DriverLoginActivity" />
         <activity android:name=".CustomerLoginActivity" />
+        <activity android:name=".WriteSettingsPermissionActivity"/>
+
+
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -116,12 +151,41 @@
         <activity android:name=".Admin.AdminAddNewProductActivity" />
 
 
+        <activity android:name=".instagram.dialogs.ConfirmPasswordDialog" />
+        <activity android:name=".instagram.Home.InstagramHomeActivity" />
+        <activity android:name=".instagram.Home.CameraFragment" />
+        <activity android:name=".instagram.Home.HomeFragment" />
+        <activity android:name=".instagram.Home.MessagesFragment" />
+
+        <activity android:name=".instagram.Likes.LikesActivity" />
+        <activity android:name=".instagram.Login.InstagramLoginActivity" />
+        <activity android:name=".instagram.Login.InstagramRegisterActivity" />
+
+
+        <activity android:name=".instagram.Profile.AccountSettingsActivity" />
+        <activity android:name=".instagram.Profile.EditProfileFragment" />
+        <activity android:name=".instagram.Profile.ProfileActivity" />
+        <activity android:name=".instagram.Profile.ProfileFragment" />
+        <activity android:name=".instagram.Profile.SignOutFragment" />
+
+        <activity android:name=".instagram.Search.SearchActivity" />
+        <activity android:name=".instagram.Search.SearchActivityPeople" />
+        <activity android:name=".instagram.Search.SearchByImage" />
+        <activity android:name=".instagram.Search.SearchByPosts" />
+        <activity android:name=".instagram.Search.SearchByResidence" />
 
 
 
+        <activity android:name=".instagram.Share.GalleryFragment" />
+        <activity android:name=".instagram.Share.NextActivity" />
+        <activity android:name=".instagram.Share.PhotoFragment" />
+        <activity android:name=".instagram.Share.ShareActivity" />
+        <activity android:name=".instagram.Share.SetNameAndPriceActivity" />
 
 
-
+        <activity android:name=".instagram.Utils.ViewCommentsFragment" />
+        <activity android:name=".instagram.Utils.ViewPostFragment" />
+        <activity android:name=".instagram.Utils.ViewProfileFragment" />
 
     </application>
 

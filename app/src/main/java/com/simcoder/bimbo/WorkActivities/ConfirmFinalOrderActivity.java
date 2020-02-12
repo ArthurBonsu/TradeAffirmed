@@ -50,6 +50,8 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity
     private String totalAmount = "";
     private static final int RC_SIGN_IN = 1;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
+    String saveCurrentDate;
+    Intent intent;
 
 
     //AUTHENTICATORS
@@ -61,64 +63,64 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity
     private GoogleSignInClient mGoogleSignInClient;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_confirm_final_order);
+        if (getIntent() != null) {
+            cartkey = getIntent().getStringExtra("cartkey");
+            totalAmount = getIntent().getStringExtra("Total Price");
+            productIDHERE = getIntent().getStringExtra("pid");
+            Toast.makeText(this, "Total Price =  $ " + totalAmount, Toast.LENGTH_SHORT).show();
 
-        cartkey = getIntent().getStringExtra("cartkey");
-        totalAmount = getIntent().getStringExtra("Total Price");
-        productIDHERE = getIntent().getStringExtra("pid");
-        Toast.makeText(this, "Total Price =  $ " + totalAmount, Toast.LENGTH_SHORT).show();
 
+            confirmOrderBtn = (Button) findViewById(R.id.confirm_final_order_btn);
+            nameEditText = (EditText) findViewById(R.id.shippment_name);
+            phoneEditText = (EditText) findViewById(R.id.shippment_phone_number);
+            addressEditText = (EditText) findViewById(R.id.shippment_address);
+            cityEditText = (EditText) findViewById(R.id.shippment_city);
 
-        confirmOrderBtn = (Button) findViewById(R.id.confirm_final_order_btn);
-        nameEditText = (EditText) findViewById(R.id.shippment_name);
-        phoneEditText = (EditText) findViewById(R.id.shippment_phone_number);
-        addressEditText = (EditText) findViewById(R.id.shippment_address);
-        cityEditText = (EditText) findViewById(R.id.shippment_city);
-
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
-        if (mGoogleApiClient != null) {
-            mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-        }
-
-        if (mGoogleApiClient != null) {
-            mGoogleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(ConfirmFinalOrderActivity.this,
-                    new GoogleApiClient.OnConnectionFailedListener() {
-                        @Override
-                        public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-                        }
-                    }).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
-        }
-
-        firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                if (user != null) {
-                    userID="";
-                    userID = user.getUid();
-                }
-
-                // I HAVE TO TRY TO GET THE SETUP INFORMATION , IF THEY ARE ALREADY PROVIDED WE TAKE TO THE NEXT STAGE
-                // WHICH IS CUSTOMER TO BE ADDED.
-                // PULLING DATABASE REFERENCE IS NULL, WE CHANGE BACK TO THE SETUP PAGE ELSE WE GO STRAIGHT TO MAP PAGE
+            GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
+            if (mGoogleApiClient != null) {
+                mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
             }
-        };
-          if (confirmOrderBtn != null) {
-              confirmOrderBtn.setOnClickListener(new View.OnClickListener() {
-                  @Override
-                  public void onClick(View view) {
-                      Check();
-                  }
-              });
-          }}
+
+            if (mGoogleApiClient != null) {
+                mGoogleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(ConfirmFinalOrderActivity.this,
+                        new GoogleApiClient.OnConnectionFailedListener() {
+                            @Override
+                            public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+                            }
+                        }).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
+            }
+
+            firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
+                @Override
+                public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    if (user != null) {
+                        userID = "";
+                        userID = user.getUid();
+                    }
+
+                    // I HAVE TO TRY TO GET THE SETUP INFORMATION , IF THEY ARE ALREADY PROVIDED WE TAKE TO THE NEXT STAGE
+                    // WHICH IS CUSTOMER TO BE ADDED.
+                    // PULLING DATABASE REFERENCE IS NULL, WE CHANGE BACK TO THE SETUP PAGE ELSE WE GO STRAIGHT TO MAP PAGE
+                }
+            };
+            if (confirmOrderBtn != null) {
+                confirmOrderBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Check();
+                    }
+                });
+            }
+        }
 
 
-
+    }
     private void Check()
     {
         if (TextUtils.isEmpty(nameEditText.getText().toString()))
@@ -147,11 +149,11 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity
 
     private void ConfirmOrder()
     {
-        final String saveCurrentDate, saveCurrentTime;
-
         Calendar calForDate = Calendar.getInstance();
         SimpleDateFormat currentDate = new SimpleDateFormat("MMM dd, yyyy");
         saveCurrentDate = currentDate.format(calForDate.getTime());
+
+        final String saveCurrentDate = null, saveCurrentTime;
 
         SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss a");
         saveCurrentTime = currentDate.format(calForDate.getTime());
@@ -212,7 +214,7 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity
         productRef.updateChildren(productMap);
 
 
-        Intent intent = new Intent(ConfirmFinalOrderActivity.this, CartActivity.class);
+        intent = new Intent(ConfirmFinalOrderActivity.this, CartActivity.class);
         intent.putExtra("orderkey", orderKey);
 
         // AFTER EVERYTHING IS SUCCESSFUL MOVE IT FROM CART TO TO ORDERS,

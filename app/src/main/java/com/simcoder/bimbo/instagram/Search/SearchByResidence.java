@@ -30,6 +30,7 @@ import com.simcoder.bimbo.instagram.Utils.BottomNavigationViewHelper;
 import com.simcoder.bimbo.instagram.Utils.UserListAdapter;
 
 import java.util.ArrayList;
+import java.util.IllegalFormatCodePointException;
 import java.util.List;
 import java.util.Locale;
 
@@ -78,85 +79,106 @@ public class SearchByResidence extends AppCompatActivity{
 
             @Override
             public void afterTextChanged(Editable s) {
-
+              if (mSearchParam != null){
+                  if(mSearchParam.getText() != null){
                 String text = mSearchParam.getText().toString().toLowerCase(Locale.getDefault());
                 searchForMatch(text);
-            }
+            }}}
         });
     }
 
     private void searchForMatch(String keyword){
         Log.d(TAG, "searchForMatch: searching for a match: " + keyword);
+         if (mUserList != null){
         mUserList.clear();
         //update the users list view
-        if(keyword.length() ==0){
+        if(keyword.length() ==0) {
 
-        }else{
+        } }else{
             DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-            Query query = reference.child("Users").child("Customers")
-                    .orderByChild("name").equalTo(keyword);
+                  if (keyword != null) {
+                      Query query = reference.child("Users").child("Customers")
+                              .orderByChild("name").equalTo(keyword);
+
+            if (query != null){
             query.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    for(DataSnapshot singleSnapshot :  dataSnapshot.getChildren()){
-                       String thecustomerkey =       singleSnapshot.getKey();
+                    for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                        String thecustomerkey = singleSnapshot.getKey();
+                         if (singleSnapshot != null){
+                                                 if (singleSnapshot.child(thecustomerkey).child("name").getValue(User.class) != null){
                         Log.d(TAG, "onDataChange: found user:" + singleSnapshot.child(thecustomerkey).child("name").getValue(User.class).toString());
-
+                           if (mUserList != null){
+                            if (singleSnapshot.getValue(User.class) != null){
                         mUserList.add(singleSnapshot.getValue(User.class));
                         //update the users list view
                         updateUsersList();
-                    }
+                            }}
                 }
-
+                }}}
                 @Override
-                public void onCancelled(DatabaseError databaseError) {
+                public void onCancelled(DatabaseError databaseError){
 
-                }
+                    }
             });
         }
     }
-
-    private void updateUsersList(){
+    }}
+    private void updateUsersList() {
         Log.d(TAG, "updateUsersList: updating users list");
+        if (mAdapter != null) {
+            mAdapter = new UserListAdapter(SearchByResidence.this, R.layout.layout_user_listitem, mUserList);
+                if (mListView != null){
+            mListView.setAdapter(mAdapter);
 
-        mAdapter = new UserListAdapter(SearchByResidence.this, R.layout.layout_user_listitem, mUserList);
+            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+       if (mUserList.get(position) != null){
+                    Log.d(TAG, "onItemClick: selected user: " + mUserList.get(position).toString());
 
-        mListView.setAdapter(mAdapter);
+                    //navigate to profile activity
+                    Intent intent = new Intent(SearchByResidence.this, ProfileActivity.class);
+                   if (intent != null){
+                    intent.putExtra(getString(R.string.calling_activity), getString(R.string.search_activity));
+                    if (mUserList.get(position) != null){
+                    intent.putExtra(getString(R.string.intent_user), mUserList.get(position));
+                    startActivity(intent);
 
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d(TAG, "onItemClick: selected user: " + mUserList.get(position).toString());
-
-                //navigate to profile activity
-                Intent intent = new Intent(SearchByResidence.this, ProfileActivity.class);
-                intent.putExtra(getString(R.string.calling_activity), getString(R.string.search_activity));
-                intent.putExtra(getString(R.string.intent_user), mUserList.get(position));
-                startActivity(intent);
-
-            }
-        });
-    }
-
-
-    private void hideSoftKeyboard(){
-        if(getCurrentFocus() != null){
-            InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                }}}}
+            });
         }
-    }
+    }}
 
-
+    private void hideSoftKeyboard() {
+        if (getCurrentFocus() != null) {
+            if (INPUT_METHOD_SERVICE != null) {
+                if (getSystemService(INPUT_METHOD_SERVICE) != null) {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+      if (imm != null){
+                    imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                }
+            }
+        }
+    }}
     /**
      * BottomNavigationView setup
      */
-    private void setupBottomNavigationView(){
+    private void setupBottomNavigationView() {
+
         Log.d(TAG, "setupBottomNavigationView: setting up BottomNavigationView");
         BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.bottomNavViewBar);
         BottomNavigationViewHelper.setupBottomNavigationView(bottomNavigationViewEx);
-        BottomNavigationViewHelper.enableNavigation(mContext, this,bottomNavigationViewEx);
+         if (mContext != null){
+        BottomNavigationViewHelper.enableNavigation(mContext, this, bottomNavigationViewEx);
+               if (bottomNavigationViewEx != null){
         Menu menu = bottomNavigationViewEx.getMenu();
+            if (menu != null){
+                if (ACTIVITY_NUM !=0){
         MenuItem menuItem = menu.getItem(ACTIVITY_NUM);
-        menuItem.setChecked(true);
-    }
-}
+        if (menuItem != null) {
+            menuItem.setChecked(true);
+        }
+    }}}
+}}}

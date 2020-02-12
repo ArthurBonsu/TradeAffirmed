@@ -2,6 +2,7 @@ package  com.simcoder.bimbo.Admin;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,6 +19,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -36,8 +38,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.EventListener;
 
-public class AdminUserCartedActivity extends AppCompatActivity
-{
+public class AdminUserCartedActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private RecyclerView productsList;
     RecyclerView.LayoutManager layoutManager;
     private DatabaseReference cartListRef;
@@ -78,17 +79,19 @@ public class AdminUserCartedActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_cart_recycler);
 
+            if (getIntent() != null) {
+                if (getIntent() != null) {
+                    userID = getIntent().getStringExtra("userID");
+                    userID = getIntent().getStringExtra("userkey");
+                }
+                if (getIntent().getStringExtra("rolefromnewordertouserproduct") != null) {
+                    role = getIntent().getStringExtra("rolefromnewordertouserproduct").toString();
+                }
 
-        userID = getIntent().getStringExtra("userID");
-        userID = getIntent().getStringExtra("userkey");
-
-        { if (getIntent().getExtras().get("rolefromnewordertouserproduct") != null) {
-            role = getIntent().getExtras().get("rolefromnewordertouserproduct").toString();     } }
-
-        if (getIntent() != null) {
-            traderID = getIntent().getStringExtra("fromnewordertousersproductactivity");
-        }
-
+                if (getIntent().getStringExtra("fromnewordertousersproductactivity") != null) {
+                    traderID = getIntent().getStringExtra("fromnewordertousersproductactivity");
+                }
+            }
 
         productsList = findViewById(R.id.theadmincartrecycler);
         productsList.setHasFixedSize(true);
@@ -108,7 +111,7 @@ public class AdminUserCartedActivity extends AppCompatActivity
                         }
                     }).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
         }
-
+        buildGoogleApiClient();
         firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -216,13 +219,37 @@ public class AdminUserCartedActivity extends AppCompatActivity
        //    // }
                     }
     }
+
+    protected synchronized void buildGoogleApiClient() {
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(AdminUserCartedActivity.this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+            mGoogleApiClient.connect();
+        }
+    }
+
+
+
+
     @Override
-    protected void onStop() {
-        super.onStop();
-        //     mProgress.hide();
-         if (mAuth !=  null) {
-             mAuth.removeAuthStateListener(firebaseAuthListener);
-         }
+    public void onConnected(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.connect();
+        }
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
     }
 
     class AdminCartViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -290,4 +317,12 @@ public class AdminUserCartedActivity extends AppCompatActivity
     }
 
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        //     mProgress.hide();
+        if (mAuth !=  null) {
+            mAuth.removeAuthStateListener(firebaseAuthListener);
+        }
+    }
 }

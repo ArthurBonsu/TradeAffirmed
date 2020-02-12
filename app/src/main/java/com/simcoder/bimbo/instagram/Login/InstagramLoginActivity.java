@@ -55,12 +55,17 @@ public class InstagramLoginActivity extends AppCompatActivity {
         mPleaseWait = (TextView) findViewById(R.id.pleaseWait);
         mEmail = (EditText) findViewById(R.id.input_email);
         mPassword = (EditText) findViewById(R.id.input_password);
-        mContext = InstagramLoginActivity.this;
-        Log.d(TAG, "onCreate: started.");
+     if (mContext != null) {
+         mContext = InstagramLoginActivity.this;
 
-        mPleaseWait.setVisibility(View.GONE);
-        mProgressBar.setVisibility(View.GONE);
-
+         Log.d(TAG, "onCreate: started.");
+     }
+       if (mPleaseWait != null) {
+           mPleaseWait.setVisibility(View.GONE);
+       }
+       if (mProgressBar != null) {
+           mProgressBar.setVisibility(View.GONE);
+       }
         setupFirebaseAuth();
         init();
 
@@ -81,124 +86,163 @@ public class InstagramLoginActivity extends AppCompatActivity {
     ------------------------------------ Firebase ---------------------------------------------
      */
 
-    private void init(){
+    private void init() {
 
         //initialize the button for logging in
         Button btnLogin = (Button) findViewById(R.id.btn_login);
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "onClick: attempting to log in.");
+        if (btnLogin != null) {
+            btnLogin.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d(TAG, "onClick: attempting to log in.");
+                    if (mEmail.getText() != null) {
+                        String email = mEmail.getText().toString();
 
-                String email = mEmail.getText().toString();
-                String password = mPassword.getText().toString();
+                        if (mPassword.getText() != null) {
+                            String password = mPassword.getText().toString();
 
-                if(isStringNull(email) && isStringNull(password)){
-                    Toast.makeText(mContext, "You must fill out all the fields", Toast.LENGTH_SHORT).show();
-                }else{
-                    mProgressBar.setVisibility(View.VISIBLE);
-                    mPleaseWait.setVisibility(View.VISIBLE);
 
-                    mAuth.signInWithEmailAndPassword(email, password)
-                            .addOnCompleteListener(InstagramLoginActivity.this, new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    Log.d(TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
-                                    FirebaseUser user = mAuth.getCurrentUser();
-
-                                    // If sign in fails, display a message to the user. If sign in succeeds
-                                    // the auth state listener will be notified and logic to handle the
-                                    // signed in user can be handled in the listener.
-                                    if (!task.isSuccessful()) {
-                                        Log.w(TAG, "signInWithEmail:failed", task.getException());
-
-                                        Toast.makeText(InstagramLoginActivity.this, getString(R.string.auth_failed),
-                                                Toast.LENGTH_SHORT).show();
-                                        mProgressBar.setVisibility(View.GONE);
-                                        mPleaseWait.setVisibility(View.GONE);
-                                    }
-                                    else{
-                                        try{
-                                            if(user.isEmailVerified()){
-                                                Log.d(TAG, "onComplete: success. email is verified.");
-                                                Intent intent = new Intent(InstagramLoginActivity.this, InstagramHomeActivity.class);
-                                                startActivity(intent);
-                                            }else{
-                                                Toast.makeText(mContext, "Email is not verified \n check your email inbox.", Toast.LENGTH_SHORT).show();
-                                                mProgressBar.setVisibility(View.GONE);
-                                                mPleaseWait.setVisibility(View.GONE);
-                                                mAuth.signOut();
-                                            }
-                                        }catch (NullPointerException e){
-                                            Log.e(TAG, "onComplete: NullPointerException: " + e.getMessage() );
-                                        }
-                                    }
-
-                                    // ...
+                            if (isStringNull(email) && isStringNull(password)) {
+                                Toast.makeText(mContext, "You must fill out all the fields", Toast.LENGTH_SHORT).show();
+                            } else {
+                                if (mProgressBar != null) {
+                                    mProgressBar.setVisibility(View.VISIBLE);
                                 }
-                            });
+                                if (mPleaseWait != null) {
+                                    mPleaseWait.setVisibility(View.VISIBLE);
+                                }
+                                if (mAuth != null)
+                                    mAuth.signInWithEmailAndPassword(email, password)
+                                            .addOnCompleteListener(InstagramLoginActivity.this, new OnCompleteListener<AuthResult>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                                    if (task != null) {
+                                                        Log.d(TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
+                                                    }
+                                                    if (mAuth != null) {
+                                                        FirebaseUser user = mAuth.getCurrentUser();
+
+                                                        // If sign in fails, display a message to the user. If sign in succeeds
+                                                        // the auth state listener will be notified and logic to handle the
+                                                        // signed in user can be handled in the listener.
+                                                        if (!task.isSuccessful()) {
+                                                            Log.w(TAG, "signInWithEmail:failed", task.getException());
+
+                                                            Toast.makeText(InstagramLoginActivity.this, getString(R.string.auth_failed),
+                                                                    Toast.LENGTH_SHORT).show();
+                                                            if (mProgressBar != null) {
+                                                                mProgressBar.setVisibility(View.GONE);
+                                                            }
+                                                            if (mPleaseWait != null) {
+                                                                mPleaseWait.setVisibility(View.GONE);
+                                                            }
+                                                        } else {
+                                                            try {
+                                                                      if (user != null) {
+                                                                          if (user.isEmailVerified()) {
+                                                                              Log.d(TAG, "onComplete: success. email is verified.");
+                                                                              Intent intent = new Intent(InstagramLoginActivity.this, InstagramHomeActivity.class);
+                                                                              startActivity(intent);
+                                                                          } else {
+                                                                              Toast.makeText(mContext, "Email is not verified \n check your email inbox.", Toast.LENGTH_SHORT).show();
+                                                                              if (mProgressBar != null) {
+                                                                                  mProgressBar.setVisibility(View.GONE);
+                                                                              }
+                                                                              if (mPleaseWait != null) {
+                                                                                  mPleaseWait.setVisibility(View.GONE);
+                                                                              }
+                                                                              if (mAuth != null) {
+                                                                                  mAuth.signOut();
+                                                                              }}
+                                                                      }
+                                                            } catch (NullPointerException e) {
+                                                                Log.e(TAG, "onComplete: NullPointerException: " + e.getMessage());
+                                                                }
+                                                        }
+                                                    }
+
+                                                    // ...
+                                                }
+                                            });
+                            }
+                        }
+                    }
+
                 }
+            });
 
-            }
-        });
-
+        }
         TextView linkSignUp = (TextView) findViewById(R.id.link_signup);
-        linkSignUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "onClick: navigating to register screen");
-                Intent intent = new Intent(InstagramLoginActivity.this, InstagramRegisterActivity.class);
-                startActivity(intent);
-            }
-        });
-
+        if (linkSignUp != null) {
+            linkSignUp.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d(TAG, "onClick: navigating to register screen");
+                    Intent intent = new Intent(InstagramLoginActivity.this, InstagramRegisterActivity.class);
+                    startActivity(intent);
+                }
+            });
+        }
          /*
          If the user is logged in then navigate to HomeActivity and call 'finish()'
           */
-        if(mAuth.getCurrentUser() != null){
-            Intent intent = new Intent(InstagramLoginActivity.this, InstagramHomeActivity.class);
-            startActivity(intent);
-            finish();
+        if (mAuth != null) {
+            if (mAuth.getCurrentUser() != null) {
+
+                Intent intent = new Intent(InstagramLoginActivity.this, InstagramHomeActivity.class);
+                startActivity(intent);
+                finish();
+            }
         }
     }
 
     /**
      * Setup the firebase auth object
      */
-    private void setupFirebaseAuth(){
+    private void setupFirebaseAuth() {
         Log.d(TAG, "setupFirebaseAuth: setting up firebase auth.");
 
-        mAuth = FirebaseAuth.getInstance();
+        if (mAuth != null) {
+            mAuth = FirebaseAuth.getInstance();
+            if (mAuthListener != null) {
+                mAuthListener = new FirebaseAuth.AuthStateListener() {
+                    @Override
+                    public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                        if (firebaseAuth != null) {
+                            FirebaseUser user = firebaseAuth.getCurrentUser();
 
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
+                            if (user != null) {
+                                // User is signed in
+                                Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                            } else {
+                                // User is signed out
+                                Log.d(TAG, "onAuthStateChanged:signed_out");
+                            }
+                            // ...
+                        }
+                    }
 
-                if (user != null) {
-                    // User is signed in
-                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                } else {
-                    // User is signed out
-                    Log.d(TAG, "onAuthStateChanged:signed_out");
-                }
-                // ...
-            }
-        };
+                    ;
+
+            };}}
     }
-
     @Override
     public void onStart() {
         super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
+        if (mAuth != null) {
+            if (mAuthListener != null) {
+                mAuth.addAuthStateListener(mAuthListener);
+            }
+        }
     }
 
     @Override
     public void onStop() {
         super.onStop();
         if (mAuthListener != null) {
+        if (mAuth != null){
             mAuth.removeAuthStateListener(mAuthListener);
         }
-    }
+    }}
 }
 

@@ -71,17 +71,17 @@ public class AdminAllProducts extends AppCompatActivity {  //ACTUALLY THIS ACTIV
         FirebaseAuth.getInstance();
         mAuth = FirebaseAuth.getInstance();
 
+              if (getIntent() != null) {
 
-        {
-            if (getIntent().getExtras().get("rolefromadmincategorytoallproducts") != null) {
-                role = getIntent().getExtras().get("rolefromadmincategorytoallproducts").toString();
-            }
-        }
+                  if (getIntent().getExtras().get("rolefromadmincategorytoallproducts") != null) {
+                      role = getIntent().getExtras().get("rolefromadmincategorytoallproducts").toString();
+                  }
 
-        if (getIntent() != null) {
-            traderID = getIntent().getStringExtra("fromuserinsingleusertoadminproductdetails");
-        }
 
+                  if (getIntent() != null) {
+                      traderID = getIntent().getStringExtra("fromuserinsingleusertoadminproductdetails");
+                  }
+              }
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
         if (mGoogleApiClient != null) {
@@ -117,8 +117,10 @@ public class AdminAllProducts extends AppCompatActivity {  //ACTUALLY THIS ACTIV
         if (allproductRef != null) {
             // that means after the order traderID IS FILLED
             MyproductsQuery = allproductRef.orderByChild("traderID").equalTo(traderID);
-            productID = MyproductsQuery.getRef().getKey();
+            if (MyproductsQuery.getRef() != null) {
+                productID = MyproductsQuery.getRef().getKey();
 
+            }
         }
         allproductlist = findViewById(R.id.allproductlist);
         if (allproductlist != null) {

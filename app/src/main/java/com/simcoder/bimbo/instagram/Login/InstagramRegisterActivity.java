@@ -63,7 +63,9 @@ public class InstagramRegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         mContext = InstagramRegisterActivity.this;
-        firebaseMethods = new FirebaseMethods(mContext);
+        if (mContext != null) {
+            firebaseMethods = new FirebaseMethods(mContext);
+        }
         Log.d(TAG, "onCreate: started.");
 
         initWidgets();
@@ -71,29 +73,46 @@ public class InstagramRegisterActivity extends AppCompatActivity {
         init();
     }
 
-    private void init(){
-        btnRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                email = mEmail.getText().toString();
-                username = mUsername.getText().toString();
-                password = mPassword.getText().toString();
+    private void init() {
+        if (btnRegister != null) {
+            btnRegister.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mEmail.getText() != null) {
+                        email = mEmail.getText().toString();
+                    }
+                        if (mUsername.getText() != null)
+                    username = mUsername.getText().toString();
+                       if (mPassword.getText() != null) {
+                           password = mPassword.getText().toString();
+                       }
+                       if (email != null){
+                           if (username != null){
+                               if (password !=null){
 
-                if(checkInputs(email, username, password)){
-                    mProgressBar.setVisibility(View.VISIBLE);
-                    loadingPleaseWait.setVisibility(View.VISIBLE);
 
-                    firebaseMethods.registerNewEmail(email, password, username);
+                    if (checkInputs(email, username, password)) {
+                        if(mProgressBar != null) {
+                            mProgressBar.setVisibility(View.VISIBLE);
+                        }
+                        if (loadingPleaseWait != null) {
+                            loadingPleaseWait.setVisibility(View.VISIBLE);
+                        }
+                            if(firebaseMethods != null) {
+                                firebaseMethods.registerNewEmail(email, password, username);
+                            }
+                    }}}           }
                 }
-            }
-        });
+            });
+        }
     }
-
     private boolean checkInputs(String email, String username, String password){
         Log.d(TAG, "checkInputs: checking inputs for null values.");
-        if(email.equals("") || username.equals("") || password.equals("")){
-            Toast.makeText(mContext, "All fields must be filled out.", Toast.LENGTH_SHORT).show();
-            return false;
+        if(email.equals("") || username.equals("") || password.equals("")) {
+            if (mContext != null) {
+                Toast.makeText(mContext, "All fields must be filled out.", Toast.LENGTH_SHORT).show();
+                return false;
+            }
         }
         return true;
     }
@@ -109,9 +128,12 @@ public class InstagramRegisterActivity extends AppCompatActivity {
         loadingPleaseWait = (TextView) findViewById(R.id.loadingPleaseWait);
         mPassword = (EditText) findViewById(R.id.input_password);
         mContext = InstagramRegisterActivity.this;
-        mProgressBar.setVisibility(View.GONE);
-        loadingPleaseWait.setVisibility(View.GONE);
-
+         if (mProgressBar !=null) {
+             mProgressBar.setVisibility(View.GONE);
+         }
+         if (loadingPleaseWait != null) {
+             loadingPleaseWait.setVisibility(View.GONE);
+         }
     }
 
     private boolean isStringNull(String string){
@@ -147,24 +169,34 @@ public class InstagramRegisterActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 for (DataSnapshot singleSnapshot: dataSnapshot.getChildren()) {
-                    if (singleSnapshot.exists()) {
-                        Log.d(TAG, "checkIfUsernameExists: FOUND A MATCH" + singleSnapshot.getValue(User.class).getname());
-                        append = myRef.push().getKey().substring(3,10);
-                        Log.d(TAG, "onDataChange: username already exists. Appending random string to name: " + append);
+                    if (singleSnapshot != null) {
+                        if (singleSnapshot.exists()) {
+                            if (singleSnapshot.getValue(User.class) != null) {
+                                Log.d(TAG, "checkIfUsernameExists: FOUND A MATCH" + singleSnapshot.getValue(User.class).getname());
+                                if (myRef.push() != null) {
+                                    append = myRef.push().getKey().substring(3, 10);
+                                    Log.d(TAG, "onDataChange: username already exists. Appending random string to name: " + append);
+                                }
+                            }
+                        }
                     }
                 }
-
                 //1st check: Make sure the username is not already in use
                 String mUsername;
                 mUsername = username + append;
 
                 //add new user to the database
-                firebaseMethods.addNewUser(email, mUsername, "", "", "");
+                   if (firebaseMethods != null) {
+                       firebaseMethods.addNewUser(email, mUsername, "", "", "");
+                   }
 
-                Toast.makeText(mContext, "Signup successful. Sending verification email.", Toast.LENGTH_SHORT).show();
-
-                mAuth.signOut();
-            }
+                   if (mContext != null) {
+                       Toast.makeText(mContext, "Signup successful. Sending verification email.", Toast.LENGTH_SHORT).show();
+                   }
+                   if(mAuth != null) {
+                       mAuth.signOut();
+                   }
+                   }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -179,10 +211,15 @@ public class InstagramRegisterActivity extends AppCompatActivity {
      */
     private void setupFirebaseAuth(){
         Log.d(TAG, "setupFirebaseAuth: setting up firebase auth.");
-
-        mAuth = FirebaseAuth.getInstance();
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        myRef = mFirebaseDatabase.getReference();
+                   if (FirebaseAuth.getInstance() != null) {
+                       mAuth = FirebaseAuth.getInstance();
+                   }
+                   if (FirebaseDatabase.getInstance() != null) {
+                       mFirebaseDatabase = FirebaseDatabase.getInstance();
+                   }
+                   if (mFirebaseDatabase.getReference() != null) {
+                       myRef = mFirebaseDatabase.getReference();
+                   }
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -195,9 +232,10 @@ public class InstagramRegisterActivity extends AppCompatActivity {
 
                     myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
+                         public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (username != null) {
                             checkIfUsernameExists(username);
-
+                        }
                         }
 
                         @Override
@@ -220,14 +258,18 @@ public class InstagramRegisterActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
-    }
+        if (mAuth != null) {
+           if (mAuthListener != null) {
+               mAuth.addAuthStateListener(mAuthListener);
+           }}
+        }
 
     @Override
     public void onStop() {
         super.onStop();
         if (mAuthListener != null) {
-            mAuth.removeAuthStateListener(mAuthListener);
+
+            if (mAuth != null){mAuth.removeAuthStateListener(mAuthListener);
         }
     }
-}
+}}

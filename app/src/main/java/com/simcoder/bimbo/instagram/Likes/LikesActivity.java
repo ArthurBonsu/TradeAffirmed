@@ -32,13 +32,23 @@ public class LikesActivity extends AppCompatActivity {
     private void setupBottomNavigationView() {
         Log.d(TAG, "setupBottomNavigationView: setup up BottomNavView");
         BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.bottomNavViewBar);
-        BottomNavigationViewHelper.setupBottomNavigationView(bottomNavigationViewEx);
-        BottomNavigationViewHelper.enableNavigation(mContext, this, bottomNavigationViewEx);
+                          if (bottomNavigationViewEx != null) {
+                              BottomNavigationViewHelper.setupBottomNavigationView(bottomNavigationViewEx);
 
-        Menu menu = bottomNavigationViewEx.getMenu();
-        MenuItem menuItem = menu.getItem(ACTIVITY_NUM);
-        menuItem.setChecked(true);
+                              if (bottomNavigationViewEx != null) {
+                                  BottomNavigationViewHelper.enableNavigation(mContext, this, bottomNavigationViewEx);
+                              }
+                              if (bottomNavigationViewEx != null) {
+                                  Menu menu = bottomNavigationViewEx.getMenu();
+                                  if (menu != null) {
+                                      if (ACTIVITY_NUM != 0) {
 
-
+                                          MenuItem menuItem = menu.getItem(ACTIVITY_NUM);
+                                          if (menuItem != null) {
+                                              menuItem.setChecked(true);
+                                          }
+                                      }
+                                  }
+                              }}
     }
 }

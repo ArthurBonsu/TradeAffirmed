@@ -148,13 +148,13 @@ public class DriverSettingsActivity extends AppCompatActivity {
                         // THIS MUST BE CHANGED TO ALL THE DIFFERENT SERVICES WE HAVE , MOBILE, IMMOBILE, HYBRID
                         mService = map.get("service").toString();
                         switch (mService){
-                            case"UberX":
+                            case"STATIONARY":
                                 mRadioGroup.check(R.id.UberX);
                                 break;
-                            case"UberBlack":
+                            case"MOBILE":
                                 mRadioGroup.check(R.id.UberBlack);
                                 break;
-                            case"UberXl":
+                            case"HYBRID":
                                 mRadioGroup.check(R.id.UberXl);
                                 break;
                         }

@@ -60,92 +60,113 @@ public class SearchByImage extends AppCompatActivity{
         initTextListener();
     }
 
-    private void initTextListener(){
+    private void initTextListener() {
         Log.d(TAG, "initTextListener: initializing");
 
         mUserList = new ArrayList<>();
-
-        mSearchParam.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-                String text = mSearchParam.getText().toString().toLowerCase(Locale.getDefault());
-                searchForMatch(text);
-            }
-        });
-    }
-
-    private void searchForMatch(String keyword){
-        Log.d(TAG, "searchForMatch: searching for a match: " + keyword);
-        mUserList.clear();
-        //update the users list view
-        if(keyword.length() ==0){
-
-        }else{
-            DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-            Query query = reference.child("Photos")
-                    .orderByChild("caption").equalTo(keyword);
-            query.addListenerForSingleValueEvent(new ValueEventListener() {
+        if (mSearchParam != null) {
+            mSearchParam.addTextChangedListener(new TextWatcher() {
                 @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    for(DataSnapshot singleSnapshot :  dataSnapshot.getChildren()){
-                        Log.d(TAG, "onDataChange: found user:" + singleSnapshot.getValue(User.class).toString());
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-                        mUserList.add(singleSnapshot.getValue(User.class));
-                        //update the users list view
-                        updateUsersList();
-                    }
                 }
 
                 @Override
-                public void onCancelled(DatabaseError databaseError) {
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
 
                 }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+      if (mSearchParam != null) {
+          if (mSearchParam.getText() != null){
+          String text = mSearchParam.getText().toString().toLowerCase(Locale.getDefault());
+          searchForMatch(text);
+      } }}
             });
         }
     }
+    private void searchForMatch(String keyword) {
+        Log.d(TAG, "searchForMatch: searching for a match: " + keyword);
+        if (mUserList != null) {
+            mUserList.clear();
+            if (keyword != null) {
+                //update the users list view
 
-    private void updateUsersList(){
+                if (keyword.length() == 0) {
+
+                } else {
+                    if (FirebaseDatabase.getInstance() != null){
+                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+                           if (keyword != null){
+                    Query query = reference.child("Photos")
+                            .orderByChild("caption").equalTo(keyword);
+          if (query !=null){
+                    query.addListenerForSingleValueEvent(new ValueEventListener() {
+
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                           if (dataSnapshot != null){
+                             for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                           if (singleSnapshot.getValue(User.class) != null){
+                                Log.d(TAG, "onDataChange: found user:" + singleSnapshot.getValue(User.class).toString());
+                                if (mUserList != null){
+                             if (singleSnapshot.getValue(User.class) != null){
+                                mUserList.add(singleSnapshot.getValue(User.class));
+                                //update the users list view
+                                updateUsersList();
+                            }
+                        }}}}}
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+            }
+        }
+    }}}}
+    private void updateUsersList() {
         Log.d(TAG, "updateUsersList: updating users list");
 
         mAdapter = new UserListAdapter(SearchByImage.this, R.layout.layout_user_listitem, mUserList);
+        if (mListView != null) {
+      if (mAdapter != null){
+            mListView.setAdapter(mAdapter);
+         if (mListView !=null){
+            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        if (mUserList.get(position) != null) {
+            Log.d(TAG, "onItemClick: selected user: " + mUserList.get(position).toString());
 
-        mListView.setAdapter(mAdapter);
+            //navigate to profile activity
+            // HAS TO CHANGE TO THE PROFILE ACTIVITY
 
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d(TAG, "onItemClick: selected user: " + mUserList.get(position).toString());
-
-                //navigate to profile activity
-                       // HAS TO CHANGE TO THE PROFILE ACTIVITY
-
-                Intent intent = new Intent(SearchByImage.this, ProfileActivity.class);
-                intent.putExtra(getString(R.string.calling_activity), getString(R.string.search_activity));
-                intent.putExtra(getString(R.string.intent_user), mUserList.get(position));
-                startActivity(intent);
-
-            }
-        });
-    }
-
+            Intent intent = new Intent(SearchByImage.this, ProfileActivity.class);
+            if (intent != null){
+            intent.putExtra(getString(R.string.calling_activity), getString(R.string.search_activity));
+           if (mUserList.get(position) != null){
+            intent.putExtra(getString(R.string.intent_user), mUserList.get(position));
+            startActivity(intent);
+        }}}
+                }
+            });
+        }
+    }}}
 
     private void hideSoftKeyboard(){
         if(getCurrentFocus() != null){
+       if (INPUT_METHOD_SERVICE != null){
+            if (getSystemService(INPUT_METHOD_SERVICE) != null){
             InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+           if (imm != null){
+               if (getCurrentFocus().getWindowToken() != null){
             imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-        }
-    }
+        }}}
+    }}}
 
 
     /**
@@ -156,8 +177,12 @@ public class SearchByImage extends AppCompatActivity{
         BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.bottomNavViewBar);
         BottomNavigationViewHelper.setupBottomNavigationView(bottomNavigationViewEx);
         BottomNavigationViewHelper.enableNavigation(mContext, this,bottomNavigationViewEx);
+         if (bottomNavigationViewEx != null){
         Menu menu = bottomNavigationViewEx.getMenu();
+       if (menu != null){
+           if (ACTIVITY_NUM != 0){
         MenuItem menuItem = menu.getItem(ACTIVITY_NUM);
+               if (menuItem != null){
         menuItem.setChecked(true);
-    }
-}
+    }}}
+}}}

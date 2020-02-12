@@ -1,4 +1,4 @@
-package com.simcoder.bimbo.Model;
+package com.simcoder.bimbo.historyRecyclerView;
 
 public class HistoryObject {
 

@@ -3,6 +3,7 @@ package  com.simcoder.bimbo.Admin;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -34,8 +36,7 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class AdminNewOrdersActivity extends AppCompatActivity
-{  //ACTUALLY THIS ACTIVITY IS TO SEE CART ACTIVITY
+public class AdminNewOrdersActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {  //ACTUALLY THIS ACTIVITY IS TO SEE CART ACTIVITY
     private RecyclerView ordersList;
     private DatabaseReference ordersRef;
     private Query MyordersQuery;
@@ -69,14 +70,15 @@ public class AdminNewOrdersActivity extends AppCompatActivity
         FirebaseAuth.getInstance();
         mAuth = FirebaseAuth.getInstance();
 
+                  if (getIntent() != null) {
+                      if (getIntent().getStringExtra("rolefromadmincategorytoadminneworder") != null) {
+                          role = getIntent().getStringExtra("rolefromadmincategorytoadminneworder").toString();
+                      }
 
-        { if (getIntent().getExtras().get("rolefromadmincategorytoadminneworder") != null) {
-            role = getIntent().getExtras().get("rolefromadmincategorytoadminneworder").toString();     } }
-
-        if (getIntent() != null) {
-            traderID = getIntent().getStringExtra("fromadmincategoryactivityadminnewordder");
-        }
-
+                      if (getIntent() != null) {
+                          traderID = getIntent().getStringExtra("fromadmincategoryactivityadminnewordder");
+                      }
+                  }
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
         if (mGoogleApiClient != null) {
@@ -92,7 +94,7 @@ public class AdminNewOrdersActivity extends AppCompatActivity
                         }
                     }).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
         }
-
+        buildGoogleApiClient();
         firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -108,15 +110,17 @@ public class AdminNewOrdersActivity extends AppCompatActivity
                 // PULLING DATABASE REFERENCE IS NULL, WE CHANGE BACK TO THE SETUP PAGE ELSE WE GO STRAIGHT TO MAP PAGE
             }
         };
+
         ordersRef = FirebaseDatabase.getInstance().getReference().child("Orders");
 
         ordersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0) {
-                    orderkey  = dataSnapshot.getKey();
+                    if (dataSnapshot != null) {
+                        orderkey = dataSnapshot.getKey();
 
-
+                    }
 
                 }
             }
@@ -128,12 +132,16 @@ public class AdminNewOrdersActivity extends AppCompatActivity
         });
                   if (ordersRef != null) {
                       // that means after the order traderID IS FILLED
-                      MyordersQuery = ordersRef.orderByChild("tid").equalTo(traderID);
+                      if (traderID != null) {
+                          MyordersQuery = ordersRef.orderByChild("tid").equalTo(traderID);
+                      }
                   }
         ordersList = findViewById(R.id.orders_list);
               if (ordersList != null) {
                   ordersList.setLayoutManager(new LinearLayoutManager(this));
               }
+
+
     }
 
 
@@ -147,10 +155,12 @@ public class AdminNewOrdersActivity extends AppCompatActivity
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0) {
-                     userkey  = dataSnapshot.getValue().toString();
-                     username = dataSnapshot.child("name").getValue().toString();
-
-
+                    if (dataSnapshot.getValue() != null) {
+                        userkey = dataSnapshot.getValue().toString();
+                        if (dataSnapshot.child("name").getValue() != null) {
+                            username = dataSnapshot.child("name").getValue().toString();
+                        }
+                    }
                 }
             }
 
@@ -256,15 +266,35 @@ public class AdminNewOrdersActivity extends AppCompatActivity
                adapter.startListening();
 
            }}
+    protected synchronized void buildGoogleApiClient() {
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(AdminNewOrdersActivity.this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+            mGoogleApiClient.connect();
+        }
+    }
+
+
 
 
     @Override
-    protected void onStop() {
-        super.onStop();
-        //     mProgress.hide();
-             if (mAuth != null) {
-                 mAuth.removeAuthStateListener(firebaseAuthListener);
-             }
+    public void onConnected(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.connect();
+        }
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
     }
 
     public static class AdminOrdersViewHolder extends RecyclerView.ViewHolder
@@ -296,4 +326,14 @@ public class AdminNewOrdersActivity extends AppCompatActivity
     {       if ( ordersRef.child(uID) != null) {
         ordersRef.child(uID).removeValue();
     }}
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        //     mProgress.hide();
+        if (mAuth != null) {
+            mAuth.removeAuthStateListener(firebaseAuthListener);
+        }
+    }
+
 }

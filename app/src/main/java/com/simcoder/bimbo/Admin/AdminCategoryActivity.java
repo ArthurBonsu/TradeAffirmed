@@ -2,6 +2,7 @@ package  com.simcoder.bimbo.Admin;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -15,6 +16,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -30,8 +32,7 @@ import  com.simcoder.bimbo.R;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AdminCategoryActivity extends AppCompatActivity
-{
+public class AdminCategoryActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private ImageView tShirts, sportsTShirts, femaleDresses, sweathers;
     private ImageView glasses, hatsCaps, walletsBagsPurses, shoes;
     private ImageView headPhonesHandFree, Laptops, watches, mobilePhones;
@@ -63,8 +64,23 @@ public class AdminCategoryActivity extends AppCompatActivity
         maintainProductsBtn = (Button) findViewById(R.id.maintain_btn);
         HomeBtn = (Button) findViewById(R.id.homebuttonhere);
         AllProducts = (Button)findViewById(R.id.allproducts);
+        tShirts = (ImageView) findViewById(R.id.t_shirts);
+        sportsTShirts = (ImageView) findViewById(R.id.sports_t_shirts);
+        femaleDresses = (ImageView) findViewById(R.id.female_dresses);
+        sweathers = (ImageView) findViewById(R.id.sweathers);
 
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        glasses = (ImageView) findViewById(R.id.glasses);
+        hatsCaps = (ImageView) findViewById(R.id.hats_caps);
+        walletsBagsPurses = (ImageView) findViewById(R.id.purses_bags_wallets);
+        shoes = (ImageView) findViewById(R.id.shoes);
+
+        headPhonesHandFree = (ImageView) findViewById(R.id.headphones_handfree);
+        Laptops = (ImageView) findViewById(R.id.laptop_pc);
+        watches = (ImageView) findViewById(R.id.watches);
+        mobilePhones = (ImageView) findViewById(R.id.mobilephones);
+
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                      if (user != null) {
                           traderID = "";
                           traderID = user.getUid();
@@ -192,21 +208,7 @@ public class AdminCategoryActivity extends AppCompatActivity
             }
         };
 
-
-        tShirts = (ImageView) findViewById(R.id.t_shirts);
-        sportsTShirts = (ImageView) findViewById(R.id.sports_t_shirts);
-        femaleDresses = (ImageView) findViewById(R.id.female_dresses);
-        sweathers = (ImageView) findViewById(R.id.sweathers);
-
-        glasses = (ImageView) findViewById(R.id.glasses);
-        hatsCaps = (ImageView) findViewById(R.id.hats_caps);
-        walletsBagsPurses = (ImageView) findViewById(R.id.purses_bags_wallets);
-        shoes = (ImageView) findViewById(R.id.shoes);
-
-        headPhonesHandFree = (ImageView) findViewById(R.id.headphones_handfree);
-        Laptops = (ImageView) findViewById(R.id.laptop_pc);
-        watches = (ImageView) findViewById(R.id.watches);
-        mobilePhones = (ImageView) findViewById(R.id.mobilephones);
+        buildGoogleApiClient();
 
         if (tShirts != null) {
             tShirts.setOnClickListener(new View.OnClickListener() {
@@ -370,8 +372,37 @@ public class AdminCategoryActivity extends AppCompatActivity
             });
         }
 
+    }
+
+    protected synchronized void buildGoogleApiClient() {
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(AdminCategoryActivity.this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+            mGoogleApiClient.connect();
+        }
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
 
     }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.connect();
+        }
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -379,6 +410,8 @@ public class AdminCategoryActivity extends AppCompatActivity
             mAuth.addAuthStateListener(firebaseAuthListener);
         }
     }
+
+
     @Override
     protected void onStop() {
         super.onStop();

@@ -37,27 +37,37 @@ public class SignOutFragment extends Fragment {
         mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         tvSigningOut = (TextView) view.findViewById(R.id.tvSigningOut);
         Button btnConfirmSignout = (Button) view.findViewById(R.id.btnConfirmSignout);
+        if (mProgressBar != null) {
+            mProgressBar.setVisibility(View.GONE);
+        }
+        if (tvSigningOut != null) {
+            tvSigningOut.setVisibility(View.GONE);
 
-        mProgressBar.setVisibility(View.GONE);
-        tvSigningOut.setVisibility(View.GONE);
-
+        }
         setupFirebaseAuth();
+        if (btnConfirmSignout != null) {
+            btnConfirmSignout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d(TAG, "onClick: attempting to sign out.");
+                   if (mProgressBar != null) {
+                       mProgressBar.setVisibility(View.VISIBLE);
+                   }
+                   if (tvSigningOut != null) {
+                       tvSigningOut.setVisibility(View.VISIBLE);
+                   }
+                   if (mAuth != null) {
+                       mAuth.signOut();
+                   }
+                   if (getActivity() != null){
+                    getActivity().finish();
+                            }}
+            });
 
-        btnConfirmSignout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "onClick: attempting to sign out.");
-                mProgressBar.setVisibility(View.VISIBLE);
-                tvSigningOut.setVisibility(View.VISIBLE);
-
-                mAuth.signOut();
-                getActivity().finish();
-            }
-        });
-
+            return view;
+         }
         return view;
     }
-
      /*
     ------------------------------------ Firebase ---------------------------------------------
      */
@@ -66,39 +76,45 @@ public class SignOutFragment extends Fragment {
     /**
      * Setup the firebase auth object
      */
-    private void setupFirebaseAuth(){
+    private void setupFirebaseAuth() {
         Log.d(TAG, "setupFirebaseAuth: setting up firebase auth.");
 
         mAuth = FirebaseAuth.getInstance();
+        if (mAuthListener != null) {
+            mAuthListener = new FirebaseAuth.AuthStateListener() {
+                @Override
+                public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                    FirebaseUser user = firebaseAuth.getCurrentUser();
 
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
+                    if (user != null) {
+                        // User is signed in
+                        Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    } else {
+                        // User is signed out
+                        Log.d(TAG, "onAuthStateChanged:signed_out");
 
-                if (user != null) {
-                    // User is signed in
-                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                } else {
-                    // User is signed out
-                    Log.d(TAG, "onAuthStateChanged:signed_out");
-
-                    Log.d(TAG, "onAuthStateChanged: navigating back to login screen.");
-                    Intent intent = new Intent(getActivity(), InstagramLoginActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
+                        Log.d(TAG, "onAuthStateChanged: navigating back to login screen.");
+                        Intent intent = new Intent(getActivity(), InstagramLoginActivity.class);
+                        if (intent != null) {
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                        }
+                    }
+                    // ...
                 }
-                // ...
-            }
-        };
+            };
+        }
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
+        if (mAuth != null) {
+            if (mAuthListener != null) {
+                mAuth.addAuthStateListener(mAuthListener);
+            }
+        }
     }
-
     @Override
     public void onStop() {
         super.onStop();

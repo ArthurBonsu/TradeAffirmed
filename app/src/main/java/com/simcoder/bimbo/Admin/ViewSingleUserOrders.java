@@ -2,6 +2,7 @@ package  com.simcoder.bimbo.Admin;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,6 +19,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -36,8 +38,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.simcoder.bimbo.WorkActivities.CustomerProfile;
 
-public  class ViewSingleUserOrders extends AppCompatActivity
-{
+public  class ViewSingleUserOrders extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private RecyclerView productsList;
     RecyclerView.LayoutManager layoutManager;
     private DatabaseReference singleuserordertListRef;
@@ -70,44 +71,45 @@ public  class ViewSingleUserOrders extends AppCompatActivity
         setContentView(R.layout.activity_admin_user_orders);
 
 
-        userID = getIntent().getStringExtra("userID");
-        orderkey = getIntent().getStringExtra("orderkey");
 
         singleuserproductimage =(ImageView)findViewById(R.id.singleuserproductimage);
         TextView singleuserproductname;
         TextView singleuserproductquantity;
         TextView singleuserproductprice;
 
+                if (getIntent() != null) {
+                    //FROM NEW SINGLE USER
+                    if (getIntent() != null) {
+                        userID = getIntent().getStringExtra("userID");
+                        orderkey = getIntent().getStringExtra("orderkey");
+                    }
 
-        //FROM NEW SINGLE USER
-
-        {
-            if (getIntent().getExtras().get("rolefromnewordertouserproduct") != null) {
-                role = getIntent().getExtras().get("rolefromnewordertouserproduct").toString();
-            }
-        }
-
-        if (getIntent() != null) {
-            traderID = getIntent().getStringExtra("fromnewordertousersproductactivity");
-        }
-        if (getIntent() != null) {
-            userID = getIntent().getStringExtra("neworderUserID");
-        }
-
-        {
-            if (getIntent().getExtras().get("rolefromviewbuyertoadminuserproductsactivity") != null) {
-                role = getIntent().getExtras().get("rolefromviewbuyertoadminuserproductsactivity").toString();
-            }
-        }
-
-        if (getIntent() != null) {
-            traderID = getIntent().getStringExtra("fromviewbuyertradertoadminuserproductsactivity");
-        }
-        if (getIntent() != null) {
-            userID = getIntent().getStringExtra("fromviewbuyeruseridtoadminuserproductsactivity");
-        }
+                    if (getIntent().getExtras().get("rolefromnewordertouserproduct") != null) {
+                        role = getIntent().getExtras().get("rolefromnewordertouserproduct").toString();
+                    }
 
 
+                    if (getIntent().getStringExtra("fromnewordertousersproductactivity") != null) {
+                        traderID = getIntent().getStringExtra("fromnewordertousersproductactivity");
+                    }
+                    if (getIntent().getStringExtra("neworderUserID") != null) {
+                        userID = getIntent().getStringExtra("neworderUserID");
+                    }
+
+
+                    if (getIntent().getExtras().get("rolefromviewbuyertoadminuserproductsactivity") != null) {
+                        role = getIntent().getExtras().get("rolefromviewbuyertoadminuserproductsactivity").toString();
+                    }
+
+
+                    if (getIntent().getStringExtra("fromviewbuyertradertoadminuserproductsactivity") != null) {
+                        traderID = getIntent().getStringExtra("fromviewbuyertradertoadminuserproductsactivity");
+                    }
+                    if (getIntent().getStringExtra("fromviewbuyeruseridtoadminuserproductsactivity") != null) {
+                        userID = getIntent().getStringExtra("fromviewbuyeruseridtoadminuserproductsactivity");
+                    }
+
+                }
         productsList = findViewById(R.id.products_list);
         if (productsList != null) {
             productsList.setHasFixedSize(true);
@@ -131,7 +133,7 @@ public  class ViewSingleUserOrders extends AppCompatActivity
                         }
                     }).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
         }
-
+        buildGoogleApiClient();
         firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -167,6 +169,7 @@ public  class ViewSingleUserOrders extends AppCompatActivity
 
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+
                     if (dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0) {
 
                         quantity = dataSnapshot.getValue().toString();
@@ -225,6 +228,18 @@ public  class ViewSingleUserOrders extends AppCompatActivity
         }
         }
 
+    protected synchronized void buildGoogleApiClient() {
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(ViewSingleUserOrders.this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+            mGoogleApiClient.connect();
+        }
+    }
+
+
     @Override
     protected void onStop() {
         super.onStop();
@@ -232,6 +247,23 @@ public  class ViewSingleUserOrders extends AppCompatActivity
          if (mAuth !=null) {
              mAuth.removeAuthStateListener(firebaseAuthListener);
          }
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.connect();
+        }
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
     }
 
 

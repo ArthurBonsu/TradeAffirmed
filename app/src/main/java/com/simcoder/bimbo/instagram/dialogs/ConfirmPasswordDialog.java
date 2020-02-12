@@ -49,20 +49,29 @@ public class ConfirmPasswordDialog extends DialogFragment {
         });
 
         TextView confirmDialog = (TextView) view.findViewById(R.id.dialogConfirm);
-        confirmDialog.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "onClick: captured password and confirming.");
-                String password = mPassword.getText().toString();
-                if (!password.equals("")) {
-                    mOnConfirmPasswordListener.onConfirmPassword(password);
-                    getDialog().dismiss();
-                } else {
-                    Toast.makeText(getActivity(), "you must enter a password", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+        if (confirmDialog != null) {
+            confirmDialog.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d(TAG, "onClick: captured password and confirming.");
+                    if (mPassword.getText() != null) {
+                        String password = mPassword.getText().toString();
 
+                        if (!password.equals("")) {
+                            if (mOnConfirmPasswordListener != null) {
+                                mOnConfirmPasswordListener.onConfirmPassword(password);
+                                if (getDialog() != null) {
+                                    getDialog().dismiss();
+                                }
+
+                            } else {
+                                Toast.makeText(getActivity(), "you must enter a password", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+                }
+            });
+        }
         return view;
     }
 
@@ -71,9 +80,13 @@ public class ConfirmPasswordDialog extends DialogFragment {
         super.onAttach(context);
 
         try {
+                    if (getTargetFragment() != null){
             mOnConfirmPasswordListener = (OnConfirmPasswordListener) getTargetFragment();
-        } catch (ClassCastException e){
+                    } } catch (ClassCastException e){
             Log.e(TAG, "onAttach: ClassCastException: " + e.getMessage());
         }
     }
+
+
+
 }

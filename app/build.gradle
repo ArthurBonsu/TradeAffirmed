@@ -162,7 +162,7 @@ dependencies {
 
     implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
     implementation 'com.nabinbhandari.android:permissions:3.8'
-     implementation 'com.alibaba.android:tangram:2.0.5@aar'
+    implementation 'com.alibaba.android:tangram:2.0.5@aar'
     implementation ('com.alibaba.android:vlayout:1.2.8@aar') {
         transitive = true
     }

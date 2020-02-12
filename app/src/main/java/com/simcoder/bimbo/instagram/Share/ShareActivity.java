@@ -2,6 +2,7 @@ package com.simcoder.bimbo.instagram.Share;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -40,12 +41,13 @@ public class ShareActivity extends AppCompatActivity {
         setContentView(R.layout.activity_share);
         Log.d(TAG, "onCreate: started");
 
-        if (checkPermissionsArray(Permissions.PERMISSIONS)) {
-            setupViewPager();
-        } else {
-            verifyPermissions(Permissions.PERMISSIONS);
+
+            if (checkPermissionsArray(Permissions.PERMISSIONS)) {
+                setupViewPager();
+            } else {
+                verifyPermissions(Permissions.PERMISSIONS);
+            }
         }
-    }
 
     /**
      * return the current tab number
@@ -59,38 +61,51 @@ public class ShareActivity extends AppCompatActivity {
     /**
      * setup viewpager for managing the tabs
      */
-    private void setupViewPager(){
+    private void setupViewPager() {
         SectionsPagerAdapter adapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new GalleryFragment());
-        adapter.addFragment(new PhotoFragment());
+        if (getSupportFragmentManager() != null) {
+      if (adapter != null){
+            adapter.addFragment(new GalleryFragment());
+            adapter.addFragment(new PhotoFragment());
 
-        mViewPager = (ViewPager) findViewById(R.id.viewpager_container);
-        mViewPager.setAdapter(adapter);
+            mViewPager = (ViewPager) findViewById(R.id.viewpager_container);
+           if (mViewPager != null){
+            mViewPager.setAdapter(adapter);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabsBottom);
-        tabLayout.setupWithViewPager(mViewPager);
-
-        tabLayout.getTabAt(0).setText(getString(R.string.gallery));
-        tabLayout.getTabAt(1).setText(getString(R.string.photo));
+            TabLayout tabLayout = (TabLayout) findViewById(R.id.tabsBottom);
+           if (tabLayout != null){
+            tabLayout.setupWithViewPager(mViewPager);
+          if (tabLayout != null){
+              if (tabLayout.getTabAt(0) != null){
+            tabLayout.getTabAt(0).setText(getString(R.string.gallery));
+             if (tabLayout.getTabAt(1) != null){
+            tabLayout.getTabAt(1).setText(getString(R.string.photo));
+        }}}}}}}
     }
+    public int getTask() {
+        if (getIntent() != null){
+        if (getIntent().getFlags() != 0) {
+            Log.d(TAG, "getTask: TASK: " + getIntent().getFlags());
 
-    public int getTask(){
-        Log.d(TAG, "getTask: TASK: " + getIntent().getFlags());
-        return getIntent().getFlags();
+        }   }
+          if (getIntent() != null){
+            return getIntent().getFlags();
     }
+        return 0;
+    }
+        /**
+         * Verify permissions sent to Array
+         * @param permissions
+         */
 
-    /**
-     * Verify permissions sent to Array
-     * @param permissions
-     */
     public void verifyPermissions(String[] permissions) {
         Log.d(TAG, "verifyPermissions: verifying permissions");
 
-        ActivityCompat.requestPermissions(
-                ShareActivity.this,
-                permissions,
-                VERIFY_PERMISSIONS_REQUEST
-        );
+           ActivityCompat.requestPermissions(
+                   ShareActivity.this,
+                   permissions,
+                   VERIFY_PERMISSIONS_REQUEST
+           );
 
     }
 
@@ -103,13 +118,14 @@ public class ShareActivity extends AppCompatActivity {
         Log.d(TAG, "checkPermissionsArray: checking permissions array");
 
         for (int i = 0; i < permissions.length; i++) {
-            String check = permissions[i];
-            if (checkPermissions(check)) {
-                return true;
-            }
+            if (permissions != null) {
+                String check = permissions[i];
+                if (checkPermissions(check)) {
+                    return true;
+                }
+            }        }
+            return false;
         }
-        return false;
-    }
 
     /**
      * Check a single permission for verification
@@ -117,31 +133,36 @@ public class ShareActivity extends AppCompatActivity {
      * @return
      */
     public boolean checkPermissions(String permission) {
-        Log.d(TAG, "checkPermissions: checking permissions: " + permission);
 
-        int permissionRequest = ActivityCompat.checkSelfPermission(ShareActivity.this, permission);
-        
-        if (permissionRequest != PackageManager.PERMISSION_GRANTED) {
-            Log.d(TAG, "checkPermissions: \n Permission was not granted for: " + permission);
-            return false;
-        } else {
-            Log.d(TAG, "checkPermissions: \n Permission was granted for: " + permission);
-            return true;
+            Log.d(TAG, "checkPermissions: checking permissions: " + permission);
+
+            int permissionRequest = ActivityCompat.checkSelfPermission(ShareActivity.this, permission);
+
+            if (permissionRequest != PackageManager.PERMISSION_GRANTED) {
+                Log.d(TAG, "checkPermissions: \n Permission was not granted for: " + permission);
+                return false;
+            } else {
+                Log.d(TAG, "checkPermissions: \n Permission was granted for: " + permission);
+                return true;
+            }
+
         }
 
-    }
 
     //* Bottom Nav View setup *
     private void setupBottomNavigationView() {
         Log.d(TAG, "setupBottomNavigationView: setup up BottomNavView");
         BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.bottomNavViewBar);
+        if (bottomNavigationViewEx != null){
         BottomNavigationViewHelper.setupBottomNavigationView(bottomNavigationViewEx);
         BottomNavigationViewHelper.enableNavigation(mContext, this, bottomNavigationViewEx);
-
-        Menu menu = bottomNavigationViewEx.getMenu();
-        MenuItem menuItem = menu.getItem(ACTIVITY_NUM);
-        menuItem.setChecked(true);
-
-
-    }
+           if (bottomNavigationViewEx != null) {
+               Menu menu = bottomNavigationViewEx.getMenu();
+             if (menu != null){
+               MenuItem menuItem = menu.getItem(ACTIVITY_NUM);
+              if (menuItem != null) {
+                  menuItem.setChecked(true);
+              }
+           }}
+    }}
 }
