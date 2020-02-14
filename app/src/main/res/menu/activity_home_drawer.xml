@@ -36,7 +36,13 @@
                app:actionLayout="@layout/vip_view"/>
 
 
-        <group
+           <item
+               android:id="@+id/checkfeed"
+               android:icon="@drawable/ic_apple_fill"
+               android:title="Checkfeed"
+               app:actionLayout="@layout/vip_view"/>
+
+           <group
             android:id="@+id/homegroup2"
             android:checkableBehavior="single">
             <item

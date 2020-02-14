@@ -174,7 +174,10 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(DriverMapActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
-        } else {
+
+        }
+
+        else {
             if (mapFragment != null) {
                 mapFragment.getMapAsync(this);
             }
@@ -472,7 +475,25 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         assignedCustomerPickupLocationRefListener = assignedCustomerPickupLocationRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists() && !customerId.equals("")) {
+
+                if(dataSnapshot.exists() && !customerId.equals("")){
+                    List<Object> map = (List<Object>) dataSnapshot.getValue();
+                    double locationLat = 0;
+                    double locationLng = 0;
+                    if(map.get(0) != null){
+                        locationLat = Double.parseDouble(map.get(0).toString());
+                    }
+                    if(map.get(1) != null){
+                        locationLng = Double.parseDouble(map.get(1).toString());
+                    }
+                    pickupLatLng = new LatLng(locationLat,locationLng);
+                    pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLatLng).title("pickup location").icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_pickup)));
+                    getRouteToMarker(pickupLatLng);
+                }
+
+
+
+                /*if (dataSnapshot.exists() && !customerId.equals("")) {
 
                     String zero = dataSnapshot.child("zero").getValue().toString();
                     String one = dataSnapshot.child("one").getValue().toString();
@@ -497,7 +518,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                                 }}}
 */
 
-                        double locationLat = 0;
+                   /*     double locationLat = 0;
                         double locationLng = 0;
 
 
@@ -515,6 +536,10 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                             getRouteToMarker(pickupLatLng);
                         }
                     }
+                    */
+
+
+
                 }
 
             @Override
@@ -527,7 +552,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     private void getRouteToMarker(LatLng pickupLatLng) {
 
-        if (mLastLocation != null) {
+        if (pickupLatLng != null  && mLastLocation != null) {
             double latitude = mLastLocation.getLatitude();
             double longitude = mLastLocation.getLongitude();
 
@@ -555,9 +580,39 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
+
+
+                            Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+                            if(map.get("destination")!=null){
+                                destination = map.get("destination").toString();
+                                mCustomerDestination.setText("Destination: " + destination);
+                            }
+                            else{
+                                mCustomerDestination.setText("Destination: --");
+                            }
+
+                            Double destinationLat = 0.0;
+                            Double destinationLng = 0.0;
+                            if(map.get("destinationLat") != null){
+                                destinationLat = Double.valueOf(map.get("destinationLat").toString());
+                            }
+                            if(map.get("destinationLng") != null){
+                                destinationLng = Double.valueOf(map.get("destinationLng").toString());
+                                destinationLatLng = new LatLng(destinationLat, destinationLng);
+                            }
+
+                        }
+
+
+                           /*
                             destinationvalue = dataSnapshot.child("destination").getValue().toString();
                             destinationLatvalue = dataSnapshot.child("destinationLat").getValue().toString();
                             destinationLngvalue = dataSnapshot.child("destinationLng").getValue().toString();
+*/
+
+
+
+
 
 
                          /*   if (dataSnapshot != null) {
@@ -579,14 +634,14 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                                             CustomerSearchedLocationList.add(new CustomerSearchedlocation(locmap.get("zero").toString(), locmap.get("one").toString(), locmap.get("destination").toString(), locmap.get("destinationLat").toString(), locmap.get("destinationLng").toString()));
                    */
                         }
-                    }
+
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
 
                     }
                 });
-                destination = destinationvalue;
+              /*  destination = destinationvalue;
                 mCustomerDestination.setText("Destination: " + destination);
             } else {
                 mCustomerDestination.setText("Destination: --");
@@ -601,10 +656,10 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             destinationLng = Double.valueOf(destinationLngvalue);
             destinationLatLng = new LatLng(destinationLat, destinationLng);
 
-        }
 
+*/  }
 
-    }
+    }}
 
                     // GET THE ASSIGNED CUSTOMER INFORMATION
                     private void getAssignedCustomerInfo() {
@@ -889,6 +944,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     private void connectDriver() {
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(DriverMapActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
+         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
         }
         checkLocationPermission();
         if (mLocationRequest != null) {

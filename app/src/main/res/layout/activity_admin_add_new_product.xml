@@ -7,10 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".Admin.AdminAddNewProductActivity">
 
- <LinearLayout
-     android:layout_width="match_parent"
-     android:layout_height="wrap_content"
-     android:orientation="vertical">
+
     <ImageView
         android:id="@+id/select_product_image"
         android:layout_width="350dp"
@@ -24,18 +21,6 @@
         android:contentDescription="image1" />
 
 
-
-    <ImageView
-    android:id="@+id/setimagebutton"
-    android:layout_width="350dp"
-    android:layout_height="200dp"
-    android:layout_centerHorizontal="true"
-    android:layout_marginTop="10dp"
-    android:cropToPadding="false"
-    android:scaleType="fitCenter"
-    android:src="@drawable/select_product_image"
-    app:srcCompat="@drawable/blackfresh"
-    android:contentDescription="image1" />
     <EditText
         android:id="@+id/product_name"
         android:layout_width="match_parent"
@@ -96,6 +81,6 @@
         android:textColor="@android:color/white"
         android:background="@drawable/buttons"
         />
- </LinearLayout>
+
 
 </RelativeLayout>

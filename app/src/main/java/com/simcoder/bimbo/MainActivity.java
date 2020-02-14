@@ -21,8 +21,6 @@ public class MainActivity extends AppCompatActivity {
         mCustomer = findViewById(R.id.customer);
 
         startService(new Intent(MainActivity.this, onAppKilled.class));
-        Intent intent = new Intent("com.google.android.gms.ads.identifier.service.START");
-        intent.setPackage(getPackageName());
         mDriver.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

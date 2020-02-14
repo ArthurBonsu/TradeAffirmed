@@ -125,7 +125,7 @@ public class AdminAddNewProductActivity extends AppCompatActivity implements Goo
         InputProductName = (EditText) findViewById(R.id.product_name);
         InputProductDescription = (EditText) findViewById(R.id.product_description);
         InputProductPrice = (EditText) findViewById(R.id.product_price);
-        setimagebutton = (ImageView)findViewById(R.id.setimagebutton);
+      //  setimagebutton = (ImageView)findViewById(R.id.setimagebutton);
         loadingBar = new ProgressDialog(this);
 
         FirebaseAuth.getInstance();

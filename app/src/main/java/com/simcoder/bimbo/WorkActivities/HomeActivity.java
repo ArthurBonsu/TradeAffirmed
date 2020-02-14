@@ -56,6 +56,8 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.simcoder.bimbo.R;
+import com.simcoder.bimbo.instagram.Home.HomeFragment;
+import com.simcoder.bimbo.instagram.Home.InstagramHomeActivity;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -945,6 +947,31 @@ String traderkey;
 
 
             }
+
+
+            if (id == R.id.checkfeed) {
+                if (!type.equals("Trader")) {
+
+                    Intent intent = new Intent(HomeActivity.this, InstagramHomeActivity.class);
+                    if (intent != null) {
+                        intent.putExtra("roledhomeactivitytocustomermapactivity", type);
+                        intent.putExtra("fromhomeactivitytocustomermapactivity", traderoruser);
+                        startActivity(intent);
+                        finish();
+                    }
+                } else {
+
+                    Intent intent = new Intent(HomeActivity.this, InstagramHomeActivity.class);
+                    if (intent != null) {
+                        intent.putExtra("rolefromhomeactivitytodrivermapactivity", type);
+                        intent.putExtra("fromhomeactivitytodrivermapactivity", traderoruser);
+                        startActivity(intent);
+                        finish();
+                    }
+                }
+
+
+            }
             if (id == R.id.nav_cart) {
                 if (!type.equals("Trader")) {
                     Intent intent = new Intent(HomeActivity.this, CartActivity.class);
@@ -954,6 +981,7 @@ String traderkey;
                 }
 
             }
+         //   checkfeed
 
             if (id == R.id.viewproducts) {
                 if (!type.equals("Trader")) {
@@ -1123,7 +1151,7 @@ String traderkey;
                 }
             }
 
-
+         //   checkfeed
             if (id == R.id.singeuserorderhere) {
 
                 if (!type.equals("Trader")) {

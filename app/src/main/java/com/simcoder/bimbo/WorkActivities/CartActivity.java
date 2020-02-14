@@ -115,29 +115,29 @@ public class CartActivity extends AppCompatActivity {
         txtTotalAmount = (TextView) findViewById(R.id.total_price);
         txtMsg1 = (TextView) findViewById(R.id.msg1);
 
-        if (getIntent() != null) {
-            cartkey = getIntent().getStringExtra("cartkey");
-            orderkey = getIntent().getStringExtra("orderkey");
-            Intent intent = new Intent(CartActivity.this, ProductDetailsActivity.class);
 
-            intent.putExtra("orderkey", orderkey);
-            if (NextProcessBtn != null) {
-                NextProcessBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        txtTotalAmount.setText("Total Price = $" + String.valueOf(overTotalPrice));
+        cartkey = getIntent().getStringExtra("cartkey");
+        orderkey = getIntent().getStringExtra("orderkey");
+        Intent intent = new Intent(CartActivity.this, ProductDetailsActivity.class);
 
-                        Intent intent = new Intent(CartActivity.this, ConfirmFinalOrderActivity.class);
+        intent.putExtra("orderkey", orderkey);
+        if (NextProcessBtn != null) {
+            NextProcessBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    txtTotalAmount.setText("Total Price = $" + String.valueOf(overTotalPrice));
 
-                        intent.putExtra("Total Price", String.valueOf(overTotalPrice));
-                        intent.putExtra("pid", productID);
-                        startActivity(intent);
-                        finish();
-                    }
-                });
-            }
+                    Intent intent = new Intent(CartActivity.this, ConfirmFinalOrderActivity.class);
+
+                    intent.putExtra("Total Price", String.valueOf(overTotalPrice));
+                    intent.putExtra("pid", productID);
+                    startActivity(intent);
+                    finish();
+                }
+            });
         }
     }
+
     @Override
     protected void onStart() {
         super.onStart();
