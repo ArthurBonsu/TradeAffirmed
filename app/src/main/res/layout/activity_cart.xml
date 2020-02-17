@@ -41,15 +41,16 @@
         android:visibility="gone"
         />
 
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="50sp">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/cart_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/rl11"
-        android:layout_above="@+id/next_btn">
-    </android.support.v7.widget.RecyclerView>
-
+      <android.support.v7.widget.RecyclerView
+          android:id="@+id/cart_list"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
+  </LinearLayout>
     <Button
         android:id="@+id/next_btn"
         android:layout_width="match_parent"

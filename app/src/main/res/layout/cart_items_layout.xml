@@ -1,57 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_margin="10dp"
-    app:cardElevation="15dp">
+    android:layout_height="match_parent">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="10dp"
-        android:background="@color/colorPrimaryDark">
+        android:layout_height="match_parent">
 
-
-
-
-        <TextView
-            android:id="@+id/cart_product_name"
-            android:layout_width="160dp"
-            android:layout_height="wrap_content"
-            android:text="Product Name"
-            android:textColor="@android:color/white"
-            android:textSize="15dp"
-            android:layout_marginLeft="2dp"
-            android:textStyle="bold"
-            />
-
-        <TextView
-            android:id="@+id/cart_product_quantity"
-            android:layout_width="160dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:text="Product Quantity"
-            android:textAlignment="viewEnd"
-            android:textColor="@android:color/white"
-            android:textSize="15dp"
-            android:layout_marginRight="2dp"
-            android:textStyle="bold"
-            />
-
-        <TextView
-            android:id="@+id/cart_product_price"
+        <android.support.v4.widget.NestedScrollView
+            android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Product Price"
-            android:textColor="@android:color/white"
-            android:textSize="18dp"
-            android:textStyle="bold"
-            android:layout_below="@+id/cart_product_quantity"
-            android:gravity="center"
-            android:layout_marginTop="15dp"
-            />
+            android:layout_marginTop="10dp"
+            android:padding="10dp">
 
-    </RelativeLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
 
-</android.support.v7.widget.CardView>
+                <ImageView
+                    android:id="@+id/cartimageonscreen"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:contentDescription="@string/cartimageonscreen"
+                    android:scaleType="centerCrop"
+                    android:visibility="visible" />
+
+
+                <ImageView
+                    android:id="@+id/cartproductimageonscreeen"
+                    android:layout_width="match_parent"
+                    android:layout_height="170dp"
+                    android:contentDescription="@string/cartproductimageonscreen"
+                    android:scaleType="centerCrop"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/carttheproductname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:padding="8dp"
+                    android:text="@string/carttheproductname"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/carttheproductprice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="#ecedec"
+                    android:padding="8dp"
+                    android:text="@string/cartproductprices" />
+
+
+                <TextView
+                    android:id="@+id/carttradernamehere"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="#ecedec"
+                    android:padding="8dp"
+                    android:text="@string/cartthetradername"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/cartdescriptionhere"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="#ecedec"
+                    android:padding="8dp"
+                    android:text="@string/cartdescriptionhere"
+                    android:textSize="18sp" />
+
+                <ImageView
+                    android:id="@+id/numberoflikesimage"
+                    android:layout_width="match_parent"
+                    android:layout_height="170dp"
+                    android:contentDescription="@string/cart_number_of_likess"
+                    android:scaleType="centerCrop"
+                    android:visibility="visible"
+                    tools:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/cartquantity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="#ecedec"
+                    android:padding="8dp"
+                    android:text="@string/cartquantity"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
+
+
+        </android.support.v4.widget.NestedScrollView>
+
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>

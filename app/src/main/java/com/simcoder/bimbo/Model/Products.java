@@ -21,6 +21,21 @@ public class Products {
     public Products() {
     }
 
+    public Products( String pid,  String tid, String quantity, String price,String desc, String discount, String name, String image
+
+                     ) {this.desc = desc;
+        this.image = image;
+
+        this.desc = desc;
+        this.image = image;
+
+        this.name = name;
+        this.tid = tid;
+        this.discount = discount;
+        this.pid = pid;
+        this.price = price;
+        this.quantity = quantity;
+    }
     public Products(
             String desc, String image, String title, String name, String phone, String discount, String pid, String price, String quantity, String tid, String traderID,
 

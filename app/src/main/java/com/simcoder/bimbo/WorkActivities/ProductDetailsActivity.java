@@ -309,7 +309,7 @@ public class ProductDetailsActivity extends AppCompatActivity   implements Navig
             userID = user.getUid();
 
         }
-        final DatabaseReference cartListRef = FirebaseDatabase.getInstance().getReference().child("Cart List");
+        final DatabaseReference cartListRef = FirebaseDatabase.getInstance().getReference().child("Cart");
 
         if (cartListRef.getKey() == "") {
             cartkey = cartListRef.push().getKey();
@@ -322,16 +322,22 @@ public class ProductDetailsActivity extends AppCompatActivity   implements Navig
 
         cartMap.put("pid", key);
         cartMap.put("name", productname);
+        cartMap.put("desc", describe);
         cartMap.put("price", suchtheprice);
         cartMap.put("date", saveCurrentDate);
         cartMap.put("time", saveCurrentTime);
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            cartMap.put("uid", FirebaseAuth.getInstance().getCurrentUser().getUid());
+        }
         if (numberButton != null) {
             cartMap.put("quantity", numberButton.getNumber());
         }
         cartMap.put("discount", "");
+        cartMap.put("tid", traderkey);
 
         if (cartkey != null) {
-            cartforuser = FirebaseDatabase.getInstance().getReference().child("Cart List").child(cartkey).child("Users");
+            cartforuser = FirebaseDatabase.getInstance().getReference().child("Cart").child(cartkey).child("Users");
+            cartforuser.keepSynced(true);
                     user = FirebaseAuth.getInstance().getCurrentUser();
                        if (user != null){
                            userID = "";
@@ -343,8 +349,9 @@ public class ProductDetailsActivity extends AppCompatActivity   implements Navig
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if (dataSnapshot.hasChild(userID)) {
 
-                         cartintoproductListRef = FirebaseDatabase.getInstance().getReference().child("Cart List").child(cartkey).child("Users").child(userID).child("products");
-                        //    String productinputedkey = cartintoproductListRef.push().getKey();
+                         cartintoproductListRef = FirebaseDatabase.getInstance().getReference().child("Cart").child(cartkey).child("Users").child(userID).child("products");
+                        cartintoproductListRef.keepSynced(true);
+                         //    String productinputedkey = cartintoproductListRef.push().getKey();
 
                         cartintoproductListRef.setValue(key);
                         if (key != null) {
@@ -368,7 +375,7 @@ public class ProductDetailsActivity extends AppCompatActivity   implements Navig
 
 
                             cartforuser.setValue(userID);
-                             DatabaseReference cartintoproductListRef = FirebaseDatabase.getInstance().getReference().child("Cart List").child(cartkey).child("Users").child(userID).child("products");
+                             DatabaseReference cartintoproductListRef = FirebaseDatabase.getInstance().getReference().child("Cart").child(cartkey).child("Users").child(userID).child("products");
                             //    String productinputedkey = cartintoproductListRef.push().getKey();
 
                             cartintoproductListRef.setValue(key);
@@ -451,7 +458,7 @@ public class ProductDetailsActivity extends AppCompatActivity   implements Navig
 
 
                                                     }
-                                                    ;
+
                                                 }
 
                                             }

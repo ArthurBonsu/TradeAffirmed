@@ -307,6 +307,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
         }
         DatabaseReference myrolereference = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverId).child("role");
+          myrolereference.keepSynced(true);
         if (myrolereference != null) {
             myrolereference.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -416,6 +417,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             driverId = driver.getUid();
             // HERE WE GET THE CUSTOMER RIDE ID AND WE ESTABLISH FOR THAT CUSTOMER
             DatabaseReference assignedCustomerRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverId).child("customerRequest").child("customerRideId");
+            assignedCustomerRef.keepSynced(true);
             if (assignedCustomerRef != null) {
                 assignedCustomerRef.addValueEventListener(new ValueEventListener() {
                     @Override
@@ -666,16 +668,21 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                         if (mCustomerInfo != null) {
                             mCustomerInfo.setVisibility(View.VISIBLE);
                             DatabaseReference mCustomerDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(customerId);
+                             mCustomerDatabase.keepSynced(true);
                             if (mCustomerDatabase != null) {
                                 mCustomerDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         if (dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0) {
-
-                         name = dataSnapshot.child("name").getValue().toString();
-                        phone = dataSnapshot.child("phone").getValue().toString();
-                         image = dataSnapshot.child("image").getValue().toString();
-
+                          if (dataSnapshot.child("name").getValue() != null) {
+                              name = dataSnapshot.child("name").getValue().toString();
+                          }
+                           if (dataSnapshot.child("phone").getValue() != null ) {
+                               phone = dataSnapshot.child("phone").getValue().toString();
+                           }
+                           if (dataSnapshot.child("image").getValue() != null) {
+                               image = dataSnapshot.child("image").getValue().toString();
+                           }
                                             //      Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
 /*
                                             Iterator<DataSnapshot> items = dataSnapshot.getChildren().iterator();
@@ -732,6 +739,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                             userId = user.getUid();
 
                             DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(userId).child("customerRequest");
+                            driverRef.keepSynced(true);
                             if (driverRef != null) {
                                 driverRef.removeValue();
                             }
@@ -775,8 +783,11 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
                             userId = user.getUid();
                             DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(userId).child("history");
+                            driverRef.keepSynced(true);
                             DatabaseReference customerRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(customerId).child("history");
+                            customerRef.keepSynced(true);
                             DatabaseReference historyRef = FirebaseDatabase.getInstance().getReference().child("history");
+                            historyRef.keepSynced(true);
                             String requestId = historyRef.push().getKey();
                             if (requestId != null) {
                                 driverRef.child(requestId).setValue(true);
@@ -893,7 +904,9 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                 userId = user.getUid();
 
                 DatabaseReference refAvailable = FirebaseDatabase.getInstance().getReference("driversAvailable");
+                refAvailable.keepSynced(true);
                 DatabaseReference refWorking = FirebaseDatabase.getInstance().getReference("driversWorking");
+                refWorking.keepSynced(true);
                 GeoFire geoFireAvailable = new GeoFire(refAvailable);
                 GeoFire geoFireWorking = new GeoFire(refWorking);
 
@@ -965,7 +978,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
                 userId = user.getUid();
                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference("driversAvailable");
-
+                   ref.keepSynced(true);
                 GeoFire geoFire = new GeoFire(ref);
                 if (geoFire != null){
                     geoFire.removeLocation(userId);

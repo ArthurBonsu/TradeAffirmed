@@ -374,4 +374,18 @@
     <string name="stationary2">STATIONARY</string>
     <string name="mobileS">MOBILE</string>
     <string name="hybridS">HYBRID</string>
+
+    <string name="cartproductprice">cartProductPrice</string>
+
+    <string name="cart_the_number_of_likes">cart the number of likes</string>
+    <string name="cart_number_of_likes">cart number of likes</string>
+    <string name="cartimageonscreen">cartimageonscreen</string>
+    <string name="carttheproductname">carttheproductname</string>
+    <string name="cartproductprices">cartproductprice</string>
+    <string name="cartthetradername">cartthetradername</string>
+    <string name="cartcategoryhere">cartcategoryhere</string>
+    <string name="cart_number_of_likess">cart_number_of_likes</string>
+    <string name="cartproductimageonscreen">cartproductimageonscreen</string>
+    <string name="cartdescriptionhere">cartdescriptionhere</string>
+    <string name="cartquantity">cartquantity</string>
 </resources>
