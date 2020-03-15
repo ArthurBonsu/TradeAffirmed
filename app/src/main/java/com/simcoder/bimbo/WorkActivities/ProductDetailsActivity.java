@@ -100,6 +100,13 @@ public class ProductDetailsActivity extends AppCompatActivity   implements Navig
     String userID;
    DatabaseReference  cartintoproductListRef;
     DatabaseReference cartforuser;
+
+
+
+        String  traderimage;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -310,6 +317,7 @@ public class ProductDetailsActivity extends AppCompatActivity   implements Navig
 
         }
         final DatabaseReference cartListRef = FirebaseDatabase.getInstance().getReference().child("Cart");
+        final DatabaseReference TraderListRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child("traders");
 
         if (cartListRef.getKey() == "") {
             cartkey = cartListRef.push().getKey();
@@ -318,6 +326,7 @@ public class ProductDetailsActivity extends AppCompatActivity   implements Navig
             cartkey = cartListRef.getKey();
         }
         final HashMap<String, Object> cartMap = new HashMap<>();
+        final HashMap<String, Object> traderMap = new HashMap<>();
 
 
         cartMap.put("pid", key);
@@ -326,6 +335,9 @@ public class ProductDetailsActivity extends AppCompatActivity   implements Navig
         cartMap.put("price", suchtheprice);
         cartMap.put("date", saveCurrentDate);
         cartMap.put("time", saveCurrentTime);
+
+
+
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             cartMap.put("uid", FirebaseAuth.getInstance().getCurrentUser().getUid());
         }
@@ -335,6 +347,9 @@ public class ProductDetailsActivity extends AppCompatActivity   implements Navig
         cartMap.put("discount", "");
         cartMap.put("tid", traderkey);
 
+
+        cartMap.put("tradername", thetraderhere );
+        cartMap.put("traderimage", traderimage );
         if (cartkey != null) {
             cartforuser = FirebaseDatabase.getInstance().getReference().child("Cart").child(cartkey).child("Users");
             cartforuser.keepSynced(true);
@@ -358,8 +373,7 @@ public class ProductDetailsActivity extends AppCompatActivity   implements Navig
                             cartintoproductListRef.child(key)
                                     .updateChildren(cartMap);
                             cartListRef.child(cartkey)
-                                    .updateChildren(cartMap)
-                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    .updateChildren(cartMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
@@ -455,6 +469,7 @@ public class ProductDetailsActivity extends AppCompatActivity   implements Navig
                                                 if (traderkey != null) {
                                                     if (dataSnapshot.child("trader").child(traderkey).child("name").getValue() != null) {
                                                         thetraderhere = dataSnapshot.child("trader").child(traderkey).child("name").getValue().toString();
+                                                        traderimage = dataSnapshot.child("trader").child(traderkey).child("image").getValue().toString();
 
 
                                                     }

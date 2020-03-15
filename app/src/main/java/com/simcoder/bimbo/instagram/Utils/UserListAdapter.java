@@ -70,14 +70,15 @@ public class UserListAdapter extends ArrayAdapter<User>{
             holder = (ViewHolder) convertView.getTag();
         }
 
-
         holder.username.setText(getItem(position).getname());
         holder.email.setText(getItem(position).getemail());
+    ///    holder.profileImage.setImageResource(Integer.parseInt(getItem(position).getphotoid()));
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
         Query query = reference.child("Users")
                 .orderByChild("Customers")
                 .equalTo(getItem(position).getuid());
+
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

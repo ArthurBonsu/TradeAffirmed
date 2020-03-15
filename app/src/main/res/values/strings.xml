@@ -388,4 +388,5 @@
     <string name="cartproductimageonscreen">cartproductimageonscreen</string>
     <string name="cartdescriptionhere">cartdescriptionhere</string>
     <string name="cartquantity">cartquantity</string>
+    <string name="nextclicktogotoconfirm">next</string>
 </resources>

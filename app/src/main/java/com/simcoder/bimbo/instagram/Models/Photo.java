@@ -3,6 +3,8 @@ package com.simcoder.bimbo.instagram.Models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.firebase.database.DataSnapshot;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +49,27 @@ public class Photo implements Parcelable{
         this.tags = tags;
         this.price = price;
     }
+    public Photo(String caption, String date, String image, String time, String uid, String name, String photoid, String  number, String number1, String tid, String pid, String price) {
 
+        this.caption = caption;
+        this.date = date;
+        this.image = image;
+        this.photoid = photoid;
+        this.uid = uid;
+        this.name = name;
+        this.likes = likes;
+        this.comments = comments;
+        this.commentkey = commentkey;
+        this.likeid = likeid;
+        this.comment = comment;
+        this.number = number;
+        this.tid = tid ;
+        this.pid = pid;
+        this.tags = tags;
+        this.price = price;
+        this.time = time;
+
+    }
     protected Photo(Parcel in) {
 
         caption = in.readString();
@@ -86,7 +108,6 @@ public class Photo implements Parcelable{
             return new Photo[size];
         }
     };
-
 
 
 
@@ -141,9 +162,7 @@ public class Photo implements Parcelable{
         this.date = date;
     }
 
-    public String gettime() {
-        return time;
-    }
+    public String gettime(){return  time;}
 
     public void settime(String time) {
         this.time = time;
@@ -228,8 +247,9 @@ public class Photo implements Parcelable{
         return comments;
     }
 
-    public void setComments(ArrayList<com.simcoder.bimbo.instagram.Models.Comment> comments) {
+    public List<Photo> setComments(ArrayList<Comment> comments) {
         this.comments = comments;
+        return null;
     }
 
 

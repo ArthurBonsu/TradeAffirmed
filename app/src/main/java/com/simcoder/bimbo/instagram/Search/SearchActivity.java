@@ -88,6 +88,7 @@ public class SearchActivity extends AppCompatActivity{
             });
         }
     }
+    // HOW TO GET THE IMAGES SHOWING IN THE ADAPTER
     private void searchForMatch(String keyword) {
         Log.d(TAG, "searchForMatch: searching for a match: " + keyword);
         if (mUserList != null) {

@@ -85,51 +85,51 @@ public class InstagramHomeActivity extends AppCompatActivity implements
         ViewCommentsFragment fragment  = new ViewCommentsFragment();
 
         Bundle args = new Bundle();
-         if (args != null) {
-             if (photo != null) {
-                 args.putParcelable(getString(R.string.photo), photo);
-                 args.putString(getString(R.string.instagramhomeactivity), getString(R.string.instagramhomeactivity
-                 ));
-                 if (fragment != null) {
-                     fragment.setArguments(args);
-                 }
-             }
-         }
-             if(getSupportFragmentManager() != null) {
-                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                 if (transaction != null) {
-                     transaction.replace(R.id.container, fragment);
-                     transaction.addToBackStack(getString(R.string.view_comments_fragment));
-                     transaction.commit();
-                 }
+        if (args != null) {
+            if (photo != null) {
+                args.putParcelable(getString(R.string.photo), photo);
+                args.putString(getString(R.string.instagramhomeactivity), getString(R.string.instagramhomeactivity
+                ));
+                if (fragment != null) {
+                    fragment.setArguments(args);
+                }
+            }
+        }
+        if(getSupportFragmentManager() != null) {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            if (transaction != null) {
+                transaction.replace(R.id.container, fragment);
+                transaction.addToBackStack(getString(R.string.view_comments_fragment));
+                transaction.commit();
+            }
 
-             }}
+        }}
 
     public void hideLayout(){
         Log.d(TAG, "hideLayout: hiding layout");
-         if (mRelativeLayout != null){        mRelativeLayout.setVisibility(View.GONE);}
-         if (mFrameLayout != null) {
-             mFrameLayout.setVisibility(View.VISIBLE);
-         }
-         }
+        if (mRelativeLayout != null){        mRelativeLayout.setVisibility(View.GONE);}
+        if (mFrameLayout != null) {
+            mFrameLayout.setVisibility(View.VISIBLE);
+        }
+    }
 
 
     public void showLayout(){
         Log.d(TAG, "hideLayout: showing layout");
-         if (mRelativeLayout != null) {
-             mRelativeLayout.setVisibility(View.VISIBLE);
-         }
-         if (mFrameLayout != null) {
-             mFrameLayout.setVisibility(View.GONE);
+        if (mRelativeLayout != null) {
+            mRelativeLayout.setVisibility(View.VISIBLE);
+        }
+        if (mFrameLayout != null) {
+            mFrameLayout.setVisibility(View.GONE);
 
-         }}
+        }}
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-                 if (mFrameLayout != null){
-        if(mFrameLayout.getVisibility() == View.VISIBLE) {
-        }
+        if (mFrameLayout != null){
+            if(mFrameLayout.getVisibility() == View.VISIBLE) {
+            }
             showLayout();
         }
     }
@@ -169,20 +169,20 @@ public class InstagramHomeActivity extends AppCompatActivity implements
         }
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         if (tabLayout != null) {
-               if (mViewPager != null) {
-                   tabLayout.setupWithViewPager(mViewPager);
-               }
-                  if (tabLayout.getTabAt(0) != null) {
+            if (mViewPager != null) {
+                tabLayout.setupWithViewPager(mViewPager);
+            }
+            if (tabLayout.getTabAt(0) != null) {
 
-                      tabLayout.getTabAt(0).setIcon(R.drawable.ic_camera);
-                  }
-                  if (tabLayout.getTabAt(1) != null) {
-                      tabLayout.getTabAt(1).setIcon(R.drawable.ic_instagram_black);
-                  }
-                  if (tabLayout.getTabAt(2) != null) {
-                      tabLayout.getTabAt(2).setIcon(R.drawable.ic_arrow);
-                  }
-                  }
+                tabLayout.getTabAt(0).setIcon(R.drawable.ic_camera);
+            }
+            if (tabLayout.getTabAt(1) != null) {
+                tabLayout.getTabAt(1).setIcon(R.drawable.ic_instagram_black);
+            }
+            if (tabLayout.getTabAt(2) != null) {
+                tabLayout.getTabAt(2).setIcon(R.drawable.ic_arrow);
+            }
+        }
     }
     /**
      * BottomNavigationView setup
@@ -243,9 +243,9 @@ public class InstagramHomeActivity extends AppCompatActivity implements
                 FirebaseUser user = firebaseAuth.getCurrentUser();
 
                 //check if the user is logged in
-          if (user != null) {
-              checkCurrentUser(user);
-          }
+                if (user != null) {
+                    checkCurrentUser(user);
+                }
                 if (user != null) {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
@@ -279,9 +279,9 @@ public class InstagramHomeActivity extends AppCompatActivity implements
     public void onStop() {
         super.onStop();
         if (mAuthListener != null) {
-          if (mAuth != null) {
-              mAuth.removeAuthStateListener(mAuthListener);
-          }    }
+            if (mAuth != null) {
+                mAuth.removeAuthStateListener(mAuthListener);
+            }    }
     }
 
 

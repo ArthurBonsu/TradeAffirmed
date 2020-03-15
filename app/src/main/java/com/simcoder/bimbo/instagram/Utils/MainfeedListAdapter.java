@@ -40,6 +40,7 @@ import org.w3c.dom.Text;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -63,15 +64,22 @@ public class MainfeedListAdapter extends ArrayAdapter<Photo> {
     private Context mContext;
     private DatabaseReference mReference;
     private String currentUsername = "";
+    List<Photo> ourobject;
+
    String saveCurrentDate, saveCurrentTime;
    String followingkey;
+
+
     public MainfeedListAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull List<Photo> objects) {
         super(context, resource, objects);
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mLayoutResource = resource;
         this.mContext = context;
+        ourobject =  objects;
         mReference = FirebaseDatabase.getInstance().getReference();
     }
+
+
 
     static class ViewHolder{
         CircleImageView mprofileImage;
@@ -97,7 +105,7 @@ public class MainfeedListAdapter extends ArrayAdapter<Photo> {
         final ViewHolder holder;
 
         if(convertView == null){
-            convertView = mInflater.inflate(mLayoutResource, parent, false);
+            convertView = mInflater.inflate(R.layout.layout_mainfeed_listitem, parent, false);
             holder = new ViewHolder();
 
             holder.username = (TextView) convertView.findViewById(R.id.username);
@@ -131,12 +139,13 @@ public class MainfeedListAdapter extends ArrayAdapter<Photo> {
         holder.caption.setText(getItem(position).getCaption());
 
         //set the comment
-        List<Comment> comments = getItem(position).getComments();
-        holder.comments.setText("View all " + comments.size() + " comments");
+        ArrayList<Comment> comments = new ArrayList<Comment>();
+        ourobject = getItem(position).setComments(comments);
+        holder.comments.setText("View all " + getItem(position).setComments(comments).size() + " comments");
         holder.comments.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Log.d(TAG, "onClick: loading comment thread for " + getItem(position).getphotoid());
+           public void onClick(View v) {
+                Log.d(TAG, "onClick: loading comment thread for " + getItem(position).getname());
 
                 ((InstagramHomeActivity)mContext).onCommentThreadSelected(getItem(position),
                         mContext.getString(R.string.home_activity));
@@ -219,14 +228,14 @@ public class MainfeedListAdapter extends ArrayAdapter<Photo> {
                             Intent intent = new Intent(mContext, ProfileActivity.class);
                             intent.putExtra(mContext.getString(R.string.calling_activity),
                                     mContext.getString(R.string.home_activity));
-                            intent.putExtra(mContext.getString(R.string.intent_user), holder.user);
+                            intent.putExtra(mContext.getString(R.string.intent_user), holder.user.getuid());
                             mContext.startActivity(intent);
                         }
                     });
 
 
 
-                    holder.settings = singleSnapshot.getValue(UserAccountSettings.class);
+                    holder.settings=singleSnapshot.getValue(UserAccountSettings.class);
                     holder.comment.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -277,6 +286,13 @@ public class MainfeedListAdapter extends ArrayAdapter<Photo> {
 
         return convertView;
     }
+
+
+
+
+
+
+
 
     private boolean reachedEndOfList(int position){
         return position == getCount() - 1;

@@ -88,6 +88,7 @@ public  class  CartActivity extends AppCompatActivity
     private RecyclerView.LayoutManager layoutManager;
 
     private Button NextProcessBtn;
+    private  Button cartthenextactivityhere;
     private TextView txtTotalAmount, txtMsg1;
 
     private int overTotalPrice = 0;
@@ -130,11 +131,14 @@ public  class  CartActivity extends AppCompatActivity
     String somerole;
     String key;
 
+
     String traderkey;
     String thetraderhere;
     String tradername;
     String thetraderimage;
     android.widget.ImageView thepicturebeingloaded;
+    android.widget.ImageView  thetraderpicturebeingloaded;
+    DatabaseReference UsersRef;
 
 
     @Override
@@ -156,14 +160,16 @@ public  class  CartActivity extends AppCompatActivity
         }
         fetch();
         thepicturebeingloaded = (android.widget.ImageView) findViewById(R.id.cartproductimageonscreeen);
-
+        thetraderpicturebeingloaded = (android.widget.ImageView) findViewById(R.id.cartimageonscreen);
+        cartthenextactivityhere = (Button)findViewById(R.id.cartnextbutton);
         //     recyclerView.setAdapter(adapter);
 
         //    if (recyclerView != null) {
         //       recyclerView.setAdapter(adapter);
         //   }
 
-
+        UsersRef =  FirebaseDatabase.getInstance().getReference().child("Users");
+        UsersRef.keepSynced(true);
         CartListRef = FirebaseDatabase.getInstance().getReference().child("Cart");
         CartListRef.keepSynced(true);
         cartlistkey = CartListRef.getKey();
@@ -339,7 +345,15 @@ public  class  CartActivity extends AppCompatActivity
 
 
         }
-
+        cartthenextactivityhere.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent cartactivityintent = new Intent(CartActivity.this, ConfirmFinalOrderActivity.class);
+                if (cartactivityintent != null) {
+                    startActivity(cartactivityintent);
+                }
+            }
+        });
     }
 
 
@@ -428,7 +442,7 @@ public  class  CartActivity extends AppCompatActivity
                                      }}
         }
 
-     /*   public void setTraderImage(final Context ctx, final String image) {
+       public void setTraderImage(final Context ctx, final String image) {
             final android.widget.ImageView cartimageonscreen = (android.widget.ImageView) itemView.findViewById(R.id.cartimageonscreen);
 
             Picasso.get().load(image).resize(400, 0).networkPolicy(NetworkPolicy.OFFLINE).into(cartimageonscreen, new Callback() {
@@ -472,7 +486,7 @@ public  class  CartActivity extends AppCompatActivity
 
         }
 
-*/
+
 
 
 }
@@ -488,6 +502,7 @@ public  class  CartActivity extends AppCompatActivity
                             @NonNull
                             @Override
                             public Products parseSnapshot(@NonNull DataSnapshot snapshot) {
+
                                 return new Products(snapshot.child("pid").getValue().toString(),
 
                                         snapshot.child("tid").getValue().toString(),
@@ -496,11 +511,19 @@ public  class  CartActivity extends AppCompatActivity
                                         snapshot.child("desc").getValue().toString(),
                                         snapshot.child("discount").getValue().toString(),
                                         snapshot.child("name").getValue().toString(),
-                                        snapshot.child("image").getValue().toString()
-                                         );
+                                        snapshot.child("image").getValue().toString(),
+                                        snapshot.child("tradername").getValue().toString(),
+                                        snapshot.child("traderimage").getValue().toString()
+
+                                             );
+
+
                             }
                         })
                         .build();
+
+
+
 
         adapter = new FirebaseRecyclerAdapter<Products, ViewHolder>(options) {
             @Override
@@ -518,69 +541,88 @@ public  class  CartActivity extends AppCompatActivity
                 holder.carttheproductprice.setText("Price = " + model.getprice() + "$");
                 holder.cartdescriptionhere.setText(model.getdesc());
                 holder.cartquantity.setText(model.getquantity());
+                holder.carttradernamehere.setText(model.getTradername());
 
-                 if (thepicturebeingloaded != null) {
-                     Picasso.get().load(model.getimage()).placeholder(R.drawable.profile).into(thepicturebeingloaded);
-                 }
+                key = model.getpid();
+                traderkey = model.gettid();
+                model.setTrader(traderkey);
 
-                    holder.setImage(getApplicationContext(), model.getimage());
+                if (thepicturebeingloaded != null) {
+                    Picasso.get().load(model.getimage()).placeholder(R.drawable.profile).into(thepicturebeingloaded);
+                }
 
-                if (holder != null) {
-                    holder.carttheproductname.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            if (role.equals("Trader")) {
-                                Intent intent = new Intent(CartActivity.this, ProductDetailsActivity.class);
-                                if (intent != null) {
+                if (thetraderpicturebeingloaded != null) {
+                    Picasso.get().load(model.getTraderimage()).placeholder(R.drawable.profile).into(thetraderpicturebeingloaded);
+                }
+
+
+
+                holder.setImage(getApplicationContext(), model.getimage());
+                     holder.setTraderImage(getApplication(), model.getTraderimage());
+
+                    holder.cartquantity.setText(thetraderhere);
+
+                    if (holder != null) {
+                        holder.carttheproductname.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                if (role.equals("Trader")) {
+                                    Intent intent = new Intent(CartActivity.this, ProductDetailsActivity.class);
+                                    if (intent != null) {
+                                        intent.putExtra("pid", key);
+                                        intent.putExtra("fromthehomeactivitytraderkey", traderkey);
+                                        intent.putExtra("fromthehomeactivityname", model.getname());
+                                        intent.putExtra("fromthehomeactivityprice", model.getprice());
+                                        intent.putExtra("fromthehomeactivitydesc", model.getdesc());
+                                        intent.putExtra("fromthehomeactivityname", thetraderhere);
+                                        intent.putExtra("fromthehomeactivityimage", model.getimage());
+
+                                    }
+                                    startActivity(intent);
+                                } else {
+                                    Intent intent = new Intent(CartActivity.this, ProductDetailsActivity.class);
+                                    if (intent != null) {
+                                        intent.putExtra("fromthehomeactivitytoproductdetails", traderkey);
+                                    }
+                                    startActivity(intent);
+                                }
+                            }
+                        });
+
+                    }
+
+                int oneTyprProductTPrice = ((Integer.valueOf(model.getprice()))) * Integer.valueOf(model.getquantity());
+                overTotalPrice = overTotalPrice + oneTyprProductTPrice;
+                productID = model.getpid();
+
+                    if (holder != null) {
+                        holder.carttradernamehere.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                if (role.equals("Trader")) {
+                                    Intent intent = new Intent(CartActivity.this, TraderProfile.class);
                                     intent.putExtra("pid", key);
-                                    intent.putExtra("fromthehomeactivitytraderkey", traderkey);
-                                    intent.putExtra("fromthehomeactivityname", model.getname());
-                                    intent.putExtra("fromthehomeactivityprice", model.getprice());
-                                    intent.putExtra("fromthehomeactivitydesc", model.getdesc());
-                                    intent.putExtra("fromthehomeactivityname", thetraderhere);
-                                    intent.putExtra("fromthehomeactivityimage", model.getimage() );
+                                    intent.putExtra("fromhomeactivitytotraderprofile", traderkey);
 
+                                    startActivity(intent);
+                                } else {
+                                    Intent intent = new Intent(CartActivity.this, TraderProfile.class);
+                                    intent.putExtra("pid", key);
+                                    intent.putExtra("fromhomeactivitytotraderprofile", traderkey);
+
+                                    startActivity(intent);
                                 }
-                                startActivity(intent);
-                            } else {
-                                Intent intent = new Intent(CartActivity.this, ProductDetailsActivity.class);
-                                if (intent != null) {
-                                    intent.putExtra("fromthehomeactivitytoproductdetails", traderkey);
-                                }
-                                startActivity(intent);
                             }
-                        }
-                    });
+                        });
+                    }
+
+
 
                 }
-
-
-                if (holder != null) {
-                    holder.carttradernamehere.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            if (role.equals("Trader")) {
-                                Intent intent = new Intent(CartActivity.this, TraderProfile.class);
-                                intent.putExtra("pid", key);
-                                intent.putExtra("fromhomeactivitytotraderprofile", traderkey);
-
-                                startActivity(intent);
-                            } else {
-                                Intent intent = new Intent(CartActivity.this, TraderProfile.class);
-                                intent.putExtra("pid", key);
-                                intent.putExtra("fromhomeactivitytotraderprofile", traderkey);
-
-                                startActivity(intent);
-                            }
-                        }
-                    });
-                }
-
-            }
 
         };
         recyclerView.setAdapter(adapter);
-    }
+    };
 
 
 

@@ -16,12 +16,12 @@ public class Products {
 
     private String field, followersname, customerPaid, driverPaidOut;
     private String timestamp, operations, reviewBy, residences, service, setinformations;
-    private String baseprice;
+    private String baseprice; String traderimage; String tradername;
        String trader;
     public Products() {
     }
 
-    public Products( String pid,  String tid, String quantity, String price,String desc, String discount, String name, String image
+    public Products( String pid,  String tid, String quantity, String price,String desc, String discount, String name, String image, String tradername, String traderimage
 
                      ) {this.desc = desc;
         this.image = image;
@@ -35,6 +35,8 @@ public class Products {
         this.pid = pid;
         this.price = price;
         this.quantity = quantity;
+        this.tradername = tradername;
+        this.traderimage = traderimage;
     }
     public Products(
             String desc, String image, String title, String name, String phone, String discount, String pid, String price, String quantity, String tid, String traderID,
@@ -46,7 +48,7 @@ public class Products {
             String coverimage, String g, String one, String zero, String customerId, String customerRideId, String destination, String destinationLat, String destinationLng,
             String driverFoundID, String customer, String driver, String predictDistance, String lat, String lng, String rating, String triptime,
             String job, String quote, String role, String car, String descriptions, String field, String followersname, String customerPaid, String driverPaidOut,
-            String timestamp, String operations, String reviewBy, String residences, String service, String setinformations, String baseprice
+            String timestamp, String operations, String reviewBy, String residences, String service, String setinformations, String baseprice, String tradername, String traderimage
     ) {
 
 
@@ -111,7 +113,24 @@ public class Products {
         this.setinformations = setinformations;
         this.baseprice = baseprice;
         this.trader = trader;
+        this.traderimage = traderimage;
+        this.tradername= tradername;
     }
+
+    public String getTradername() {
+        return tradername;
+    }
+    public void setTradername(String tradername) {
+        this.tradername = tradername;
+    }
+
+    public String getTraderimage() {
+        return traderimage;
+    }
+    public void setTraderimage(String traderimage) {
+        this.traderimage = traderimage;
+    }
+
 
     public String getPhone() {
         return phone;

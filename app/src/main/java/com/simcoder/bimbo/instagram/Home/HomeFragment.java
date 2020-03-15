@@ -42,6 +42,8 @@ public class HomeFragment extends Fragment {
     private ArrayList<Photo> mPhotos;
     private ArrayList<Photo> mPaginatedPhotos;
     private ArrayList<String> mFollowing;
+    //LIST VIEW AS THE SUBJECT IS NOT REALLY NECESSARY
+
     private ListView mListView;
     private MainfeedListAdapter mAdapter;
     private int mResults;
@@ -53,6 +55,8 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         mListView = (ListView) view.findViewById(R.id.listView);
+
+
         mFollowing = new ArrayList<>();
         mPhotos = new ArrayList<>();
         //   mPhotos = (ArrayList<Photo>) new ArrayList<>();
@@ -150,6 +154,9 @@ public class HomeFragment extends Fragment {
                                         //     photo.setuid(objectMap.get("uid").toString());
                                         if (objectMap.get("date") != null) {
                                             photo.setdate(objectMap.get("date").toString());
+                                        }
+                                        if (objectMap.get("name") != null) {
+                                            photo.setname(objectMap.get("name").toString());
                                         }
 
                                         if (objectMap.get("image") != null) {
@@ -307,6 +314,8 @@ public class HomeFragment extends Fragment {
                     mAdapter = new MainfeedListAdapter(getActivity(), R.layout.layout_mainfeed_listitem, mPaginatedPhotos);
 
                 }
+
+
                 if (mAdapter != null) {
                     mListView.setAdapter(mAdapter);
                 }
