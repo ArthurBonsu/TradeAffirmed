@@ -996,7 +996,7 @@ public  class  MainViewFeedFragment extends Fragment {
                           holder.username.setText(tradername);
 
                           holder.likes.setText("Liked by " +    likenumber + "  " + "number of people");
-                          holder.comments.setText("View all comment from" + commentnumber +"people");
+                          holder.comments.setText("View all comment from" + commentnumber  +"people");
                           holder.caption.setText(caption);
                           holder.timeDetla.setText(model.gettime());
                           holder.setThefeedimage(getContext(), model.getimage());
@@ -1004,6 +1004,8 @@ public  class  MainViewFeedFragment extends Fragment {
                           holder.heartRed.setImageResource(R.drawable.ic_heart_red);
 
                           holder.heartWhite.setImageResource(R.drawable.ic_heart_white);
+
+
 
 
 
@@ -1018,10 +1020,12 @@ public  class  MainViewFeedFragment extends Fragment {
                               Picasso.get().load( thetraderimage).placeholder(R.drawable.profile).into(theprofileimage);
                           }
 
+
+                        /*
                           if (thephotoimage != null) {
                               Picasso.get().load(model.getimage()).placeholder(R.drawable.profile).into(thephotoimage);
                           }
-
+*/
 
 
 
