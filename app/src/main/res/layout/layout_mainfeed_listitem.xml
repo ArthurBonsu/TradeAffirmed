@@ -46,7 +46,10 @@
 
                         </RelativeLayout>
 
-                        <com.stephanie.instagramclone.Utils.SquareImageView
+
+
+
+        <com.simcoder.bimbo.instagram.Utils.SquareImageView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:id="@+id/post_image"

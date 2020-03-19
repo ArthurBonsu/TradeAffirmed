@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -103,6 +104,7 @@ import io.paperdb.Paper;
 
 
 public  class  MainViewFeedFragment extends Fragment {
+    private View MessageFeedView;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
 
@@ -114,15 +116,15 @@ public  class  MainViewFeedFragment extends Fragment {
     String productID = "";
     String userID = "";
     DatabaseReference UserRef;
-
+       ViewPager myviewpager;
     String cartkey = "";
     String orderkey = "";
     String role;
     DatabaseReference UserDetailsRef;
     private static final int RC_SIGN_IN = 1;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
-    private FirebaseRecyclerAdapter adapter;
-SquareImageView thefeedimage;
+
+    SquareImageView thefeedimage;
 
     //AUTHENTICATORS
 
@@ -136,6 +138,7 @@ SquareImageView thefeedimage;
     private ImageView numberoflikesimage;
     String cartlistkey;
     DatabaseReference CartListRef;
+    DatabaseReference PhotoReferences;
     String traderoruser;
     String nameofproduct;
     String productid;
@@ -150,11 +153,7 @@ SquareImageView thefeedimage;
     String key;
 
 
-
-
     //AUTHENTICATORS
-
-
 
 
     String traderkey;
@@ -162,13 +161,10 @@ SquareImageView thefeedimage;
     String tradername;
     String thetraderimage;
     android.widget.ImageView thepicturebeingloaded;
-    android.widget.ImageView  thetraderpicturebeingloaded;
+    android.widget.ImageView thetraderpicturebeingloaded;
     DatabaseReference UsersRef;
 
-
-    private View MessageFeedView;
-
-
+    FirebaseRecyclerAdapter<Photo, MainFeedViewHolder> feedadapter;
     //vars
     private ArrayList<Photo> mPhotos;
     private ArrayList<Photo> mPaginatedPhotos;
@@ -184,6 +180,12 @@ SquareImageView thefeedimage;
     //THE ELEMENTS TO PICK UP FROM THE DATABASE ARENA
 
 
+    @Nullable
+    @Override
+    public Context getContext() {
+        return super.getContext();
+    }
+
     public MainViewFeedFragment() {
 
 
@@ -193,20 +195,22 @@ SquareImageView thefeedimage;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        MessageFeedView = inflater.inflate(R.layout.fragment_home, container, false);
+        MessageFeedView = inflater.inflate(R.layout.stickynoterecycler, container, false);
 
-
-        recyclerView = MessageFeedView.findViewById(R.id.stickyheaderrecyler);
+              if(MessageFeedView != null) {
+                  recyclerView = MessageFeedView.findViewById(R.id.stickyheaderrecyler);
 
         //    LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         if (recyclerView != null) {
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         }
+
         if (recyclerView != null) {
             recyclerView.setHasFixedSize(true);
 
         }
-        fetch();
+
+                  fetch();
 
         thepicturebeingloaded = (android.widget.ImageView) MessageFeedView.findViewById(R.id.cartproductimageonscreeen);
         thetraderpicturebeingloaded = (android.widget.ImageView) MessageFeedView.findViewById(R.id.cartimageonscreen);
@@ -217,95 +221,116 @@ SquareImageView thefeedimage;
         //       recyclerView.setAdapter(adapter);
         //   }
 
+              }
+              if (FirebaseDatabase.getInstance().getReference() != null) {
+                  UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
+                  UsersRef.keepSynced(true);
+                  CartListRef = FirebaseDatabase.getInstance().getReference().child("Cart");
+                  CartListRef.keepSynced(true);
+                  cartlistkey = CartListRef.getKey();
 
-        UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
-        UsersRef.keepSynced(true);
-        CartListRef = FirebaseDatabase.getInstance().getReference().child("Cart");
-        CartListRef.keepSynced(true);
-        cartlistkey = CartListRef.getKey();
+                         if(FirebaseDatabase.getInstance().getReference() != null) {
+                             PhotoReferences = FirebaseDatabase.getInstance().getReference().child("Photos");
 
-
-        Paper.init(getContext());
-        getFollowing();
-        getPhotos();
-        displayPhotos();
-        displayMorePhotos();
-        Toolbar toolbar = (Toolbar) MessageFeedView.findViewById(R.id.hometoolbar);
-        if (toolbar != null) {
-            toolbar.setTitle("Home Fragment");
-//        setSupportActionBar(toolbar);
-        }
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
-        if (mGoogleApiClient != null) {
-
-            mGoogleSignInClient = GoogleSignIn.getClient(getContext(), gso);
-        }
-
-        if (mGoogleApiClient != null) {
-            mGoogleApiClient = new GoogleApiClient.Builder(getContext()).enableAutoManage(getActivity(),
-                    new GoogleApiClient.OnConnectionFailedListener() {
-                        @Override
-                        public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-                        }
-                    }).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
-        }
+                  Paper.init(getContext());
 
 
+                  GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
+                  if (mGoogleApiClient != null) {
+
+                      mGoogleSignInClient = GoogleSignIn.getClient(getContext(), gso);
+                  }
+
+                  if (mGoogleApiClient != null) {
+                      mGoogleApiClient = new GoogleApiClient.Builder(getContext()).enableAutoManage(getActivity(),
+                              new GoogleApiClient.OnConnectionFailedListener() {
+                                  @Override
+                                  public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+                                  }
+                              }).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
+                  }
+
+              }
         firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                if (FirebaseAuth.getInstance() != null) {
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    if (user != null) {
+                        customerid = "";
+                        traderoruser = user.getUid();
+                    }
 
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                if (user != null) {
-                    customerid = "";
-                    traderoruser = user.getUid();
-                }
-
-                // I HAVE TO TRY TO GET THE SETUP INFORMATION , IF THEY ARE ALREADY PROVIDED WE TAKE TO THE NEXT STAGE
-                // WHICH IS CUSTOMER TO BE ADDED.
-                // PULLING DATABASE REFERENCE IS NULL, WE CHANGE BACK TO THE SETUP PAGE ELSE WE GO STRAIGHT TO MAP PAGE
+                    // I HAVE TO TRY TO GET THE SETUP INFORMATION , IF THEY ARE ALREADY PROVIDED WE TAKE TO THE NEXT STAGE
+                    // WHICH IS CUSTOMER TO BE ADDED.
+                    // PULLING DATABASE REFERENCE IS NULL, WE CHANGE BACK TO THE SETUP PAGE ELSE WE GO STRAIGHT TO MAP PAGE
+                }        }
             }
-        };
 
+            ;
 
+              if (MessageFeedView != null){
         FloatingActionButton fab = (FloatingActionButton) MessageFeedView.findViewById(R.id.fab);
         if (fab != null) {
             fab.setOnClickListener(
                     new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+
                             if (!role.equals("Trader")) {
                                 Intent intent = new Intent(getContext(), CartActivity.class);
                                 startActivity(intent);
                             }
                         }
                     });
-        }
-
-
+        }}
 
 
         //
+              if (FirebaseAuth.getInstance() != null) {
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            UserRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers");
+            UserRef.keepSynced(true);
+            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                UserDetailsRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                UserDetailsRef.keepSynced(true);
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        UserRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers");
-        UserRef.keepSynced(true);
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            UserDetailsRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-            UserDetailsRef.keepSynced(true);
+                UserDetailsRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            if (dataSnapshot.child("uid").getValue() != null) {
+                                useridentifier = dataSnapshot.child("uid").getValue().toString();
+                                if (dataSnapshot.child("role").getValue() != null) {
+                                    role = dataSnapshot.child("role").getValue().toString();
+                                }
+                            }
+                        }
+                    }
 
-            UserDetailsRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        }  }
+
+        if (FirebaseAuth.getInstance() != null) {
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            PhotoReferences = FirebaseDatabase.getInstance().getReference().child("Photos");
+            PhotoReferences.keepSynced(true);
+
+
+            PhotoReferences.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
-                        if (dataSnapshot.child("uid").getValue() != null) {
-                            useridentifier = dataSnapshot.child("uid").getValue().toString();
-                             if (dataSnapshot.child("role").getValue() != null) {
-                                 role = dataSnapshot.child("role").getValue().toString();
-                             }
-                        }
+
                     }
+
+
                 }
 
                 @Override
@@ -314,15 +339,16 @@ SquareImageView thefeedimage;
                 }
             });
         }
-
-
-
-
-
+                getFollowing();
+        getPhotos();
+        displayPhotos();
+        displayMorePhotos();
         return MessageFeedView;
     }
 
-    //GETFOLLOWING WILL PULL FROM DIFFERENT DATASTORE( THE USER DATASTORE)
+
+
+
     private void getFollowing() {
         Log.d(TAG, "getFollowing: searching for following");
 
@@ -330,45 +356,46 @@ SquareImageView thefeedimage;
         if (user != null) {
             String userid = "";
             userid = user.getUid();
-            DatabaseReference followingreference = FirebaseDatabase.getInstance().getReference();
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
 
-            Query query = followingreference
+            Query query = reference
                     .child("Users").child("Customers").child(userid)
                     .child("following");
-            query.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
-                        if (followingkey != null) {
-                            if (singleSnapshot != null) {
-                                followingkey = singleSnapshot.getKey();
+            if (query != null) {
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                            if (followingkey != null) {
+                                if (singleSnapshot != null) {
+                                    followingkey = singleSnapshot.getKey();
 
-                                if (singleSnapshot.child(followingkey).child("name") != null) {
-                                    Log.d(TAG, "onDataChange: found user: " +
+                                    if (singleSnapshot.child(followingkey).child("name") != null) {
+                                        Log.d(TAG, "onDataChange: found user: " +
 
-                                            singleSnapshot.child(followingkey).child("name").getValue());
-                                    if (singleSnapshot.child(followingkey).getValue() != null) {
-                                        mFollowing.add(singleSnapshot.child(followingkey).getValue().toString());
+                                                singleSnapshot.child(followingkey).child("name").getValue());
+                                        if (singleSnapshot.child(followingkey).getValue() != null) {
+                                            mFollowing.add(singleSnapshot.child(followingkey).getValue().toString());
+                                        }
                                     }
                                 }
                             }
                         }
+                        if (followingkey != null) {
+                            mFollowing.add(followingkey);
+                        }
+                        //get the photos
+                        getPhotos();
                     }
-                    if (followingkey != null) {
-                        mFollowing.add(followingkey);
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
                     }
-                    //get the photos
-                    getPhotos();
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
+                });
+            }
         }
     }
-
     private void getPhotos() {
         Log.d(TAG, "getPhotos: getting photos");
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
@@ -540,8 +567,8 @@ SquareImageView thefeedimage;
 
 
         }
-
     }
+
     private void displayPhotos() {
         mPaginatedPhotos = new ArrayList<>();
 
@@ -566,6 +593,8 @@ SquareImageView thefeedimage;
                         mPaginatedPhotos.add(mPhotos.get(i));
                     }
                 }
+
+
 
 
             } catch (NullPointerException e) {
@@ -605,15 +634,21 @@ SquareImageView thefeedimage;
                     }
                 }
             }
-        } catch (NullPointerException e) {
+        }
+        catch(NullPointerException e){
             Log.e(TAG, "displayPhotos: NullPointerException: " + e.getMessage());
-        } catch (IndexOutOfBoundsException e) {
+        }catch(IndexOutOfBoundsException e){
             Log.e(TAG, "displayPhotos: IndexOutOfBoundsException: " + e.getMessage());
         }
     }
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+
+
+
+
+
+    public  class MainFeedViewHolder extends RecyclerView.ViewHolder {
         public LinearLayout root;
         CircleImageView mprofileImage;
         String likesString;
@@ -633,23 +668,23 @@ SquareImageView thefeedimage;
 
         public ItemClickListner listner;
 
-        public ViewHolder(View itemView) {
+        public MainFeedViewHolder(View itemView) {
             super(itemView);
-
-            username = (TextView) itemView.findViewById(R.id.username);
-            thefeedimage = (SquareImageView) itemView.findViewById(R.id.post_image);
-
-
-            heartRed = (android.widget.ImageView) itemView.findViewById(R.id.image_heart_red);
-            heartWhite = (android.widget.ImageView) itemView.findViewById(R.id.image_heart);
-            comment = (android.widget.ImageView) itemView.findViewById(R.id.speech_bubble);
-            likes = (TextView) itemView.findViewById(R.id.image_likes);
-            comments = (TextView) itemView.findViewById(R.id.image_comments_link);
-            caption = (TextView) itemView.findViewById(R.id.image_caption);
-            timeDetla = (TextView) itemView.findViewById(R.id.image_time_posted);
-            mprofileImage = (CircleImageView) itemView.findViewById(R.id.profile_photo);
+            if (itemView != null) {
+                username = (TextView) itemView.findViewById(R.id.username);
+                thefeedimage = (SquareImageView) itemView.findViewById(R.id.post_image);
 
 
+                heartRed = (android.widget.ImageView) itemView.findViewById(R.id.image_heart_red);
+                heartWhite = (android.widget.ImageView) itemView.findViewById(R.id.image_heart);
+                comment = (android.widget.ImageView) itemView.findViewById(R.id.speech_bubble);
+                likes = (TextView) itemView.findViewById(R.id.image_likes);
+                comments = (TextView) itemView.findViewById(R.id.image_comments_link);
+                caption = (TextView) itemView.findViewById(R.id.image_caption);
+                timeDetla = (TextView) itemView.findViewById(R.id.image_time_posted);
+                mprofileImage = (CircleImageView) itemView.findViewById(R.id.profile_photo);
+
+            }
         }
 
 
@@ -658,34 +693,37 @@ SquareImageView thefeedimage;
         }
 
 
-
         public void setmainviewusername(String mainviewusername) {
-
-            username.setText(mainviewusername);
+            if (username != null) {
+                username.setText(mainviewusername);
+            }
         }
 
         public void setTheLikes(String theLikes) {
-
-            likes.setText(theLikes);
+            if (likes != null) {
+                likes.setText(theLikes);
+            }
         }
 
         public void setthecomment(String thecomments) {
-
-            comments.setText(thecomments);
+            if (comments != null) {
+                comments.setText(thecomments);
+            }
         }
 
 
         public void setcaptionhere(String thecaptionhere) {
-
-            caption.setText(thecaptionhere);
+            if (caption != null) {
+                caption.setText(thecaptionhere);
+            }
         }
 
 
         public void setTimeDetla(String timeDetlaview) {
-
-            timeDetla.setText(timeDetlaview);
+            if (timeDetla != null) {
+                timeDetla.setText(timeDetlaview);
+            }
         }
-
 
         public void setThefeedimage(final Context ctx, final String image) {
             thefeedimage = (SquareImageView) itemView.findViewById(R.id.post_image);
@@ -737,166 +775,214 @@ SquareImageView thefeedimage;
         }
 
         public void setTheHeartWhite(final Context ctx, final String image) {
-            final android.widget.ImageView setimage_heart= (android.widget.ImageView) itemView.findViewById(R.id.image_heart);
-
-            Picasso.get().load(image).resize(400, 0).networkPolicy(NetworkPolicy.OFFLINE).into(setimage_heart, new Callback() {
-
-
-                @Override
-                public void onSuccess() {
-
-                }
-
-                @Override
-                public void onError(Exception e) {
-                    Picasso.get().load(image).resize(100, 0).into(setimage_heart);
-                }
+            final android.widget.ImageView setimage_heart = (android.widget.ImageView) itemView.findViewById(R.id.image_heart);
+            if (setimage_heart != null) {
+                Picasso.get().load(image).resize(400, 0).networkPolicy(NetworkPolicy.OFFLINE).into(setimage_heart, new Callback() {
 
 
-            });
+                    @Override
+                    public void onSuccess() {
+
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        Picasso.get().load(image).resize(100, 0).into(setimage_heart);
+                    }
 
 
+                });
+
+
+            }
         }
+
         public void setcommentbubble(final Context ctx, final String image) {
             final android.widget.ImageView setthecommentbubble = (android.widget.ImageView) itemView.findViewById(R.id.speech_bubble);
-
-            Picasso.get().load(image).resize(400, 0).networkPolicy(NetworkPolicy.OFFLINE).into(setthecommentbubble, new Callback() {
-
-
-                @Override
-                public void onSuccess() {
-
-                }
-
-                @Override
-                public void onError(Exception e) {
-                    Picasso.get().load(image).resize(100, 0).into(setthecommentbubble);
-                }
+            if (setthecommentbubble != null) {
+                Picasso.get().load(image).resize(400, 0).networkPolicy(NetworkPolicy.OFFLINE).into(setthecommentbubble, new Callback() {
 
 
-            });
+                    @Override
+                    public void onSuccess() {
+
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        Picasso.get().load(image).resize(100, 0).into(setthecommentbubble);
+                    }
 
 
+                });
+
+
+            }
+
+        }
+
+        //GETFOLLOWING WILL PULL FROM DIFFERENT DATASTORE( THE USER DATASTORE)
+
+    }
+    private void fetch(){
+        Query queryhere =
+                FirebaseDatabase.getInstance().getReference().child("Photos");
+
+
+              FirebaseRecyclerOptions<Photo> options =
+                      new FirebaseRecyclerOptions.Builder<Photo>()
+                              .setQuery(queryhere, new SnapshotParser<Photo>() {
+
+
+
+                                  @Override
+                                  public Photo parseSnapshot(@NonNull DataSnapshot snapshot) {
+                                     /*
+                                      String commentkey = snapshot.child("Comments").getKey();
+                                      String likekey = snapshot.child("Likes").getKey();
+
+
+*/
+
+                                          return new Photo(snapshot.child("caption").getValue().toString(),
+                                                           
+                                                  snapshot.child("date").getValue().toString(),
+                                                  snapshot.child("image").getValue().toString(),
+                                                  snapshot.child("time").getValue().toString(),
+                                                  snapshot.child("uid").getValue().toString(),
+                                                  snapshot.child("name").getValue().toString(),
+                                                  snapshot.child("photoid").getValue().toString(),
+
+                                                  snapshot.child("tid").getValue().toString(),
+                                                  snapshot.child("pid").getValue().toString(),
+                                                  snapshot.child("price").getValue().toString());
+
+                                      }
+
+
+                                  })
+
+                              .build();
+
+
+              feedadapter = new FirebaseRecyclerAdapter<Photo, MainFeedViewHolder>(options) {
+                  @Override
+                  public MainFeedViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+
+                      View view = LayoutInflater.from(parent.getContext())
+                              .inflate(R.layout.layout_mainfeed_listitem, parent, false);
+
+                      return new MainFeedViewHolder(view);
+                  }
+
+                  ;
+
+                  // recyclerview here must be set
+                  // holders must be set
+
+
+                  @Override
+                  public int getItemCount() {
+                      return super.getItemCount();
+                  }
+
+                  @Override
+                  protected void onBindViewHolder(@NonNull MainFeedViewHolder holder, int position, @NonNull Photo model) {
+                      if (model != null) {
+                          holder.username.setText(model.getname());
+                          holder.likes.setText("Likes" + model.getnumber());
+                          holder.comments.setText(model.getComment());
+                          holder.caption.setText(model.getCaption());
+                          holder.timeDetla.setText(model.gettime());
+
+                          key = model.getphotoid();
+                          traderkey = model.gettid();
+                          //   model.setTrader(traderkey);
+
+                          if (thefeedimage != null) {
+                              Picasso.get().load(model.getimage()).placeholder(R.drawable.profile).into(thefeedimage);
+                          }
+
+
+                          holder.setThefeedimage(getContext(), model.getimage());
+                          holder.setTheHeartRed(getContext(), String.valueOf(R.drawable.ic_heart_red));
+                          holder.setTheHeartWhite(getContext(), String.valueOf(R.drawable.ic_heart_white));
+                          holder.setcommentbubble(getContext(), String.valueOf(R.drawable.ic_speech_bubble));
+
+
+                          if (holder != null) {
+                              holder.heartRed.setOnClickListener(new View.OnClickListener() {
+                                  @Override
+                                  public void onClick(View view) {
+
+
+                                  }
+                              });
+                          }
+
+                          if (holder != null) {
+                              holder.thefeedimage.setOnClickListener(new View.OnClickListener() {
+                                  @Override
+                                  public void onClick(View view) {
+
+                                  }
+
+
+                              });
+
+
+                          }
+                      }
+
+
+                  };;
+
+
+              };
+
+
+
+
+          ;
+        if (recyclerView != null){
+            recyclerView.setAdapter(feedadapter);
         }
 
     }
 
-    private void fetch() {
-        Query query = FirebaseDatabase.getInstance()
-                .getReference()
-                .child("Photos");
-
-        FirebaseRecyclerOptions<Photo> options =
-                new FirebaseRecyclerOptions.Builder<Photo>()
-                        .setQuery(query, new SnapshotParser<Photo>() {
-
-
-                            @NonNull
-                            @Override
-                            public Photo parseSnapshot(@NonNull DataSnapshot snapshot) {
-                                String commentkey = snapshot.child("Comments").getKey();
-                                String likekey = snapshot.child("Likes").getKey();
-                                return new Photo(snapshot.child("caption").getValue().toString(),
-                                        snapshot.child("date").getValue().toString(),
-                                        snapshot.child("image").getValue().toString(),
-                                        snapshot.child("time").getValue().toString(),
-                                        snapshot.child("uid").getValue().toString(),
-                                        snapshot.child("name").getValue().toString(),
-                                        snapshot.child("photoid").getValue().toString(),
-                                        snapshot.child("Comments").child(commentkey).child("number").getValue().toString(),
-                                        snapshot.child("Likes").child(likekey).child("number").getValue().toString(),
-                                        snapshot.child("tid").getValue().toString(),
-                                        snapshot.child("pid").getValue().toString(),
-                                        snapshot.child("price").getValue().toString()
-                                );
-
-
-                            }
-                        })
-                        .build();
-
-
-        adapter = new FirebaseRecyclerAdapter<Photo, ViewHolder>(options) {
-            @Override
-            public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                View view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.layout_mainfeed_listitem, parent, false);
-
-                return new ViewHolder(view);
-            }
-
-
-            @Override
-            protected void onBindViewHolder(ViewHolder holder, final int position, final Photo model) {
-                holder.username.setText(model.getname());
-                holder.likes.setText("Likes" + model.getnumber());
-                holder.comments.setText(model.getComment());
-                holder.caption.setText(model.getCaption());
-                holder.timeDetla.setText(model.gettime());
-
-                key = model.getphotoid();
-                traderkey = model.gettid();
-                //   model.setTrader(traderkey);
-
-                if (thefeedimage != null) {
-                    Picasso.get().load(model.getimage()).placeholder(R.drawable.profile).into(thefeedimage);
-                }
-
-
-                holder.setThefeedimage(getContext(), model.getimage());
-                holder.setTheHeartRed(getContext(), String.valueOf(R.drawable.ic_heart_red));
-                holder.setTheHeartWhite(getContext(), String.valueOf(R.drawable.ic_heart_white));
-                holder.setcommentbubble(getContext(), String.valueOf(R.drawable.ic_speech_bubble));
-
-
-                if (holder != null) {
-                    holder.heartRed.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-
-
-                        }
-                    });
-                }
-
-                if (holder != null) {
-                    holder.thefeedimage.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-
-                        }
-                    });
-
-
-                }
-                ;
-                recyclerView.setAdapter(adapter);
-
-            }
-        };
-    }
     @Override
     public void onStart() {
         super.onStart();
-        adapter.startListening();
+        if (feedadapter != null) {
+            feedadapter.startListening();
+        }
         if (mAuth != null) {
             mAuth.addAuthStateListener(firebaseAuthListener);
         }
 
 
+
     }
 
 
     @Override
-    public void onStop() {
+    public void onStop () {
         super.onStop();
-        adapter.stopListening();
+         if (feedadapter != null) {
+             feedadapter.stopListening();
+         }
         //     mProgress.hide();
         if (mAuth != null) {
             mAuth.removeAuthStateListener(firebaseAuthListener);
         }
     }
 
+}
 
-    }
+
+
+
+
+
 

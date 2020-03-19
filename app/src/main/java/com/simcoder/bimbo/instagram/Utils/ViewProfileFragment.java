@@ -114,10 +114,12 @@ public class ViewProfileFragment extends Fragment {
         Log.d(TAG, "onCreateView: stared.");
 
         try {
-            mUser = getUserFromBundle();
-            init();
-        } catch  (NullPointerException e){
-            Log.e(TAG, "onCreateView: NullPointerException: " + e.getMessage() );
+            if (mUser != null) {
+                mUser = getUserFromBundle();
+                init();
+            }
+        } catch (NullPointerException e) {
+            Log.e(TAG, "onCreateView: NullPointerException: " + e.getMessage());
             Toast.makeText(mContext, "something went wrong", Toast.LENGTH_SHORT).show();
             getActivity().getSupportFragmentManager().popBackStack();
         }
@@ -131,151 +133,160 @@ public class ViewProfileFragment extends Fragment {
         getFollowersCount();
         getPostsCount();
 
-        mFollow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "onClick: now following: " + mUser.getname());
+        if (mFollow != null) {
+            mFollow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mUser != null) {
+                        Log.d(TAG, "onClick: now following: " + mUser.getname());
 
-                FirebaseDatabase.getInstance().getReference()
-                        .child("Users").child("Customers")
-                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                        .child("following")
-                        .setValue(mUser.getuid());
+                        FirebaseDatabase.getInstance().getReference()
+                                .child("Users").child("Customers")
+                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                .child("following")
+                                .setValue(mUser.getuid());
 
-                FirebaseDatabase.getInstance().getReference()
-                        .child("Users").child("Drivers")
-                        .child("followers")
-                        .child(mUser.getuid())
-                        .setValue(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                        FirebaseDatabase.getInstance().getReference()
+                                .child("Users").child("Drivers")
+                                .child("followers")
+                                .child(mUser.getuid())
+                                .setValue(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
-                setFollowing();
-            }
-        });
+                        setFollowing();
 
-        mUnfollow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "onClick: now unfollowing: " + mUser.getname());
+                    }
+                }
+            });
+        }
 
-                FirebaseDatabase.getInstance().getReference()
-                        .child("Users").child("Customers")
-                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                        .child("following").child(mUser.getuid())
-                        .removeValue();
+        if (mUnfollow != null) {
+            mUnfollow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mUser != null) {
+                        Log.d(TAG, "onClick: now unfollowing: " + mUser.getname());
 
-                FirebaseDatabase.getInstance().getReference()
-                        .child("Users").child("Drivers")
-                        .child("followers")
-                        .child(mUser.getuid()).child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                        .removeValue();
+                        FirebaseDatabase.getInstance().getReference()
+                                .child("Users").child("Customers")
+                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                .child("following").child(mUser.getuid())
+                                .removeValue();
 
+                        FirebaseDatabase.getInstance().getReference()
+                                .child("Users").child("Drivers")
+                                .child("followers")
+                                .child(mUser.getuid()).child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                .removeValue();
+                    }
 
-                setUnfollowing();
-            }
-        });
-
+                    setUnfollowing();
+                }
+            });
+        }
         //setupGridView();
+        if (editProfile != null) {
+            editProfile.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.d(TAG, "onClick: navigating to " + mContext.getString(R.string.edit_profile_fragment));
 
-        editProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, "onClick: navigating to " + mContext.getString(R.string.edit_profile_fragment));
-
-                Intent intent = new Intent(getActivity(), AccountSettingsActivity.class);
-                intent.putExtra(getString(R.string.calling_activity), getString(R.string.profile_activity));
-                startActivity(intent);
-                getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    Intent intent = new Intent(getActivity(), AccountSettingsActivity.class);
+                    intent.putExtra(getString(R.string.calling_activity), getString(R.string.profile_activity));
+                    startActivity(intent);
+                    getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                }                           });
             }
-        });
-        return view;
-    }
+            return view;
+        }
 
     private void init() {
         //set the profile widgets
-        DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference();
-        Query query1 = reference1.child("Users").child("Customers")
-                .orderByChild("uid").equalTo(mUser.getuid());
-        query1.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot singleSnapshot :  dataSnapshot.getChildren()){
-                    Log.d(TAG, "onDataChange: found user:" + singleSnapshot.getValue(UserAccountSettings.class).toString());
+        if (mUser != null) {
+            DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference();
+            Query query1 = reference1.child("Users").child("Customers")
+                    .orderByChild("uid").equalTo(mUser.getuid());
+            query1.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                        Log.d(TAG, "onDataChange: found user:" + singleSnapshot.getValue(UserAccountSettings.class).toString());
 
-                    UserSettings settings = new UserSettings();
-                    settings.setUser(mUser);
-                    settings.setSettings(singleSnapshot.getValue(UserAccountSettings.class));
-                    setProfileWidgets(settings);
+                        UserSettings settings = new UserSettings();
+                        settings.setUser(mUser);
+                        settings.setSettings(singleSnapshot.getValue(UserAccountSettings.class));
+                        setProfileWidgets(settings);
+                    }
                 }
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-            }
-        });
+                }
+            });
 
-
+        }
         //get the users profile photos
         DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference();
-        Query query2 = reference2
-                .child("Photos")
-                .child(mUser.getphotoid());
+        if (mUser != null) {
+            Query query2 = reference2
+                    .child("Photos")
+                    .child(mUser.getphotoid());
 
-        query2.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            query2.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
 
-                ArrayList<Photo> photos = new ArrayList<>();
+                    ArrayList<Photo> photos = new ArrayList<>();
 
-                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
-                    Photo photo = new Photo();
-                    Map<String, Object> objectMap = (HashMap<String, Object>) singleSnapshot.getValue();
+                    for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                        Photo photo = new Photo();
+                        Map<String, Object> objectMap = (HashMap<String, Object>) singleSnapshot.getValue();
 
-                    photo.setCaption(objectMap.get("caption").toString());
-                    photo.setTags(objectMap.get("tags").toString());
-                    photo.setphotoid(objectMap.get("photoid").toString());
-                    photo.setuid(objectMap.get("uid").toString());
-                    photo.setdate(objectMap.get("date").toString());
-                    photo.setimage(objectMap.get("image").toString());
+                        photo.setCaption(objectMap.get("caption").toString());
+                        photo.setTags(objectMap.get("tags").toString());
+                        photo.setphotoid(objectMap.get("photoid").toString());
+                        photo.setuid(objectMap.get("uid").toString());
+                        photo.setdate(objectMap.get("date").toString());
+                        photo.setimage(objectMap.get("image").toString());
 
-                    ArrayList<Comment> comments = new ArrayList<Comment>();
-                    for (DataSnapshot dSnapshot : singleSnapshot
-                            .child("Comments").getChildren()){
+                        ArrayList<Comment> comments = new ArrayList<Comment>();
+                        for (DataSnapshot dSnapshot : singleSnapshot
+                                .child("Comments").getChildren()) {
 
-                          getcommentkey = dSnapshot.getKey();
-                         theuserkey = dSnapshot.child(getcommentkey).child("Users").getKey();
-                         thecommentkey = dSnapshot.child(getcommentkey).child("Users").child(theuserkey).child("comments").getKey();
-                        Comment comment = new Comment();
-                        comment.setuid(dSnapshot.child(getcommentkey).child("Users").child(theuserkey).child("uid").getValue(Comment.class).getuid());
-                        comment.setComment(dSnapshot.child(getcommentkey).child("Users").child(theuserkey).child("comments").child(thecommentkey).child("comment").getValue(Comment.class).getComment());
-                        comment.setdate(dSnapshot.child(getcommentkey).child("Users").child(theuserkey).child("comments").child(thecommentkey).child("date").getValue(Comment.class).getdate());
-                        comments.add(comment);
+                            getcommentkey = dSnapshot.getKey();
+                            theuserkey = dSnapshot.child(getcommentkey).child("Users").getKey();
+                            thecommentkey = dSnapshot.child(getcommentkey).child("Users").child(theuserkey).child("comments").getKey();
+                            Comment comment = new Comment();
+                            comment.setuid(dSnapshot.child(getcommentkey).child("Users").child(theuserkey).child("uid").getValue(Comment.class).getuid());
+                            comment.setComment(dSnapshot.child(getcommentkey).child("Users").child(theuserkey).child("comments").child(thecommentkey).child("comment").getValue(Comment.class).getComment());
+                            comment.setdate(dSnapshot.child(getcommentkey).child("Users").child(theuserkey).child("comments").child(thecommentkey).child("date").getValue(Comment.class).getdate());
+                            comments.add(comment);
+                        }
+                        photo.setComments(comments);
+
+                        List<Like> likesList = new ArrayList<Like>();
+                        for (DataSnapshot dSnapshot : singleSnapshot
+                                .child("Likes").getChildren()) {
+                            Like like = new Like();
+                            like.setuid(dSnapshot.child(getcommentkey).child("Users").child(theuserkey).child("uid").getValue(Like.class).getuid());
+                            likesList.add(like);
+                        }
+                        photo.setLikes(likesList);
+                        photos.add(photo);
+
                     }
-                    photo.setComments(comments);
-
-                    List<Like> likesList = new ArrayList<Like>();
-                    for (DataSnapshot dSnapshot : singleSnapshot
-                            .child("Likes").getChildren()) {
-                        Like like = new Like();
-                        like.setuid(dSnapshot.child(getcommentkey).child("Users").child(theuserkey).child("uid").getValue(Like.class).getuid());
-                        likesList.add(like);
-                    }
-                    photo.setLikes(likesList);
-                    photos.add(photo);
+                    setupImageGrid(photos);
 
                 }
-                setupImageGrid(photos);
 
-            }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.d(TAG, "onCancelled: query cancelled");
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.d(TAG, "onCancelled: query cancelled");
-
-            }
-        });
+                }
+            });
+        }
     }
-
     private User getUserFromBundle() {
         Log.d(TAG, "getUserFromBundle: arguments: " + getArguments());
 

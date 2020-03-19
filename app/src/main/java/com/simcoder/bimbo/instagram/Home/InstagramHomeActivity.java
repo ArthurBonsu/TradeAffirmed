@@ -9,18 +9,30 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.firebase.ui.database.SnapshotParser;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.simcoder.bimbo.Model.Products;
 import com.simcoder.bimbo.R;
+import com.simcoder.bimbo.WorkActivities.CartActivity;
+import com.simcoder.bimbo.WorkActivities.ProductDetailsActivity;
+import com.simcoder.bimbo.WorkActivities.TraderProfile;
 import com.simcoder.bimbo.instagram.Home.InstagramHomeActivity;
 import com.simcoder.bimbo.instagram.Login.InstagramLoginActivity;
 import com.simcoder.bimbo.instagram.Models.Photo;
@@ -31,21 +43,22 @@ import com.simcoder.bimbo.instagram.Utils.MainfeedListAdapter;
 import com.simcoder.bimbo.instagram.Utils.SectionsPagerAdapter;
 import com.simcoder.bimbo.instagram.Utils.UniversalImageLoader;
 import com.simcoder.bimbo.instagram.Utils.ViewCommentsFragment;
+import com.squareup.picasso.Picasso;
 
-public class InstagramHomeActivity extends AppCompatActivity implements
-        MainfeedListAdapter.OnLoadMoreItemsListener{
-
+public class InstagramHomeActivity extends AppCompatActivity
+      {
+/*
     @Override
     public void onLoadMoreItems() {
         Log.d(TAG, "onLoadMoreItems: displaying more photos");
-        com.simcoder.bimbo.instagram.Home.HomeFragment fragment = (com.simcoder.bimbo.instagram.Home.HomeFragment)getSupportFragmentManager()
+        com.simcoder.bimbo.instagram.Home.MainViewFeedFragment fragment = (com.simcoder.bimbo.instagram.Home.MainViewFeedFragment)getSupportFragmentManager()
                 .findFragmentByTag("android:switcher:" + R.id.viewpager_container + ":" + mViewPager.getCurrentItem());
         if(fragment != null){
             fragment.displayMorePhotos();
         }
     }
-
-    private static final String TAG = "HomeActivity";
+*/
+    private static final String TAG = "Home Fragement Activity";
     private static final int ACTIVITY_NUM = 0;
     private static final int HOME_FRAGMENT = 1;
 
@@ -74,6 +87,9 @@ public class InstagramHomeActivity extends AppCompatActivity implements
         initImageLoader();
         setupBottomNavigationView();
         setupViewPager();
+
+
+
 
     }
 
@@ -156,12 +172,19 @@ public class InstagramHomeActivity extends AppCompatActivity implements
                 if (new CameraFragment() != null) {
                     adapter.addFragment(new CameraFragment()); //index 0
                 }
-                if (new HomeFragment() != null) {
-                    adapter.addFragment(new HomeFragment()); //index 1
+                if (new MainViewFeedFragment() != null) {
+                    adapter.addFragment(new MainViewFeedFragment()); //index 1
                 }
                 if (new MessagesFragment() != null) {
                     adapter.addFragment(new MessagesFragment()); //index 2
                 }
+
+
+
+
+
+
+
                 if (mViewPager != null) {
                     mViewPager.setAdapter(adapter);
                 }
@@ -258,7 +281,15 @@ public class InstagramHomeActivity extends AppCompatActivity implements
         };
     }
 
-    @Override
+
+
+
+
+
+
+
+
+          @Override
     public void onStart() {
         super.onStart();
         if (mAuth != null) {

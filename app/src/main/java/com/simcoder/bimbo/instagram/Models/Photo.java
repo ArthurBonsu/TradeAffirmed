@@ -109,8 +109,26 @@ public class Photo implements Parcelable{
         }
     };
 
+    public Photo(String caption, String date, String image, String time, String uid, String name, String photoid, String tid, String pid, String price) {
 
-
+        this.caption = caption;
+        this.date = date;
+        this.image = image;
+        this.photoid = photoid;
+        this.uid = uid;
+        this.name = name;
+        this.likes = likes;
+        this.comments = comments;
+        this.commentkey = commentkey;
+        this.likeid = likeid;
+        this.comment = comment;
+        this.number = number;
+        this.tid = tid ;
+        this.pid = pid;
+        this.tags = tags;
+        this.price = price;
+        this.time = time;
+    }
 
 
     public String getCaption() {

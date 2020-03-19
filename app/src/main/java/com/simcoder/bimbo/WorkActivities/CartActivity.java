@@ -499,6 +499,8 @@ public  class  CartActivity extends AppCompatActivity
         FirebaseRecyclerOptions<Products> options =
                 new FirebaseRecyclerOptions.Builder<Products>()
                         .setQuery(query, new SnapshotParser<Products>() {
+
+
                             @NonNull
                             @Override
                             public Products parseSnapshot(@NonNull DataSnapshot snapshot) {
