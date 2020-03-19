@@ -111,7 +111,7 @@ public  class  MainViewFeedFragment extends Fragment {
     private Button NextProcessBtn;
     private Button cartthenextactivityhere;
     private TextView txtTotalAmount, txtMsg1;
-
+      CircleImageView theprofileimage;
     private int overTotalPrice = 0;
     String productID = "";
     String userID = "";
@@ -125,7 +125,7 @@ public  class  MainViewFeedFragment extends Fragment {
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
 
     SquareImageView thefeedimage;
-
+    String    caption,  date,  image,  time, uid,  name,   photoid,  tid,  pid, price,  tagnumber, likenumber,commentnumber;
     //AUTHENTICATORS
 
     private GoogleMap mMap;
@@ -143,10 +143,7 @@ public  class  MainViewFeedFragment extends Fragment {
     String nameofproduct;
     String productid;
     String quantity;
-    String image;
-    String price;
-    String users;
-    String time;
+
     String useridentifier;
     String customerid;
     String somerole;
@@ -160,8 +157,11 @@ public  class  MainViewFeedFragment extends Fragment {
     String thetraderhere;
     String tradername;
     String thetraderimage;
+    android.widget.ImageView profilephoto;
+    android.widget.ImageView mainphoto;
     android.widget.ImageView thepicturebeingloaded;
     android.widget.ImageView thetraderpicturebeingloaded;
+
     DatabaseReference UsersRef;
 
     FirebaseRecyclerAdapter<Photo, MainFeedViewHolder> feedadapter;
@@ -179,6 +179,10 @@ public  class  MainViewFeedFragment extends Fragment {
 
     //THE ELEMENTS TO PICK UP FROM THE DATABASE ARENA
 
+    CircleImageView theprofilepicture;
+    SquareImageView thephotoimage;
+    ImageView theimageheart;
+    ImageView thebubbleimage;
 
     @Nullable
     @Override
@@ -212,9 +216,10 @@ public  class  MainViewFeedFragment extends Fragment {
 
                   fetch();
 
-        thepicturebeingloaded = (android.widget.ImageView) MessageFeedView.findViewById(R.id.cartproductimageonscreeen);
-        thetraderpicturebeingloaded = (android.widget.ImageView) MessageFeedView.findViewById(R.id.cartimageonscreen);
-        cartthenextactivityhere = (Button) MessageFeedView.findViewById(R.id.cartnextbutton);
+        theprofilepicture = (CircleImageView) MessageFeedView.findViewById(R.id.profile_photo);
+        thephotoimage = (SquareImageView) MessageFeedView.findViewById(R.id.post_image);
+        theimageheart = (ImageView) MessageFeedView.findViewById(R.id.image_heart_red);
+        thebubbleimage = (ImageView) MessageFeedView.findViewById(R.id.speech_bubble);
         //     recyclerView.setAdapter(adapter);
 
         //    if (recyclerView != null) {
@@ -339,7 +344,7 @@ public  class  MainViewFeedFragment extends Fragment {
                 }
             });
         }
-                getFollowing();
+        getFollowing();
         getPhotos();
         displayPhotos();
         displayMorePhotos();
@@ -654,6 +659,7 @@ public  class  MainViewFeedFragment extends Fragment {
         String likesString;
         TextView username, timeDetla, caption, likes, comments;
         SquareImageView thefeedimage;
+        CircleImageView theprofileimage;
         android.widget.ImageView heartRed, heartWhite, comment;
 
         UserAccountSettings settings = new UserAccountSettings();
@@ -671,13 +677,20 @@ public  class  MainViewFeedFragment extends Fragment {
         public MainFeedViewHolder(View itemView) {
             super(itemView);
             if (itemView != null) {
+
                 username = (TextView) itemView.findViewById(R.id.username);
+                theprofileimage =  (CircleImageView) itemView.findViewById(R.id.profile_photo);
                 thefeedimage = (SquareImageView) itemView.findViewById(R.id.post_image);
+
+
 
 
                 heartRed = (android.widget.ImageView) itemView.findViewById(R.id.image_heart_red);
                 heartWhite = (android.widget.ImageView) itemView.findViewById(R.id.image_heart);
                 comment = (android.widget.ImageView) itemView.findViewById(R.id.speech_bubble);
+
+
+
                 likes = (TextView) itemView.findViewById(R.id.image_likes);
                 comments = (TextView) itemView.findViewById(R.id.image_comments_link);
                 caption = (TextView) itemView.findViewById(R.id.image_caption);
@@ -691,6 +704,8 @@ public  class  MainViewFeedFragment extends Fragment {
         public void setItemClickListner(ItemClickListner listner) {
             this.listner = listner;
         }
+
+
 
 
         public void setmainviewusername(String mainviewusername) {
@@ -823,54 +838,136 @@ public  class  MainViewFeedFragment extends Fragment {
 
         //GETFOLLOWING WILL PULL FROM DIFFERENT DATASTORE( THE USER DATASTORE)
 
+        public void setTheProfilePhoto(final Context ctx, final String image) {
+            theprofileimage = (CircleImageView) itemView.findViewById(R.id.profile_photo);
+            if (theprofileimage != null) {
+                Picasso.get().load(image).resize(400, 0).networkPolicy(NetworkPolicy.OFFLINE).into(theprofileimage, new Callback() {
+
+
+                    @Override
+                    public void onSuccess() {
+
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        Picasso.get().load(image).resize(100, 0).into(theprofileimage);
+                    }
+
+
+                });
+
+
+            }
+        }
+
+
+
     }
+
     private void fetch(){
+        @Nullable
+
         Query queryhere =
+
                 FirebaseDatabase.getInstance().getReference().child("Photos");
+                        if (queryhere != null) {
+
+                            FirebaseRecyclerOptions<Photo> options =
+                                    new FirebaseRecyclerOptions.Builder<Photo>()
+                                            .setQuery(queryhere, new SnapshotParser<Photo>() {
 
 
-              FirebaseRecyclerOptions<Photo> options =
-                      new FirebaseRecyclerOptions.Builder<Photo>()
-                              .setQuery(queryhere, new SnapshotParser<Photo>() {
+
+                                                @Nullable
+                                                        @Override
+                                                        public Photo parseSnapshot(@Nullable DataSnapshot snapshot) {
 
 
-
-                                  @Override
-                                  public Photo parseSnapshot(@NonNull DataSnapshot snapshot) {
-                                     /*
+                                      /*
                                       String commentkey = snapshot.child("Comments").getKey();
                                       String likekey = snapshot.child("Likes").getKey();
 
 
-*/
-
-                                          return new Photo(snapshot.child("caption").getValue().toString(),
-                                                           
-                                                  snapshot.child("date").getValue().toString(),
-                                                  snapshot.child("image").getValue().toString(),
-                                                  snapshot.child("time").getValue().toString(),
-                                                  snapshot.child("uid").getValue().toString(),
-                                                  snapshot.child("name").getValue().toString(),
-                                                  snapshot.child("photoid").getValue().toString(),
-
-                                                  snapshot.child("tid").getValue().toString(),
-                                                  snapshot.child("pid").getValue().toString(),
-                                                  snapshot.child("price").getValue().toString());
-
-                                      }
+*/                                                                String Photokey = snapshot.getKey();
+                                                                  String TheLikeKey= snapshot.child(Photokey).child("Likes").getKey();
+                                                                  String Commentkey = snapshot.child(Photokey).child("Comments").getKey();
+                                                                  String ReplyKey = snapshot.child(Photokey).child("Replies").getKey();
 
 
-                                  })
 
-                              .build();
 
+                                                                 if (snapshot.child("caption").getValue() != null) {
+                                                              caption =         snapshot.child("caption").getValue().toString();
+                                                                 }
+                                                            if (snapshot.child("date").getValue() != null) {
+                                                             date =     snapshot.child("date").getValue().toString();
+                                                            }
+
+                                                            if (snapshot.child("image").getValue() != null) {
+                                                            image =      snapshot.child("image").getValue().toString();
+                                                            }
+                                                            if (snapshot.child("time").getValue() != null) {
+                                                          time =        snapshot.child("time").getValue().toString();
+                                                            }
+
+                                                            if (snapshot.child("uid").getValue() != null) {
+                                                          uid =     snapshot.child("uid").getValue().toString();
+                                                            }
+
+                                                            if (snapshot.child("name").getValue() != null) {
+                                                            name =     snapshot.child("name").getValue().toString();
+                                                            }
+
+                                                            if (snapshot.child("photoid").getValue() != null) {
+                                                              photoid =   snapshot.child("photoid").getValue().toString();
+                                                            }
+
+                                                            if (snapshot.child("tid").getValue() != null) {
+                                                                tid =    snapshot.child("tid").getValue().toString();
+                                                            }
+
+
+
+                                                            if (snapshot.child("pid").getValue() != null) {
+                                                                pid = snapshot.child("pid").getValue().toString();
+                                                            }
+
+                                                            if (snapshot.child("price").getValue() != null) {
+                                                                 price = snapshot.child("price").getValue().toString();
+                                                            }
+
+                                                            if (snapshot.child("tagnumber").getValue() != null) {
+                                                                 tagnumber = snapshot.child("tagnumber").getValue().toString();
+                                                            }
+                                                            if (snapshot.child("Likes").child("likenumber").getValue() != null) {
+                                                            likenumber =     snapshot.child("Likes").child("likenumber").getValue().toString();
+                                                            }
+                                                    if (snapshot.child("tradername").getValue() != null) {
+                                                        tradername = snapshot.child("tradername").getValue().toString();
+                                                    }
+                                                    if (snapshot.child("traderimage").getValue() != null) {
+                                                        thetraderimage =      snapshot.child("traderimage").getValue().toString();
+                                                    }
+
+                                                    if (snapshot.child("Comments").child("commentnumber").getValue() != null) {
+                                                        commentnumber =      snapshot.child("Comments").child("commentnumber").getValue().toString();
+                                                    }
+
+                                                    return new Photo(caption, date,  image,  time, uid,  name,   photoid,  tid,  pid, price,  tagnumber, likenumber, tradername, thetraderimage, commentnumber);
+
+
+                                                }
+
+                                                    }).build();
 
               feedadapter = new FirebaseRecyclerAdapter<Photo, MainFeedViewHolder>(options) {
+                  @Nullable
                   @Override
                   public MainFeedViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-
-                      View view = LayoutInflater.from(parent.getContext())
+                      @Nullable
+                      View view = LayoutInflater.from(  parent.getContext())
                               .inflate(R.layout.layout_mainfeed_listitem, parent, false);
 
                       return new MainFeedViewHolder(view);
@@ -888,27 +985,46 @@ public  class  MainViewFeedFragment extends Fragment {
                   }
 
                   @Override
-                  protected void onBindViewHolder(@NonNull MainFeedViewHolder holder, int position, @NonNull Photo model) {
+                  protected void onBindViewHolder(@Nullable MainFeedViewHolder holder, int position, @Nullable Photo model) {
                       if (model != null) {
-                          holder.username.setText(model.getname());
-                          holder.likes.setText("Likes" + model.getnumber());
-                          holder.comments.setText(model.getComment());
-                          holder.caption.setText(model.getCaption());
-                          holder.timeDetla.setText(model.gettime());
 
                           key = model.getphotoid();
                           traderkey = model.gettid();
                           //   model.setTrader(traderkey);
+
+
+                          holder.username.setText(tradername);
+
+                          holder.likes.setText("Liked by " +    likenumber + "  " + "number of people");
+                          holder.comments.setText("View all comment from" + commentnumber +"people");
+                          holder.caption.setText(caption);
+                          holder.timeDetla.setText(model.gettime());
+                          holder.setThefeedimage(getContext(), model.getimage());
+                          holder.setTheProfilePhoto(getContext(),  thetraderimage);
+                          holder.heartRed.setImageResource(R.drawable.ic_heart_red);
+
+                          holder.heartWhite.setImageResource(R.drawable.ic_heart_white);
+
+
+
 
                           if (thefeedimage != null) {
                               Picasso.get().load(model.getimage()).placeholder(R.drawable.profile).into(thefeedimage);
                           }
 
 
-                          holder.setThefeedimage(getContext(), model.getimage());
-                          holder.setTheHeartRed(getContext(), String.valueOf(R.drawable.ic_heart_red));
-                          holder.setTheHeartWhite(getContext(), String.valueOf(R.drawable.ic_heart_white));
-                          holder.setcommentbubble(getContext(), String.valueOf(R.drawable.ic_speech_bubble));
+
+                          if (theprofileimage != null) {
+                              Picasso.get().load( thetraderimage).placeholder(R.drawable.profile).into(theprofileimage);
+                          }
+
+                          if (thephotoimage != null) {
+                              Picasso.get().load(model.getimage()).placeholder(R.drawable.profile).into(thephotoimage);
+                          }
+
+
+
+
 
 
                           if (holder != null) {
@@ -932,6 +1048,7 @@ public  class  MainViewFeedFragment extends Fragment {
                               });
 
 
+
                           }
                       }
 
@@ -951,6 +1068,8 @@ public  class  MainViewFeedFragment extends Fragment {
 
     }
 
+    }
+    @Nullable
     @Override
     public void onStart() {
         super.onStart();

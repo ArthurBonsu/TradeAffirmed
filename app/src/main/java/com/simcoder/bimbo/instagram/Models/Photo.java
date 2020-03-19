@@ -24,6 +24,12 @@ public class Photo implements Parcelable{
     String pid;
     String tid;
     String price;
+    String commentnumber;
+    String replynumber;
+    String likenumber;
+    String tagnumber;
+    String tradername;
+    String traderimage;
     private List<Like> likes;
     private List<Comment> comments;
     private List<Tags>tags;
@@ -31,6 +37,28 @@ public class Photo implements Parcelable{
 
     public Photo() {
     }
+
+
+    public Photo(String caption,String date,  String image, String time, String uid, String name, String photoid, String tid, String  pid, String price,String tagnumber,String likenumber, String tradername, String traderimage, String commentnumber) {
+
+
+        this.caption = caption;
+        this.date = date;
+        this.image = image;
+        this.time = time;
+        this.uid = uid;
+        this.name = name;
+        this.photoid = photoid;
+        this.tid = tid;
+        this.pid = pid;
+        this.price = price;
+        this.tagnumber = tagnumber;
+        this.likenumber = likenumber;
+        this.commentnumber = commentnumber;
+
+    }
+
+
     public Photo(String caption, String date, String image, String time, String uid, String name, List<Like> likes, List<Comment> comments, String photoid, String commentkey, String likeid, String comment,String number, String tid, String pid,List<Tags>tags, String price) {
         this.caption = caption;
         this.date = date;
@@ -49,7 +77,9 @@ public class Photo implements Parcelable{
         this.tags = tags;
         this.price = price;
     }
-    public Photo(String caption, String date, String image, String time, String uid, String name, String photoid, String  number, String number1, String tid, String pid, String price) {
+
+
+    public Photo(String caption, String date, String image, String time, String uid, String name, String photoid, String  number, String tid, String pid, String price) {
 
         this.caption = caption;
         this.date = date;
@@ -70,6 +100,10 @@ public class Photo implements Parcelable{
         this.time = time;
 
     }
+
+
+
+
     protected Photo(Parcel in) {
 
         caption = in.readString();
@@ -158,6 +192,36 @@ public class Photo implements Parcelable{
     }
 
 
+    public String getcommentnumber() {
+        return commentnumber;
+    }
+    public void setcommentnumber(String commentnumber) {
+        this.commentnumber = commentnumber;
+    }
+
+    public String getreplynumber() {
+        return replynumber;
+    }
+    public void setreplynumber(String replynumber) {
+        this.replynumber = replynumber;
+    }
+
+
+    public String getlikenumber() {
+        return likenumber;
+    }
+    public void setlikenumber(String likenumber) {
+        this.likenumber = likenumber;
+    }
+
+    public String gettagnumber() {
+        return tagnumber;
+    }
+    public void settagnumber(String tagnumber) {
+        this.tagnumber = tagnumber;
+    }
+
+
     public String getLikeid(String likeid) {
         return likeid;
     }
@@ -208,6 +272,22 @@ public class Photo implements Parcelable{
 
     public void setnumber(String number) {
         this.number = number;
+    }
+
+
+
+    public String getTradername() {
+        return tradername;
+    }
+    public void setTradername(String tradername) {
+        this.tradername = tradername;
+    }
+
+    public String getTraderimage() {
+        return traderimage;
+    }
+    public void setTraderimage(String traderimage) {
+        this.traderimage = traderimage;
     }
 
 
