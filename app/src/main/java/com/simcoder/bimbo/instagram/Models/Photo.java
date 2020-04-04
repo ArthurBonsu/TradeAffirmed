@@ -33,7 +33,16 @@ public class Photo implements Parcelable{
     private List<Like> likes;
     private List<Comment> comments;
     private List<Tags>tags;
+    String orderkey;
+    String reply;
+    String replyid;
 
+
+
+    String pname;
+    String pimage;
+
+    String photid;
 
     public Photo() {
     }
@@ -76,10 +85,15 @@ public class Photo implements Parcelable{
         this.pid = pid;
         this.tags = tags;
         this.price = price;
+
+
+
+
     }
 
 
-    public Photo(String caption, String date, String image, String time, String uid, String name, String photoid, String  number, String tid, String pid, String price) {
+    public Photo(String caption, String date, String image, String time, String uid, String name,  String  number, String tid, String pid, String price,String photoid,
+            String orderkey,String reply,String replyid,String traderimage,String tradername,String pname,String pimage, String photid) {
 
         this.caption = caption;
         this.date = date;
@@ -98,6 +112,15 @@ public class Photo implements Parcelable{
         this.tags = tags;
         this.price = price;
         this.time = time;
+
+        this.orderkey = orderkey;
+        this.reply =reply;
+        this.replyid =replyid;
+        this.traderimage = traderimage;
+        this.tradername= tradername;
+        this.pname= pname;
+        this.pimage = pimage;
+        this.photoid = photoid;
 
     }
 
@@ -162,6 +185,53 @@ public class Photo implements Parcelable{
         this.tags = tags;
         this.price = price;
         this.time = time;
+    }
+
+
+    public String getorderkey() {
+        return orderkey;
+    }
+    public void setorderkey(String orderkey) {
+        this.orderkey = orderkey;
+    }
+
+
+    public String getreply() {
+        return reply;
+    }
+
+    public void setreply(String reply) {
+        this.reply = reply;
+    }
+
+    public String getreplyid() {
+        return replyid;
+    }
+    public void setreplyid(String replyid) {
+        this.replyid = replyid;
+    }
+
+
+    public String gettraderimage() {
+        return traderimage;
+    }
+    public void settraderimage(String traderimage) {
+        this.traderimage = traderimage;
+    }
+
+    public String getpname() {
+        return pname;
+    }
+    public void setpname(String pname) {
+        this.pname = pname;
+    }
+
+
+    public String getpimage() {
+        return pimage;
+    }
+    public void setpimage(String pimage) {
+        this.pimage = pimage;
     }
 
 
@@ -276,19 +346,8 @@ public class Photo implements Parcelable{
 
 
 
-    public String getTradername() {
-        return tradername;
-    }
-    public void setTradername(String tradername) {
-        this.tradername = tradername;
-    }
 
-    public String getTraderimage() {
-        return traderimage;
-    }
-    public void setTraderimage(String traderimage) {
-        this.traderimage = traderimage;
-    }
+
 
 
 

@@ -19,12 +19,24 @@ public class Tags {
     String pid;
     String image;
 
+    String photoid;
+    String orderkey;
+    String reply;
+    String replyid;
+    String traderimage;
+    String tradername;
+
+    String pname;
+    String pimage;
+
+
 
 
     public Tags() {
     }
 
-    public Tags(String comment, String uid, List<Like> likes, String date, String time, String tid, String name, String number, String subject, String likeid, String pid, String commentkey, List<Tags> tags, String image) {
+    public Tags(String comment, String uid, List<Like> likes, String date, String time, String tid, String name, String number, String subject, String likeid, String pid, String commentkey, List<Tags> tags, String image,
+                String photoid,String orderkey,String reply,String replyid,String traderimage,String tradername,String pname,String pimage,String photid) {
         this.comment = comment;
         this.uid = uid;
         this.likes = likes;
@@ -39,8 +51,91 @@ public class Tags {
         this.commentkey = commentkey;
         this.tags = tags;
         this.image = image;
+        this.photoid = photoid;
 
+        this.orderkey = orderkey;
+        this.reply = reply;
+        this.replyid =replyid;
+        this.traderimage = traderimage;
+        this.tradername = tradername;
+        this.pimage = pimage;
+        this.pname =pname;
+        this.image =photoid;
+        }
+
+
+
+
+    public String getphotoid() {
+        return photoid;
     }
+
+    public void setphotoid(String photoid) {
+        this.photoid = photoid;
+    }
+
+    public String getorderkey() {
+        return orderkey;
+    }
+
+    public void setorderkey(String orderkey) {
+        this.orderkey = orderkey;
+    }
+
+
+    public String getreply() {
+        return reply;
+    }
+    public void setreply(String reply) {
+        this.reply = reply;
+    }
+
+
+
+    public String getreplyid(String replyid) {
+        return replyid;
+    }
+    public void setreplyid(String replyid) {
+        this.replyid = replyid;
+    }
+
+
+    public String gettraderimage() {
+        return traderimage;
+    }
+
+    public void settraderimage(String traderimage) {
+        this.traderimage = traderimage;
+    }
+
+    public String gettradername() {
+        return tradername;
+    }
+
+    public void settradername(String tradername) {
+        this.tradername = tradername;
+    }
+
+    public String getpname() {
+        return pname;
+    }
+
+    public void setpname(String pname) {
+        this.pname = pname;
+    }
+
+
+    public String getpimage() {
+        return pimage;
+    }
+
+    public void setpimage(String pimage) {
+        this.pimage = pimage;
+    }
+
+
+
+
 
     public String getComment() {
         return comment;

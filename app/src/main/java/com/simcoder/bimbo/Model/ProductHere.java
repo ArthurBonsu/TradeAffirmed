@@ -1,5 +1,9 @@
 package com.simcoder.bimbo.Model;
 
+import com.simcoder.bimbo.instagram.Models.Like;
+
+import java.util.List;
+
 public class ProductHere {
 
     private String desc, image, title, name, phone, discount, pid, price, quantity, tid, traderID, commentkey, likeid;
@@ -16,8 +20,28 @@ public class ProductHere {
 
     private String field, followersname, customerPaid, driverPaidOut;
     private String timestamp, operations, reviewBy, residences, service, setinformations;
-    private String baseprice;
+    private String baseprice;  String traderoruser;
+    String nameofproduct;
+    String productid;
+    String useridentifier;
+    String customerid;
+    String somerole;
+    String key;
 
+    String comment;
+     String likes;
+    String subject;
+
+    String photoid;
+
+    String orderkey;
+    String reply;
+    String replyid;
+    String traderimage;
+    String pname;
+
+    String pimage;
+    String tradername;
     public ProductHere() {
     }
 
@@ -101,12 +125,116 @@ public class ProductHere {
 
     }
 
-    public String getCommentkey() {
+    public ProductHere(String comment, String uid, List<Like> likes, String date, String time, String tid, String name, String number, String subject, String likeid, String pid, String commentkey, String photoid, String orderkey,
+                   String reply, String replyid, String traderimage, String tradername, String pname, String pimage, String image
+    ) {
+        this.comment = comment;
+        this.uid = uid;
+
+        this.date = date;
+        this.likeid = likeid;
+        this.time = time;
+        this.tid = tid;
+        this.name = name;
+        this.number = number;
+        this.subject = subject;
+        this.pid = pid;
+        this.commentkey = commentkey;
+        this.photoid = photoid;
+
+        this.orderkey = orderkey;
+        this.reply = reply;
+        this.replyid = replyid;
+        this.traderimage = traderimage;
+        this.pname = pname;
+        this.image = image;
+        this.photoid = photoid;
+        this.pimage = pimage;
+        this.tradername = tradername;
+
+    }
+
+
+    public String gettradername() {
+        return tradername;
+    }
+
+
+    public void settradername(String tradername) {
+        this.tradername = tradername;
+    }
+    public String getorderkey() {
+        return orderkey;
+    }
+
+
+    public String getreply() {
+        return reply;
+    }
+
+
+    public String getreplyid() {
+        return replyid;
+    }
+
+
+
+    public void setreplyid(String replyid) {
+        this.replyid = replyid;
+    }
+
+
+    public String gettraderimage() {
+        return traderimage;
+    }
+
+    public void settraderimage(String traderimage) {
+        this.traderimage = traderimage;
+    }
+
+
+    public String getpname() {
+        return pname;
+    }
+
+    public void setpname(String pname) {
+        this.pname = pname;
+    }
+
+
+
+
+
+    public void setreply(String reply) {
+        this.reply = reply;
+    }
+
+    public void setorderkey(String orderkey) {
+        this.orderkey = orderkey;
+    }
+
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public String getcommentkey() {
         return commentkey;
     }
-    public void setCommentkey(String commentkey) {
+
+    public void setcommentkey(String commentkey) {
         this.commentkey = commentkey;
     }
+
+
+    public String getuid() {
+        return uid;
+    }
+
 
     public String getLikeid(String likeid) {
         return likeid;
@@ -114,6 +242,38 @@ public class ProductHere {
     public void setLikeid(String likeid) {
         this.likeid = likeid;
     }
+
+
+
+
+    public String getsubject() {
+        return subject;
+    }
+
+    public void setsubject(String subject) {
+        this.subject = subject;
+    }
+
+
+
+    public String getphotoid() {
+        return photoid;
+    }
+
+    public void setphotoid(String photoid) {
+        this.photoid = photoid;
+    }
+
+
+
+    public String getCommentkey() {
+        return commentkey;
+    }
+    public void setCommentkey(String commentkey) {
+        this.commentkey = commentkey;
+    }
+
+
 
 
     public String getPhone() {

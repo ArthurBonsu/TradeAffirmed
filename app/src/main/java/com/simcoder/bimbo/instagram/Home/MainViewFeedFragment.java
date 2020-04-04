@@ -45,6 +45,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.gms.vision.text.Line;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
@@ -97,6 +98,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -139,7 +141,9 @@ public  class  MainViewFeedFragment extends Fragment {
     String cartlistkey;
     DatabaseReference CartListRef;
     DatabaseReference PhotoReferences;
-    String traderoruser;
+
+
+       String traderoruser;
     String nameofproduct;
     String productid;
     String quantity;
@@ -163,6 +167,11 @@ public  class  MainViewFeedFragment extends Fragment {
     android.widget.ImageView thetraderpicturebeingloaded;
 
     DatabaseReference UsersRef;
+
+
+
+
+
 
     FirebaseRecyclerAdapter<Photo, MainFeedViewHolder> feedadapter;
     //vars
@@ -189,7 +198,9 @@ public  class  MainViewFeedFragment extends Fragment {
     String photokey;
 FirebaseDatabase LikesFirebaseDatabase;
 String likeskey;
-    String likername,likeimage,likernumber,likeruid, likerlikeid;
+  public static   String likername,likeimage,likernumber,likeruid, likerlikeid;
+
+    Query myLikeDatabaseQuery;
 
 
     public interface GetmyPhotosCallBack {
@@ -289,9 +300,9 @@ String likeskey;
                     // WHICH IS CUSTOMER TO BE ADDED.
                     // PULLING DATABASE REFERENCE IS NULL, WE CHANGE BACK TO THE SETUP PAGE ELSE WE GO STRAIGHT TO MAP PAGE
                 }        }
-            }
+            };
 
-            ;
+
 
               if (MessageFeedView != null){
         FloatingActionButton fab = (FloatingActionButton) MessageFeedView.findViewById(R.id.fab);
@@ -329,8 +340,8 @@ String likeskey;
                           Photo post = dataSnapshot.getValue(Photo.class);
                           //  System.out.println(post);
                           for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-
-
+                             photokey =  dataSnapshot.getKey();
+                              Log.d(TAG, "The Photokey " + photokey);
 
                               if (dataSnapshot1.child("caption").getValue() != null) {
                                   caption = dataSnapshot1.child("caption").getValue().toString();
@@ -377,7 +388,7 @@ String likeskey;
                                   }
 
                                   Gettingmyphotoscallback.onCallback(caption, date,  image,  name, photoid, pid,  posttype,  price, tid,traderimage,  tradername); {
-
+                                      Log.d(TAG, "After Call Back " + caption + " " +  date  + " " +  image + " " +  name + " "  + photoid + " " +  pid + " " +  posttype +  price + tid + traderimage +  tradername );
                               }
                           }}}
 
@@ -391,7 +402,7 @@ String likeskey;
 
                   Gettingmyphotoscallback.onCallback(caption, date,  image,  name, photoid, pid,  posttype,  price, tid,traderimage,  tradername);
 
-
+                  Log.d(TAG, "After Second  Call Back " + caption + " " +  date  + " " +  image + " " +  name + " "  + photoid + " " +  pid + " " +  posttype +  price + tid + traderimage +  tradername );
 
 
                  final GetmyLikersCallBack getmyLikersCallBack = new GetmyLikersCallBack() {
@@ -407,34 +418,42 @@ String likeskey;
                   LikesFirebaseDatabase = FirebaseDatabase.getInstance();
 
 
-                  mylikesdatabasereference = LikesFirebaseDatabase.getReference("Photos").child("Likes");
+                  mylikesdatabasereference = LikesFirebaseDatabase.getReference("Photos");
+                  myLikeDatabaseQuery =  mylikesdatabasereference.child(photokey).child("Likes");
                   likeskey = mylikesdatabasereference.getKey();
 
 // Attach a listener to read the data at our posts reference
-                  mylikesdatabasereference.addValueEventListener(new ValueEventListener() {
+                  myLikeDatabaseQuery.addChildEventListener(new ChildEventListener() {
                       @Override
-                      public void onDataChange(DataSnapshot dataSnapshot) {
+                      public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                      }
+
+                      @Override
+                      public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
                           Photo post = dataSnapshot.getValue(Photo.class);
                           //  System.out.println(post);
-                          for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                          for (DataSnapshot dataSnapshot2 : dataSnapshot.getChildren()) {
+                                 String likekey =         dataSnapshot.getKey();
 
-
-                              if (dataSnapshot1.child("Users").child("image").getValue() != null) {
-                                  likeimage = dataSnapshot1.child("Users").child("image").getValue().toString();
+                              if (dataSnapshot2.child("Users").child("image").getValue() != null) {
+                                  likeimage = dataSnapshot2.child("Users").child("image").getValue().toString();
                               }
-                              if (dataSnapshot1.child("Users").child("name").getValue() != null) {
-                                  likername = dataSnapshot1.child("Users").child("name").getValue().toString();
-
-                              }
-                              if (dataSnapshot1.child("Users").child("uid").getValue() != null) {
-                                  likeruid = dataSnapshot1.child("Users").child("uid").getValue().toString();
+                              if (dataSnapshot2.child("Users").child("name").getValue() != null) {
+                                  likername = dataSnapshot2.child("Users").child("name").getValue().toString();
 
                               }
-                              if (dataSnapshot1.child("likeid").getValue() != null) {
-                                  likerlikeid = dataSnapshot1.child("likeid").getValue().toString();
+                              if (dataSnapshot2.child("Users").child("uid").getValue() != null) {
+                                  likeruid = dataSnapshot2.child("Users").child("uid").getValue().toString();
 
-                                  if (dataSnapshot1.child("number").getValue() != null) {
-                                      likernumber = dataSnapshot1.child("number").getValue().toString();
+                              }
+                              if (dataSnapshot2.child(likekey).child("likeid").getValue() != null) {
+                                  likerlikeid = dataSnapshot2.child(likekey).child("likeid").getValue().toString();
+                                  Log.d(TAG, "Does it show the likeid " +   likerlikeid );
+
+                                  if (dataSnapshot2.child("number").getValue() != null) {
+                                      likernumber = dataSnapshot2.child("number").getValue().toString();
 
                                   }
 
@@ -442,20 +461,31 @@ String likeskey;
                                   getmyLikersCallBack.onCallback(likeimage,  likername,  likeruid, likerlikeid,  likernumber); {
 
                                   }
-                              }}}
+                              }}
+
+                      }
+
+                      @Override
+                      public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                      }
+
+                      @Override
+                      public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                      }
 
                       @Override
                       public void onCancelled(DatabaseError databaseError) {
-                          System.out.println("The read failed: " + databaseError.getCode());
+
                       }
                   });
-
 
 
                   getmyLikersCallBack.onCallback(likeimage,  likername,  likeruid, likerlikeid,  likernumber);
 
 
-
+                  Log.d(TAG, "After likes " +  likeimage +   likername +  likeruid + likerlikeid +  likernumber);
 
 
                   //
@@ -1162,9 +1192,9 @@ String likeskey;
                           //   model.setTrader(traderkey);
 
 
-                          holder.username.setText(tradername);
+                          holder.username.setText(likerlikeid);
 
-                          holder.likes.setText("Liked by " +    name + "  " + "number of people");
+                          holder.likes.setText("Liked by " +    likername + "  " + "number of people");
                           holder.comments.setText("View all comment from" + commentnumber  +"people");
                           holder.caption.setText(caption);
                           holder.timeDetla.setText(model.gettime());

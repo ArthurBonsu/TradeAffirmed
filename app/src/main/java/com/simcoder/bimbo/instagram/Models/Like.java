@@ -15,6 +15,17 @@ public class Like {
     String number;
 
     String pid;
+    String photoid;
+    String orderkey;
+    String reply;
+    String replyid;
+    String traderimage;
+    String tradername;
+
+    String pname;
+    String pimage;
+    String image;
+    String photid;
 
 
 
@@ -26,7 +37,8 @@ public class Like {
     }
 
 
-     public  Like( String uid, List<Like> likes, String date, String time, String tid, String name, String number,  String likeid, String pid){
+     public  Like( String uid, List<Like> likes, String date, String time, String tid, String name, String number,  String likeid, String pid,String photoid, String orderkey,
+                   String reply,String replyid,String traderimage,String tradername,String pname,String pimage,String image ){
 
 
          this.uid = uid;
@@ -40,11 +52,94 @@ public class Like {
 
          this.pid = pid;
 
+         this.photoid = photoid;
+         this.orderkey = orderkey;
+         this.reply = reply;
+         this.replyid = replyid;
+         this.traderimage = traderimage;
+         this.tradername = tradername;
+         this.pname = pname;
+         this.pimage = pimage;
+         this.image = image;
+
     }
 
 
 
 
+    public String getphotoid() {
+        return photoid;
+    }
+    public void setphotoid(String photoid) {
+        this.photoid = photoid;
+    }
+
+
+    public String getorderkey() {
+        return orderkey;
+    }
+    public void setorderkey(String orderkey) {
+        this.orderkey = orderkey;
+    }
+
+
+    public String getreply() {
+        return reply;
+    }
+    public void setreply(String reply) {
+        this.reply = reply;
+    }
+
+
+    public String getreplyid() {
+        return replyid;
+    }
+
+    public void setreplyid(String replyid) {
+        this.replyid = replyid;
+    }
+
+    public String gettraderimage() {
+        return traderimage;
+    }
+
+    public void settraderimage(String traderimage) {
+        this.traderimage = traderimage;
+    }
+
+
+    public String gettradername() {
+        return tradername;
+    }
+
+    public void settradername(String tradername) {
+        this.tradername = tradername;
+    }
+
+
+    public String getpname() {
+        return pname;
+    }
+
+    public void setpname(String pname) {
+        this.pname = pname;
+    }
+    public String getpimage() {
+        return pimage;
+    }
+
+    public void setpimage(String pimage) {
+        this.pimage = pimage;
+    }
+
+
+    public String getimage() {
+        return image;
+    }
+
+    public void setimage(String image) {
+        this.image = image;
+    }
 
     public String getuid() {
         return uid;

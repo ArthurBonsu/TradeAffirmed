@@ -17,9 +17,29 @@ public class UserAccountSettings implements Parcelable {
     private String website;
     private String uid;
 
+    String likeid;
+    String tid;
+
+
+    String subject;
+    String pid;
+    String photoid;
+    String orderkey;
+    String reply;
+    String replyid;
+    String traderimage;
+    String tradername;
+
+    String pname;
+    String pimage;
+
+    String commentkey;
+    String comment;
+
     public UserAccountSettings(String desc, String name, String number,
-                               String  posts, String image, String website,
-                               String uid) {
+                               String  posts, String website,
+                               String uid,String photoid, String orderkey,
+                               String reply,String replyid,String traderimage,String tradername,String pname,String pimage,String image,String commentkey, String comment) {
         this.desc = desc;
         this.name = name;
         this.number = number;
@@ -28,7 +48,23 @@ public class UserAccountSettings implements Parcelable {
         this.website = website;
         this.uid = uid;
         this.posts = posts;
+        this.number = number;
+        this.subject = subject;
+        this.pid = pid;
+        this.commentkey = commentkey;
+        this.photoid = photoid;
 
+        this.orderkey = orderkey;
+        this.reply = reply;
+        this.replyid = replyid;
+        this.traderimage = traderimage;
+        this.pname = pname;
+        this.image = image;
+        this.photoid = photoid;
+        this.pimage = pimage;
+        this.tradername = tradername;
+        this.commentkey = commentkey;
+        this.comment = comment;
 
     }
 
@@ -54,6 +90,29 @@ public class UserAccountSettings implements Parcelable {
         uid = in.readString();
         posts = in.readString();
 
+
+
+
+        number = in.readString();
+        subject = in.readString();
+        pid = in.readString();
+        commentkey = in.readString();
+
+        photoid = in.readString();
+        orderkey = in.readString();
+        reply = in.readString();
+        replyid = in.readString();
+
+        traderimage = in.readString();
+        photoid = in.readString();
+        pimage = in.readString();
+        tradername = in.readString();
+
+        commentkey = in.readString();
+        comment = in.readString();
+
+
+
     }
 
     public static final Creator<UserAccountSettings> CREATOR = new Creator<UserAccountSettings>() {
@@ -67,6 +126,90 @@ public class UserAccountSettings implements Parcelable {
             return new UserAccountSettings[size];
         }
     };
+
+
+
+    public String getcomment() {
+        return comment;
+    }
+
+
+    public void setcomment(String comment) {
+        this.comment = comment;
+    }
+    public String gettradername() {
+        return tradername;
+    }
+
+
+    public void settradername(String tradername) {
+        this.tradername = tradername;
+    }
+    public String getorderkey() {
+        return orderkey;
+    }
+
+
+    public String getreply() {
+        return reply;
+    }
+
+
+    public String getreplyid() {
+        return replyid;
+    }
+
+
+
+    public void setreplyid(String replyid) {
+        this.replyid = replyid;
+    }
+
+
+    public String gettraderimage() {
+        return traderimage;
+    }
+
+    public void settraderimage(String traderimage) {
+        this.traderimage = traderimage;
+    }
+
+
+    public String getpname() {
+        return pname;
+    }
+
+    public void setpname(String pname) {
+        this.pname = pname;
+    }
+
+
+
+
+
+    public void setreply(String reply) {
+        this.reply = reply;
+    }
+
+    public void setorderkey(String orderkey) {
+        this.orderkey = orderkey;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public String getcommentkey() {
+        return commentkey;
+    }
+
+    public void setcommentkey(String commentkey) {
+        this.commentkey = commentkey;
+    }
 
 
 
@@ -171,6 +314,27 @@ public class UserAccountSettings implements Parcelable {
         dest.writeString(name);
         dest.writeString(website);
         dest.writeString(uid);
+
+        dest.writeString(number);
+        dest.writeString(subject);
+        dest.writeString(pid);
+        dest.writeString(commentkey);
+        dest.writeString(photoid);
+        dest.writeString(orderkey);
+        dest.writeString(reply);
+        dest.writeString(replyid);
+        dest.writeString(traderimage);
+
+        dest.writeString(photoid);
+        dest.writeString(pimage);
+        dest.writeString(pid);
+        dest.writeString(tradername);
+        dest.writeString(commentkey);
+        dest.writeString(comment);
+
+
+
+
     }
 }
 

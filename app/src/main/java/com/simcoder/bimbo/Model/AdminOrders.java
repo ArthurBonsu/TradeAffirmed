@@ -18,6 +18,18 @@ public class AdminOrders {
     private String timestamp, operations, reviewBy, residences, service, setinformations;
     private String baseprice;
 
+    String subject;
+    String photoid;
+    String orderkey;
+    String reply;
+    String replyid;
+    String traderimage;
+    String tradername;
+
+    String pname;
+    String pimage;
+
+
     public AdminOrders() {
     }
 
@@ -31,7 +43,12 @@ public class AdminOrders {
             String coverimage, String g, String one, String zero, String customerId, String customerRideId, String destination, String destinationLat, String destinationLng,
             String driverFoundID, String customer, String driver, String predictDistance, String lat, String lng, String rating, String triptime,
             String job, String quote, String role, String car, String descriptions, String field, String followersname, String customerPaid, String driverPaidOut,
-            String timestamp, String operations, String reviewBy, String residences, String service, String setinformations, String baseprice, String commentkey, String likeid
+            String timestamp, String operations, String reviewBy, String residences, String service, String setinformations, String baseprice, String commentkey, String likeid,
+               String subject,  String photoid, String orderkey, String reply, String replyid, String traderimage, String tradername, String pname, String pimage
+
+
+
+
     ) {
 
 
@@ -97,9 +114,77 @@ public class AdminOrders {
         this.baseprice = baseprice;
         this.commentkey = commentkey;
         this. likeid = likeid;
+        this.subject =subject;
+        this.photoid = photoid;
+        this.orderkey = orderkey;
+
+
+
+
 
 
     }
+
+
+    public String gettradername() {
+        return tradername;
+    }
+
+
+    public void settradername(String tradername) {
+        this.tradername = tradername;
+    }
+    public String getorderkey() {
+        return orderkey;
+    }
+
+
+    public String getreply() {
+        return reply;
+    }
+
+
+    public String getreplyid() {
+        return replyid;
+    }
+
+
+
+    public void setreplyid(String replyid) {
+        this.replyid = replyid;
+    }
+
+
+    public String gettraderimage() {
+        return traderimage;
+    }
+
+    public void settraderimage(String traderimage) {
+        this.traderimage = traderimage;
+    }
+
+
+    public String getpname() {
+        return pname;
+    }
+
+    public void setpname(String pname) {
+        this.pname = pname;
+    }
+
+
+
+
+
+    public void setreply(String reply) {
+        this.reply = reply;
+    }
+
+    public void setorderkey(String orderkey) {
+        this.orderkey = orderkey;
+    }
+
+
 
     public String getCommentkey() {
         return commentkey;

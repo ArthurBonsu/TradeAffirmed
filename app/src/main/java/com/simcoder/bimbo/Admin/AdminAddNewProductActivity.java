@@ -199,6 +199,9 @@ public class AdminAddNewProductActivity extends AppCompatActivity implements Goo
 
 
 
+
+
+
     private void OpenGallery() {
         Intent galleryIntent = new Intent();
         if (galleryIntent != null) {
@@ -257,6 +260,12 @@ public class AdminAddNewProductActivity extends AppCompatActivity implements Goo
         }
 
     }
+
+
+
+
+
+
     private void StoreProductInformation() {
         if (loadingBar != null) {
             loadingBar.setTitle("Add New Product");
@@ -340,9 +349,6 @@ public class AdminAddNewProductActivity extends AppCompatActivity implements Goo
         productMap.put("categoryID", CategoryName);
         productMap.put("price", Price);
         productMap.put("name", Pname);
-
-
-
 
         traderhashmap.put("name",user.getDisplayName()   );
         traderhashmap.put("tid", user.getUid());

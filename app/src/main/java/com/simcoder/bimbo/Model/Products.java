@@ -1,5 +1,9 @@
 package com.simcoder.bimbo.Model;
 
+import com.simcoder.bimbo.instagram.Models.Like;
+
+import java.util.List;
+
 public class Products {
 
     private String desc, image, title, name, phone, discount, pid, price, quantity, tid, traderID;
@@ -18,6 +22,30 @@ public class Products {
     private String timestamp, operations, reviewBy, residences, service, setinformations;
     private String baseprice; String traderimage; String tradername;
        String trader;
+
+    private  String commentkey;
+    private String comment;
+
+    private List<Like> likes;
+
+    String likeid;
+
+    String subject;
+
+    String photoid;
+    String orderkey;
+    String reply;
+    String replyid;
+
+
+    String pname;
+    String pimage;
+
+
+
+
+
+
     public Products() {
     }
 
@@ -117,19 +145,158 @@ public class Products {
         this.tradername= tradername;
     }
 
-    public String getTradername() {
-        return tradername;
-    }
-    public void setTradername(String tradername) {
+
+
+    public Products(String comment, String uid, List<Like> likes, String date, String time, String tid, String name, String number, String subject, String likeid, String pid, String commentkey, String photoid, String orderkey,
+                   String reply,String replyid,String traderimage,String tradername,String pname,String pimage,String image
+    ) {
+        this.comment = comment;
+        this.uid = uid;
+        this.likes = likes;
+        this.date = date;
+        this.likeid = likeid;
+        this.time = time;
+        this.tid = tid;
+        this.name = name;
+        this.number = number;
+        this.subject = subject;
+        this.pid = pid;
+        this.commentkey = commentkey;
+        this.photoid = photoid;
+
+        this.orderkey = orderkey;
+        this.reply = reply;
+        this.replyid = replyid;
+        this.traderimage = traderimage;
+        this.pname = pname;
+        this.image = image;
+        this.photoid = photoid;
+        this.pimage = pimage;
         this.tradername = tradername;
+
     }
 
-    public String getTraderimage() {
+
+
+
+
+
+    public String gettradername() {
+        return tradername;
+    }
+
+
+    public void settradername(String tradername) {
+        this.tradername = tradername;
+    }
+    public String getorderkey() {
+        return orderkey;
+    }
+
+
+    public String getreply() {
+        return reply;
+    }
+
+
+    public String getreplyid() {
+        return replyid;
+    }
+
+
+
+    public void setreplyid(String replyid) {
+        this.replyid = replyid;
+    }
+
+
+    public String gettraderimage() {
         return traderimage;
     }
-    public void setTraderimage(String traderimage) {
+
+    public void settraderimage(String traderimage) {
         this.traderimage = traderimage;
     }
+
+
+    public String getpname() {
+        return pname;
+    }
+
+    public void setpname(String pname) {
+        this.pname = pname;
+    }
+
+
+
+
+
+    public void setreply(String reply) {
+        this.reply = reply;
+    }
+
+    public void setorderkey(String orderkey) {
+        this.orderkey = orderkey;
+    }
+
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public String getcommentkey() {
+        return commentkey;
+    }
+
+    public void setcommentkey(String commentkey) {
+        this.commentkey = commentkey;
+    }
+
+
+    public String getuid() {
+        return uid;
+    }
+    public void setuid(String uid) {
+        this.uid = uid;
+    }
+
+
+    public void setLikes(List<Like> likes) {
+        this.likes = likes;
+    }
+
+    public String getLikeid(String likeid) {
+        return likeid;
+    }
+    public void setLikeid(String likeid) {
+        this.likeid = likeid;
+    }
+
+
+
+
+    public String getsubject() {
+        return subject;
+    }
+
+    public void setsubject(String subject) {
+        this.subject = subject;
+    }
+
+
+
+    public String getphotoid() {
+        return photoid;
+    }
+
+    public void setphotoid(String photoid) {
+        this.photoid = photoid;
+    }
+
 
 
     public String getPhone() {
@@ -602,9 +769,6 @@ public class Products {
     }
     public String getuid(String uid) {
         return uid;
-    }
-    public void setuid(String uid) {
-        this.uid = uid;
     }
 
 

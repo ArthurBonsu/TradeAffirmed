@@ -15,7 +15,22 @@ public class User implements Parcelable{
     private  String image;
     String photoid;
     String tid;
+    String likeid;
 
+    String number;
+    String subject;
+    String pid;
+
+    String orderkey;
+    String reply;
+    String replyid;
+    String traderimage;
+    String tradername;
+
+    String pname;
+    String pimage;
+
+    String photid;
 
     public User(String email, String name, String desc, String website, String image) {
         this.email = email;
@@ -28,7 +43,9 @@ public class User implements Parcelable{
        }
 
 
-    public User(String email, String name, String desc, String website, String image, String uid, String phone,String posts, String photoid,String tid) {
+    public User(String email, String name, String desc, String website, String image, String uid, String phone,String posts, String photoid,
+            String tid,String likeid,String number,String subject, String pid,String orderkey,String reply, String replyid,String traderimage,String tradername,String pname,
+            String pimage) {
         this.uid = uid;
         this.phone = phone;
         this.email = email;
@@ -39,6 +56,19 @@ public class User implements Parcelable{
         this.image = image;
         this.photoid = photoid;
         this.tid = tid;
+        this.likeid = likeid;
+                this.number = number;
+                this.subject = subject;
+                this.pid = pid;
+                this.orderkey = orderkey;
+                this.reply = reply;
+                this.replyid= replyid;
+                this.traderimage = traderimage;
+                this.tradername = tradername;
+                this.pname = pname;
+                this.pimage = pimage;
+                this.photoid = photoid;
+
     }
 
 
@@ -53,6 +83,23 @@ public class User implements Parcelable{
         posts = in.readString();
         photoid = in.readString();
         tid = in.readString();
+
+        photoid = in.readString();
+        tid = in.readString();
+        likeid = in.readString();
+        number = in.readString();
+        subject = in.readString();
+        pid = in.readString();
+        orderkey = in.readString();
+
+        reply = in.readString();
+        replyid = in.readString();
+        traderimage = in.readString();
+        tradername = in.readString();
+        pname = in.readString();
+        pimage = in.readString();
+
+
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {
@@ -68,6 +115,104 @@ public class User implements Parcelable{
     };
 
 
+
+
+
+
+
+
+
+
+    public String getlikeid() {
+        return likeid;
+    }
+
+    public void setlikeid(String likeid) {
+        this.likeid = likeid;
+    }
+
+    public String getnumber() {
+        return number;
+    }
+
+    public void setnumber(String number) {
+        this.number = number;
+    }
+
+    public String getsubject() {
+        return subject;
+    }
+
+    public void setsubject(String subject) {
+        this.subject = subject;
+    }
+
+    public String getpid() {
+        return pid;
+    }
+
+    public void setpid(String pid) {
+        this.pid = pid;
+    }
+
+    public String getorderkey() {
+        return orderkey;
+    }
+
+    public void setorderkey(String orderkey) {
+        this.orderkey = orderkey;
+    }
+
+
+
+    public String getreply() {
+        return reply;
+    }
+
+    public void setreply(String reply) {
+        this.reply = reply;
+    }
+
+    public String getreplyid() {
+        return replyid;
+    }
+
+    public void setreplyid(String replyid) {
+        this.replyid = replyid;
+    }
+
+    public String gettraderimage() {
+        return traderimage;
+    }
+
+    public void settraderimage(String traderimage) {
+        this.traderimage = traderimage;
+    }
+
+    public String gettradername() {
+        return tradername;
+    }
+
+    public void settradername(String tradername) {
+        this.tradername = tradername;
+    }
+
+    public String getpname() {
+        return pname;
+    }
+
+    public void setpname(String pname) {
+        this.pname = pname;
+    }
+
+
+    public String getpimage() {
+        return pimage;
+    }
+
+    public void setpimage(String pimage) {
+        this.pimage = pimage;
+    }
 
 
     public String gettid() {
@@ -151,5 +296,24 @@ public class User implements Parcelable{
         dest.writeString(email);
         dest.writeString(name);
         dest.writeString(posts);
+
+
+        dest.writeString(photoid);
+        dest.writeString(tid);
+        dest.writeString(likeid);
+        dest.writeString(number);
+        dest.writeString(subject);
+        dest.writeString(pid);
+        dest.writeString(orderkey);
+        dest.writeString(reply);
+        dest.writeString(replyid);
+        dest.writeString(traderimage);
+        dest.writeString(tradername);
+        dest.writeString(pname);
+        dest.writeString(pimage);
+
+
+
+
     }
 }

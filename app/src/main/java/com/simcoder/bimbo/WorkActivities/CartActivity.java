@@ -543,7 +543,7 @@ public  class  CartActivity extends AppCompatActivity
                 holder.carttheproductprice.setText("Price = " + model.getprice() + "$");
                 holder.cartdescriptionhere.setText(model.getdesc());
                 holder.cartquantity.setText(model.getquantity());
-                holder.carttradernamehere.setText(model.getTradername());
+                holder.carttradernamehere.setText(model.gettradername());
 
                 key = model.getpid();
                 traderkey = model.gettid();
@@ -554,13 +554,13 @@ public  class  CartActivity extends AppCompatActivity
                 }
 
                 if (thetraderpicturebeingloaded != null) {
-                    Picasso.get().load(model.getTraderimage()).placeholder(R.drawable.profile).into(thetraderpicturebeingloaded);
+                    Picasso.get().load(model.gettraderimage()).placeholder(R.drawable.profile).into(thetraderpicturebeingloaded);
                 }
 
 
 
                 holder.setImage(getApplicationContext(), model.getimage());
-                     holder.setTraderImage(getApplication(), model.getTraderimage());
+                     holder.setTraderImage(getApplication(), model.gettraderimage());
 
                     holder.cartquantity.setText(thetraderhere);
 

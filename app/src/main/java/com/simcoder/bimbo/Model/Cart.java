@@ -1,5 +1,7 @@
 package com.simcoder.bimbo.Model;
 
+import com.simcoder.bimbo.instagram.Models.Like;
+
 public class Cart {
 
     private String desc, image, title, name, phone, discount, pid, price, quantity, tid, traderID;
@@ -18,6 +20,18 @@ public class Cart {
     private String timestamp, operations, reviewBy, residences, service, setinformations;
     private String baseprice,commentkey,  likeid;
 
+    String subject;
+    String photoid;
+    String orderkey;
+    String reply;
+    String replyid;
+    String traderimage;
+    String tradername;
+
+    String pname;
+    String pimage;
+    String comment;
+    String likes;
     public Cart() {
     }
 
@@ -31,7 +45,8 @@ public class Cart {
             String coverimage, String g, String one, String zero, String customerId, String customerRideId, String destination, String destinationLat, String destinationLng,
             String driverFoundID, String customer, String driver, String predictDistance, String lat, String lng, String rating, String triptime,
             String job, String quote, String role, String car, String descriptions, String field, String followersname, String customerPaid, String driverPaidOut,
-            String timestamp, String operations, String reviewBy, String residences, String service, String setinformations, String baseprice,String commentkey, String likeid
+            String timestamp, String operations, String reviewBy, String residences, String service, String setinformations, String baseprice,String commentkey, String likeid,
+            String comment,   String subject,   String photoid, String orderkey, String reply,String replyid,String traderimage,String tradername,String pname,String pimage
     ) {
 
 
@@ -98,7 +113,111 @@ public class Cart {
         this.commentkey = commentkey;
         this. likeid = likeid;
 
+        this.comment = comment;
+        this.uid = uid;
+        this.likes = likes;
+        this.date = date;
+        this.likeid = likeid;
+        this.time = time;
+        this.tid = tid;
+        this.name = name;
+        this.number = number;
+        this.subject = subject;
+        this.pid = pid;
+        this.commentkey = commentkey;
+        this.photoid = photoid;
+
+        this.orderkey = orderkey;
+        this.reply = reply;
+        this.replyid = replyid;
+        this.traderimage = traderimage;
+        this.pname = pname;
+        this.image = image;
+        this.photoid = photoid;
+        this.pimage = pimage;
+        this.tradername = tradername;
+
+
     }
+
+
+
+    public String gettradername() {
+        return tradername;
+    }
+
+
+    public void settradername(String tradername) {
+        this.tradername = tradername;
+    }
+    public String getorderkey() {
+        return orderkey;
+    }
+
+
+    public String getreply() {
+        return reply;
+    }
+
+
+    public String getreplyid() {
+        return replyid;
+    }
+
+
+
+    public void setreplyid(String replyid) {
+        this.replyid = replyid;
+    }
+
+
+    public String gettraderimage() {
+        return traderimage;
+    }
+
+    public void settraderimage(String traderimage) {
+        this.traderimage = traderimage;
+    }
+
+
+    public String getpname() {
+        return pname;
+    }
+
+    public void setpname(String pname) {
+        this.pname = pname;
+    }
+
+
+
+
+
+    public void setreply(String reply) {
+        this.reply = reply;
+    }
+
+    public void setorderkey(String orderkey) {
+        this.orderkey = orderkey;
+    }
+
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public String getcommentkey() {
+        return commentkey;
+    }
+
+    public void setcommentkey(String commentkey) {
+        this.commentkey = commentkey;
+    }
+
+
 
     public String getCommentkey() {
         return commentkey;
