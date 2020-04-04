@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -78,7 +79,9 @@ public class AdminAddNewProductActivity extends AppCompatActivity implements Goo
     private static final String TAG = "Google Activity";
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
-    ImageView setimagebutton;
+    ImageView imagetobesetto;
+    ImageButton setimagebutton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

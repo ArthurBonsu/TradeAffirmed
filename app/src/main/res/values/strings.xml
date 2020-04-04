@@ -389,4 +389,7 @@
     <string name="cartdescriptionhere">cartdescriptionhere</string>
     <string name="cartquantity">cartquantity</string>
     <string name="nextclicktogotoconfirm">next</string>
+    <string name="image1">image1</string>
+
+    <string name="tostartimageintent">tostartimageintent</string>
 </resources>
