@@ -47,7 +47,7 @@ import com.simcoder.bimbo.Admin.AdminMaintainProductsActivity;
 import com.simcoder.bimbo.Admin.AdminProductDetails;
 import com.simcoder.bimbo.Admin.AdminUserCartedActivity;
 import com.simcoder.bimbo.Admin.AdminViewBuyersActivity;
-import com.simcoder.bimbo.Admin.HomeActivity;
+import com.simcoder.bimbo.WorkActivities.HomeActivity;
 import com.simcoder.bimbo.Admin.ViewSingleUserOrders;
 import com.simcoder.bimbo.DriverMapActivity;
 import com.simcoder.bimbo.HistoryActivity;

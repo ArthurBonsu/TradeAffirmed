@@ -293,7 +293,7 @@ public class AdminAddNewProductActivityII extends AppCompatActivity implements G
 
                                                       if (task.isSuccessful()) {
 
-                                                          Intent startanewproductintent = new Intent(getApplicationContext(), com.simcoder.bimbo.Admin.HomeActivity.class);
+                                                          Intent startanewproductintent = new Intent(getApplicationContext(), com.simcoder.bimbo.WorkActivities.HomeActivity.class);
                                                           startActivity(startanewproductintent);
 
 
