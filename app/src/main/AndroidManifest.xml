@@ -149,14 +149,14 @@
         <activity android:name=".Admin.AdminAllProducts" />
         <activity android:name=".Admin.AdminAllCustomers" />
         <activity android:name=".Admin.AdminAddNewProductActivity" />
-
-
+        <activity android:name=".Admin.AdminAddNewProductActivityII" />
         <activity android:name=".instagram.dialogs.ConfirmPasswordDialog" />
         <activity android:name=".instagram.Home.InstagramHomeActivity" />
         <activity android:name=".instagram.Home.CameraFragment" />
         <activity android:name=".instagram.Home.HomeFragment" />
         <activity android:name=".instagram.Home.MessagesFragment" />
         <activity android:name=".instagram.Home.MainViewFeedFragment" />
+
 
 
         <activity android:name=".instagram.Likes.LikesActivity" />

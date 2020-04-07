@@ -6,27 +6,27 @@ import java.util.List;
 
 public class Products {
 
-    private String desc, image, title, name, phone, discount, pid, price, quantity, tid, traderID;
+    private String desc, image, title, name, phone, discount, pid, price, quantity, tid;
 
     private String address, amount, city, date, state, distance, mode, number, shippingcost, time;
 
-    private String count, condition, uid;
+    private String count, uid;
     private String password;
     private String coverimage, g, one, zero, customerId, customerRideId, destination, destinationLat, destinationLng;
-    private String driverFoundID, customer, driver, predictDistance, lat, lng, rating, triptime;
+    private String driverFoundID,  predictDistance, lat, lng, rating, triptime;
     private String job, quote, role;
 
     private String car, descriptions;
 
-    private String field, followersname, customerPaid, driverPaidOut;
+    private String field,  customerPaid, driverPaidOut;
     private String timestamp, operations, reviewBy, residences, service, setinformations;
     private String baseprice; String traderimage; String tradername;
-       String trader;
+
 
     private  String commentkey;
     private String comment;
 
-    private List<Like> likes;
+
 
     String likeid;
 
@@ -38,8 +38,14 @@ public class Products {
     String replyid;
 
 
+
     String pname;
     String pimage;
+    String categoryid;
+    String reviewid;
+    String categoryname;
+
+    String size;
 
 
 
@@ -54,7 +60,7 @@ public class Products {
                      ) {this.desc = desc;
         this.image = image;
 
-        this.desc = desc;
+
         this.image = image;
 
         this.name = name;
@@ -67,16 +73,19 @@ public class Products {
         this.traderimage = traderimage;
     }
     public Products(
-            String desc, String image, String title, String name, String phone, String discount, String pid, String price, String quantity, String tid, String traderID,
+            String desc, String image, String title, String name, String phone, String discount, String pid, String price, String quantity, String tid,
 
             String address, String amount, String city, String date, String state, String distance, String mode, String number, String shippingcost, String time,
 
-            String count, String condition, String uid,
-            String password, String trader,
-            String coverimage, String g, String one, String zero, String customerId, String customerRideId, String destination, String destinationLat, String destinationLng,
-            String driverFoundID, String customer, String driver, String predictDistance, String lat, String lng, String rating, String triptime,
-            String job, String quote, String role, String car, String descriptions, String field, String followersname, String customerPaid, String driverPaidOut,
-            String timestamp, String operations, String reviewBy, String residences, String service, String setinformations, String baseprice, String tradername, String traderimage
+            String count,  String uid, String password, String coverimage, String g, String one, String zero, String customerId, String customerRideId, String destination, String destinationLat, String destinationLng,
+            String driverFoundID,   String predictDistance, String lat, String lng, String rating, String triptime,
+            String job, String quote, String role, String car, String descriptions, String field,  String customerPaid, String driverPaidOut,
+            String timestamp, String operations, String reviewBy, String residences, String service, String setinformations, String baseprice, String tradername, String traderimage, String subject,
+            String orderkey,String reply,String replyid,String pname,String pimage,String categoryid,String reviewid, String categoryname,String photoid,
+             String size, String likeid
+
+
+
     ) {
 
 
@@ -90,7 +99,7 @@ public class Products {
         this.price = price;
         this.quantity = quantity;
         this.tid = tid;
-        this.traderID = traderID;
+
         this.address = address;
         this.amount = amount;
         this.city = city;
@@ -103,7 +112,6 @@ public class Products {
         this.time = time;
 
         this.count = count;
-        this.condition = condition;
         this.uid = uid;
         this.password = password;
         this.coverimage = coverimage;
@@ -117,8 +125,8 @@ public class Products {
         this.destinationLat = destinationLat;
         this.destinationLng = destinationLng;
         this.driverFoundID = driverFoundID;
-        this.customer = customer;
-        this.driver = driver;
+
+
         this.predictDistance = predictDistance;
         this.lat = lat;
         this.lng = lng;
@@ -130,7 +138,6 @@ public class Products {
         this.car = car;
         this.descriptions = descriptions;
         this.field = field;
-        this.followersname = followersname;
         this.customerPaid = customerPaid;
         this.driverPaidOut = driverPaidOut;
         this.timestamp = timestamp;
@@ -140,19 +147,35 @@ public class Products {
         this.service = service;
         this.setinformations = setinformations;
         this.baseprice = baseprice;
-        this.trader = trader;
+
         this.traderimage = traderimage;
         this.tradername= tradername;
+
+        this.orderkey = orderkey;
+        this.reply = reply;
+        this.replyid = replyid;
+        this.pname = pname;
+        this.pimage = pimage;
+        this.categoryid = categoryid;
+        this.reviewid =reviewid;
+        this.categoryname =categoryname;
+        this.photoid= photoid;
+        this.size =size;
+        this.likeid = likeid;
+        this.subject = subject;
+
+
+
     }
 
 
 
-    public Products(String comment, String uid, List<Like> likes, String date, String time, String tid, String name, String number, String subject, String likeid, String pid, String commentkey, String photoid, String orderkey,
+    public Products(String comment, String uid,  String date, String time, String tid, String name, String number, String subject, String likeid, String pid, String commentkey, String photoid, String orderkey,
                    String reply,String replyid,String traderimage,String tradername,String pname,String pimage,String image
     ) {
         this.comment = comment;
         this.uid = uid;
-        this.likes = likes;
+
         this.date = date;
         this.likeid = likeid;
         this.time = time;
@@ -174,6 +197,66 @@ public class Products {
         this.pimage = pimage;
         this.tradername = tradername;
 
+
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+    public void setpimage(String pimage) {
+        this.pimage = pimage;
+    }
+
+
+    public String getcategoryname() {
+        return categoryname;
+    }
+
+
+
+    public void setcategoryname(String categoryname) {
+        this.categoryname = categoryname;
+    }
+
+
+    public String getsize() {
+        return size;
+    }
+    public void setsize(String size) {
+        this.size = size;
+    }
+
+
+
+    public String getreviewid() {
+        return reviewid;
+    }
+    public void setreviewid(String reviewid) {
+        this.reviewid = reviewid;
+    }
+
+
+
+
+    public String getcategoryid() {
+        return categoryid;
+    }
+
+    public void setcategoryid(String categoryid) {
+        this.categoryid = categoryid;
+    }
+
+
+    public String getpimage() {
+        return pimage;
     }
 
 
@@ -262,18 +345,6 @@ public class Products {
     }
     public void setuid(String uid) {
         this.uid = uid;
-    }
-
-
-    public void setLikes(List<Like> likes) {
-        this.likes = likes;
-    }
-
-    public String getLikeid(String likeid) {
-        return likeid;
-    }
-    public void setLikeid(String likeid) {
-        this.likeid = likeid;
     }
 
 
@@ -444,13 +515,6 @@ public class Products {
     }
 
 
-    public String gettraderID() {
-        return traderID;
-    }
-
-    public void settraderID(String traderID) {
-        this.traderID = traderID;
-    }
 
 
     public String getpid() {
@@ -520,21 +584,8 @@ public class Products {
     }
 
 
-    public String getcustomer() {
-        return customer;
-    }
 
-    public void setcustomer(String customer) {
-        this.customer = customer;
-    }
 
-    public String getdriver() {
-        return driver;
-    }
-
-    public void setdriver(String driver) {
-        this.driver = driver;
-    }
 
 
     public String getlat() {
@@ -747,12 +798,6 @@ public class Products {
         this.tid = tid;
     }
 
-    public String getcondition(String condition) {
-        return condition;
-    }
-    public void settcondition(String condition) {
-        this.condition = condition;
-    }
 
     public String getcar(String car) {
         return car;
@@ -761,13 +806,7 @@ public class Products {
         this.car = car;
     }
 
-    public String getfollowersname(String followersname) {
-        return followersname;
-    }
-    public void setfollowersname(String followersname) {
-        this.followersname = followersname;
-    }
-    public String getuid(String uid) {
+   public String getuid(String uid) {
         return uid;
     }
 

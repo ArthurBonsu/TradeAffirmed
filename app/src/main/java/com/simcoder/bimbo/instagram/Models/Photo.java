@@ -36,6 +36,7 @@ public class Photo implements Parcelable{
     String orderkey;
     String reply;
     String replyid;
+    String posttype;
 
 
 
@@ -185,6 +186,30 @@ public class Photo implements Parcelable{
         this.tags = tags;
         this.price = price;
         this.time = time;
+    }
+
+    public Photo(String caption,String  date,String time, String tid,String traderimage,String tradername,String  photoid,String pname,String  pimage,String pid,String posttype,String price) {
+        this.caption = caption;
+        this.date = date;
+        this.time = time;
+        this.tid = tid;
+        this.traderimage = traderimage;
+        this.tradername = tradername;
+        this.photoid = photoid;
+        this.pname = pname;
+        this.pimage = pimage;
+        this.pid = pid;
+        this.posttype = posttype;
+        this.price = price;
+
+
+    }
+
+    public String getposttype() {
+        return posttype;
+    }
+    public void setposttype(String posttype) {
+        this.posttype = posttype;
     }
 
 
@@ -392,9 +417,7 @@ public class Photo implements Parcelable{
         this.likes = likes;
     }
 
-    public List<Tags> getTag() {
-        return tags ;
-    }
+
 
     public void setTag(List<Tags> tags) {
         this.tags = tags;

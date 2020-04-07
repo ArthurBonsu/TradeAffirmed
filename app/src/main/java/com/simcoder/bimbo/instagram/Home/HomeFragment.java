@@ -351,28 +351,22 @@ public class HomeFragment extends Fragment {
                             }
 
                             mResults = mResults + iterations;
-          if (mAdapter != null) {
-              mAdapter.notifyDataSetChanged();
-          }
-          }
+                            if (mAdapter != null) {
+                                mAdapter.notifyDataSetChanged();
+                            }
+                        }
                     }
                 }
             }
         }
-            catch(NullPointerException e){
-                Log.e(TAG, "displayPhotos: NullPointerException: " + e.getMessage());
-            }catch(IndexOutOfBoundsException e){
-                Log.e(TAG, "displayPhotos: IndexOutOfBoundsException: " + e.getMessage());
-            }
+        catch(NullPointerException e){
+            Log.e(TAG, "displayPhotos: NullPointerException: " + e.getMessage());
+        }catch(IndexOutOfBoundsException e){
+            Log.e(TAG, "displayPhotos: IndexOutOfBoundsException: " + e.getMessage());
         }
-
     }
 
-
-
-
-
-
+}
 
 
 

@@ -39,7 +39,7 @@ public class UserAccountSettings implements Parcelable {
     public UserAccountSettings(String desc, String name, String number,
                                String  posts, String website,
                                String uid,String photoid, String orderkey,
-                               String reply,String replyid,String traderimage,String tradername,String pname,String pimage,String image,String commentkey, String comment) {
+                               String reply,String replyid,String traderimage,String tradername,String pname,String pimage,String image,String commentkey, String comment, String tid, String likeid) {
         this.desc = desc;
         this.name = name;
         this.number = number;
@@ -65,6 +65,7 @@ public class UserAccountSettings implements Parcelable {
         this.tradername = tradername;
         this.commentkey = commentkey;
         this.comment = comment;
+
 
     }
 

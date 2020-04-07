@@ -2,7 +2,6 @@ package com.simcoder.bimbo.instagram.Home;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.ColorSpace;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,34 +14,20 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.firebase.ui.database.SnapshotParser;
-import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.vision.text.Line;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -51,35 +36,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.rey.material.widget.ImageView;
-import com.simcoder.bimbo.Admin.AdminAddNewProductActivity;
-import com.simcoder.bimbo.Admin.AdminAllCustomers;
-import com.simcoder.bimbo.Admin.AdminCategoryActivity;
-import com.simcoder.bimbo.Admin.AdminMaintainProductsActivity;
-import com.simcoder.bimbo.Admin.AdminProductDetails;
-import com.simcoder.bimbo.Admin.AdminUserCartedActivity;
-import com.simcoder.bimbo.Admin.AdminViewBuyersActivity;
-import com.simcoder.bimbo.Admin.ViewSingleUserOrders;
-import com.simcoder.bimbo.DriverMapActivity;
-import com.simcoder.bimbo.HistoryActivity;
 import com.simcoder.bimbo.Interface.ItemClickListner;
-import com.simcoder.bimbo.Model.Cart;
-import com.simcoder.bimbo.Model.ProductHere;
-import com.simcoder.bimbo.Model.Products;
-import com.simcoder.bimbo.Model.ProductsInformationModel;
-import com.simcoder.bimbo.Model.TraderWhoPostedProductModel;
-import com.simcoder.bimbo.ViewHolder.CartViewHolder;
-import com.simcoder.bimbo.ViewHolder.ProductViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.simcoder.bimbo.R;
 import com.simcoder.bimbo.WorkActivities.CartActivity;
-import com.simcoder.bimbo.WorkActivities.HomeActivity;
-import com.simcoder.bimbo.WorkActivities.ProductDetailsActivity;
-import com.simcoder.bimbo.WorkActivities.TraderProfile;
-import com.simcoder.bimbo.instagram.Home.HomeFragment;
-import com.simcoder.bimbo.instagram.Home.InstagramHomeActivity;
 import com.simcoder.bimbo.instagram.Models.Comment;
 import com.simcoder.bimbo.instagram.Models.Like;
 import com.simcoder.bimbo.instagram.Models.Photo;
@@ -97,8 +60,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -113,12 +74,12 @@ public  class  MainViewFeedFragment extends Fragment {
     private Button NextProcessBtn;
     private Button cartthenextactivityhere;
     private TextView txtTotalAmount, txtMsg1;
-      CircleImageView theprofileimage;
+    CircleImageView theprofileimage;
     private int overTotalPrice = 0;
     String productID = "";
     String userID = "";
     DatabaseReference UserRef;
-       ViewPager myviewpager;
+    ViewPager myviewpager;
     String cartkey = "";
     String orderkey = "";
     String role;
@@ -127,9 +88,9 @@ public  class  MainViewFeedFragment extends Fragment {
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
 
     SquareImageView thefeedimage;
-    String    caption,  date,  image,  time, uid,  name,   photoid,  tid,  pid, price,  tagnumber, likenumber,commentnumber;
+    String caption, date, image, time, uid, name, photoid, tid, pid, price, tagnumber, likenumber, commentnumber;
     //AUTHENTICATORS
-    String   posttype,  traderimage,  tradername;
+    String posttype, traderimage, tradername;
     private GoogleMap mMap;
     GoogleApiClient mGoogleApiClient;
     private static final String TAG = "Main Feed Activity";
@@ -143,7 +104,7 @@ public  class  MainViewFeedFragment extends Fragment {
     DatabaseReference PhotoReferences;
 
 
-       String traderoruser;
+    String traderoruser;
     String nameofproduct;
     String productid;
     String quantity;
@@ -169,10 +130,6 @@ public  class  MainViewFeedFragment extends Fragment {
     DatabaseReference UsersRef;
 
 
-
-
-
-
     FirebaseRecyclerAdapter<Photo, MainFeedViewHolder> feedadapter;
     //vars
     private ArrayList<Photo> mPhotos;
@@ -195,21 +152,24 @@ public  class  MainViewFeedFragment extends Fragment {
     FirebaseDatabase RetrievingDatabase;
     DatabaseReference myretrievalref;
     DatabaseReference mylikesdatabasereference;
+    DatabaseReference mycommentFirebaseDatabase;
     String photokey;
-FirebaseDatabase LikesFirebaseDatabase;
-String likeskey;
-  public static   String likername,likeimage,likernumber,likeruid, likerlikeid;
+    FirebaseDatabase LikesFirebaseDatabase;
+    FirebaseDatabase CommentFirebaseDatabase;
+    String likeskey;
+    String likername, likeimage, likernumber, likeruid, likerlikeid;
+String    pname; String    pimage;
 
     Query myLikeDatabaseQuery;
 
 
     public interface GetmyPhotosCallBack {
-        void onCallback(String caption,  String date, String image, String name, String photoid, String pid, String posttype, String price, String tid, String traderimage, String tradername);
+        void onCallback(String caption, String date, String image, String name, String photoid, String pid, String posttype, String price, String tid, String traderimage, String tradername);
     }
 
 
     public interface GetmyLikersCallBack {
-        void onCallback(String image,  String name, String uid, String likeid, String number );
+        void onCallback(String image, String name, String uid, String likeid, String number);
     }
 
 
@@ -230,293 +190,236 @@ String likeskey;
 
         MessageFeedView = inflater.inflate(R.layout.stickynoterecycler, container, false);
 
-              if(MessageFeedView != null) {
-                  recyclerView = MessageFeedView.findViewById(R.id.stickyheaderrecyler);
+        if (MessageFeedView != null) {
+            recyclerView = MessageFeedView.findViewById(R.id.stickyheaderrecyler);
 
-        //    LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        if (recyclerView != null) {
-            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            //    LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+            if (recyclerView != null) {
+                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            }
+
+            if (recyclerView != null) {
+                recyclerView.setHasFixedSize(true);
+
+            }
+
+            fetch();
+
+            theprofilepicture = (CircleImageView) MessageFeedView.findViewById(R.id.profile_photo);
+            thephotoimage = (SquareImageView) MessageFeedView.findViewById(R.id.post_image);
+            theimageheart = (ImageView) MessageFeedView.findViewById(R.id.image_heart_red);
+            thebubbleimage = (ImageView) MessageFeedView.findViewById(R.id.speech_bubble);
+            //     recyclerView.setAdapter(adapter);
+
+            //    if (recyclerView != null) {
+            //       recyclerView.setAdapter(adapter);
+            //   }
+
         }
+        if (FirebaseDatabase.getInstance().getReference() != null) {
+            UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
+            UsersRef.keepSynced(true);
+            CartListRef = FirebaseDatabase.getInstance().getReference().child("Cart");
+            CartListRef.keepSynced(true);
+            cartlistkey = CartListRef.getKey();
 
-        if (recyclerView != null) {
-            recyclerView.setHasFixedSize(true);
+            if (FirebaseDatabase.getInstance().getReference() != null) {
+                PhotoReferences = FirebaseDatabase.getInstance().getReference().child("Photos");
 
-        }
-
-                  fetch();
-
-        theprofilepicture = (CircleImageView) MessageFeedView.findViewById(R.id.profile_photo);
-        thephotoimage = (SquareImageView) MessageFeedView.findViewById(R.id.post_image);
-        theimageheart = (ImageView) MessageFeedView.findViewById(R.id.image_heart_red);
-        thebubbleimage = (ImageView) MessageFeedView.findViewById(R.id.speech_bubble);
-        //     recyclerView.setAdapter(adapter);
-
-        //    if (recyclerView != null) {
-        //       recyclerView.setAdapter(adapter);
-        //   }
-
-              }
-              if (FirebaseDatabase.getInstance().getReference() != null) {
-                  UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
-                  UsersRef.keepSynced(true);
-                  CartListRef = FirebaseDatabase.getInstance().getReference().child("Cart");
-                  CartListRef.keepSynced(true);
-                  cartlistkey = CartListRef.getKey();
-
-                         if(FirebaseDatabase.getInstance().getReference() != null) {
-                             PhotoReferences = FirebaseDatabase.getInstance().getReference().child("Photos");
-
-                  Paper.init(getContext());
+                Paper.init(getContext());
 
 
-                  GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
-                  if (mGoogleApiClient != null) {
+                GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
+                if (mGoogleApiClient != null) {
 
-                      mGoogleSignInClient = GoogleSignIn.getClient(getContext(), gso);
-                  }
+                    mGoogleSignInClient = GoogleSignIn.getClient(getContext(), gso);
+                }
 
-                  if (mGoogleApiClient != null) {
-                      mGoogleApiClient = new GoogleApiClient.Builder(getContext()).enableAutoManage(getActivity(),
-                              new GoogleApiClient.OnConnectionFailedListener() {
-                                  @Override
-                                  public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+                if (mGoogleApiClient != null) {
+                    mGoogleApiClient = new GoogleApiClient.Builder(getContext()).enableAutoManage(getActivity(),
+                            new GoogleApiClient.OnConnectionFailedListener() {
+                                @Override
+                                public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
-                                  }
-                              }).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
-                  }
+                                }
+                            }).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
+                }
 
-              }
-        firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if (FirebaseAuth.getInstance() != null) {
-                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                    if (user != null) {
-                        customerid = "";
-                        traderoruser = user.getUid();
+            }
+            firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
+                @Override
+                public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                    if (FirebaseAuth.getInstance() != null) {
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        if (user != null) {
+                            customerid = "";
+                            traderoruser = user.getUid();
+                        }
+
+                        // I HAVE TO TRY TO GET THE SETUP INFORMATION , IF THEY ARE ALREADY PROVIDED WE TAKE TO THE NEXT STAGE
+                        // WHICH IS CUSTOMER TO BE ADDED.
+                        // PULLING DATABASE REFERENCE IS NULL, WE CHANGE BACK TO THE SETUP PAGE ELSE WE GO STRAIGHT TO MAP PAGE
                     }
-
-                    // I HAVE TO TRY TO GET THE SETUP INFORMATION , IF THEY ARE ALREADY PROVIDED WE TAKE TO THE NEXT STAGE
-                    // WHICH IS CUSTOMER TO BE ADDED.
-                    // PULLING DATABASE REFERENCE IS NULL, WE CHANGE BACK TO THE SETUP PAGE ELSE WE GO STRAIGHT TO MAP PAGE
-                }        }
+                }
             };
 
 
+            if (MessageFeedView != null) {
+                FloatingActionButton fab = (FloatingActionButton) MessageFeedView.findViewById(R.id.fab);
+                if (fab != null) {
+                    fab.setOnClickListener(
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
 
-              if (MessageFeedView != null){
-        FloatingActionButton fab = (FloatingActionButton) MessageFeedView.findViewById(R.id.fab);
-        if (fab != null) {
-            fab.setOnClickListener(
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
+                                    if (!role.equals("Trader")) {
+                                        Intent intent = new Intent(getContext(), CartActivity.class);
+                                        startActivity(intent);
+                                    }
+                                }
+                            });
+                }
+            }
 
-                            if (!role.equals("Trader")) {
-                                Intent intent = new Intent(getContext(), CartActivity.class);
-                                startActivity(intent);
+            final GetmyPhotosCallBack Gettingmyphotoscallback = new GetmyPhotosCallBack() {
+                @Override
+                public void onCallback(String caption, String date, String image, String name, String photoid, String pid, String posttype, String price, String tid, String traderimage, String tradername) {
+
+                }
+            };
+
+            RetrievingDatabase = FirebaseDatabase.getInstance();
+            CommentFirebaseDatabase = FirebaseDatabase.getInstance();
+
+
+            myretrievalref = RetrievingDatabase.getReference("Photos");
+            photokey = myretrievalref.getKey();
+
+// Attach a listener to read the data at our posts reference
+            myretrievalref.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Photo post = dataSnapshot.getValue(Photo.class);
+                    photokey = dataSnapshot.getKey();
+
+                    //  System.out.println(post);
+                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                           Log.d(TAG, "The Photokey " + photokey);
+
+                        if (dataSnapshot1.child("caption").getValue(Photo.class) != null) {
+                            caption = dataSnapshot1.child("caption").getValue(Photo.class).toString();
+                        }
+                        if (dataSnapshot1.child("date").getValue(Photo.class) != null) {
+                            date = dataSnapshot1.child("date").getValue(Photo.class).toString();
+
+                        }
+                        if (dataSnapshot1.child("image").getValue(Photo.class) != null) {
+                            image = dataSnapshot1.child("image").getValue(Photo.class).toString();
+
+                        }
+                        if (dataSnapshot1.child("name").getValue(Photo.class) != null) {
+                            name = dataSnapshot1.child("name").getValue(Photo.class).toString();
+
+                            if (dataSnapshot1.child("photoid").getValue(Photo.class) != null) {
+                                photoid = dataSnapshot1.child("photoid").getValue(Photo.class).toString();
+
+                            }
+                            if (dataSnapshot1.child("pid").getValue(Photo.class) != null) {
+                                pid = dataSnapshot1.child("pid").getValue(Photo.class).toString();
+
+                            }
+                            if (dataSnapshot1.child("posttype").getValue(Photo.class) != null) {
+                                posttype = dataSnapshot1.child("posttype").getValue(Photo.class).toString();
+
+                            }
+                            if (dataSnapshot1.child("price").getValue(Photo.class) != null) {
+                                price = dataSnapshot1.child("price").getValue(Photo.class).toString();
+
+                            }
+                            if (dataSnapshot1.child("tid").getValue(Photo.class) != null) {
+                                tid = dataSnapshot1.child("tid").getValue(Photo.class).toString();
+
+                            }
+                            if (dataSnapshot1.child("traderimage").getValue(Photo.class) != null) {
+                                traderimage = dataSnapshot1.child("traderimage").getValue(Photo.class).toString();
+
+                            }
+                            if (dataSnapshot1.child("tradername").getValue(Photo.class) != null) {
+                                tradername = dataSnapshot1.child("tradername").getValue(Photo.class).toString();
+
+
+                            }
+
+                            Gettingmyphotoscallback.onCallback(caption, date, image, name, photoid, pid, posttype, price, tid, traderimage, tradername);
+                            {
+                                Log.d(TAG, "After this Call Back " + caption + " " + date + " " + image + " " + name + " " + photoid + " " + pid + " " + posttype + price + tid + traderimage + tradername);
                             }
                         }
-                    });
-        }}
+                    }
+                }
 
-                final   GetmyPhotosCallBack Gettingmyphotoscallback = new GetmyPhotosCallBack() {
-                      @Override
-                      public void onCallback( String caption,String date, String image, String name,String photoid,String  pid, String posttype, String price, String tid,String traderimage, String tradername) {
-
-                      }
-                  };
-
-                  RetrievingDatabase = FirebaseDatabase.getInstance();
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    System.out.println("The read failed: " + databaseError.getCode());
+                }
+            });
 
 
-                  myretrievalref = RetrievingDatabase.getReference("Photos");
-                  photokey = myretrievalref.getKey();
+            Gettingmyphotoscallback.onCallback(caption, date, image, name, photoid, pid, posttype, price, tid, traderimage, tradername);
 
-// Attach a listener to read the data at our posts reference
-                  myretrievalref.addValueEventListener(new ValueEventListener() {
-                      @Override
-                      public void onDataChange(DataSnapshot dataSnapshot) {
-                          Photo post = dataSnapshot.getValue(Photo.class);
-                          //  System.out.println(post);
-                          for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                             photokey =  dataSnapshot.getKey();
-                              Log.d(TAG, "The Photokey " + photokey);
-
-                              if (dataSnapshot1.child("caption").getValue() != null) {
-                                  caption = dataSnapshot1.child("caption").getValue().toString();
-                              }
-                              if (dataSnapshot1.child("date").getValue() != null) {
-                                  date = dataSnapshot1.child("date").getValue().toString();
-
-                              }
-                              if (dataSnapshot1.child("image").getValue() != null) {
-                                  image = dataSnapshot1.child("image").getValue().toString();
-
-                              }
-                              if (dataSnapshot1.child("name").getValue() != null) {
-                                  name = dataSnapshot1.child("name").getValue().toString();
-
-                                  if (dataSnapshot1.child("photoid").getValue() != null) {
-                                      photoid = dataSnapshot1.child("photoid").getValue().toString();
-
-                                  }
-                                  if (dataSnapshot1.child("pid").getValue() != null) {
-                                      pid = dataSnapshot1.child("pid").getValue().toString();
-
-                                  }
-                                  if (dataSnapshot1.child("posttype").getValue() != null) {
-                                      posttype = dataSnapshot1.child("posttype").getValue().toString();
-
-                                  }
-                                  if (dataSnapshot1.child("price").getValue() != null) {
-                                      price = dataSnapshot1.child("price").getValue().toString();
-
-                                  }
-                                  if (dataSnapshot1.child("tid").getValue() != null) {
-                                      tid = dataSnapshot1.child("tid").getValue().toString();
-
-                                  }
-                                  if (dataSnapshot1.child("traderimage").getValue() != null) {
-                                      traderimage = dataSnapshot1.child("traderimage").getValue().toString();
-
-                                  }
-                                  if (dataSnapshot1.child("tradername").getValue() != null) {
-                                      tradername = dataSnapshot1.child("tradername").getValue().toString();
+            Log.d(TAG, "After Second  Call Back " + caption + " " + date + " " + image + " " + name + " " + photoid + " " + pid + " " + posttype + price + tid + traderimage + tradername);
 
 
-                                  }
+            final GetmyLikersCallBack getmyLikersCallBack = new GetmyLikersCallBack() {
+                @Override
+                public void onCallback(String image, String name, String uid, String likeid, String number) {
 
-                                  Gettingmyphotoscallback.onCallback(caption, date,  image,  name, photoid, pid,  posttype,  price, tid,traderimage,  tradername); {
-                                      Log.d(TAG, "After Call Back " + caption + " " +  date  + " " +  image + " " +  name + " "  + photoid + " " +  pid + " " +  posttype +  price + tid + traderimage +  tradername );
-                              }
-                          }}}
-
-                      @Override
-                      public void onCancelled(DatabaseError databaseError) {
-                          System.out.println("The read failed: " + databaseError.getCode());
-                      }
-                  });
+                }
+            };
 
 
-
-                  Gettingmyphotoscallback.onCallback(caption, date,  image,  name, photoid, pid,  posttype,  price, tid,traderimage,  tradername);
-
-                  Log.d(TAG, "After Second  Call Back " + caption + " " +  date  + " " +  image + " " +  name + " "  + photoid + " " +  pid + " " +  posttype +  price + tid + traderimage +  tradername );
-
-
-                 final GetmyLikersCallBack getmyLikersCallBack = new GetmyLikersCallBack() {
-                      @Override
-                      public void onCallback(String image, String name, String uid, String likeid, String number) {
-
-                      }
-                  };
+            LikesFirebaseDatabase = FirebaseDatabase.getInstance();
 
 
 
 
-                  LikesFirebaseDatabase = FirebaseDatabase.getInstance();
 
 
-                  mylikesdatabasereference = LikesFirebaseDatabase.getReference("Photos");
-                  myLikeDatabaseQuery =  mylikesdatabasereference.child(photokey).child("Likes");
-                  likeskey = mylikesdatabasereference.getKey();
+            //
+            if (FirebaseAuth.getInstance() != null) {
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                UserRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers");
+                UserRef.keepSynced(true);
+                if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                    UserDetailsRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                    UserDetailsRef.keepSynced(true);
 
-// Attach a listener to read the data at our posts reference
-                  myLikeDatabaseQuery.addChildEventListener(new ChildEventListener() {
-                      @Override
-                      public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    UserDetailsRef.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
 
-                      }
+                            User myysers = dataSnapshot.getValue(User.class);
+                            Log.i(TAG, "MainfeedSnapshots " + myysers);
+                            if (dataSnapshot.exists()) {
 
-                      @Override
-                      public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-                          Photo post = dataSnapshot.getValue(Photo.class);
-                          //  System.out.println(post);
-                          for (DataSnapshot dataSnapshot2 : dataSnapshot.getChildren()) {
-                                 String likekey =         dataSnapshot.getKey();
-
-                              if (dataSnapshot2.child("Users").child("image").getValue() != null) {
-                                  likeimage = dataSnapshot2.child("Users").child("image").getValue().toString();
-                              }
-                              if (dataSnapshot2.child("Users").child("name").getValue() != null) {
-                                  likername = dataSnapshot2.child("Users").child("name").getValue().toString();
-
-                              }
-                              if (dataSnapshot2.child("Users").child("uid").getValue() != null) {
-                                  likeruid = dataSnapshot2.child("Users").child("uid").getValue().toString();
-
-                              }
-                              if (dataSnapshot2.child(likekey).child("likeid").getValue() != null) {
-                                  likerlikeid = dataSnapshot2.child(likekey).child("likeid").getValue().toString();
-                                  Log.d(TAG, "Does it show the likeid " +   likerlikeid );
-
-                                  if (dataSnapshot2.child("number").getValue() != null) {
-                                      likernumber = dataSnapshot2.child("number").getValue().toString();
-
-                                  }
-
-
-                                  getmyLikersCallBack.onCallback(likeimage,  likername,  likeruid, likerlikeid,  likernumber); {
-
-                                  }
-                              }}
-
-                      }
-
-                      @Override
-                      public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                      }
-
-                      @Override
-                      public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                      }
-
-                      @Override
-                      public void onCancelled(DatabaseError databaseError) {
-
-                      }
-                  });
-
-
-                  getmyLikersCallBack.onCallback(likeimage,  likername,  likeruid, likerlikeid,  likernumber);
-
-
-                  Log.d(TAG, "After likes " +  likeimage +   likername +  likeruid + likerlikeid +  likernumber);
-
-
-                  //
-              if (FirebaseAuth.getInstance() != null) {
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-            UserRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers");
-            UserRef.keepSynced(true);
-            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-                UserDetailsRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-                UserDetailsRef.keepSynced(true);
-
-                UserDetailsRef.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.exists()) {
-                            if (dataSnapshot.child("uid").getValue() != null) {
-                                useridentifier = dataSnapshot.child("uid").getValue().toString();
-                                if (dataSnapshot.child("role").getValue() != null) {
-                                    role = dataSnapshot.child("role").getValue().toString();
+                                if (dataSnapshot.child("uid").getValue(User.class) != null) {
+                                    useridentifier = dataSnapshot.child("uid").getValue(User.class).toString();
+                                    if (dataSnapshot.child("role").getValue(User.class) != null) {
+                                        role = dataSnapshot.child("role").getValue(User.class).toString();
+                                    }
                                 }
                             }
                         }
-                    }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
 
-                    }
-                });
+                        }
+                    });
+                }
             }
-        }  }
+        }
+
 
         if (FirebaseAuth.getInstance() != null) {
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -540,311 +443,11 @@ String likeskey;
                 }
             });
         }
-        getFollowing();
-        getPhotos();
-        displayPhotos();
-        displayMorePhotos();
         return MessageFeedView;
     }
 
 
 
-
-    private void getFollowing() {
-        Log.d(TAG, "getFollowing: searching for following");
-
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            String userid = "";
-            userid = user.getUid();
-            DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-
-            Query query = reference
-                    .child("Users").child("Customers").child(userid)
-                    .child("following");
-            if (query != null) {
-                query.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
-                            if (followingkey != null) {
-                                if (singleSnapshot != null) {
-                                    followingkey = singleSnapshot.getKey();
-
-                                    if (singleSnapshot.child(followingkey).child("name") != null) {
-                                        Log.d(TAG, "onDataChange: found user: " +
-
-                                                singleSnapshot.child(followingkey).child("name").getValue());
-                                        if (singleSnapshot.child(followingkey).getValue() != null) {
-                                            mFollowing.add(singleSnapshot.child(followingkey).getValue().toString());
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        if (followingkey != null) {
-                            mFollowing.add(followingkey);
-                        }
-                        //get the photos
-                        getPhotos();
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-            }
-        }
-    }
-
-
-
-    private void getPhotos() {
-        Log.d(TAG, "getPhotos: getting photos");
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference thePhotos = FirebaseDatabase.getInstance().getReference().child("Photos");
-        if (mFollowing != null) {
-            for (int i = 0; i < mFollowing.size(); i++) {
-                final int count = i;
-                if (thePhotosKeykey != null) {
-                    if (thePhotos != null) {
-                        thePhotosKeykey = thePhotos.getKey();
-                    }
-                    Query query = reference
-                            .child("Photos")
-                            .child(thePhotosKeykey)
-                            .orderByChild("tid")
-                            .equalTo(mFollowing.get(i));
-
-                    query.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            Photo photo = new Photo();
-                            if (dataSnapshot != null) {
-                                thePhotosKeykey = dataSnapshot.getKey();
-
-                                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
-                                    if (singleSnapshot != null) {
-                                        thePhotosKeykey = singleSnapshot.getKey();
-
-
-                                        Map<String, Object> objectMap = (HashMap<String, Object>) singleSnapshot.getValue();
-                                        if (photo != null) {
-                                            if (objectMap.get("caption") != null) {
-                                                photo.setCaption(objectMap.get(getString(R.string.field_caption)).toString());
-                                            }
-                                            //     photo.setTags(objectMap.get(getString(R.string.field_tags)).toString());
-                                            if (objectMap.get("photoid") != null) {
-                                                photo.setphotoid(objectMap.get("photoid").toString());
-                                            }
-                                            //     photo.setuid(objectMap.get("uid").toString());
-                                            if (objectMap.get("date") != null) {
-                                                photo.setdate(objectMap.get("date").toString());
-                                            }
-                                            if (objectMap.get("name") != null) {
-                                                photo.setname(objectMap.get("name").toString());
-                                            }
-
-                                            if (objectMap.get("image") != null) {
-                                                photo.setimage(objectMap.get("image").toString());
-                                            }
-                                        }
-                                        ArrayList<Like> likes = new ArrayList<Like>();
-                                        if (thePhotosKeykey != null) {
-                                            for (DataSnapshot dSnapshot : singleSnapshot
-                                                    .child(thePhotosKeykey).child("Likes").getChildren()) {
-                                                if (singleSnapshot != null) {
-                                                    thePhotosKeykey = singleSnapshot.getKey();
-                                                }
-                                                Like like = new Like();
-                                                if (like != null) {
-                                                    if (dataSnapshot != null) {
-
-
-                                                        if (dSnapshot.getValue(Like.class) != null) {
-                                                            like.setLikeid(dSnapshot.getValue(Like.class).getLikeid());
-                                                        }
-                                                        if (dSnapshot.getValue(Like.class) != null) {
-                                                            like.setnumber(dSnapshot.getValue(Like.class).getnumber());
-                                                        }
-                                                        if (dSnapshot.child("Users").child("name").getValue(Like.class) != null) {
-                                                            like.setname(dSnapshot.child("Users").child("name").getValue(Like.class).getname());
-                                                        }
-                                                        if (dSnapshot.child("Users").child("uid").getValue(Like.class) != null) {
-                                                            like.setuid(dSnapshot.child("Users").child("uid").getValue(Like.class).getuid());
-                                                        }
-                                                        if (like != null) {
-                                                            likes.add(like);
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                            ArrayList<Comment> comments = new ArrayList<Comment>();
-                                            if (comments != null) {
-                                                if (thePhotosKeykey != null) {
-                                                    for (DataSnapshot dSnapshot : dataSnapshot
-                                                            .child(thePhotosKeykey).child("Comments").getChildren()) {
-                                                        if (dataSnapshot
-                                                                .child(thePhotosKeykey).child("Comments") != null) {
-                                                            if (singleSnapshot != null) {
-                                                                thePhotosKeykey = singleSnapshot.getKey();
-                                                            }
-
-                                                            Comment comment = new Comment();
-                                                            if (dSnapshot.child("comment").getValue(Comment.class) != null) {
-                                                                comment.setComment(dSnapshot.child("comment").getValue(Comment.class).getComment());
-                                                            }
-                                                            if (dSnapshot.child("commentkey").getValue(Comment.class) != null) {
-                                                                comment.setcommentkey(dSnapshot.child("commentkey").getValue(Comment.class).getcommentkey());
-                                                            }
-                                                            if (dSnapshot.child("name").getValue(Comment.class) != null) {
-                                                                comment.setname(dSnapshot.child("name").getValue(Comment.class).getname());
-                                                            }
-                                                            if (dSnapshot.child("uid").getValue(Comment.class) != null) {
-                                                                comment.setuid(dSnapshot.child("uid").getValue(Comment.class).getuid());
-                                                            }
-                                                            if (comment != null) {
-                                                                comments.add(comment);
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                            ArrayList<Tags> tagshere = new ArrayList<Tags>();
-                                            if (thePhotosKeykey != null) {
-                                                if (dataSnapshot
-                                                        .child(thePhotosKeykey).child("tags") != null) {
-                                                    for (DataSnapshot dSnapshot : dataSnapshot
-                                                            .child(thePhotosKeykey).child("tags").getChildren()) {
-                                                        thePhotosKeykey = singleSnapshot.getKey();
-                                                        Tags tags1 = new Tags();
-                                                        if (tags1 != null) {
-                                                            if (dSnapshot != null) {
-                                                                if (dSnapshot.child("image").getValue(Tags.class) != null) {
-                                                                    tags1.setimage(dSnapshot.child("image").getValue(Tags.class).getimage());
-                                                                }
-                                                                if (dSnapshot.child("name").getValue(Tags.class) != null) {
-                                                                    tags1.setname(dSnapshot.child("name").getValue(Tags.class).getname());
-                                                                }
-                                                                if (dSnapshot.child("uid").getValue(Tags.class) != null) {
-                                                                    tags1.setuid(dSnapshot.child("uid").getValue(Tags.class).getuid());
-                                                                }
-                                                                if (tags1 != null) {
-                                                                    tagshere.add(tags1);
-                                                                }
-                                                            }
-
-                                                            if (photo != null) {
-                                                                if (comments != null) {
-                                                                    photo.setComments(comments);
-                                                                    if (likes != null) {
-                                                                        photo.setLikes(likes);
-                                                                    }
-                                                                    if (tagshere != null) {
-                                                                        photo.setTag(tagshere);
-                                                                    }
-                                                                    mPhotos.add(photo);
-                                                                }
-                                                                if (count >= mFollowing.size() - 1) {
-                                                                    //display our photos
-                                                                    displayPhotos();
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-                }
-            }
-
-
-        }
-    }
-
-    private void displayPhotos() {
-        mPaginatedPhotos = new ArrayList<>();
-
-        if (mPhotos != null) {
-            try {
-                Collections.sort(mPhotos, new Comparator<Photo>() {
-                    @Override
-                    public int compare(Photo o1, Photo o2) {
-                        return o2.getdate().compareTo(o1.getdate());
-                    }
-                });
-
-                int iterations = mPhotos.size();
-
-                if (iterations > 10) {
-                    iterations = 10;
-                }
-
-                mResults = 10;
-                for (int i = 0; i < iterations; i++) {
-                    if (mPhotos != null) {
-                        mPaginatedPhotos.add(mPhotos.get(i));
-                    }
-                }
-
-
-
-
-            } catch (NullPointerException e) {
-                Log.e(TAG, "displayPhotos: NullPointerException: " + e.getMessage());
-            } catch (IndexOutOfBoundsException e) {
-                Log.e(TAG, "displayPhotos: IndexOutOfBoundsException: " + e.getMessage());
-            }
-        }
-    }
-
-    public void displayMorePhotos() {
-        Log.d(TAG, "displayMorePhotos: displaying more photos");
-
-        try {
-            if (mPhotos != null) {
-                if (mResults != 0) {
-                    if (mPhotos.size() > mResults && mPhotos.size() > 0) {
-
-                        int iterations;
-                        if (mResults != 0) {
-                            if (mPhotos.size() > (mResults + 10)) {
-                                Log.d(TAG, "displayMorePhotos: there are greater than 10 more photos");
-                                iterations = 10;
-                            } else {
-                                Log.d(TAG, "displayMorePhotos: there is less than 10 more photos");
-                                iterations = mPhotos.size() - mResults;
-                            }
-
-                            //add the new photos to the paginated results
-                            for (int i = mResults; i < mResults + iterations; i++) {
-                                mPaginatedPhotos.add(mPhotos.get(i));
-                            }
-
-                            mResults = mResults + iterations;
-
-                        }
-                    }
-                }
-            }
-        }
-        catch(NullPointerException e){
-            Log.e(TAG, "displayPhotos: NullPointerException: " + e.getMessage());
-        }catch(IndexOutOfBoundsException e){
-            Log.e(TAG, "displayPhotos: IndexOutOfBoundsException: " + e.getMessage());
-        }
-    }
 
 
 
@@ -1093,67 +696,62 @@ String likeskey;
                                                                   String Commentkey = snapshot.child(Photokey).child("Comments").getKey();
                                                                   String ReplyKey = snapshot.child(Photokey).child("Replies").getKey();
 
+                                                                 snapshot.getValue(Photo.class);
+                                                    Log.i(TAG, "MainfeedSnapshots " + snapshot);
 
-
-
-                                                                 if (snapshot.child("caption").getValue() != null) {
-                                                              caption =         snapshot.child("caption").getValue().toString();
+                                                                 if (snapshot.child("caption").getValue(Photo.class) != null) {
+                                                              caption =         snapshot.child("caption").getValue(Photo.class).toString();
                                                                  }
-                                                            if (snapshot.child("date").getValue() != null) {
-                                                             date =     snapshot.child("date").getValue().toString();
-                                                            }
-
-                                                            if (snapshot.child("image").getValue() != null) {
-                                                            image =      snapshot.child("image").getValue().toString();
-                                                            }
-                                                            if (snapshot.child("time").getValue() != null) {
-                                                          time =        snapshot.child("time").getValue().toString();
-                                                            }
-
-                                                            if (snapshot.child("uid").getValue() != null) {
-                                                          uid =     snapshot.child("uid").getValue().toString();
-                                                            }
-
-                                                            if (snapshot.child("name").getValue() != null) {
-                                                            name =     snapshot.child("name").getValue().toString();
-                                                            }
-
-                                                            if (snapshot.child("photoid").getValue() != null) {
-                                                              photoid =   snapshot.child("photoid").getValue().toString();
-                                                            }
-
-                                                            if (snapshot.child("tid").getValue() != null) {
-                                                                tid =    snapshot.child("tid").getValue().toString();
+                                                            if (snapshot.child("date").getValue(Photo.class) != null) {
+                                                             date =     snapshot.child("date").getValue(Photo.class).toString();
                                                             }
 
 
-
-                                                            if (snapshot.child("pid").getValue() != null) {
-                                                                pid = snapshot.child("pid").getValue().toString();
+                                                            if (snapshot.child("time").getValue(Photo.class) != null) {
+                                                          time =        snapshot.child("time").getValue(Photo.class).toString();
                                                             }
 
-                                                            if (snapshot.child("price").getValue() != null) {
-                                                                 price = snapshot.child("price").getValue().toString();
+                                                            if (snapshot.child("tid").getValue(Photo.class) != null) {
+                                                          tid =     snapshot.child("tid").getValue(Photo.class).toString();
                                                             }
-
-                                                            if (snapshot.child("tagnumber").getValue() != null) {
-                                                                 tagnumber = snapshot.child("tagnumber").getValue().toString();
-                                                            }
-                                                            if (snapshot.child("Likes").child("likenumber").getValue() != null) {
-                                                            likenumber =     snapshot.child("Likes").child("likenumber").getValue().toString();
-                                                            }
-                                                    if (snapshot.child("tradername").getValue() != null) {
-                                                        tradername = snapshot.child("tradername").getValue().toString();
-                                                    }
-                                                    if (snapshot.child("traderimage").getValue() != null) {
-                                                        thetraderimage =      snapshot.child("traderimage").getValue().toString();
+                                                          if (snapshot.child("traderimage").getValue(Photo.class) != null) {
+                                                        thetraderimage =      snapshot.child("traderimage").getValue(Photo.class).toString();
                                                     }
 
-                                                    if (snapshot.child("Comments").child("commentnumber").getValue() != null) {
-                                                        commentnumber =      snapshot.child("Comments").child("commentnumber").getValue().toString();
+
+
+                                                            if (snapshot.child("tradername").getValue(Photo.class) != null) {
+                                                            tradername =     snapshot.child("tradername").getValue(Photo.class).toString();
+                                                            }
+
+                                                            if (snapshot.child("photoid").getValue(Photo.class) != null) {
+                                                              photoid =   snapshot.child("photoid").getValue(Photo.class).toString();
+                                                            }
+
+                                                            if (snapshot.child("pname").getValue(Photo.class) != null) {
+                                                                pname =    snapshot.child("pname").getValue(Photo.class).toString();
+                                                            }
+
+                                                           if (snapshot.child("pimage").getValue(Photo.class) != null) {
+                                                             pimage =    snapshot.child("pimage").getValue(Photo.class).toString();
+                                                            }
+
+                                                    if (snapshot.child("pid").getValue(Photo.class) != null) {
+                                                        pid = snapshot.child("pid").getValue(Photo.class).toString();
                                                     }
 
-                                                    return new Photo(caption, date,  image,  time, uid,  name,   photoid,  tid,  pid, price,  tagnumber, likenumber, tradername, thetraderimage, commentnumber);
+                                                    if (snapshot.child("posttype").getValue(Photo.class) != null) {
+                                                                   posttype =    snapshot.child("posttype").getValue(Photo.class).toString();
+                                                              }
+
+
+                                                            if (snapshot.child("price").getValue(Photo.class) != null) {
+                                                                 price = snapshot.child("price").getValue(Photo.class).toString();
+                                                            }
+
+
+
+                                                    return new Photo(caption, date,time, tid, thetraderimage, tradername, photoid, pname, pimage, pid, posttype, price);
 
 
                                                 }
@@ -1184,7 +782,7 @@ String likeskey;
                   }
 
                   @Override
-                  protected void onBindViewHolder(@Nullable MainFeedViewHolder holder, int position, @Nullable Photo model) {
+                  protected void onBindViewHolder(@Nullable final MainFeedViewHolder holder, int position, @Nullable Photo model) {
                       if (model != null) {
 
                           key = model.getphotoid();
@@ -1192,13 +790,71 @@ String likeskey;
                           //   model.setTrader(traderkey);
 
 
-                          holder.username.setText(likerlikeid);
+                          holder.username.setText(name);
 
-                          holder.likes.setText("Liked by " +    likername + "  " + "number of people");
-                          holder.comments.setText("View all comment from" + commentnumber  +"people");
+                          mylikesdatabasereference = LikesFirebaseDatabase.getReference("Photos").child("Likes");
+                          mylikesdatabasereference.keepSynced(true);
+                          mylikesdatabasereference.addValueEventListener(new ValueEventListener() {
+                              @Override
+                              public void onDataChange(DataSnapshot dataSnapshot) {
+                                  Photo post = dataSnapshot.getValue(Photo.class);
+                                  Log.i(TAG, "MainfeedSnapshots " + post);
+
+                                  for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+
+                                      photokey = dataSnapshot1.getKey();
+                                      Log.d(TAG, "The Photokey " + photokey);
+
+                                      if (dataSnapshot1.child("number").getValue(Photo.class) != null) {
+                                          likenumber = dataSnapshot1.child("number").getValue(Photo.class).toString();
+                                      }
+                                      holder.likes.setText("Liked by " +   likenumber + "  " + "number of people");
+
+                                      }
+                                  }
+
+
+
+                              @Override
+                              public void onCancelled(DatabaseError databaseError) {
+
+                              }
+                          });
+
+
+                          mycommentFirebaseDatabase = CommentFirebaseDatabase.getReference().child("Photos").child("Comments");
+                          mycommentFirebaseDatabase.keepSynced(true);
+                          mycommentFirebaseDatabase.addValueEventListener(new ValueEventListener() {
+                              @Override
+                              public void onDataChange(DataSnapshot dataSnapshot) {
+                                  Photo post = dataSnapshot.getValue(Photo.class);
+                                  Log.i(TAG, "MainfeedSnapshots " + post);
+
+                                  for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+
+                                      photokey = dataSnapshot1.getKey();
+                                      Log.d(TAG, "The Photokey " + photokey);
+
+                                      if (dataSnapshot1.child("number").getValue(Photo.class) != null) {
+                                          commentnumber = dataSnapshot1.child("number").getValue(Photo.class).toString();
+                                      }
+                                      holder.comments.setText("View all comment from" + commentnumber  +"people");
+
+                                  }
+                              }
+
+
+
+                              @Override
+                              public void onCancelled(DatabaseError databaseError) {
+
+                              }
+                          });
+
+
                           holder.caption.setText(caption);
                           holder.timeDetla.setText(model.gettime());
-                          holder.setThefeedimage(getContext(), model.getimage());
+                          holder.setThefeedimage(getContext(), model.getpimage());
                           holder.setTheProfilePhoto(getContext(),  thetraderimage);
                           holder.heartRed.setImageResource(R.drawable.ic_heart_red);
 

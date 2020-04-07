@@ -2,10 +2,8 @@ package com.simcoder.bimbo.WorkActivities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.ColorSpace;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,17 +22,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.firebase.ui.database.SnapshotParser;
-import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -52,31 +47,23 @@ import com.simcoder.bimbo.Admin.AdminMaintainProductsActivity;
 import com.simcoder.bimbo.Admin.AdminProductDetails;
 import com.simcoder.bimbo.Admin.AdminUserCartedActivity;
 import com.simcoder.bimbo.Admin.AdminViewBuyersActivity;
+import com.simcoder.bimbo.Admin.HomeActivity;
 import com.simcoder.bimbo.Admin.ViewSingleUserOrders;
 import com.simcoder.bimbo.DriverMapActivity;
 import com.simcoder.bimbo.HistoryActivity;
 import com.simcoder.bimbo.Interface.ItemClickListner;
 import com.simcoder.bimbo.Model.Cart;
-import com.simcoder.bimbo.Model.ProductHere;
 import com.simcoder.bimbo.Model.Products;
-import com.simcoder.bimbo.Model.ProductsInformationModel;
-import com.simcoder.bimbo.Model.TraderWhoPostedProductModel;
-import com.simcoder.bimbo.ViewHolder.CartViewHolder;
-import com.simcoder.bimbo.ViewHolder.ProductViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.simcoder.bimbo.R;
-import com.simcoder.bimbo.instagram.Home.HomeFragment;
 import com.simcoder.bimbo.instagram.Home.InstagramHomeActivity;
+import com.simcoder.bimbo.instagram.Models.User;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.paperdb.Paper;
@@ -179,6 +166,7 @@ public  class  CartActivity extends AppCompatActivity
             CartListRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+                    Cart cart =  dataSnapshot.getValue(Cart.class);
                     if (cartlistkey != null) {
                         for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                             cartlistkey = dataSnapshot1.getKey();
@@ -188,28 +176,28 @@ public  class  CartActivity extends AppCompatActivity
 
                             if (cartlistkey != null) {
                                 if (cartlistkey != null) {
-                                    if (dataSnapshot.child(cartlistkey).child("name").getValue() != null) {
-                                        nameofproduct = dataSnapshot.child(cartlistkey).child("name").getValue().toString();
-                                        if (dataSnapshot.child(cartlistkey).child("pid").getValue() != null) {
-                                            productid = dataSnapshot.child(cartlistkey).child("pid").getValue().toString();
-                                            if (dataSnapshot.child(cartlistkey).child("quantity").getValue() != null) {
-                                                quantity = dataSnapshot.child(cartlistkey).child("quantity").getValue().toString();
+                                    if (dataSnapshot.child(cartlistkey).child("name").getValue(Cart.class) != null) {
+                                        nameofproduct = dataSnapshot.child(cartlistkey).child("name").getValue(Cart.class).toString();
+                                        if (dataSnapshot.child(cartlistkey).child("pid").getValue(Cart.class) != null) {
+                                            productid = dataSnapshot.child(cartlistkey).child("pid").getValue(Cart.class).toString();
+                                            if (dataSnapshot.child(cartlistkey).child("quantity").getValue(Cart.class) != null) {
+                                                quantity = dataSnapshot.child(cartlistkey).child("quantity").getValue(Cart.class).toString();
                                             }
                                         }
-                                        if (dataSnapshot.child(cartlistkey).child("image").getValue() != null) {
-                                            image = dataSnapshot.child(cartlistkey).child("image").getValue().toString();
+                                        if (dataSnapshot.child(cartlistkey).child("image").getValue(Cart.class) != null) {
+                                            image = dataSnapshot.child(cartlistkey).child("image").getValue(Cart.class).toString();
                                         }
 
-                                        if (dataSnapshot.child(cartlistkey).child("price").getValue() != null) {
-                                            price = dataSnapshot.child(cartlistkey).child("price").getValue().toString();
+                                        if (dataSnapshot.child(cartlistkey).child("price").getValue(Cart.class) != null) {
+                                            price = dataSnapshot.child(cartlistkey).child("price").getValue(Cart.class).toString();
                                         }
-                                        if (dataSnapshot.child(cartlistkey).child("name").getValue() != null) {
-                                            users = dataSnapshot.child(cartlistkey).child("name").getValue().toString();
+                                        if (dataSnapshot.child(cartlistkey).child("name").getValue(Cart.class) != null) {
+                                            users = dataSnapshot.child(cartlistkey).child("name").getValue(Cart.class).toString();
                                         }
 
 
-                                        if (dataSnapshot.child(cartlistkey).child("time").getValue() != null) {
-                                            time = dataSnapshot.child(cartlistkey).child("time").getValue().toString();
+                                        if (dataSnapshot.child(cartlistkey).child("time").getValue(Cart.class) != null) {
+                                            time = dataSnapshot.child(cartlistkey).child("time").getValue(Cart.class).toString();
                                         }
 
                                     }
@@ -311,9 +299,10 @@ public  class  CartActivity extends AppCompatActivity
                 UserDetailsRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
+                        User myuser = dataSnapshot.getValue(User.class);
                         if (dataSnapshot.exists()) {
-                            useridentifier = dataSnapshot.child("uid").getValue().toString();
-                            role = dataSnapshot.child("role").getValue().toString();
+                            useridentifier = dataSnapshot.child("uid").getValue(User.class).toString();
+                            role = dataSnapshot.child("role").getValue(User.class).toString();
 
                         }
                     }
@@ -504,18 +493,18 @@ public  class  CartActivity extends AppCompatActivity
                             @NonNull
                             @Override
                             public Products parseSnapshot(@NonNull DataSnapshot snapshot) {
+                                                  snapshot.getValue(Products.class);
+                                return new Products(snapshot.child("pid").getValue(Products.class).toString(),
 
-                                return new Products(snapshot.child("pid").getValue().toString(),
-
-                                        snapshot.child("tid").getValue().toString(),
-                                        snapshot.child("quantity").getValue().toString(),
-                                        snapshot.child("price").getValue().toString(),
-                                        snapshot.child("desc").getValue().toString(),
-                                        snapshot.child("discount").getValue().toString(),
-                                        snapshot.child("name").getValue().toString(),
-                                        snapshot.child("image").getValue().toString(),
-                                        snapshot.child("tradername").getValue().toString(),
-                                        snapshot.child("traderimage").getValue().toString()
+                                        snapshot.child("tid").getValue(Products.class).toString(),
+                                        snapshot.child("quantity").getValue(Products.class).toString(),
+                                        snapshot.child("price").getValue(Products.class).toString(),
+                                        snapshot.child("desc").getValue(Products.class).toString(),
+                                        snapshot.child("discount").getValue(Products.class).toString(),
+                                        snapshot.child("name").getValue(Products.class).toString(),
+                                        snapshot.child("image").getValue(Products.class).toString(),
+                                        snapshot.child("tradername").getValue(Products.class).toString(),
+                                        snapshot.child("traderimage").getValue(Products.class).toString()
 
                                              );
 
