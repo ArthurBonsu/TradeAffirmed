@@ -56,6 +56,7 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.simcoder.bimbo.R;
+import com.simcoder.bimbo.instagram.Models.User;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -70,7 +71,7 @@ import io.paperdb.Paper;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    private DatabaseReference ProductsRef;
+    DatabaseReference ProductsRef;
     private DatabaseReference Userdetails;
     private DatabaseReference ProductsRefwithproduct;
     private RecyclerView recyclerView;
@@ -85,6 +86,7 @@ public class HomeActivity extends AppCompatActivity
     private static final int RC_SIGN_IN = 1;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
     String ProductID;
+    FirebaseDatabase myfirebaseDatabase;
 
     String thetraderkey;
     String thenameofthetrader;
@@ -144,37 +146,40 @@ public class HomeActivity extends AppCompatActivity
         if (traderoruser != null) {
             traderoruser = getIntent().getStringExtra("fromadmincategoryactivity");
         }
-
-        ProductsRef = FirebaseDatabase.getInstance().getReference().child("Product");
+        myfirebaseDatabase = FirebaseDatabase.getInstance();
+        ProductsRef = myfirebaseDatabase.getReference().child("Product");
 
         productkey = ProductsRef.getKey();
 
 
         if (ProductsRefwithproduct != null) {
 
-            thetraderkey = ProductsRefwithproduct.getKey().toString();
+            thetraderkey = ProductsRefwithproduct.getKey();
             thetraderview = findViewById(R.id.thetraderiknow);
         }
 
-        if (ProductsRefwithproduct != null){
-            ProductsRefwithproduct.addValueEventListener(new ValueEventListener() {
+        if (ProductsRef != null){
+            ProductsRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+                    Products nameofallvalues = dataSnapshot.getValue(Products.class);
                     if (productkey != null) {
-                        for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                            traderkeyhere = dataSnapshot1.getKey();
+
+
+
+                            traderkeyhere = dataSnapshot.getKey();
                             Log.d("TAG", traderkeyhere);
 
                             if (thetraderkey != null) {
                                 if (traderkeyhere != null) {
-                                    if (dataSnapshot.child("tradername").getValue() != null) {
-                                        thenameofthetrader = dataSnapshot.child("tradername").getValue().toString();
-                                        if (dataSnapshot.child("desc").getValue() != null) {
-                                            description = dataSnapshot.child("desc").getValue().toString();
+                                    if (dataSnapshot.child("tradername").getValue(String.class) != null) {
+                                        thenameofthetrader = dataSnapshot.child("tradername").getValue(String.class);
+                                        if (dataSnapshot.child("desc").getValue(String.class) != null) {
+                                            description = dataSnapshot.child("desc").getValue(String.class);
                                         }
                                     }
                                 }
-                            }
+
 
                     /*
                     ArrayList<ProductsInformationModel> ProductsInformationList = new ArrayList<>();
@@ -230,20 +235,22 @@ public class HomeActivity extends AppCompatActivity
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (productkey != null) {
-                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                        keyhere = dataSnapshot1.getKey();
+
+                        Products allproducts = dataSnapshot.getValue(Products.class);
+                        keyhere = dataSnapshot.getKey();
                         Log.d("TAG", keyhere);
 
                         if (thetraderkey != null) {
                             if (keyhere != null) {
-                                if (dataSnapshot.child("tradername").getValue() != null) {
-                                    thenameofthetrader = dataSnapshot.child("tradername").getValue().toString();
-                                    if (dataSnapshot.child("desc").getValue() != null) {
-                                        description = dataSnapshot.child("desc").getValue().toString();
+                                if (dataSnapshot.child("tradername").getValue(String.class) != null) {
+                                    thenameofthetrader = dataSnapshot.child("tradername").getValue(String.class);
+                                }
+                                    if (dataSnapshot.child("desc").getValue(String.class) != null) {
+                                        description = dataSnapshot.child("desc").getValue(String.class);
                                     }
                                 }
                             }
-                        }
+
                     /*
                     ArrayList<ProductsInformationModel> ProductsInformationList = new ArrayList<>();
                     ArrayList<TraderWhoPostedProductModel> TraderWhoPostedProductModerList = new ArrayList<>();
@@ -282,7 +289,7 @@ public class HomeActivity extends AppCompatActivity
                 ;
 
 
-            }
+
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -434,11 +441,12 @@ public class HomeActivity extends AppCompatActivity
                                 ProductsRef.addValueEventListener(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
-                                        if (dataSnapshot.exists()) {
+                                        Products productshere  =dataSnapshot.getValue(Products.class);
+
                                             if (key != null) {
                                                 if (traderkey != null) {
-                                                    if (dataSnapshot.child("tradername").getValue() != null) {
-                                                        thetraderhere = dataSnapshot.child("tradername").getValue().toString();
+                                                    if (dataSnapshot.child("tradername").getValue(String.class) != null) {
+                                                        thetraderhere = dataSnapshot.child("tradername").getValue(String.class);
 
 
                                                     }
@@ -447,7 +455,7 @@ public class HomeActivity extends AppCompatActivity
 
                                             }
                                         }
-                                    }
+
                                     @Override
                                     public void onCancelled(DatabaseError databaseError) {
 

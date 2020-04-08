@@ -311,7 +311,7 @@ public class TraderProfile extends AppCompatActivity  implements  View.OnClickLi
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
 
-                        Users usershere = dataSnapshot.getValue(Users.class);
+                        String usershere = dataSnapshot.getValue(Users.class).toString();
 
                                 if (traderimageonscreen != null) {
                                     if (traderimage != null) {

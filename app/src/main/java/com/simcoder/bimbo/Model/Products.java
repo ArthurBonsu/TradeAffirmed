@@ -1,8 +1,5 @@
 package com.simcoder.bimbo.Model;
 
-import com.simcoder.bimbo.instagram.Models.Like;
-
-import java.util.List;
 
 public class Products {
 
@@ -55,7 +52,7 @@ public class Products {
     public Products() {
     }
 
-    public Products( String pid,  String tid, String quantity, String price,String desc, String discount, String name, String image, String tradername, String traderimage
+    public Products( String pid,  String tid, String quantity, String price,String desc, String discount, String name, String image, String tradername, String traderimage,String size
 
                      ) {this.desc = desc;
         this.image = image;
@@ -71,6 +68,7 @@ public class Products {
         this.quantity = quantity;
         this.tradername = tradername;
         this.traderimage = traderimage;
+        this.size = size;
     }
     public Products(
             String desc, String image, String title, String name, String phone, String discount, String pid, String price, String quantity, String tid,
@@ -205,7 +203,24 @@ public class Products {
 
 
 
+    public Products( String pname,String pimage,String desc, String price, String  pid, String date, String time, String tid,String  tradername, String traderimage)
+     {
 
+
+
+        this.pname = pname;
+        this.pimage = pimage;
+        this.desc = desc;
+        this.price = price;
+        this.pid = pid;
+        this.date = date;
+        this.time = time;
+        this.tid= tid;
+        this.tradername = tradername;
+        this.traderimage = traderimage;
+
+
+    }
 
 
 

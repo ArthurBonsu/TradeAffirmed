@@ -71,17 +71,18 @@ public class AdminAllProducts extends AppCompatActivity {  //ACTUALLY THIS ACTIV
         FirebaseAuth.getInstance();
         mAuth = FirebaseAuth.getInstance();
 
-              if (getIntent() != null) {
+                    Intent  rolesintent = getIntent();
 
-                  if (getIntent().getExtras().get("rolefromadmincategorytoallproducts") != null) {
-                      role = getIntent().getExtras().get("rolefromadmincategorytoallproducts").toString();
+                  if (rolesintent.getExtras().getString("rolefromadmincategorytoallproducts") != null) {
+                      role = rolesintent.getExtras().getString("rolefromadmincategorytoallproducts");
                   }
 
+                    Intent  traderIDIntent = getIntent();
+                  if (traderIDIntent.getExtras().getString("fromuserinsingleusertoadminproductdetails") != null) {
+                      traderID = traderIDIntent.getExtras().getString("fromuserinsingleusertoadminproductdetails");
 
-                  if (getIntent() != null) {
-                      traderID = getIntent().getStringExtra("fromuserinsingleusertoadminproductdetails");
                   }
-              }
+              
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
         if (mGoogleApiClient != null) {

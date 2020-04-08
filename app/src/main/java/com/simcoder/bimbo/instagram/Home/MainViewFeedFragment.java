@@ -216,6 +216,8 @@ String    pname; String    pimage;
             //   }
 
         }
+
+        mAuth = FirebaseAuth.getInstance();
         if (FirebaseDatabase.getInstance().getReference() != null) {
             UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
             UsersRef.keepSynced(true);
@@ -299,53 +301,53 @@ String    pname; String    pimage;
             myretrievalref.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    Photo post = dataSnapshot.getValue(Photo.class);
+
                     photokey = dataSnapshot.getKey();
 
                     //  System.out.println(post);
                     for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                            Log.d(TAG, "The Photokey " + photokey);
 
-                        if (dataSnapshot1.child("caption").getValue(Photo.class) != null) {
-                            caption = dataSnapshot1.child("caption").getValue(Photo.class).toString();
+                        if (dataSnapshot1.child("caption").getValue(String.class) != null) {
+                            caption = dataSnapshot1.child("caption").getValue(String.class);
                         }
-                        if (dataSnapshot1.child("date").getValue(Photo.class) != null) {
-                            date = dataSnapshot1.child("date").getValue(Photo.class).toString();
-
-                        }
-                        if (dataSnapshot1.child("image").getValue(Photo.class) != null) {
-                            image = dataSnapshot1.child("image").getValue(Photo.class).toString();
+                        if (dataSnapshot1.child("date").getValue(String.class) != null) {
+                            date = dataSnapshot1.child("date").getValue(String.class);
 
                         }
-                        if (dataSnapshot1.child("name").getValue(Photo.class) != null) {
-                            name = dataSnapshot1.child("name").getValue(Photo.class).toString();
+                        if (dataSnapshot1.child("image").getValue(String.class) != null) {
+                            image = dataSnapshot1.child("image").getValue(String.class);
 
-                            if (dataSnapshot1.child("photoid").getValue(Photo.class) != null) {
-                                photoid = dataSnapshot1.child("photoid").getValue(Photo.class).toString();
+                        }
+                        if (dataSnapshot1.child("name").getValue(String.class) != null) {
+                            name = dataSnapshot1.child("name").getValue(String.class);
 
-                            }
-                            if (dataSnapshot1.child("pid").getValue(Photo.class) != null) {
-                                pid = dataSnapshot1.child("pid").getValue(Photo.class).toString();
-
-                            }
-                            if (dataSnapshot1.child("posttype").getValue(Photo.class) != null) {
-                                posttype = dataSnapshot1.child("posttype").getValue(Photo.class).toString();
+                            if (dataSnapshot1.child("photoid").getValue(String.class) != null) {
+                                photoid = dataSnapshot1.child("photoid").getValue(String.class);
 
                             }
-                            if (dataSnapshot1.child("price").getValue(Photo.class) != null) {
-                                price = dataSnapshot1.child("price").getValue(Photo.class).toString();
+                            if (dataSnapshot1.child("pid").getValue(String.class) != null) {
+                                pid = dataSnapshot1.child("pid").getValue(String.class);
 
                             }
-                            if (dataSnapshot1.child("tid").getValue(Photo.class) != null) {
-                                tid = dataSnapshot1.child("tid").getValue(Photo.class).toString();
+                            if (dataSnapshot1.child("posttype").getValue(String.class) != null) {
+                                posttype = dataSnapshot1.child("posttype").getValue(String.class);
 
                             }
-                            if (dataSnapshot1.child("traderimage").getValue(Photo.class) != null) {
-                                traderimage = dataSnapshot1.child("traderimage").getValue(Photo.class).toString();
+                            if (dataSnapshot1.child("price").getValue(String.class) != null) {
+                                price = dataSnapshot1.child("price").getValue(String.class);
 
                             }
-                            if (dataSnapshot1.child("tradername").getValue(Photo.class) != null) {
-                                tradername = dataSnapshot1.child("tradername").getValue(Photo.class).toString();
+                            if (dataSnapshot1.child("tid").getValue(String.class) != null) {
+                                tid = dataSnapshot1.child("tid").getValue(String.class);
+
+                            }
+                            if (dataSnapshot1.child("traderimage").getValue(String.class) != null) {
+                                traderimage = dataSnapshot1.child("traderimage").getValue(String.class);
+
+                            }
+                            if (dataSnapshot1.child("tradername").getValue(String.class) != null) {
+                                tradername = dataSnapshot1.child("tradername").getValue(String.class);
 
 
                             }
@@ -390,22 +392,22 @@ String    pname; String    pimage;
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 UserRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers");
                 UserRef.keepSynced(true);
+
                 if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-                    UserDetailsRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                    UserDetailsRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(mAuth.getCurrentUser().getUid());
                     UserDetailsRef.keepSynced(true);
 
                     UserDetailsRef.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
 
-                            User myysers = dataSnapshot.getValue(User.class);
-                            Log.i(TAG, "MainfeedSnapshots " + myysers);
+
                             if (dataSnapshot.exists()) {
 
-                                if (dataSnapshot.child("uid").getValue(User.class) != null) {
-                                    useridentifier = dataSnapshot.child("uid").getValue(User.class).toString();
-                                    if (dataSnapshot.child("role").getValue(User.class) != null) {
-                                        role = dataSnapshot.child("role").getValue(User.class).toString();
+                                if (dataSnapshot.child("uid").getValue(String.class) != null) {
+                                    useridentifier = dataSnapshot.child("uid").getValue(String.class);
+                                    if (dataSnapshot.child("role").getValue(String.class) != null) {
+                                        role = dataSnapshot.child("role").getValue(String.class);
                                     }
                                 }
                             }
@@ -421,41 +423,13 @@ String    pname; String    pimage;
         }
 
 
-        if (FirebaseAuth.getInstance() != null) {
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-            PhotoReferences = FirebaseDatabase.getInstance().getReference().child("Photos");
-            PhotoReferences.keepSynced(true);
 
 
-            PhotoReferences.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.exists()) {
-
-                    }
-
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-        }
         return MessageFeedView;
     }
 
 
-
-
-
-
-
-
-
-
-    public  class MainFeedViewHolder extends RecyclerView.ViewHolder {
+  public  class MainFeedViewHolder extends RecyclerView.ViewHolder {
         public LinearLayout root;
         CircleImageView mprofileImage;
         String likesString;
@@ -696,57 +670,56 @@ String    pname; String    pimage;
                                                                   String Commentkey = snapshot.child(Photokey).child("Comments").getKey();
                                                                   String ReplyKey = snapshot.child(Photokey).child("Replies").getKey();
 
-                                                                 snapshot.getValue(Photo.class);
-                                                    Log.i(TAG, "MainfeedSnapshots " + snapshot);
 
-                                                                 if (snapshot.child("caption").getValue(Photo.class) != null) {
-                                                              caption =         snapshot.child("caption").getValue(Photo.class).toString();
+
+                                                                 if (snapshot.child("caption").getValue(String.class) != null) {
+                                                              caption =         snapshot.child("caption").getValue(String.class);
                                                                  }
-                                                            if (snapshot.child("date").getValue(Photo.class) != null) {
-                                                             date =     snapshot.child("date").getValue(Photo.class).toString();
+                                                            if (snapshot.child("date").getValue(String.class) != null) {
+                                                             date =     snapshot.child("date").getValue(String.class);
                                                             }
 
 
-                                                            if (snapshot.child("time").getValue(Photo.class) != null) {
-                                                          time =        snapshot.child("time").getValue(Photo.class).toString();
+                                                            if (snapshot.child("time").getValue(String.class) != null) {
+                                                          time =        snapshot.child("time").getValue(String.class);
                                                             }
 
-                                                            if (snapshot.child("tid").getValue(Photo.class) != null) {
-                                                          tid =     snapshot.child("tid").getValue(Photo.class).toString();
+                                                            if (snapshot.child("tid").getValue(String.class) != null) {
+                                                          tid =     snapshot.child("tid").getValue(String.class);
                                                             }
-                                                          if (snapshot.child("traderimage").getValue(Photo.class) != null) {
-                                                        thetraderimage =      snapshot.child("traderimage").getValue(Photo.class).toString();
+                                                          if (snapshot.child("traderimage").getValue(String.class) != null) {
+                                                        thetraderimage =      snapshot.child("traderimage").getValue(String.class);
                                                     }
 
 
 
-                                                            if (snapshot.child("tradername").getValue(Photo.class) != null) {
-                                                            tradername =     snapshot.child("tradername").getValue(Photo.class).toString();
+                                                            if (snapshot.child("tradername").getValue(String.class) != null) {
+                                                            tradername =     snapshot.child("tradername").getValue(String.class);
                                                             }
 
-                                                            if (snapshot.child("photoid").getValue(Photo.class) != null) {
-                                                              photoid =   snapshot.child("photoid").getValue(Photo.class).toString();
+                                                            if (snapshot.child("photoid").getValue(String.class) != null) {
+                                                              photoid =   snapshot.child("photoid").getValue(String.class);
                                                             }
 
-                                                            if (snapshot.child("pname").getValue(Photo.class) != null) {
-                                                                pname =    snapshot.child("pname").getValue(Photo.class).toString();
+                                                            if (snapshot.child("pname").getValue(String.class) != null) {
+                                                                pname =    snapshot.child("pname").getValue(String.class);
                                                             }
 
-                                                           if (snapshot.child("pimage").getValue(Photo.class) != null) {
-                                                             pimage =    snapshot.child("pimage").getValue(Photo.class).toString();
+                                                           if (snapshot.child("pimage").getValue(String.class) != null) {
+                                                             pimage =    snapshot.child("pimage").getValue(String.class);
                                                             }
 
-                                                    if (snapshot.child("pid").getValue(Photo.class) != null) {
-                                                        pid = snapshot.child("pid").getValue(Photo.class).toString();
+                                                    if (snapshot.child("pid").getValue(String.class) != null) {
+                                                        pid = snapshot.child("pid").getValue(String.class);
                                                     }
 
-                                                    if (snapshot.child("posttype").getValue(Photo.class) != null) {
-                                                                   posttype =    snapshot.child("posttype").getValue(Photo.class).toString();
+                                                    if (snapshot.child("posttype").getValue(String.class) != null) {
+                                                                   posttype =    snapshot.child("posttype").getValue(String.class);
                                                               }
 
 
-                                                            if (snapshot.child("price").getValue(Photo.class) != null) {
-                                                                 price = snapshot.child("price").getValue(Photo.class).toString();
+                                                            if (snapshot.child("price").getValue(String.class) != null) {
+                                                                 price = snapshot.child("price").getValue(String.class);
                                                             }
 
 
@@ -797,16 +770,16 @@ String    pname; String    pimage;
                           mylikesdatabasereference.addValueEventListener(new ValueEventListener() {
                               @Override
                               public void onDataChange(DataSnapshot dataSnapshot) {
-                                  Photo post = dataSnapshot.getValue(Photo.class);
-                                  Log.i(TAG, "MainfeedSnapshots " + post);
+
+
 
                                   for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
 
                                       photokey = dataSnapshot1.getKey();
                                       Log.d(TAG, "The Photokey " + photokey);
 
-                                      if (dataSnapshot1.child("number").getValue(Photo.class) != null) {
-                                          likenumber = dataSnapshot1.child("number").getValue(Photo.class).toString();
+                                      if (dataSnapshot1.child("number").getValue(String.class) != null) {
+                                          likenumber = dataSnapshot1.child("number").getValue(String.class);
                                       }
                                       holder.likes.setText("Liked by " +   likenumber + "  " + "number of people");
 
@@ -827,16 +800,16 @@ String    pname; String    pimage;
                           mycommentFirebaseDatabase.addValueEventListener(new ValueEventListener() {
                               @Override
                               public void onDataChange(DataSnapshot dataSnapshot) {
-                                  Photo post = dataSnapshot.getValue(Photo.class);
-                                  Log.i(TAG, "MainfeedSnapshots " + post);
+
+
 
                                   for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
 
                                       photokey = dataSnapshot1.getKey();
                                       Log.d(TAG, "The Photokey " + photokey);
 
-                                      if (dataSnapshot1.child("number").getValue(Photo.class) != null) {
-                                          commentnumber = dataSnapshot1.child("number").getValue(Photo.class).toString();
+                                      if (dataSnapshot1.child("number").getValue(String.class) != null) {
+                                          commentnumber = dataSnapshot1.child("number").getValue(String.class);
                                       }
                                       holder.comments.setText("View all comment from" + commentnumber  +"people");
 

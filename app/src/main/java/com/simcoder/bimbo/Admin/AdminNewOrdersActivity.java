@@ -155,10 +155,10 @@ public class AdminNewOrdersActivity extends AppCompatActivity implements GoogleA
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0) {
-                    if (dataSnapshot.getValue() != null) {
-                        userkey = dataSnapshot.getValue().toString();
-                        if (dataSnapshot.child("name").getValue() != null) {
-                            username = dataSnapshot.child("name").getValue().toString();
+                    if (dataSnapshot.getValue(String.class) != null) {
+                        userkey = dataSnapshot.getValue(String.class);
+                        if (dataSnapshot.child("name").getValue(String.class) != null) {
+                            username = dataSnapshot.child("name").getValue(String.class);
                         }
                     }
                 }

@@ -46,12 +46,19 @@ public class AdminProductDetails extends AppCompatActivity implements View.OnCli
     String traderID;
     Query myproductsdetails;
     DatabaseReference mDatabaseLikeCount;
+String    productdetailsimage;
 
+            String productdetailsname;
+    String productdetailsdescription;
+            String productdetailsnumber;
+    String LikeRefkey;
+ String photokey;
 
     private static final int RC_SIGN_IN = 1;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
 
-
+   FirebaseDatabase myfirebasedatabase;
+   FirebaseDatabase likesgetdatabase;
     //AUTHENTICATORS
 
     private GoogleMap mMap;
@@ -60,6 +67,7 @@ public class AdminProductDetails extends AppCompatActivity implements View.OnCli
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
     DatabaseReference productsRef;
+    DatabaseReference photodatabase;
     DatabaseReference LikeRef;
     Boolean mProcessLike;
     String userID;
@@ -187,21 +195,32 @@ public class AdminProductDetails extends AppCompatActivity implements View.OnCli
         adminproductimagelikebutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LikeRef = FirebaseDatabase.getInstance().getReference().child("Products");
+
+                myfirebasedatabase = FirebaseDatabase.getInstance();
+                likesgetdatabase = FirebaseDatabase.getInstance();
+
+
+
+                 photodatabase = myfirebasedatabase.getReference().child("Photo");
+                 photokey = photodatabase.getKey();
+
+
+                LikeRef = likesgetdatabase.getReference().child("Photo").child(photokey).child("Likes");
+                      LikeRefkey = LikeRef.getKey();
                 if (LikeRef != null) {
                     LikeRef.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if (dataSnapshot.exists()) {
 
-                                if (dataSnapshot.child(productID) != null && dataSnapshot.child(productID).child("Likes").hasChild(traderID)) {
+                                if (dataSnapshot.child("uid").getValue(String.class) != null && dataSnapshot.hasChild(LikeRefkey)) {
                                     Log.i("Product Unliked", ".");
-                                    LikeRef.child(productID).child("Likes").child(traderID).removeValue();
+                                    LikeRef.child(LikeRefkey).removeValue();
                                     updateCounter(false);
                                     mProcessLike = false;
                                 } else {
                                     Log.i("Product Liked", "User Liked");
-                                    LikeRef.child(productID).child("Likes").setValue(mAuth.getCurrentUser().getUid());
+                                    LikeRef.push().setValue(mAuth.getCurrentUser().getUid());
                                     updateCounter(true);
                                     Log.i(dataSnapshot.getKey(), dataSnapshot.getChildrenCount() + "Count");
                                     mProcessLike = false;
@@ -227,7 +246,7 @@ public class AdminProductDetails extends AppCompatActivity implements View.OnCli
             private void updateCounter(final Boolean increment) {
                 this.increments = increment;
                 DatabaseReference mDatabaseLikeCount;
-                mDatabaseLikeCount = FirebaseDatabase.getInstance().getReference().child("Product").child(productID).child("Likes").child("count");
+                mDatabaseLikeCount = FirebaseDatabase.getInstance().getReference().child("Photos").child(photokey).child("Likes").child("number");
                 mDatabaseLikeCount.runTransaction(new Transaction.Handler() {
                     @Override
                     public Transaction.Result doTransaction(MutableData mutableData) {
@@ -272,7 +291,20 @@ public class AdminProductDetails extends AppCompatActivity implements View.OnCli
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
                         Products products = dataSnapshot.getValue(Products.class);
+                           if (dataSnapshot.child("pimage").getValue(String.class) != null) {
+                                productdetailsimage = dataSnapshot.child("pimage").getValue(String.class);
+                           }
 
+                           if (dataSnapshot.child("pname").getValue(String.class) != null) {
+                               productdetailsname = dataSnapshot.child("pname").getValue(String.class);
+                           }
+
+                           if (dataSnapshot.child("desc").getValue(String.class) != null) {
+                               productdetailsdescription = dataSnapshot.child("desc").getValue(String.class);
+                           }
+                           if (dataSnapshot.child("number").getValue(String.class) != null) {
+                                productdetailsnumber = dataSnapshot.child("number").getValue(String.class);
+                           }
 
                         ImageView adminproductdetailsimage = (ImageView) findViewById(R.id.adminproductdetailsimage);
                         TextView adminproductimageproductname = (TextView) findViewById(R.id.adminproductimageproductname);
@@ -280,11 +312,11 @@ public class AdminProductDetails extends AppCompatActivity implements View.OnCli
                         TextView adminproductimagenumberoflikes = (TextView) findViewById(R.id.adminproductimagenumberoflikes);
 
 
-                        adminproductdetailsimage.setImageResource(Integer.parseInt(products.getimage()));
-                        adminproductimageproductname.setText(products.getname());
-                        adminproductimagedescription.setText(products.getdesc());
-                        adminproductimagenumberoflikes.setText(products.getnumber());
-                        Picasso.get().load(products.getimage()).into(adminproductdetailsimage);
+                        adminproductdetailsimage.setImageResource(Integer.parseInt(productdetailsimage));
+                        adminproductimageproductname.setText(productdetailsname);
+                        adminproductimagedescription.setText(productdetailsdescription);
+                        adminproductimagenumberoflikes.setText(productdetailsnumber);
+                        Picasso.get().load(productdetailsimage).into(adminproductdetailsimage);
                     }
 
 
@@ -328,11 +360,7 @@ public class AdminProductDetails extends AppCompatActivity implements View.OnCli
     }
 
     @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
-    }
-
-    @Override
     protected void onStop() {
         super.onStop();
         //     mProgress.hide();
@@ -341,5 +369,8 @@ public class AdminProductDetails extends AppCompatActivity implements View.OnCli
         }
     }
 
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
+    }
 }

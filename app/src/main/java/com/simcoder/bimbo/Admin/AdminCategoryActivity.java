@@ -91,7 +91,7 @@ public class AdminCategoryActivity extends AppCompatActivity implements GoogleAp
                                  @Override
                                  public void onDataChange(DataSnapshot dataSnapshot) {
                                      if (dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0) {
-                                         role = dataSnapshot.getValue().toString();
+                                         role = dataSnapshot.getValue(String.class);
 
                                      }
                                  }

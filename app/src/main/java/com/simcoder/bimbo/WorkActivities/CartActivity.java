@@ -117,6 +117,7 @@ public  class  CartActivity extends AppCompatActivity
     String customerid;
     String somerole;
     String key;
+    String uid;
 
 
     String traderkey;
@@ -126,7 +127,9 @@ public  class  CartActivity extends AppCompatActivity
     android.widget.ImageView thepicturebeingloaded;
     android.widget.ImageView  thetraderpicturebeingloaded;
     DatabaseReference UsersRef;
-
+    FirebaseUser user;
+    Query cartquery;
+    String date, desc, discount, name, photoid,pid, pimage, pname,tid, traderimage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,66 +158,89 @@ public  class  CartActivity extends AppCompatActivity
         //       recyclerView.setAdapter(adapter);
         //   }
 
-        UsersRef =  FirebaseDatabase.getInstance().getReference().child("Users");
-        UsersRef.keepSynced(true);
-        CartListRef = FirebaseDatabase.getInstance().getReference().child("Cart");
-        CartListRef.keepSynced(true);
-        cartlistkey = CartListRef.getKey();
+        mAuth = FirebaseAuth.getInstance();
+        user = mAuth.getCurrentUser();
+         if (user != null) {
+             uid = user.getUid();
+
+             UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
+             UsersRef.keepSynced(true);
+             CartListRef = FirebaseDatabase.getInstance().getReference().child("Cart");
+             CartListRef.keepSynced(true);
+             cartlistkey = CartListRef.getKey();
+              cartquery = CartListRef.orderByChild("tid").equalTo(uid);
+
+             if (cartquery != null) {
+                 cartquery.addValueEventListener(new ValueEventListener() {
+                     @Override
+                     public void onDataChange(DataSnapshot dataSnapshot) {
+
+                         if (cartlistkey != null) {
+                             for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                         cartlistkey = dataSnapshot1.getKey();
+                         Log.d("TAG", cartlistkey);
+                         if (dataSnapshot.child("date").getValue(String.class) != null) {
+                             date = dataSnapshot.child("date").getValue(String.class);
+                         }
+                         if (dataSnapshot.child("desc").getValue(String.class) != null) {
+                             desc = dataSnapshot.child("desc").getValue(String.class);
+                         }
+                         if (dataSnapshot.child("discount").getValue(String.class) != null) {
+                             discount = dataSnapshot.child("discount").getValue(String.class);
+                         }
+                         if (dataSnapshot.child("image").getValue(String.class) != null) {
+                             image = dataSnapshot.child("image").getValue(String.class);
+                         }
 
 
-        if (CartListRef != null) {
-            CartListRef.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    Cart cart =  dataSnapshot.getValue(Cart.class);
-                    if (cartlistkey != null) {
-                        for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                            cartlistkey = dataSnapshot1.getKey();
-                            String userkey = dataSnapshot.child(cartlistkey).child("Users").getKey();
-                            String productkey = dataSnapshot.child(cartlistkey).child("Users").child(userkey).child("products").getKey();
-                            Log.d("TAG", cartlistkey);
+                         if (dataSnapshot.child("name").getValue(String.class) != null) {
+                             name = dataSnapshot.child("name").getValue(String.class);
+                         }
 
-                            if (cartlistkey != null) {
-                                if (cartlistkey != null) {
-                                    if (dataSnapshot.child(cartlistkey).child("name").getValue(Cart.class) != null) {
-                                        nameofproduct = dataSnapshot.child(cartlistkey).child("name").getValue(Cart.class).toString();
-                                        if (dataSnapshot.child(cartlistkey).child("pid").getValue(Cart.class) != null) {
-                                            productid = dataSnapshot.child(cartlistkey).child("pid").getValue(Cart.class).toString();
-                                            if (dataSnapshot.child(cartlistkey).child("quantity").getValue(Cart.class) != null) {
-                                                quantity = dataSnapshot.child(cartlistkey).child("quantity").getValue(Cart.class).toString();
-                                            }
-                                        }
-                                        if (dataSnapshot.child(cartlistkey).child("image").getValue(Cart.class) != null) {
-                                            image = dataSnapshot.child(cartlistkey).child("image").getValue(Cart.class).toString();
-                                        }
+                         if (dataSnapshot.child("photoid").getValue(String.class) != null) {
+                             photoid = dataSnapshot.child("photoid").getValue(String.class);
+                         }
 
-                                        if (dataSnapshot.child(cartlistkey).child("price").getValue(Cart.class) != null) {
-                                            price = dataSnapshot.child(cartlistkey).child("price").getValue(Cart.class).toString();
-                                        }
-                                        if (dataSnapshot.child(cartlistkey).child("name").getValue(Cart.class) != null) {
-                                            users = dataSnapshot.child(cartlistkey).child("name").getValue(Cart.class).toString();
-                                        }
+                         if (dataSnapshot.child("pid").getValue(String.class) != null) {
+                             pid = dataSnapshot.child("pid").getValue(String.class);
+                         }
+                         if (dataSnapshot.child("pimage").getValue(String.class) != null) {
+                             pimage = dataSnapshot.child("pimage").getValue(String.class);
+                         }
+                         if (dataSnapshot.child("pname").getValue(String.class) != null) {
+                         pname = dataSnapshot.child("pname").getValue(String.class);
+                         }
+                         if (dataSnapshot.child("price").getValue(String.class) != null) {
+                         price = dataSnapshot.child("price").getValue(String.class);
+                         }
+                         if (dataSnapshot.child("quantity").getValue(String.class) != null) {
+                         quantity = dataSnapshot.child("quantity").getValue(String.class);
+                         }
+                         if (dataSnapshot.child("tid").getValue(String.class) != null) {
+                                     tid = dataSnapshot.child("tid").getValue(String.class);
+                         }
+                         if (dataSnapshot.child("time").getValue(String.class) != null) {
+                          time = dataSnapshot.child("time").getValue(String.class);
+                          }
+                         if (dataSnapshot.child("traderimage").getValue(String.class) != null) {
+                         traderimage = dataSnapshot.child("traderimage").getValue(String.class);
+                          }
+                         if (dataSnapshot.child("tradername").getValue(String.class) != null) {
+                          tradername = dataSnapshot.child("tradername").getValue(String.class);
+                          }
+                          if (dataSnapshot.child("uid").getValue(String.class) != null) {
+                           uid = dataSnapshot.child("uid").getValue(String.class);
+                           }
+                      }
+                 }}
+                     @Override
+                     public void onCancelled(DatabaseError databaseError) {
 
+                     }
 
-                                        if (dataSnapshot.child(cartlistkey).child("time").getValue(Cart.class) != null) {
-                                            time = dataSnapshot.child(cartlistkey).child("time").getValue(Cart.class).toString();
-                                        }
-
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-
-            });
-        }
-
+                 });
+             }
+         }
         Paper.init(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.hometoolbar);
@@ -239,21 +265,6 @@ public  class  CartActivity extends AppCompatActivity
         }
 
 
-        firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                if (user != null) {
-                    customerid = "";
-                    traderoruser = user.getUid();
-                }
-
-                // I HAVE TO TRY TO GET THE SETUP INFORMATION , IF THEY ARE ALREADY PROVIDED WE TAKE TO THE NEXT STAGE
-                // WHICH IS CUSTOMER TO BE ADDED.
-                // PULLING DATABASE REFERENCE IS NULL, WE CHANGE BACK TO THE SETUP PAGE ELSE WE GO STRAIGHT TO MAP PAGE
-            }
-        };
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -292,18 +303,21 @@ public  class  CartActivity extends AppCompatActivity
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             UserRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers");
             UserRef.keepSynced(true);
-            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-                UserDetailsRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+            if (mAuth.getCurrentUser() != null) {
+                UserDetailsRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(mAuth.getCurrentUser().getUid());
                 UserDetailsRef.keepSynced(true);
 
                 UserDetailsRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        User myuser = dataSnapshot.getValue(User.class);
-                        if (dataSnapshot.exists()) {
-                            useridentifier = dataSnapshot.child("uid").getValue(User.class).toString();
-                            role = dataSnapshot.child("role").getValue(User.class).toString();
 
+                        if (dataSnapshot.exists()) {
+                            if (dataSnapshot.child("uid").getValue(String.class) != null) {
+                                useridentifier = dataSnapshot.child("uid").getValue(String.class);
+                            }
+                            if (dataSnapshot.child("role").getValue(String.class) != null) {
+                                role = dataSnapshot.child("role").getValue(String.class);
+                            }
                         }
                     }
 
@@ -493,18 +507,18 @@ public  class  CartActivity extends AppCompatActivity
                             @NonNull
                             @Override
                             public Products parseSnapshot(@NonNull DataSnapshot snapshot) {
-                                                  snapshot.getValue(Products.class);
-                                return new Products(snapshot.child("pid").getValue(Products.class).toString(),
+                                                  snapshot.getValue(String.class);
+                                return new Products(snapshot.child("pid").getValue(String.class),
 
-                                        snapshot.child("tid").getValue(Products.class).toString(),
-                                        snapshot.child("quantity").getValue(Products.class).toString(),
-                                        snapshot.child("price").getValue(Products.class).toString(),
-                                        snapshot.child("desc").getValue(Products.class).toString(),
-                                        snapshot.child("discount").getValue(Products.class).toString(),
-                                        snapshot.child("name").getValue(Products.class).toString(),
-                                        snapshot.child("image").getValue(Products.class).toString(),
-                                        snapshot.child("tradername").getValue(Products.class).toString(),
-                                        snapshot.child("traderimage").getValue(Products.class).toString()
+                                        snapshot.child("tid").getValue(String.class),
+                                        snapshot.child("quantity").getValue(String.class),
+                                        snapshot.child("price").getValue(String.class),
+                                        snapshot.child("desc").getValue(String.class),
+                                        snapshot.child("discount").getValue(String.class),
+                                        snapshot.child("name").getValue(String.class),
+                                        snapshot.child("image").getValue(String.class),
+                                        snapshot.child("tradername").getValue(String.class),
+                                        snapshot.child("traderimage").getValue(String.class)
 
                                              );
 
@@ -626,6 +640,24 @@ public  class  CartActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
+
+
+        firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+
+                FirebaseUser user =  mAuth.getCurrentUser();
+                if (user != null) {
+                    customerid = "";
+                    traderoruser = user.getUid();
+                }
+
+                // I HAVE TO TRY TO GET THE SETUP INFORMATION , IF THEY ARE ALREADY PROVIDED WE TAKE TO THE NEXT STAGE
+                // WHICH IS CUSTOMER TO BE ADDED.
+                // PULLING DATABASE REFERENCE IS NULL, WE CHANGE BACK TO THE SETUP PAGE ELSE WE GO STRAIGHT TO MAP PAGE
+            }
+        };
+
         adapter.startListening();
         if (mAuth != null) {
             mAuth.addAuthStateListener(firebaseAuthListener);

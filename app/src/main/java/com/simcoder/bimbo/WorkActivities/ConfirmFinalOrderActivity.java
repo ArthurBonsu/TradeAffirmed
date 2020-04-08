@@ -93,21 +93,13 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity
                     }).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
         }
 
-        firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
 
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                if (user != null) {
-                    userID="";
-                    userID = user.getUid();
-                }
 
                 // I HAVE TO TRY TO GET THE SETUP INFORMATION , IF THEY ARE ALREADY PROVIDED WE TAKE TO THE NEXT STAGE
                 // WHICH IS CUSTOMER TO BE ADDED.
                 // PULLING DATABASE REFERENCE IS NULL, WE CHANGE BACK TO THE SETUP PAGE ELSE WE GO STRAIGHT TO MAP PAGE
-            }
-        };
+
+
           if (confirmOrderBtn != null) {
               confirmOrderBtn.setOnClickListener(new View.OnClickListener() {
                   @Override
@@ -248,13 +240,48 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity
         });
     }
 
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+
+                firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
+                    @Override
+                    public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        if (user != null) {
+                            userID = "";
+                            userID = user.getUid();
+                        }
+
+                        // I HAVE TO TRY TO GET THE SETUP INFORMATION , IF THEY ARE ALREADY PROVIDED WE TAKE TO THE NEXT STAGE
+                        // WHICH IS CUSTOMER TO BE ADDED.
+                        // PULLING DATABASE REFERENCE IS NULL, WE CHANGE BACK TO THE SETUP PAGE ELSE WE GO STRAIGHT TO MAP PAGE
+                    }
+                };
+
+
+                if (mAuth != null) {
+                    mAuth.addAuthStateListener(firebaseAuthListener);
+                }
+            }
+        };
+    }
     @Override
     protected void onStop() {
         super.onStop();
-        //     mProgress.hide();
-       if (mAuth !=null) {
-           mAuth.removeAuthStateListener(firebaseAuthListener);
-       }
+        if (mAuth !=null) {
+            mAuth.removeAuthStateListener(firebaseAuthListener);
+        }
     }
+
+
+
+
 
 }

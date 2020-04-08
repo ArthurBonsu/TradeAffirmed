@@ -467,9 +467,8 @@ public class ProductDetailsActivity extends AppCompatActivity   implements Navig
                                         if (dataSnapshot.exists()) {
                                             if (key != null) {
                                                 if (traderkey != null) {
-                                                    if (dataSnapshot.child("trader").child(traderkey).child("name").getValue() != null) {
-                                                        thetraderhere = dataSnapshot.child("trader").child(traderkey).child("name").getValue().toString();
-                                                        traderimage = dataSnapshot.child("trader").child(traderkey).child("image").getValue().toString();
+                                                    if (dataSnapshot.child("tradername").getValue() != null) {
+                                                        thetraderhere = dataSnapshot.child("tradername").getValue().toString();
 
 
                                                     }

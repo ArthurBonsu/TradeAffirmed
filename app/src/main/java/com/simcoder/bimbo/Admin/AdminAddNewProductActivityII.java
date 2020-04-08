@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -39,6 +40,9 @@ import com.google.firebase.storage.UploadTask;
 import com.simcoder.bimbo.Model.Products;
 import com.simcoder.bimbo.R;
 
+import com.simcoder.bimbo.WorkActivities.HomeActivity;
+import com.simcoder.bimbo.WorkActivities.ProductDetailsActivity;
+import com.simcoder.bimbo.WorkActivities.TraderProfile;
 import com.simcoder.bimbo.instagram.Profile.ProfileActivity;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
@@ -96,6 +100,8 @@ public class AdminAddNewProductActivityII extends AppCompatActivity implements G
     String date;
     String time;
     String userid;
+    String productkey;
+    String mytraderimage;
 
     //AUTHENTICATORS
 
@@ -112,6 +118,10 @@ public class AdminAddNewProductActivityII extends AppCompatActivity implements G
    String titleval;
    String descval;
     String  price;
+    String tradername;
+    String myphotoimage;
+    String traderid;
+    String pimage;
 
 
     public AdminAddNewProductActivityII() {
@@ -123,20 +133,21 @@ public class AdminAddNewProductActivityII extends AppCompatActivity implements G
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_add_new_product);
 
-        if (getIntent() != null) {
-            if (getIntent().getStringExtra("category") != null) {
-                CategoryName = getIntent().getStringExtra("category").toString();
+              Intent sendcategory = getIntent();
+              if( sendcategory.getExtras().getString("category") != null) {
+                CategoryName = sendcategory.getExtras().getString("category");
             }
             // KEYS PASSED IN FROM ADMINCATEGORY
+                  Intent roleintent = getIntent();
 
-            if (getIntent().getStringExtra("rolefromadmincategorytoaddadmin") != null) {
-                role = getIntent().getStringExtra("rolefromadmincategorytoaddadmin").toString();
+            if (roleintent.getExtras().getString("rolefromadmincategorytoaddadmin") != null) {
+                role = roleintent.getExtras().getString("rolefromadmincategorytoaddadmin");
+            }
+                Intent fromaddadmincategorytrader = getIntent();
+            if (fromaddadmincategorytrader.getExtras().getString("fromadmincategoryactivitytoaddadmin") != null){
+                traderID = fromaddadmincategorytrader.getExtras().getString("fromadmincategoryactivitytoaddadmin");
             }
 
-            if (getIntent() != null) {
-                traderID = getIntent().getStringExtra("fromadmincategoryactivitytoaddadmin");
-            }
-        }
 
 
         AddimageButon = (ImageButton) findViewById(R.id.addingtoproductsbutton);
@@ -147,8 +158,8 @@ public class AdminAddNewProductActivityII extends AppCompatActivity implements G
 
         msubmitButton = (Button) findViewById(R.id.add_new_product);
 
-        Auth = FirebaseAuth.getInstance();
-        mCurrentUser = Auth.getCurrentUser();
+        mAuth = FirebaseAuth.getInstance();
+        mCurrentUser = mAuth.getCurrentUser();
 
 
         user = mAuth.getCurrentUser();
@@ -264,58 +275,41 @@ public class AdminAddNewProductActivityII extends AppCompatActivity implements G
                 filepath.putFile(mImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+
+
                         final Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                        final DatabaseReference newPost = ProductsRef.push();
 
-                                   userid = user.getUid();
+                                          traderid = user.getUid();
+                                          tradername = user.getDisplayName();
+                                          pimage = downloadUrl.toString();
+
                                    Uri myphoto = user.getPhotoUrl();
-                                  if (userid != null) {
-                                      ProductsRef.addValueEventListener(new ValueEventListener() {
-                                          @Override
+                                           mytraderimage = myphoto.toString();
+                                       productkey =     ProductsRef.push().getKey();
+                        Products producttobesent = new Products ( titleval,pimage,descval, price, productkey, saveCurrentDate, saveCurrentTime, traderid, tradername, mytraderimage);
 
-                                          public void onDataChange(final DataSnapshot dataSnapshot) {
-                                              Products products = dataSnapshot.getValue(Products.class);
-                                              Log.i(TAG, "Storage Products " + products);
+                        ProductsRef.child(productkey).setValue(producttobesent, new
+                                DatabaseReference.CompletionListener() {
+                                    @Override
+                                    public void onComplete(DatabaseError databaseError, DatabaseReference
+                                            databaseReference) {
+                                        Toast.makeText(getApplicationContext(), "Product Added", Toast.LENGTH_SHORT).show();
+                                        Intent addadminproductactivity = new Intent(AdminAddNewProductActivityII.this, HomeActivity.class);
 
+                                        startActivity(addadminproductactivity);
 
-                                              newPost.child("pname").setValue(titleval);
-                                              newPost.child("pimage").setValue(downloadUrl.toString());
-                                              newPost.child("desc").setValue(descval);
-                                              newPost.child("price").setValue(price);
-                                              newPost.child("date").setValue(saveCurrentDate);
-                                              newPost.child("time").setValue(saveCurrentTime);
-                                              newPost.child("tid").setValue(userid);
-                                              newPost.child("tradername").setValue(user.getDisplayName().toString());
-                                              newPost.child("traderimage").setValue(user.getPhotoUrl().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
-
-                                                  @Override
-                                                  public void onComplete(@NonNull Task<Void> task) {
-
-                                                      if (task.isSuccessful()) {
-
-                                                          Intent startanewproductintent = new Intent(getApplicationContext(), com.simcoder.bimbo.WorkActivities.HomeActivity.class);
-                                                          startActivity(startanewproductintent);
-
-
-                                                      }
-                                                  }
-                                              });
+                                    }
+                                });
 
 
                                           }
 
-                                          @Override
-                                          public void onCancelled(DatabaseError databaseError) {
-
-                                          }
                                       });
 
 
                                       mProgress.dismiss();
 
-                                  }
-                    }
-                });
             }
 
 
