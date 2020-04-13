@@ -54,3 +54,5 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryViewHolders> {
     }
 
 }
+
+// #BuiltByGOD

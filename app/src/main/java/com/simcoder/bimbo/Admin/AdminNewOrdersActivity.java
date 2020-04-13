@@ -337,3 +337,5 @@ public class AdminNewOrdersActivity extends AppCompatActivity implements GoogleA
     }
 
 }
+
+// #BuiltByGOD

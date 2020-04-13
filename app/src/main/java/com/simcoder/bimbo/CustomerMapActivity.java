@@ -201,22 +201,26 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
         user = FirebaseAuth.getInstance().getCurrentUser();
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+
 
         Paper.init(this);
 
-        toolbar = (Toolbar) findViewById(R.id.customertoolbar);
-        setActionBar(toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
             toolbar.setTitle("Customer MapView");
-            toolbar.collapseActionView();
-            PlaceAutocompleteFragment autocompleteFragment;
-
+//        setSupportActionBar(toolbar);
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
             if (drawer != null) {
                 drawer.addDrawerListener(toggle);
-            }}
+                if (toggle != null) {
+                    toggle.syncState();
 
+                }
+            }
+        }
 
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -227,6 +231,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             if (headerView != null) {
                 TextView userNameTextView = headerView.findViewById(R.id.user_profile_name);
                 CircleImageView profileImageView = headerView.findViewById(R.id.user_profile_image);
+
+                PlaceAutocompleteFragment autocompleteFragment;
 
 
                 serchbutton.setOnClickListener(new View.OnClickListener() {
@@ -242,11 +248,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
 
                 // USER
-                if (drawer !=null){
-                    if (toggle != null) {
-                        toggle.syncState();
-                        setupDrawer();
-                    }
+
+
                     {
                         if (user.getDisplayName() != null) {
                             if (user.getDisplayName() != null) {
@@ -354,7 +357,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
 
                 }
-            }
+
         }
         // SELECT , WE MUST SELECT THE OPTION OF WHETHER THE PRODUCT IS BROUGOHT AS A MEETYUP OR DELIVERY RADIO BUTTON
 
@@ -1508,17 +1511,14 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                 finish();
             }
         } else if (id == R.id.nav_paymenthome) {
-            if (drawer != null) {
 
 
-            }
-
-            drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+           /* drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
             if (drawer != null) {
 
                 drawer.closeDrawer(GravityCompat.START);
             }
-
+*/
         }return true;
     }
     @Override

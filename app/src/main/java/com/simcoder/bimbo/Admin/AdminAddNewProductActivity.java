@@ -419,3 +419,4 @@ public class AdminAddNewProductActivity extends AppCompatActivity implements Goo
         }
     }
 }
+// #BuiltByGOD

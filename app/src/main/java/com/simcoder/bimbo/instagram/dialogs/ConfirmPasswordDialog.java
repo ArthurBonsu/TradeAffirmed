@@ -90,3 +90,5 @@ public class ConfirmPasswordDialog extends DialogFragment {
 
 
 }
+
+// #BuiltByGOD

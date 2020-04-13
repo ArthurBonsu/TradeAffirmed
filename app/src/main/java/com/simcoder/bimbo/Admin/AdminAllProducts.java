@@ -297,3 +297,4 @@ public class AdminAllProducts extends AppCompatActivity {  //ACTUALLY THIS ACTIV
         allproductRef.child(uID).removeValue();
     }}
 }
+// #BuiltByGOD

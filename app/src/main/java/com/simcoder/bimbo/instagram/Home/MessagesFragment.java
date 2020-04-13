@@ -21,3 +21,5 @@ public class MessagesFragment extends Fragment {
         return view;
     }
 }
+
+// #BuiltByGOD

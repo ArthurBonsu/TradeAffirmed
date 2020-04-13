@@ -135,7 +135,7 @@ public  class  HomeActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(
-                (R.layout.stickynoterecycler));
+                (R.layout.activity_home));
 
 
 
@@ -166,25 +166,69 @@ public  class  HomeActivity extends AppCompatActivity
 
 
 
-        recyclerView = findViewById(R.id.stickyheaderrecyler);
+        recyclerView = findViewById(R.id.recycler_menu);
 
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         if (recyclerView != null) {
             recyclerView.setLayoutManager(layoutManager);
         }
-       if (recyclerView != null) {
+     /*  if (recyclerView != null) {
             recyclerView.setHasFixedSize(true);
 
         }
-
+*/
 
 
         thetraderview = findViewById(R.id.thetraderiknow);
 
         product_imagehere = (ImageView) findViewById(R.id.product_imagehere);
         thetraderimageforproduct = (ImageView)findViewById(R.id.thetraderimageforproduct);
-        mAuth = FirebaseAuth.getInstance();
+
+        Paper.init(this);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.hometoolbar);
+        if (toolbar != null) {
+            toolbar.setTitle("Home");
+        }
+
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer != null) {
+            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+            drawer.addDrawerListener(toggle);
+            if (toggle != null) {
+                toggle.syncState();
+            }
+
+            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+            if (navigationView != null) {
+                navigationView.setNavigationItemSelectedListener(this);
+            }
+            View headerView = navigationView.getHeaderView(0);
+            TextView userNameTextView = headerView.findViewById(R.id.user_profile_name);
+            CircleImageView profileImageView = headerView.findViewById(R.id.user_profile_image);
+
+            // USER
+
+
+
+            mAuth = FirebaseAuth.getInstance();
+
+
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+
+
+
+            if (user.getDisplayName() != null) {
+                if (user.getDisplayName() != null) {
+                    userNameTextView.setText(user.getDisplayName());
+
+                    Picasso.get().load(user.getPhotoUrl()).placeholder(R.drawable.profile).into(profileImageView);
+                }
+            }}
 
         myfirebaseDatabase = FirebaseDatabase.getInstance();
         FollowerDatabase = FirebaseDatabase.getInstance();
@@ -258,12 +302,9 @@ public  class  HomeActivity extends AppCompatActivity
 
               getmyfollowingsagain.onCallback(followingid, followingname, followingimage);
 
-             Log.d("Followerinfo" , followingid + followingname + followingimage);
+             Log.i("Followerinfo" , followingid + followingname + followingimage);
 
-            Paper.init(this);
 
-            Toolbar toolbar = (Toolbar) findViewById(R.id.hometoolbar);
-            toolbar.setTitle("Home");
 //        setSupportActionBar(toolbar);
 
             GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
@@ -297,23 +338,8 @@ public  class  HomeActivity extends AppCompatActivity
                             }
                         });
 
-            }
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            if (drawer != null) {
-                ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                        this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-                drawer.addDrawerListener(toggle);
-                if (toggle != null) {
-                    toggle.syncState();
-                }
 
-                NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-                if (navigationView != null) {
-                    navigationView.setNavigationItemSelectedListener(this);
-                }
-                View headerView = navigationView.getHeaderView(0);
-                TextView userNameTextView = headerView.findViewById(R.id.user_profile_name);
-                CircleImageView profileImageView = headerView.findViewById(R.id.user_profile_image);
+
 
                 // USER
                 user = mAuth.getCurrentUser();
@@ -586,7 +612,7 @@ public  class  HomeActivity extends AppCompatActivity
 
                                     holder.product_name.setText(pname);
 
-                                    holder.thetraderiknow.setText(thetradername);
+                                    holder.thetraderiknow.setText(tradername);
 
                                     holder.product_description.setText(desc);
                                     holder.product_price.setText("Price = " +  "$" +price );
@@ -1548,10 +1574,7 @@ public  class  HomeActivity extends AppCompatActivity
         }
 
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer != null) {
-            drawer.closeDrawer(GravityCompat.START);
-        }
+
         return true;
     }
 

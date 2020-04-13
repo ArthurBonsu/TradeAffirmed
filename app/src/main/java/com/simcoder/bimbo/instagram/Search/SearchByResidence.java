@@ -182,3 +182,6 @@ public class SearchByResidence extends AppCompatActivity{
         }
     }}}
 }}}
+
+
+// #BuiltByGOD

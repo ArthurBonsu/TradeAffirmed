@@ -208,7 +208,7 @@ public class ProductDetailsActivity extends AppCompatActivity   implements Navig
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.hometoolbar);
            if (toolbar != null) {
-               toolbar.setTitle("Home");
+               toolbar.setTitle("Product Details");
            }
 //        setSupportActionBar(toolbar);
 

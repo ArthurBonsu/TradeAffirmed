@@ -40,3 +40,6 @@ public class HistoryViewHolders extends RecyclerView.ViewHolder implements View.
         v.getContext().startActivity(intent);
     }
 }
+
+
+// #BuiltByGOD
