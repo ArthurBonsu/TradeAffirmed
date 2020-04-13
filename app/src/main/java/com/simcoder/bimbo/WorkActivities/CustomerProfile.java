@@ -161,17 +161,18 @@ public class CustomerProfile extends AppCompatActivity  implements  View.OnClick
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0) {
                     if (dataSnapshot != null) {
+                        dataSnapshot.getValue(Users.class);
 
                         if (userID != null) {
                             customerkey = dataSnapshot.child(userID).getKey();
-                            customerimage = dataSnapshot.child(userID).child("image").getValue().toString();
-                            coverimage = dataSnapshot.child(userID).child("coverimage").getValue().toString();
-                            customerquote = dataSnapshot.child(userID).child("quote").getValue().toString();
+                            customerimage = dataSnapshot.child(userID).child("image").getValue(String.class);
+                            coverimage = dataSnapshot.child(userID).child("coverimage").getValue(String.class);
+                            customerquote = dataSnapshot.child(userID).child("quote").getValue(String.class);
 
-                            customerfollowers = dataSnapshot.child(userID).child("followers").child("number").getValue().toString();
-                            customername = dataSnapshot.child(userID).child("name").getValue().toString();
-                            customerphoneaddress = dataSnapshot.child(userID).child("address").getValue().toString();
-                            customerjob = dataSnapshot.child(userID).child("job").getValue().toString();
+                            customerfollowers = dataSnapshot.child(userID).child("followers").child("number").getValue(String.class);
+                            customername = dataSnapshot.child(userID).child("name").getValue(String.class);
+                            customerphoneaddress = dataSnapshot.child(userID).child("address").getValue(String.class);
+                            customerjob = dataSnapshot.child(userID).child("job").getValue(String.class);
                         }
 
 
@@ -205,6 +206,7 @@ public class CustomerProfile extends AppCompatActivity  implements  View.OnClick
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     if (dataSnapshot.exists()) {
+                                        dataSnapshot.getValue(Users.class);
 
                                         if (dataSnapshot.child("followers") != null && dataSnapshot.child("followers").hasChild("number")) {
                                             Log.i("Number of followers", ".");
@@ -284,8 +286,9 @@ public class CustomerProfile extends AppCompatActivity  implements  View.OnClick
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
                         if (dataSnapshot != null) {
+                            dataSnapshot.getValue(Users.class);
                              if (userID != null){
-                                 customerkeywehave=   dataSnapshot.child(userID).getValue().toString();
+                                 customerkeywehave=   dataSnapshot.child(userID).getValue(String.class);
 
 
                             customerimageonscreen.setImageResource(Integer.parseInt(customerimage));

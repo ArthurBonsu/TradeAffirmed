@@ -36,6 +36,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.simcoder.bimbo.Model.HashMaps;
 
 
 import java.io.ByteArrayInputStream;
@@ -129,7 +130,7 @@ public class DriverSettingsActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists() && dataSnapshot.getChildrenCount()>0){
-                    Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+                    Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue(HashMaps.class);
                     if(map.get("name")!=null){
                         mName = map.get("name").toString();
                         mNameField.setText(mName);

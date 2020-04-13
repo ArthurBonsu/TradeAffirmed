@@ -40,6 +40,8 @@ import com.paypal.android.sdk.payments.PayPalPayment;
 import com.paypal.android.sdk.payments.PayPalService;
 import com.paypal.android.sdk.payments.PaymentActivity;
 import com.paypal.android.sdk.payments.PaymentConfirmation;
+import com.simcoder.bimbo.Model.HashMaps;
+import com.simcoder.bimbo.Model.Users;
 
 
 import org.json.JSONException;
@@ -139,6 +141,7 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
+                    dataSnapshot.getValue(HashMaps.class);
                     for (DataSnapshot child:dataSnapshot.getChildren()){
 
                         if (child.getKey().equals("customer")){
@@ -203,11 +206,11 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
 
 
                         if (child.getKey().equals("destination")){
-                            rideLocation.setText(child.getValue().toString());
+                            rideLocation.setText(child.getValue(String.class));
                         }
                         if (child.getKey().equals("location")){
-                            pickupLatLng = new LatLng(Double.valueOf(child.child("from").child("lat").getValue().toString()), Double.valueOf(child.child("from").child("lng").getValue().toString()));
-                            destinationLatLng = new LatLng(Double.valueOf(child.child("to").child("lat").getValue().toString()), Double.valueOf(child.child("to").child("lng").getValue().toString()));
+                            pickupLatLng = new LatLng(Double.valueOf(child.child("from").child("lat").getValue(String.class)), Double.valueOf(child.child("from").child("lng").getValue(String.class)));
+                            destinationLatLng = new LatLng(Double.valueOf(child.child("to").child("lat").getValue(String.class)), Double.valueOf(child.child("to").child("lng").getValue(String.class)));
                             if(destinationLatLng != new LatLng(0,0)){
                                 getRouteToMarker();
 
@@ -323,7 +326,7 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
-                    Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+                    Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue(Users.class);
                     if(map.get("name") != null){
                         userName.setText(map.get("name").toString());
                     }

@@ -107,8 +107,8 @@ public class SearchByResidence extends AppCompatActivity{
                     for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
                         String thecustomerkey = singleSnapshot.getKey();
                          if (singleSnapshot != null){
-                                                 if (singleSnapshot.child(thecustomerkey).child("name").getValue(User.class) != null){
-                        Log.d(TAG, "onDataChange: found user:" + singleSnapshot.child(thecustomerkey).child("name").getValue(User.class).toString());
+                                                 if (singleSnapshot.child(thecustomerkey).child("name").getValue(String.class) != null){
+                        Log.d(TAG, "onDataChange: found user:" + singleSnapshot.child(thecustomerkey).child("name").getValue(String.class));
                            if (mUserList != null){
                             if (singleSnapshot.getValue(User.class) != null){
                         mUserList.add(singleSnapshot.getValue(User.class));

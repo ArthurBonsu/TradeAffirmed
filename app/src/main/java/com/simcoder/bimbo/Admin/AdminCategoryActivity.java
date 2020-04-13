@@ -90,10 +90,7 @@ public class AdminCategoryActivity extends AppCompatActivity implements GoogleAp
                              RoleReference.addListenerForSingleValueEvent(new ValueEventListener() {
                                  @Override
                                  public void onDataChange(DataSnapshot dataSnapshot) {
-                                     if (dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0) {
-                                         role = dataSnapshot.getValue(String.class);
 
-                                     }
                                  }
 
 

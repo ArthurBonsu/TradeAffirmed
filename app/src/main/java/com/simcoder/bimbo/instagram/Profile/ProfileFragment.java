@@ -217,14 +217,14 @@ public class ProfileFragment extends Fragment {
                                                     String userkey = dSnapshot.child(likeid).child("Users").getKey();
 
                                                     Like like = new Like();
-                                                    if (dSnapshot.child("likeid").getValue(Like.class) != null) {
-                                                        like.setLikeid(dSnapshot.child("likeid").getValue(Like.class).getLikeid());
-                                                        if (dSnapshot.child("number").getValue(Like.class) != null) {
-                                                            like.setnumber(dSnapshot.child("number").getValue(Like.class).getnumber());
+                                                    if (dSnapshot.child("likeid").getValue(String.class) != null) {
+                                                        like.setLikeid(dSnapshot.child("likeid").getValue(String.class));
+                                                        if (dSnapshot.child("number").getValue(String.class) != null) {
+                                                            like.setnumber(dSnapshot.child("number").getValue(String.class));
                                                             if (userkey != null) {
-                                                                if (dSnapshot.child(likeid).child("Users").child(userkey).child("name").getValue(Like.class) != null) {
-                                                                    like.setname(dSnapshot.child(likeid).child("Users").child(userkey).child("name").getValue(Like.class).getname());
-                                                                    like.setuid(dSnapshot.child(likeid).child("Users").child(userkey).child("uid").getValue(Like.class).getuid());
+                                                                if (dSnapshot.child(likeid).child("Users").child(userkey).child("name").getValue(String.class) != null) {
+                                                                    like.setname(dSnapshot.child(likeid).child("Users").child(userkey).child("name").getValue(String.class));
+                                                                    like.setuid(dSnapshot.child(likeid).child("Users").child(userkey).child("uid").getValue(String.class));
                                                                     likes.add(like);
                                                                 }
                                                             }
@@ -248,11 +248,11 @@ public class ProfileFragment extends Fragment {
                                             if ( dSnapshot.child("Users") != null){
                                                 Comment comment = new Comment();
 
-                                                comment.setComment(dSnapshot.child(commentkey).child("comment").getValue(Comment.class).getComment());
+                                                comment.setComment(dSnapshot.child(commentkey).child("comment").getValue(String.class));
                                                if (commentkey != null){
-                                                if (dSnapshot.child(commentkey).child("comment").getValue(Comment.class) != null){
-                                                     if (dSnapshot.child("commentkey").getValue(Comment.class) != null){
-                                                comment.setcommentkey(dSnapshot.child("commentkey").getValue(Comment.class).getcommentkey());
+                                                if (dSnapshot.child(commentkey).child("comment").getValue(String.class) != null){
+                                                     if (dSnapshot.child("commentkey").getValue(String.class) != null){
+                                                comment.setcommentkey(dSnapshot.child("commentkey").getValue(String.class));
                                                                if (commentkey != null){
 
                                                                    if (thecommenteruserkey != null){
@@ -284,13 +284,13 @@ public class ProfileFragment extends Fragment {
                                             //tagvalue as setvalue
                                             if (tags1 != null){
 
-                                                if (dSnapshot.child("image").getValue(Tags.class) != null){
-                                                if (dSnapshot.child("image").getValue(Tags.class) != null){
-                                            tags1.setimage(dSnapshot.child("image").getValue(Tags.class).getimage());
-                        if (dSnapshot.child("name").getValue(Tags.class) != null){
-                                            tags1.setname(dSnapshot.child("name").getValue(Tags.class).getname());
-                                          if (dSnapshot.child("uid").getValue(Tags.class) != null){
-                                            tags1.setuid(dSnapshot.child("uid").getValue(Tags.class).getuid());
+                                                if (dSnapshot.child("image").getValue(String.class) != null){
+                                                if (dSnapshot.child("image").getValue(String.class) != null){
+                                            tags1.setimage(dSnapshot.child("image").getValue(String.class));
+                        if (dSnapshot.child("name").getValue(String.class) != null){
+                                            tags1.setname(dSnapshot.child("name").getValue(String.class));
+                                          if (dSnapshot.child("uid").getValue(String.class) != null){
+                                            tags1.setuid(dSnapshot.child("uid").getValue(String.class));
                                            if (tags1 != null){
                                             tagshere.add(tags1);
                                         }
@@ -388,7 +388,7 @@ public class ProfileFragment extends Fragment {
                                     Log.d(TAG, "onDataChange: found follower:" + singleSnapshot.child(thefollowerkey).child("name").getValue());
                                               if (singleSnapshot.child("number").getValue() != null){
 
-                                    mFollowersCount = Integer.parseInt(singleSnapshot.child("number").getValue().toString());
+                                    mFollowersCount = Integer.parseInt(singleSnapshot.child("number").getValue(String.class));
                                  if (mFollowersCount != 0){
                                     mFollowersCount++;
 
@@ -472,7 +472,7 @@ public class ProfileFragment extends Fragment {
                             Log.d(TAG, "onDataChange: found following user:" + singleSnapshot.child("name").getValue());
                   if (singleSnapshot.child("name") != null){
                                  if (singleSnapshot.child("numbers").getValue() != null){
-                            mFollowingCount = Integer.parseInt(singleSnapshot.child("numbers").getValue().toString());
+                            mFollowingCount = Integer.parseInt(singleSnapshot.child("numbers").getValue(String.class));
                          if (mFollowersCount != 0){
                             mFollowingCount++;
                         }

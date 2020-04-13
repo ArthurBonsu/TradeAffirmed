@@ -157,8 +157,8 @@ public class AdminAllProducts extends AppCompatActivity {  //ACTUALLY THIS ACTIV
 
                     @Override
                     protected void onBindViewHolder(@NonNull AdminProductsViewHolder holder, int position, @NonNull Products model) {
-                        holder.productimagesforname.setImageResource(Integer.parseInt(model.getimage()));
-                        holder.productnameforadmin.setText("Name: " + model.getname());
+                        holder.productimagesforname.setImageResource(Integer.parseInt(model.getpimage()));
+                        holder.productnameforadmin.setText("Name: " + model.getpname());
                         holder.productpriceforadmin.setText("Phone: " + model.getprice());
 
                         holder.producttimeuploaded.setText("Order at: " + model.getdate() + "  " + model.gettime());
@@ -168,7 +168,7 @@ public class AdminAllProducts extends AppCompatActivity {  //ACTUALLY THIS ACTIV
 
 
                         if (productimagesfornamehere != null) {
-                            Glide.with(getApplication()).load((model.getimage())).into(productimagesfornamehere);
+                            Glide.with(getApplication()).load((model.getpimage())).into(productimagesfornamehere);
                         }
                     }
 

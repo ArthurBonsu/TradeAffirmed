@@ -179,56 +179,56 @@ public  class  CartActivity extends AppCompatActivity
                              for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                          cartlistkey = dataSnapshot1.getKey();
                          Log.d("TAG", cartlistkey);
-                         if (dataSnapshot.child("date").getValue(String.class) != null) {
+                         if (dataSnapshot.child("date").getValue() != null) {
                              date = dataSnapshot.child("date").getValue(String.class);
                          }
-                         if (dataSnapshot.child("desc").getValue(String.class) != null) {
+                         if (dataSnapshot.child("desc").getValue() != null) {
                              desc = dataSnapshot.child("desc").getValue(String.class);
                          }
-                         if (dataSnapshot.child("discount").getValue(String.class) != null) {
+                         if (dataSnapshot.child("discount").getValue() != null) {
                              discount = dataSnapshot.child("discount").getValue(String.class);
                          }
-                         if (dataSnapshot.child("image").getValue(String.class) != null) {
+                         if (dataSnapshot.child("image").getValue() != null) {
                              image = dataSnapshot.child("image").getValue(String.class);
                          }
 
 
-                         if (dataSnapshot.child("name").getValue(String.class) != null) {
+                         if (dataSnapshot.child("name").getValue() != null) {
                              name = dataSnapshot.child("name").getValue(String.class);
                          }
 
-                         if (dataSnapshot.child("photoid").getValue(String.class) != null) {
+                         if (dataSnapshot.child("photoid").getValue() != null) {
                              photoid = dataSnapshot.child("photoid").getValue(String.class);
                          }
 
-                         if (dataSnapshot.child("pid").getValue(String.class) != null) {
+                         if (dataSnapshot.child("pid").getValue() != null) {
                              pid = dataSnapshot.child("pid").getValue(String.class);
                          }
-                         if (dataSnapshot.child("pimage").getValue(String.class) != null) {
+                         if (dataSnapshot.child("pimage").getValue() != null) {
                              pimage = dataSnapshot.child("pimage").getValue(String.class);
                          }
-                         if (dataSnapshot.child("pname").getValue(String.class) != null) {
+                         if (dataSnapshot.child("pname").getValue() != null) {
                          pname = dataSnapshot.child("pname").getValue(String.class);
                          }
-                         if (dataSnapshot.child("price").getValue(String.class) != null) {
+                         if (dataSnapshot.child("price").getValue() != null) {
                          price = dataSnapshot.child("price").getValue(String.class);
                          }
-                         if (dataSnapshot.child("quantity").getValue(String.class) != null) {
+                         if (dataSnapshot.child("quantity").getValue() != null) {
                          quantity = dataSnapshot.child("quantity").getValue(String.class);
                          }
-                         if (dataSnapshot.child("tid").getValue(String.class) != null) {
+                         if (dataSnapshot.child("tid").getValue() != null) {
                                      tid = dataSnapshot.child("tid").getValue(String.class);
                          }
-                         if (dataSnapshot.child("time").getValue(String.class) != null) {
+                         if (dataSnapshot.child("time").getValue() != null) {
                           time = dataSnapshot.child("time").getValue(String.class);
                           }
-                         if (dataSnapshot.child("traderimage").getValue(String.class) != null) {
+                         if (dataSnapshot.child("traderimage").getValue() != null) {
                          traderimage = dataSnapshot.child("traderimage").getValue(String.class);
                           }
-                         if (dataSnapshot.child("tradername").getValue(String.class) != null) {
+                         if (dataSnapshot.child("tradername").getValue() != null) {
                           tradername = dataSnapshot.child("tradername").getValue(String.class);
                           }
-                          if (dataSnapshot.child("uid").getValue(String.class) != null) {
+                          if (dataSnapshot.child("uid").getValue() != null) {
                            uid = dataSnapshot.child("uid").getValue(String.class);
                            }
                       }
@@ -312,10 +312,10 @@ public  class  CartActivity extends AppCompatActivity
                     public void onDataChange(DataSnapshot dataSnapshot) {
 
                         if (dataSnapshot.exists()) {
-                            if (dataSnapshot.child("uid").getValue(String.class) != null) {
+                            if (dataSnapshot.child("uid").getValue() != null) {
                                 useridentifier = dataSnapshot.child("uid").getValue(String.class);
                             }
-                            if (dataSnapshot.child("role").getValue(String.class) != null) {
+                            if (dataSnapshot.child("role").getValue() != null) {
                                 role = dataSnapshot.child("role").getValue(String.class);
                             }
                         }
@@ -499,16 +499,16 @@ public  class  CartActivity extends AppCompatActivity
                 .getReference()
                 .child("Cart");
 
-        FirebaseRecyclerOptions<Products> options =
-                new FirebaseRecyclerOptions.Builder<Products>()
-                        .setQuery(query, new SnapshotParser<Products>() {
+        FirebaseRecyclerOptions<Cart> options =
+                new FirebaseRecyclerOptions.Builder<Cart>()
+                        .setQuery(query, new SnapshotParser<Cart>() {
 
 
-                            @NonNull
+
                             @Override
-                            public Products parseSnapshot(@NonNull DataSnapshot snapshot) {
-                                                  snapshot.getValue(String.class);
-                                return new Products(snapshot.child("pid").getValue(String.class),
+                            public Cart parseSnapshot( DataSnapshot snapshot) {
+
+                                return new Cart(snapshot.child("pid").getValue(String.class),
 
                                         snapshot.child("tid").getValue(String.class),
                                         snapshot.child("quantity").getValue(String.class),
@@ -518,9 +518,12 @@ public  class  CartActivity extends AppCompatActivity
                                         snapshot.child("name").getValue(String.class),
                                         snapshot.child("image").getValue(String.class),
                                         snapshot.child("tradername").getValue(String.class),
-                                        snapshot.child("traderimage").getValue(String.class)
+                                        snapshot.child("traderimage").getValue(String.class),
+                                        snapshot.child("pname").getValue(String.class),
+                                        snapshot.child("pimage").getValue(String.class)
 
-                                             );
+
+                                );
 
 
                             }
@@ -530,7 +533,7 @@ public  class  CartActivity extends AppCompatActivity
 
 
 
-        adapter = new FirebaseRecyclerAdapter<Products, ViewHolder>(options) {
+        adapter = new FirebaseRecyclerAdapter<Cart, ViewHolder>(options) {
             @Override
             public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
                 View view = LayoutInflater.from(parent.getContext())
@@ -541,7 +544,7 @@ public  class  CartActivity extends AppCompatActivity
 
 
             @Override
-            protected void onBindViewHolder(ViewHolder holder, final int position, final Products model) {
+            protected void onBindViewHolder(ViewHolder holder, final int position, final Cart model) {
                 holder.carttheproductname.setText(model.getname());
                 holder.carttheproductprice.setText("Price = " + model.getprice() + "$");
                 holder.cartdescriptionhere.setText(model.getdesc());
@@ -550,7 +553,6 @@ public  class  CartActivity extends AppCompatActivity
 
                 key = model.getpid();
                 traderkey = model.gettid();
-                model.setTrader(traderkey);
 
                 if (thepicturebeingloaded != null) {
                     Picasso.get().load(model.getimage()).placeholder(R.drawable.profile).into(thepicturebeingloaded);

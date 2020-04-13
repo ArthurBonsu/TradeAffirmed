@@ -103,8 +103,6 @@ public class AdminAddNewProductActivity extends AppCompatActivity implements Goo
                    }
         ProductImagesRef = FirebaseStorage.getInstance().getReference().child("product_images");
         ProductsRef = FirebaseDatabase.getInstance().getReference().child("Product");
-        ProductsTraderRef =FirebaseDatabase.getInstance().getReference().child("Product").child("trader");
-
 
 
             ;
@@ -377,9 +375,9 @@ public class AdminAddNewProductActivity extends AppCompatActivity implements Goo
                         {
                             loadingBar.dismiss();
                             if (task !=null) {
-                                String message = task.getException().toString();
+                           //     String message = task.getException().toString();
 
-                            Toast.makeText(AdminAddNewProductActivity.this, "Error: " + message, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AdminAddNewProductActivity.this, "Error: " + "Task Exception Thrown",  Toast.LENGTH_SHORT).show();
                         }
                     }}
                 });

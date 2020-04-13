@@ -287,13 +287,6 @@ public class Users {
 
 
 
-    public String getCommentkey() {
-        return commentkey;
-    }
-    public void setCommentkey(String commentkey) {
-        this.commentkey = commentkey;
-    }
-
     public String getPhone() {
         return phone;
     }

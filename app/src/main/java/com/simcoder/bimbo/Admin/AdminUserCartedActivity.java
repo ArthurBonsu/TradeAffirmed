@@ -152,7 +152,7 @@ public class AdminUserCartedActivity extends AppCompatActivity implements Google
 
                             productkey = dataSnapshot.getKey();
                             if (productkey != null) {
-                                getimage = dataSnapshot.child(productkey).child("image").getValue().toString();
+                                getimage = dataSnapshot.child(productkey).child("image").getValue(String.class);
                             }
                         }
 

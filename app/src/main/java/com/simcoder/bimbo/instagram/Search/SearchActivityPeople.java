@@ -111,8 +111,8 @@ public class SearchActivityPeople extends AppCompatActivity{
 
                             String key = dataSnapshot.getKey();
                             if (key != null){
-                                if (singleSnapshot.child(key).child("name").getValue(User.class) != null){
-                            Log.d(TAG, "onDataChange: found user:" + singleSnapshot.child(key).child("name").getValue(User.class).toString());
+                                if (singleSnapshot.child(key).child("name").getValue(String.class) != null){
+                            Log.d(TAG, "onDataChange: found user:" + singleSnapshot.child(key).child("name").getValue(String.class));
             if (mUserList != null){
                           if (singleSnapshot.getValue(User.class) != null){
                             mUserList.add(singleSnapshot.getValue(User.class));

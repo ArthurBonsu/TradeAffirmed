@@ -167,10 +167,10 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity
 
                     // CURRENT USERNAME HERE
                          if (dataSnapshot.child("image").getValue() != null) {
-                             productImage = dataSnapshot.child("image").getValue().toString();
+                             productImage = dataSnapshot.child("image").getValue(String.class);
                          }
                          if (dataSnapshot.child("name").getValue() != null) {
-                             productname = dataSnapshot.child("name").getValue().toString();
+                             productname = dataSnapshot.child("name").getValue(String.class);
                          }
 
                     }

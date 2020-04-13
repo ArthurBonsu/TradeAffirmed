@@ -110,7 +110,7 @@ public class SearchByImage extends AppCompatActivity{
                            if (dataSnapshot != null){
                              for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
                            if (singleSnapshot.getValue(User.class) != null){
-                                Log.d(TAG, "onDataChange: found user:" + singleSnapshot.getValue(User.class).toString());
+                                Log.d(TAG, "onDataChange: found user:" + singleSnapshot.getValue(User.class));
                                 if (mUserList != null){
                              if (singleSnapshot.getValue(User.class) != null){
                                 mUserList.add(singleSnapshot.getValue(User.class));

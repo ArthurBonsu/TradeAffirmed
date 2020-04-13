@@ -86,12 +86,15 @@ import com.simcoder.bimbo.Model.CustomerRequester;
 import com.simcoder.bimbo.Model.CustomerSearchedlocation;
 import com.simcoder.bimbo.Model.DriverLocation;
 import com.simcoder.bimbo.Model.DriverRole;
+import com.simcoder.bimbo.Model.HashMaps;
+import com.simcoder.bimbo.Model.Users;
 import com.simcoder.bimbo.WorkActivities.CartActivity;
 import com.simcoder.bimbo.WorkActivities.CustomerProfile;
 import com.simcoder.bimbo.WorkActivities.HomeActivity;
 import com.simcoder.bimbo.WorkActivities.SearchProductsActivity;
 import com.simcoder.bimbo.WorkActivities.SettinsActivity;
 import com.simcoder.bimbo.WorkActivities.TraderProfile;
+import com.simcoder.bimbo.instagram.Models.User;
 
 
 import java.util.ArrayList;
@@ -306,7 +309,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             });
 
         }
-        DatabaseReference myrolereference = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverId).child("role");
+        DatabaseReference myrolereference = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverId);
           myrolereference.keepSynced(true);
         if (myrolereference != null) {
             myrolereference.addValueEventListener(new ValueEventListener() {
@@ -314,8 +317,8 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
                         if (dataSnapshot != null) {
-                            role = dataSnapshot.getValue().toString();
-
+                    dataSnapshot.getValue(User.class);
+                   role =dataSnapshot.child("role").getValue(String.class);
 
                          /*
                             Iterator<DataSnapshot> items = dataSnapshot.getChildren().iterator();
@@ -416,16 +419,18 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             String driverId = "";
             driverId = driver.getUid();
             // HERE WE GET THE CUSTOMER RIDE ID AND WE ESTABLISH FOR THAT CUSTOMER
-            DatabaseReference assignedCustomerRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverId).child("customerRequest").child("customerRideId");
+            DatabaseReference assignedCustomerRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(driverId).child("customerRequest");
             assignedCustomerRef.keepSynced(true);
             if (assignedCustomerRef != null) {
                 assignedCustomerRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
+                        dataSnapshot.getValue(User.class);
                         if (dataSnapshot.exists()) {
                             status = 1;
+                            String assignedcustomerrefkey = dataSnapshot.getKey();
                               if (customerId != null) {
-                                  customerId = dataSnapshot.getValue().toString();
+                                  customerId = dataSnapshot.child("customerRideId").getValue(String.class);
                               }
                             /* if (dataSnapshot != null) {
                             //    customerId = dataSnapshot.getValue().toString();
@@ -479,7 +484,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 if(dataSnapshot.exists() && !customerId.equals("")){
-                    List<Object> map = (List<Object>) dataSnapshot.getValue();
+                    List<Object> map = (List<Object>) dataSnapshot.getValue(HashMaps.class);
                     double locationLat = 0;
                     double locationLng = 0;
                     if(map.get(0) != null){
@@ -584,7 +589,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                         if (dataSnapshot.exists()) {
 
 
-                            Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+                            Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue(HashMaps.class);
                             if(map.get("destination")!=null){
                                 destination = map.get("destination").toString();
                                 mCustomerDestination.setText("Destination: " + destination);
@@ -674,14 +679,15 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         if (dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0) {
+                                            dataSnapshot.getValue(Users.class);
                           if (dataSnapshot.child("name").getValue() != null) {
-                              name = dataSnapshot.child("name").getValue().toString();
+                              name = dataSnapshot.child("name").getValue(String.class);
                           }
                            if (dataSnapshot.child("phone").getValue() != null ) {
-                               phone = dataSnapshot.child("phone").getValue().toString();
+                               phone = dataSnapshot.child("phone").getValue(String.class);
                            }
                            if (dataSnapshot.child("image").getValue() != null) {
-                               image = dataSnapshot.child("image").getValue().toString();
+                               image = dataSnapshot.child("image").getValue(String.class);
                            }
                                             //      Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
 /*

@@ -1,5 +1,6 @@
 package com.simcoder.bimbo;
 import com.google.gson.JsonObject;
+import com.simcoder.bimbo.Model.HashMaps;
 import com.simcoder.bimbo.historyRecyclerView.HistoryAdapter;
 import com.simcoder.bimbo.historyRecyclerView.HistoryObject;
 
@@ -177,6 +178,7 @@ e.printStackTrace();
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
+                    dataSnapshot.getValue(HashMaps.class);
                     for(DataSnapshot history : dataSnapshot.getChildren()){
 
                         if (history.getKey() !=null)
@@ -212,6 +214,7 @@ e.printStackTrace();
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
+                    dataSnapshot.getValue(HashMaps.class);
 
                     //RIDEKEY ==RIDE_ID
                     //BUT WHERE DID HE PASS IT TO HISTORY SINGLE ACTIVITY
@@ -231,15 +234,15 @@ e.printStackTrace();
                     //WE WILL CLEAR OFF PRICE CALCULATIONS
 
                     if(dataSnapshot.child("time").getValue() != null){
-                        timestamp = Long.valueOf(dataSnapshot.child("time").getValue().toString());
+                        timestamp = Long.valueOf(dataSnapshot.child("time").getValue(String.class));
                     }
 
                     if(dataSnapshot.child("customerPaid").getValue() != null && dataSnapshot.child("driverPaidOut").getValue() == null){
 
                         if(dataSnapshot.child("distance").getValue() != null){
-                            distance = dataSnapshot.child("distance").getValue().toString();
+                            distance = dataSnapshot.child("distance").getValue(String.class);
 
-                            ridePrice = (Double.valueOf(dataSnapshot.child("price").getValue().toString()) * 0.4);
+                            ridePrice = (Double.valueOf(dataSnapshot.child("price").getValue(String.class)) * 0.4);
                             //I HAVE TO GET THE PRICES, PRODUCT TYPE AND PRODUCT NAME
 
                             Balance += ridePrice;

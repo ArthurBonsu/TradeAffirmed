@@ -1,7 +1,9 @@
 package com.simcoder.bimbo.WorkActivities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,9 +20,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.firebase.ui.database.SnapshotParser;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -34,6 +38,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.rey.material.widget.ImageView;
 import com.simcoder.bimbo.Admin.AdminAddNewProductActivity;
@@ -43,33 +48,31 @@ import com.simcoder.bimbo.Admin.AdminMaintainProductsActivity;
 import com.simcoder.bimbo.Admin.AdminProductDetails;
 import com.simcoder.bimbo.Admin.AdminUserCartedActivity;
 import com.simcoder.bimbo.Admin.AdminViewBuyersActivity;
+import com.simcoder.bimbo.WorkActivities.HomeActivity;
 import com.simcoder.bimbo.Admin.ViewSingleUserOrders;
 import com.simcoder.bimbo.DriverMapActivity;
 import com.simcoder.bimbo.HistoryActivity;
-import com.simcoder.bimbo.Model.ProductHere;
+import com.simcoder.bimbo.Interface.ItemClickListner;
+import com.simcoder.bimbo.Model.Cart;
 import com.simcoder.bimbo.Model.Products;
-import com.simcoder.bimbo.Model.ProductsInformationModel;
-import com.simcoder.bimbo.Model.TraderWhoPostedProductModel;
-import com.simcoder.bimbo.ViewHolder.ProductViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.simcoder.bimbo.R;
+import com.simcoder.bimbo.instagram.Home.InstagramHomeActivity;
+import com.simcoder.bimbo.instagram.Home.MainViewFeedFragment;
+import com.simcoder.bimbo.instagram.Models.Photo;
 import com.simcoder.bimbo.instagram.Models.User;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.paperdb.Paper;
 
 
-public class HomeActivity extends AppCompatActivity
+public  class  HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     DatabaseReference ProductsRef;
     private DatabaseReference Userdetails;
@@ -77,9 +80,8 @@ public class HomeActivity extends AppCompatActivity
     private RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
     DatabaseReference TraderDetails;
+    DatabaseReference FollowerDatabaseReference;
     String productkey;
-    ArrayList<ProductsInformationModel> ProductsInformationList = new ArrayList<>();
-    ArrayList<TraderWhoPostedProductModel> TraderWhoPostedProductModerList = new ArrayList<>();
     String traderkeyhere;
     private String type = "";
     String traderoruser = "";
@@ -87,13 +89,17 @@ public class HomeActivity extends AppCompatActivity
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
     String ProductID;
     FirebaseDatabase myfirebaseDatabase;
+    FirebaseDatabase FollowerDatabase;
 
+
+    public FirebaseRecyclerAdapter adapter;
     String thetraderkey;
     String thenameofthetrader;
     String description;
     String thetradername;
+
     //AUTHENTICATORS
-    ArrayList<ProductHere> productHeres;
+
     private GoogleMap mMap;
     GoogleApiClient mGoogleApiClient;
     private static final String TAG = "Google Activity";
@@ -101,467 +107,621 @@ public class HomeActivity extends AppCompatActivity
     private GoogleSignInClient mGoogleSignInClient;
     String productdescription;
     ImageView theproductimageview;
-    TextView  thetraderview;
+    TextView thetraderview;
     String keyhere;
-    String  thetraderhere;
+    String thetraderhere;
     String traderkey;
     String key;
     String tradename;
+    String traderimage;
+    FirebaseUser user;
+    Query QueryFollowingsshere;
+     String followingid;
+     String followingname;
+     String followingimage;
+    //product_name
+    // product_imagehere
+    //  product_price
+
+    //product_description
+    //thetraderiknow
+ String   categoryname,date, desc,discount, time, pid, pimage,pname,price,image,name,size, tradername,tid;
+    android.widget.ImageView product_imagehere;
+ android.widget.ImageView thetraderimageforproduct;
+    Getmyfollowings gettingmyfollowingshere;
+    Getmyfollowings  gettingmyfollowingshereaswell;
+    Getmyfollowings  getmyfollowingsagain;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(
-                R.layout.activity_home);
-
-        theproductimageview = (ImageView) findViewById(R.id.product_imagehere);
-        Intent intent = getIntent();
-        Bundle bundle = intent.getExtras();
-        if (bundle != null)
-        // TYPE IS THE SAME AS ROLE
+                (R.layout.stickynoterecycler));
 
 
-        {
+
+
             if (getIntent().getExtras().get("rolefromcustomermapactivitytohomeactivity") != null) {
                 type = getIntent().getExtras().get("rolefromcustomermapactivitytohomeactivity").toString();
             }
-        }
+
         traderoruser = getIntent().getStringExtra("fromcustomermapactivitytohomeactivity");
 
 
-        {
-            if (getIntent().getExtras().get("roledrivermapactivitytohomeactivity") != null) {
-                type = getIntent().getExtras().get("roledrivermapactivitytohomeactivity").toString();
-            }
+        if (getIntent().getExtras().get("roledrivermapactivitytohomeactivity") != null) {
+            type = getIntent().getExtras().get("roledrivermapactivitytohomeactivity").toString();
         }
         traderoruser = getIntent().getStringExtra("fromdrivermapactivitytohomeactivity");
 
 
         //KEY PASSESS FOR TRADER
 
-        {
-            if (getIntent().getExtras().get("rolefromadmincategory") != null) {
-                type = getIntent().getExtras().get("rolefromadmincategory").toString();
-            }
+
+        if (getIntent().getExtras().get("rolefromadmincategory") != null) {
+            type = getIntent().getExtras().get("rolefromadmincategory").toString();
         }
+
         if (traderoruser != null) {
             traderoruser = getIntent().getStringExtra("fromadmincategoryactivity");
         }
+
+
+
+        recyclerView = findViewById(R.id.stickyheaderrecyler);
+
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        if (recyclerView != null) {
+            recyclerView.setLayoutManager(layoutManager);
+        }
+       if (recyclerView != null) {
+            recyclerView.setHasFixedSize(true);
+
+        }
+
+
+
+        thetraderview = findViewById(R.id.thetraderiknow);
+
+        product_imagehere = (ImageView) findViewById(R.id.product_imagehere);
+        thetraderimageforproduct = (ImageView)findViewById(R.id.thetraderimageforproduct);
+        mAuth = FirebaseAuth.getInstance();
+
         myfirebaseDatabase = FirebaseDatabase.getInstance();
+        FollowerDatabase = FirebaseDatabase.getInstance();
         ProductsRef = myfirebaseDatabase.getReference().child("Product");
+        FollowerDatabaseReference = FollowerDatabase.getReference().child("Following");
+
+        productkey = ProductsRef.getKey();
+        // GET FROM FOLLOWING KEY
 
         productkey = ProductsRef.getKey();
 
+        fetch();
+        recyclerView.setAdapter(adapter);
 
-        if (ProductsRefwithproduct != null) {
-
-            thetraderkey = ProductsRefwithproduct.getKey();
-            thetraderview = findViewById(R.id.thetraderiknow);
-        }
-
-        if (ProductsRef != null){
-            ProductsRef.addValueEventListener(new ValueEventListener() {
+             ProductsRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    Products nameofallvalues = dataSnapshot.getValue(Products.class);
-                    if (productkey != null) {
 
+                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                        // This method is called once with the initial value and again
 
-
-                            traderkeyhere = dataSnapshot.getKey();
-                            Log.d("TAG", traderkeyhere);
-
-                            if (thetraderkey != null) {
-                                if (traderkeyhere != null) {
-                                    if (dataSnapshot.child("tradername").getValue(String.class) != null) {
-                                        thenameofthetrader = dataSnapshot.child("tradername").getValue(String.class);
-                                        if (dataSnapshot.child("desc").getValue(String.class) != null) {
-                                            description = dataSnapshot.child("desc").getValue(String.class);
-                                        }
-                                    }
-                                }
-
-
-                    /*
-                    ArrayList<ProductsInformationModel> ProductsInformationList = new ArrayList<>();
-                    ArrayList<TraderWhoPostedProductModel> TraderWhoPostedProductModerList = new ArrayList<>();
-
-                    Iterator<DataSnapshot> items = dataSnapshot.getChildren().iterator();
-                    Toast.makeText(HomeActivity.this, "Total Location Count:" + dataSnapshot.getChildrenCount(), Toast.LENGTH_LONG).show();
-                    ProductsInformationList.clear();
-
-                    HashMap<String, Object> locationmap = null;
-                    if (locationmap != null) {
-                        while (items.hasNext()) {
-                            DataSnapshot item = items.next();
-
-                            ProductsInformationModel myuser = item.getValue(ProductsInformationModel.class);
-                            if (locationmap.get("name") != null && locationmap.get("time") != null && locationmap.get("price") != null && locationmap.get("pid") != null && locationmap.get("image") != null) {
-                                if (locationmap.get("one") != null) {
-                                    ProductsInformationList.add(new ProductsInformationModel(locationmap.get("name").toString(), locationmap.get("time").toString(), locationmap.get("price").toString(), locationmap.get("pid").toString(), locationmap.get("image").toString()));
-                                    String productdescription = ProductsInformationList.get(0).getdesc().toString();
-
-                                }
-                            }
-
-                        }
-                    */
-                        }
-
-
-                        //    thetraderkey = dataSnapshot.child(productkey).child("trader").getKey();
-                        //   thenameofthetrader = dataSnapshot.child(productkey).child("trader").child(thetraderkey).child("name").getValue().toString();
-                        //   description = dataSnapshot.child(productkey).child("desc").getValue().toString();
-
-
+                        tradename = ds.child("tradername").getValue(String.class);
+                        traderimage = ds.child("traderimage").getValue(String.class);
+                        Log.d(TAG, "Value is 1: " + tradename + traderimage);
                     }
-
-
-                    ;
-
-
                 }
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
 
                 }
+            });
+                   if (mAuth != null){
+             user = mAuth.getCurrentUser();
+             if (user != null){
+                 traderoruser = user.getUid();
 
-                ;
+        QueryFollowingsshere = FollowerDatabaseReference.orderByChild("uid").equalTo(traderoruser);
+
+         QueryFollowingsshere.addValueEventListener(new ValueEventListener() {
+             @Override
+             public void onDataChange(DataSnapshot dataSnapshot) {
+                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                     if (dataSnapshot1.child("tid").getValue() != null) {
+                         followingid = dataSnapshot1.child("tid").getValue(String.class);
+                         if (dataSnapshot1.child("tradername").getValue() != null) {
+                             followingname = dataSnapshot1.child("tradername").getValue(String.class);
+                             if (dataSnapshot1.child("traderimage").getValue() != null) {
+                                 followingimage = dataSnapshot1.child("traderimage").getValue(String.class);
+
+                                 if (getmyfollowingsagain != null) {
+                                     if (followingid != null && followingname != null && followingimage != null) {
+
+                                         getmyfollowingsagain.onCallback(followingid, followingname, followingimage);
+                                     }
+                                 }
+                             }
+                         }
+                     }
+                 }
+             }
+             @Override
+             public void onCancelled(DatabaseError databaseError) {
+
+             }
+
+
+         });
+
+          if (getmyfollowingsagain != null){
+
+              getmyfollowingsagain.onCallback(followingid, followingname, followingimage);
+
+             Log.d("Followerinfo" , followingid + followingname + followingimage);
+
+            Paper.init(this);
+
+            Toolbar toolbar = (Toolbar) findViewById(R.id.hometoolbar);
+            toolbar.setTitle("Home");
+//        setSupportActionBar(toolbar);
+
+            GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
+            if (mGoogleApiClient != null) {
+
+                mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+            }
+
+            if (mGoogleApiClient != null) {
+                mGoogleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(HomeActivity.this,
+                        new GoogleApiClient.OnConnectionFailedListener() {
+                            @Override
+                            public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+                            }
+                        }).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
+            }
+
+
+
+            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+            if (fab != null) {
+                fab.setOnClickListener(
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                if (!type.equals("Trader")) {
+                                    Intent intent = new Intent(HomeActivity.this, CartActivity.class);
+                                    startActivity(intent);
+                                }
+                            }
+                        });
+
+            }
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            if (drawer != null) {
+                ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                        this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                drawer.addDrawerListener(toggle);
+                if (toggle != null) {
+                    toggle.syncState();
+                }
+
+                NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+                if (navigationView != null) {
+                    navigationView.setNavigationItemSelectedListener(this);
+                }
+                View headerView = navigationView.getHeaderView(0);
+                TextView userNameTextView = headerView.findViewById(R.id.user_profile_name);
+                CircleImageView profileImageView = headerView.findViewById(R.id.user_profile_image);
+
+                // USER
+                user = mAuth.getCurrentUser();
+
+
+
+                    if (user != null) {
+                        traderoruser = "";
+                        traderoruser = user.getUid();
+                    }
+
+
+            }}}}}
+
+
+    public interface Getmyfollowings {
+
+        void onCallback(String followingid, String followingname, String followingimage);
+
+
+    }
+
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        public LinearLayout root;
+
+        //product_name
+        // product_imagehere
+        //  product_price
+
+        //product_description
+        //thetraderiknow
+
+        public TextView product_name;
+        public TextView product_price;
+
+        public TextView product_description;
+        public TextView thetraderiknow;
+
+        public android.widget.ImageView product_imagehere;
+        public android.widget.ImageView thetraderimageforproduct;
+        public ItemClickListner listner;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+
+            //product_name
+            // product_imagehere
+            //  product_price
+
+            //product_description
+            //thetraderiknow
+
+
+            product_name = itemView.findViewById(R.id.product_name);
+            product_price = itemView.findViewById(R.id.product_price);
+            product_description = itemView.findViewById(R.id.product_description);
+            thetraderiknow = itemView.findViewById(R.id.thetraderiknow);
+
+
+            //cartimage referst to the trader of the product
+            product_imagehere = itemView.findViewById(R.id.product_imagehere);
+            thetraderimageforproduct = itemView.findViewById(R.id.thetraderimageforproduct);
+
+
+        }
+
+        public void setItemClickListner(ItemClickListner listner) {
+            this.listner = listner;
+        }
+
+        public void setcurrentproductname(String currentproductname) {
+
+            product_name.setText(currentproductname);
+        }
+
+        public void setproductprice(String price) {
+
+            product_price.setText(price);
+        }
+
+        public void settradername(String tradername) {
+
+            thetraderiknow.setText(tradername);
+        }
+
+
+        public void setcartdescriptionhere(String currentdescription) {
+
+            product_description.setText(currentdescription);
+        }
+
+        public void setTraderImage(final Context ctx, final String image) {
+            final android.widget.ImageView thetraderimageforproduct = (android.widget.ImageView) itemView.findViewById(R.id.thetraderimageforproduct);
+
+            Picasso.get().load(image).resize(400, 0).networkPolicy(NetworkPolicy.OFFLINE).into(thetraderimageforproduct, new Callback() {
+
+
+                @Override
+                public void onSuccess() {
+
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    Picasso.get().load(image).resize(100, 0).into(thetraderimageforproduct);
+                }
 
 
             });
         }
-        ProductsRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (productkey != null) {
-
-                        Products allproducts = dataSnapshot.getValue(Products.class);
-                        keyhere = dataSnapshot.getKey();
-                        Log.d("TAG", keyhere);
-
-                        if (thetraderkey != null) {
-                            if (keyhere != null) {
-                                if (dataSnapshot.child("tradername").getValue(String.class) != null) {
-                                    thenameofthetrader = dataSnapshot.child("tradername").getValue(String.class);
-                                }
-                                    if (dataSnapshot.child("desc").getValue(String.class) != null) {
-                                        description = dataSnapshot.child("desc").getValue(String.class);
-                                    }
-                                }
-                            }
-
-                    /*
-                    ArrayList<ProductsInformationModel> ProductsInformationList = new ArrayList<>();
-                    ArrayList<TraderWhoPostedProductModel> TraderWhoPostedProductModerList = new ArrayList<>();
-
-                    Iterator<DataSnapshot> items = dataSnapshot.getChildren().iterator();
-                    Toast.makeText(HomeActivity.this, "Total Location Count:" + dataSnapshot.getChildrenCount(), Toast.LENGTH_LONG).show();
-                    ProductsInformationList.clear();
-
-                    HashMap<String, Object> locationmap = null;
-                    if (locationmap != null) {
-                        while (items.hasNext()) {
-                            DataSnapshot item = items.next();
-
-                            ProductsInformationModel myuser = item.getValue(ProductsInformationModel.class);
-                            if (locationmap.get("name") != null && locationmap.get("time") != null && locationmap.get("price") != null && locationmap.get("pid") != null && locationmap.get("image") != null) {
-                                if (locationmap.get("one") != null) {
-                                    ProductsInformationList.add(new ProductsInformationModel(locationmap.get("name").toString(), locationmap.get("time").toString(), locationmap.get("price").toString(), locationmap.get("pid").toString(), locationmap.get("image").toString()));
-                                    String productdescription = ProductsInformationList.get(0).getdesc().toString();
-
-                                }
-                            }
-
-                        }
-                    */
-                    }
-
-
-                    //    thetraderkey = dataSnapshot.child(productkey).child("trader").getKey();
-                    //   thenameofthetrader = dataSnapshot.child(productkey).child("trader").child(thetraderkey).child("name").getValue().toString();
-                    //   description = dataSnapshot.child(productkey).child("desc").getValue().toString();
-
-
-                }
-
-
-                ;
 
 
 
+            public void setImage(final Context ctx, final String image) {
+            product_imagehere = (android.widget.ImageView) itemView.findViewById(R.id.product_imagehere);
+            if (image != null) {
+                if (product_imagehere != null) {
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-
-            ;
+                    //
+                    Picasso.get().load(image).resize(400, 0).networkPolicy(NetworkPolicy.OFFLINE).into(product_imagehere, new Callback() {
 
 
-        });
-
-        Paper.init(this);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.hometoolbar);
-        toolbar.setTitle("Home");
-//        setSupportActionBar(toolbar);
-
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
-        if (mGoogleApiClient != null) {
-
-            mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-        }
-
-        if (mGoogleApiClient != null) {
-            mGoogleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(HomeActivity.this,
-                    new GoogleApiClient.OnConnectionFailedListener() {
                         @Override
-                        public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+                        public void onSuccess() {
 
                         }
-                    }).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
-        }
 
-        firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                if (user != null) {
-                    traderoruser = "";
-                    traderoruser = user.getUid();
-                }
-
-                // I HAVE TO TRY TO GET THE SETUP INFORMATION , IF THEY ARE ALREADY PROVIDED WE TAKE TO THE NEXT STAGE
-                // WHICH IS CUSTOMER TO BE ADDED.
-                // PULLING DATABASE REFERENCE IS NULL, WE CHANGE BACK TO THE SETUP PAGE ELSE WE GO STRAIGHT TO MAP PAGE
-            }
-        };
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        if (fab != null) {
-            fab.setOnClickListener(
-                    new View.OnClickListener() {
                         @Override
-                        public void onClick(View view) {
-                            if (!type.equals("Trader")) {
-                                Intent intent = new Intent(HomeActivity.this, CartActivity.class);
-                                startActivity(intent);
-                            }
+                        public void onError(Exception e) {
+                            Picasso.get().load(image).resize(100, 0).into(product_imagehere);
                         }
+
+
                     });
-        }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer != null) {
-            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-            drawer.addDrawerListener(toggle);
-            if (toggle != null) {
-                toggle.syncState();
-            }
+                }}}};
 
-            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-            if (navigationView != null) {
-                navigationView.setNavigationItemSelectedListener(this);
-            }
-            View headerView = navigationView.getHeaderView(0);
-            TextView userNameTextView = headerView.findViewById(R.id.user_profile_name);
-            CircleImageView profileImageView = headerView.findViewById(R.id.user_profile_image);
 
-            // USER
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    public void fetch() {
+        FirebaseUser user;
+        if (mAuth != null) {
+            user = mAuth.getCurrentUser();
+            if (user != null) {
+                traderoruser = user.getUid();
+                ProductsRef = FirebaseDatabase.getInstance().getReference().child("Product");
+                ProductsRef.keepSynced(true);
+                productkey = ProductsRef.getKey();
 
-            if (traderoruser != null) {
-                Userdetails = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child(traderoruser);
 
-            }
-            if (!type.equals("Trader"))
+                if (traderoruser != null) {
+                    if (ProductsRef != null) {
+                        Query ProductsQuery = ProductsRef.orderByChild("tid").equalTo(traderoruser);
+                        //    Query ProductsQuery = ProductsRef;
 
-                if (user != null) {
-                    traderoruser = "";
-                    traderoruser = user.getUid();
+
+                        if (ProductsQuery != null) {
+
+                            FirebaseRecyclerOptions<Products> options =
+                                    new FirebaseRecyclerOptions.Builder<Products>()
+                                            .setQuery(ProductsQuery, new SnapshotParser<Products>() {
+
+
+                                                @NonNull
+                                                @Override
+                                                public Products parseSnapshot(@NonNull DataSnapshot snapshot) {
+
+
+                                                    if (snapshot.child("categoryname").getValue() != null) {
+                                                        categoryname = snapshot.child("categoryname").getValue(String.class);
+                                                    }
+                                                    if (snapshot.child("date").getValue() != null) {
+                                                        date = snapshot.child("date").getValue(String.class);
+                                                    }
+
+                                                    if (snapshot.child("desc").getValue() != null) {
+                                                        desc = snapshot.child("desc").getValue(String.class);
+                                                    }
+                                                    if (snapshot.child("discount").getValue() != null) {
+                                                        discount = snapshot.child("discount").getValue(String.class);
+                                                    }
+
+                                                    if (snapshot.child("time").getValue() != null) {
+                                                        time = snapshot.child("time").getValue(String.class);
+                                                    }
+
+
+                                                    if (snapshot.child("pimage").getValue() != null) {
+                                                        pimage = snapshot.child("pimage").getValue(String.class);
+                                                    }
+                                                    if (snapshot.child("pname").getValue() != null) {
+                                                        pname = snapshot.child("pname").getValue(String.class);
+                                                    }
+                                                    if (snapshot.child("pid").getValue() != null) {
+                                                        pid = snapshot.child("pid").getValue(String.class);
+                                                    }
+
+                                                    if (snapshot.child("price").getValue() != null) {
+                                                        price = snapshot.child("price").getValue(String.class);
+                                                    }
+
+                                                    if (snapshot.child("image").getValue() != null) {
+                                                        image = snapshot.child("image").getValue(String.class);
+                                                    }
+                                                    if (snapshot.child("name").getValue() != null) {
+                                                        name = snapshot.child("name").getValue(String.class);
+                                                    }
+
+                                                    if (snapshot.child("size").getValue() != null) {
+                                                        size = snapshot.child("size").getValue(String.class);
+                                                    }
+
+                                                    if (snapshot.child("pname").getValue() != null) {
+                                                        pname = snapshot.child("pname").getValue(String.class);
+                                                    }
+
+                                                    if (snapshot.child("pimage").getValue() != null) {
+                                                        pimage = snapshot.child("pimage").getValue(String.class);
+                                                    }
+
+                                                    if (snapshot.child("pid").getValue() != null) {
+                                                        pid = snapshot.child("pid").getValue(String.class);
+                                                    }
+
+                                                    if (snapshot.child("tradername").getValue() != null) {
+                                                        tradername = snapshot.child("tradername").getValue(String.class);
+                                                    }
+
+                                                    if (snapshot.child("traderimage").getValue() != null) {
+                                                        traderimage = snapshot.child("traderimage").getValue(String.class);
+                                                    }
+
+                                                    if (snapshot.child("tid").getValue() != null) {
+                                                        tid = snapshot.child("tid").getValue(String.class);
+                                                    }
+
+
+                                                    return new Products(categoryname, date, desc, discount, time, pid, pimage, pname, price, image, name, size, tradername, traderimage, tid);
+
+
+                                                }
+
+                                            }).build();
+
+                            //product_name
+                            // product_imagehere
+                            //  product_price
+
+                            //product_description
+                            //thetraderiknow
+
+
+                            adapter = new FirebaseRecyclerAdapter<Products, ViewHolder>(options) {
+                                @Override
+                                public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                                    View view = LayoutInflater.from(parent.getContext())
+                                            .inflate(R.layout.product_items_layout, parent, false);
+
+                                    return new ViewHolder(view);
+                                }
+
+                                @Override
+                                public int getItemCount() {
+                                    return super.getItemCount();
+                                }
+
+                                @Override
+                                protected void onBindViewHolder(ViewHolder holder, final int position, final Products model) {
+
+
+                                    holder.product_name.setText(pname);
+
+                                    holder.thetraderiknow.setText(thetradername);
+
+                                    holder.product_description.setText(desc);
+                                    holder.product_price.setText("Price = " +  "$" +price );
+
+
+
+
+
+                                    //   thetraderimageforproduct
+                                    if (thetraderimageforproduct != null) {
+                                        Picasso.get().load(traderimage).placeholder(R.drawable.profile).into(thetraderimageforproduct);
+                                    }
+                                    if (product_imagehere != null) {
+                                        Picasso.get().load(pimage).placeholder(R.drawable.profile).into(product_imagehere);
+                                    }
+
+                                    holder.setTraderImage(getApplication(), traderimage);
+                                    holder.setImage(getApplicationContext(), pimage);
+
+
+
+                                    holder.product_imagehere.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            if (type.equals("Trader")) {
+                                                Intent intent = new Intent(HomeActivity.this, ProductDetailsActivity.class);
+                                                if (intent != null) {
+                                                    intent.putExtra("pid", key);
+                                                    intent.putExtra("fromthehomeactivitytraderkey", traderkey);
+                                                    intent.putExtra("fromthehomeactivityname", model.getname());
+                                                    intent.putExtra("fromthehomeactivityprice", model.getprice());
+                                                    intent.putExtra("fromthehomeactivitydesc", model.getdesc());
+                                                    intent.putExtra("fromthehomeactivityname", thetraderhere);
+                                                    intent.putExtra("fromthehomeactivityimage", model.getimage());
+
+                                                }
+                                                startActivity(intent);
+                                            } else {
+                                                Intent intent = new Intent(HomeActivity.this, ProductDetailsActivity.class);
+                                                if (intent != null) {
+                                                    intent.putExtra("fromthehomeactivitytoproductdetails", traderkey);
+                                                }
+                                                startActivity(intent);
+                                            }
+                                        }
+                                    });
+
+
+                                    holder.thetraderimageforproduct.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            if (type.equals("Trader")) {
+                                                Intent intent = new Intent(HomeActivity.this, TraderProfile.class);
+                                                intent.putExtra("pid", key);
+                                                intent.putExtra("fromhomeactivitytotraderprofile", traderkey);
+
+                                                startActivity(intent);
+                                            } else {
+                                                Intent intent = new Intent(HomeActivity.this, TraderProfile.class);
+                                                intent.putExtra("pid", key);
+                                                intent.putExtra("fromhomeactivitytotraderprofile", traderkey);
+
+                                                startActivity(intent);
+                                            }
+
+                                        }
+
+                                    });
+
+
+
+                                }
+
+
+                            };
+
+                        }
+
+                        }
+
                 }
 
 
-            {
-                if (user.getDisplayName() != null) {
-                    if (user.getDisplayName() != null) {
-                        userNameTextView.setText(user.getDisplayName());
-
-                        Picasso.get().load(user.getPhotoUrl()).placeholder(R.drawable.profile).into(profileImageView);
-                    }
-                }
             }
 
-
-            recyclerView = findViewById(R.id.recycler_menu);
-            if (recyclerView != null) {
-                recyclerView.setHasFixedSize(true);
-
-            }
-            layoutManager = new LinearLayoutManager(this);
-            if (recyclerView != null) {
-                recyclerView.setLayoutManager(layoutManager);
-            }
         }
 
     }
-
 
     @Override
     protected void onStart() {
         super.onStart();
 
-        FirebaseRecyclerOptions<Products> options =
-                new FirebaseRecyclerOptions.Builder<Products>()
-                        .setQuery(ProductsRef, Products.class)
-                        .build();
 
+        firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
 
-        FirebaseRecyclerAdapter<Products, ProductViewHolder> adapter =
-                new FirebaseRecyclerAdapter<Products, ProductViewHolder>(options) {
-                    @Override
-                    protected void onBindViewHolder(@NonNull ProductViewHolder holder, int position, @NonNull final Products model) {
-                        if (holder != null) {
+                 user = mAuth.getCurrentUser();
+                if (mAuth != null) {
+                    if (user != null) {
 
-                            holder.txtProductName.setText(model.getname());
-                            key = model.getpid();
-                            traderkey = model.gettid();
-                            model.setTrader(traderkey);
-
-                            holder.txtProductDescription.setText(model.getdesc());
-                            holder.txtProductPrice.setText("Price = " + model.getprice() + "$");
-                            holder.setImage(getApplicationContext(), model.getimage());
-
-
-
-
-                            if (ProductsRef != null) {
-                                ProductsRef.addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                        Products productshere  =dataSnapshot.getValue(Products.class);
-
-                                            if (key != null) {
-                                                if (traderkey != null) {
-                                                    if (dataSnapshot.child("tradername").getValue(String.class) != null) {
-                                                        thetraderhere = dataSnapshot.child("tradername").getValue(String.class);
-
-
-                                                    }
-                                                    ;
-                                                }
-
-                                            }
-                                        }
-
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
-
-                                    }
-                                });
-
-                                holder.settrader(thetraderhere);
-                            }
-
-
-
-                        }
-
-
-
-                        /*if (model != null) {
-                            if (theproductimageview != null) {
-                                Picasso.get().load(Integer.parseInt(model.getimage())).resize(400, 0).networkPolicy(NetworkPolicy.OFFLINE).into(theproductimageview, new Callback() {
-
-
-                                    @Override
-                                    public void onSuccess() {
-
-                                    }
-
-                                    @Override
-                                    public void onError(Exception e) {
-                                        Picasso.get().load(Integer.parseInt(model.getimage())).resize(100,0).into(theproductimageview);
-                                    }
-
-                                });
-
-
-                            }
-
-*/
-
-
-                        if (holder != null) {
-                            holder.tradername.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    if (type.equals("Trader")) {
-                                        Intent intent = new Intent(HomeActivity.this, TraderProfile.class);
-                                        intent.putExtra("pid", key);
-                                        intent.putExtra("fromhomeactivitytotraderprofile", traderkey);
-
-                                        startActivity(intent);
-                                    } else {
-                                        Intent intent = new Intent(HomeActivity.this, TraderProfile.class);
-                                        intent.putExtra("pid", key);
-                                        intent.putExtra("fromhomeactivitytotraderprofile", traderkey);
-
-                                        startActivity(intent);
-                                    }
-                                }
-                            });
-                        }
-                        if (holder != null) {
-                            holder.txtProductName.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    if (type.equals("Trader")) {
-                                        Intent intent = new Intent(HomeActivity.this, ProductDetailsActivity.class);
-                                        if (intent != null) {
-                                            intent.putExtra("pid", key);
-                                            intent.putExtra("fromthehomeactivitytraderkey", traderkey);
-                                            intent.putExtra("fromthehomeactivityname", model.getname());
-                                            intent.putExtra("fromthehomeactivityprice", model.getprice());
-                                            intent.putExtra("fromthehomeactivitydesc", model.getdesc());
-                                            intent.putExtra("fromthehomeactivityname", thetraderhere);
-                                            intent.putExtra("fromthehomeactivityimage", model.getimage() );
-
-                                        }
-                                        startActivity(intent);
-                                    } else {
-                                        Intent intent = new Intent(HomeActivity.this, ProductDetailsActivity.class);
-                                        if (intent != null) {
-                                            intent.putExtra("fromthehomeactivitytoproductdetails", traderkey);
-                                        }
-                                        startActivity(intent);
-                                    }
-                                }
-                            });
-
-                        }
+                        traderoruser = user.getUid();
                     }
 
-                    @NonNull
-                    @Override
-                    public ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                    // I HAVE TO TRY TO GET THE SETUP INFORMATION , IF THEY ARE ALREADY PROVIDED WE TAKE TO THE NEXT STAGE
+                    // WHICH IS CUSTOMER TO BE ADDED.
+                    // PULLING DATABASE REFERENCE IS NULL, WE CHANGE BACK TO THE SETUP PAGE ELSE WE GO STRAIGHT TO MAP PAGE
+                }
+            }    }
 
-                        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.product_items_layout, parent, false);
-                        ProductViewHolder holder = new ProductViewHolder(view);
-                        return holder;
-                    }
-                };
+            ;
 
-        if (recyclerView != null) {
-            recyclerView.setAdapter(adapter);
-        }
+            if (mAuth != null) {
+                mAuth.addAuthStateListener(firebaseAuthListener);
+            }
+
         if (adapter != null) {
             adapter.startListening();
+
         }
+
+
     }
 
+    @Override
+    protected void onStop () {
+        super.onStop();
+        if (adapter != null){
+        adapter.stopListening();
+        //     mProgress.hide();
+        if (mAuth != null) {
+            mAuth.removeAuthStateListener(firebaseAuthListener);
+        }
+    }}
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -1395,12 +1555,4 @@ public class HomeActivity extends AppCompatActivity
         return true;
     }
 
-    @Override
-    protected void onStop () {
-        super.onStop();
-        //     mProgress.hide();
-        if (mAuth != null) {
-            mAuth.removeAuthStateListener(firebaseAuthListener);
-        }
-    }
 }

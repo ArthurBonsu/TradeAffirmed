@@ -412,10 +412,11 @@ public class LoginActivity extends AppCompatActivity
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if (dataSnapshot.child(parentDbName).child(traderoruser).exists()) {
+                        dataSnapshot.getValue(Users.class);
                         //    Users usersData = dataSnapshot.child(parentDbName).child(phone).getValue(Users.class);
 
                         // GETTING THE TYPE OF TRADER
-                        role = dataSnapshot.child(parentDbName).child(traderoruser).child("role").getValue().toString();
+                        role = dataSnapshot.child(parentDbName).child(traderoruser).child("role").getValue(String.class);
 
                         //  if (usersData.getPhone().equals(phone))
                         {

@@ -231,9 +231,14 @@ public class AdminMaintainProductsActivity extends AppCompatActivity implements 
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
+
+
                         String pName = dataSnapshot.child("pname").getValue(String.class);
+
                         String pPrice = dataSnapshot.child("price").getValue(String.class);
+
                         String pDescription = dataSnapshot.child("description").getValue(String.class);
+
                         String pImage = dataSnapshot.child("image").getValue(String.class);
 
 

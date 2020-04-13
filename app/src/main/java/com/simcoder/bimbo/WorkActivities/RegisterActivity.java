@@ -36,6 +36,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.simcoder.bimbo.Admin.AdminCategoryActivity;
+import com.simcoder.bimbo.Model.Products;
 import com.simcoder.bimbo.R;
 
 import java.util.HashMap;
@@ -237,6 +238,7 @@ public class RegisterActivity extends AppCompatActivity
                                                                                @Override
                                                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                                                                    if (!dataSnapshot.child(parentDbName).child(traderoruser).exists()) {
+                                                                                       dataSnapshot.getValue(Products.class);
                                                                                        //    Users usersData = dataSnapshot.child(parentDbName).child(phone).getValue(Users.class);
 
                                                                                        // GETTING THE TYPE OF TRADER

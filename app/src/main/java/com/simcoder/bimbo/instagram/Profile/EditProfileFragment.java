@@ -296,8 +296,8 @@ public class EditProfileFragment extends Fragment implements
                                                     for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
                                                         if (singleSnapshot != null) {
                                                             if (singleSnapshot.exists()) {
-                                                                if (singleSnapshot.child(userid).child("name").getValue(User.class) != null) {
-                                                                    Log.d(TAG, "checkIfUsernameExists: FOUND A MATCH" + singleSnapshot.child(userid).child("name").getValue(User.class).getname());
+                                                                if (singleSnapshot.child(userid).child("name").getValue(String.class) != null) {
+                                                                    Log.d(TAG, "checkIfUsernameExists: FOUND A MATCH" + singleSnapshot.child(userid).child("name").getValue(String.class));
                                                                     Toast.makeText(getActivity(), "That username already exists.", Toast.LENGTH_SHORT).show();
                                                                 }
                                                             }

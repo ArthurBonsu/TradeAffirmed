@@ -110,8 +110,8 @@ public class SearchActivity extends AppCompatActivity{
                         for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
                             if (dataSnapshot != null) {
 
-                                Log.d(TAG, "onDataChange: found user:" + singleSnapshot.child("name").getValue(User.class).toString());
-                    if (singleSnapshot.child("name").getValue(User.class) != null){
+                                Log.d(TAG, "onDataChange: found user:" + singleSnapshot.child("name").getValue(String.class));
+                    if (singleSnapshot.child("name").getValue(String.class) != null){
                         if (mUserList != null){
                          if (singleSnapshot != null){
                                  mUserList.add(singleSnapshot.getValue(User.class));

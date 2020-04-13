@@ -22,6 +22,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.simcoder.bimbo.Model.Users;
 import com.simcoder.bimbo.Prevalent.Prevalent;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -334,11 +335,12 @@ public class SettinsActivity extends AppCompatActivity
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     if (dataSnapshot.exists()) {
+                                        dataSnapshot.getValue(Users.class);
                                         if (dataSnapshot.child("image").exists()) {
-                                            String image = dataSnapshot.child("image").getValue().toString();
-                                            String name = dataSnapshot.child("name").getValue().toString();
-                                            String phone = dataSnapshot.child("phone").getValue().toString();
-                                            String address = dataSnapshot.child("address").getValue().toString();
+                                            String image = dataSnapshot.child("image").getValue(String.class);
+                                            String name = dataSnapshot.child("name").getValue(String.class);
+                                            String phone = dataSnapshot.child("phone").getValue(String.class);
+                                            String address = dataSnapshot.child("address").getValue(String.class);
 
                                             Picasso.get().load(image).into(profileImageView);
                                             fullNameEditText.setText(name);
@@ -361,11 +363,12 @@ public class SettinsActivity extends AppCompatActivity
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     if (dataSnapshot.exists()) {
-                                        if (dataSnapshot.child("image").exists()) {
-                                            String image = dataSnapshot.child("image").getValue().toString();
-                                            String name = dataSnapshot.child("name").getValue().toString();
-                                            String phone = dataSnapshot.child("phone").getValue().toString();
-                                            String address = dataSnapshot.child("address").getValue().toString();
+
+                                         dataSnapshot.getValue(Users.class);
+                                            String image = dataSnapshot.child("image").getValue(String.class);
+                                            String name = dataSnapshot.child("name").getValue(String.class);
+                                            String phone = dataSnapshot.child("phone").getValue(String.class);
+                                            String address = dataSnapshot.child("address").getValue(String.class);
                                             if (profileImageView != null) {
                                                 Picasso.get().load(image).into(profileImageView);
                                                 fullNameEditText.setText(name);
@@ -374,7 +377,7 @@ public class SettinsActivity extends AppCompatActivity
                                             }
                                         }
                                     }
-                                }
+
                                 @Override
                                 public void onCancelled(DatabaseError databaseError) {
 

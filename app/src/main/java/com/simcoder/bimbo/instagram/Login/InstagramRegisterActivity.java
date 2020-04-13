@@ -172,7 +172,7 @@ public class InstagramRegisterActivity extends AppCompatActivity {
                     if (singleSnapshot != null) {
                         if (singleSnapshot.exists()) {
                             if (singleSnapshot.getValue(User.class) != null) {
-                                Log.d(TAG, "checkIfUsernameExists: FOUND A MATCH" + singleSnapshot.getValue(User.class).getname());
+                                Log.d(TAG, "checkIfUsernameExists: FOUND A MATCH" + singleSnapshot.getValue(User.class));
                                 if (myRef.push() != null) {
                                     append = myRef.push().getKey().substring(3, 10);
                                     Log.d(TAG, "onDataChange: username already exists. Appending random string to name: " + append);

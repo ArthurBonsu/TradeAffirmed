@@ -30,6 +30,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.rey.material.widget.ImageView;
+import com.simcoder.bimbo.Model.Cart;
 import com.simcoder.bimbo.Model.Users;
 import  com.simcoder.bimbo.R;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -54,6 +55,8 @@ public class AdminViewBuyersActivity extends AppCompatActivity implements Google
     Button viewallcustomers;
     String theusers;
     String thetraderinformationandkey;
+    String nameofbuyers;
+    String  imageofbuyers;
     // NEW ORDERS RECEIVED FROM THE USERS
 //AUTHENITICATORS
     private static final int RC_SIGN_IN = 1;
@@ -85,20 +88,20 @@ public class AdminViewBuyersActivity extends AppCompatActivity implements Google
         mAuth = FirebaseAuth.getInstance();
 
 
-            if (getIntent() != null) {
-                if (getIntent().getStringExtra("rolefromadminproductdetailstoviewbuyers") != null) {
-                    role = getIntent().getStringExtra("rolefromadminproductdetailstoviewbuyers").toString();
-                }
-
-
-                if (getIntent().getStringExtra("fromadminproductdetailstoviewbuyers") != null) {
-                    traderID = getIntent().getStringExtra("fromadminproductdetailstoviewbuyers");
-                }
-
-                if (getIntent().getStringExtra("productIDfromadminproductdetailstoviewbuyers") != null) {
-                    productID = getIntent().getStringExtra("productIDfromadminproductdetailstoviewbuyers");
-                }
+        if (getIntent() != null) {
+            if (getIntent().getStringExtra("rolefromadminproductdetailstoviewbuyers") != null) {
+                role = getIntent().getStringExtra("rolefromadminproductdetailstoviewbuyers").toString();
             }
+
+
+            if (getIntent().getStringExtra("fromadminproductdetailstoviewbuyers") != null) {
+                traderID = getIntent().getStringExtra("fromadminproductdetailstoviewbuyers");
+            }
+
+            if (getIntent().getStringExtra("productIDfromadminproductdetailstoviewbuyers") != null) {
+                productID = getIntent().getStringExtra("productIDfromadminproductdetailstoviewbuyers");
+            }
+        }
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
         if (mGoogleApiClient != null) {
@@ -130,33 +133,30 @@ public class AdminViewBuyersActivity extends AppCompatActivity implements Google
                 // PULLING DATABASE REFERENCE IS NULL, WE CHANGE BACK TO THE SETUP PAGE ELSE WE GO STRAIGHT TO MAP PAGE
             }
         };
-        thebuyersforthisproductRef = FirebaseDatabase.getInstance().getReference().child("Orders").child("Users");
+        thebuyersforthisproductRef = FirebaseDatabase.getInstance().getReference().child("Orders");
         // AFTER SETTING SHIPPED IT HAS TO UPDATE AT USERS ORDERS AS WELL-
         thestateofproductquery = thebuyersforthisproductRef.orderByChild("state").equalTo("shipped");
         // get key
         // pass to Datareference
-        if (thestateofproductquery != null) {
-            // that means after the order traderID IS FILLED
-            String theuserskey = thestateofproductquery.getRef().getKey();
 
-            if (theuserskey != null) {
-                if (productID != null) {
-                    MybuyersproductQuery = thestateofproductquery.getRef().child(theuserskey).child("products").orderByChild(productID);
-                }
+        // that means after the order traderID IS FILLED
+        String theuserskey = thestateofproductquery.getRef().getKey();
+
+        if (theuserskey != null) {
+            if (productID != null) {
+                MybuyersproductQuery = thebuyersforthisproductRef.orderByChild("tid").equalTo(mAuth.getCurrentUser().getUid());
+
             }
         }
+
         thebuyersforthisproduct = findViewById(R.id.thebuyersforthisproductlist);
         if (thebuyersforthisproduct != null) {
             thebuyersforthisproduct.setLayoutManager(new LinearLayoutManager(this));
         }
         // WE HAVE TO CHANGE THIS BUTTON TO BACKPRESSED
-        if (MybuyersproductQuery != null) {
-            theusers = MybuyersproductQuery.getRef().getKey();
-            if (theusers != null) {
-                thebuyersforthisproductdatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(theusers);
 
 
-                thetraderinformationandkey = thebuyersforthisproductdatabase.getKey();
+
 
                 thebuyersforthisproductdatabase.addValueEventListener(new ValueEventListener() {
 
@@ -164,9 +164,15 @@ public class AdminViewBuyersActivity extends AppCompatActivity implements Google
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0) {
 
+                            for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                                if (dataSnapshot1.child("name") != null) {
+                                     nameofbuyers = dataSnapshot1.child("name").getValue(String.class);
+                           if ( dataSnapshot.child("image") != null){
+                                     imageofbuyers = dataSnapshot1.child("image").getValue(String.class);
 
+                                }
+                            }}
                         }
-
 
                     }
 
@@ -178,21 +184,24 @@ public class AdminViewBuyersActivity extends AppCompatActivity implements Google
 
                 });
             }
-        }
-    }
+
+
+
+
+
     @Override
     protected void onStart() {
         super.onStart();
 
 
-        FirebaseRecyclerOptions<Users> options =
-                new FirebaseRecyclerOptions.Builder<Users>()
-                        .setQuery(MybuyersproductQuery, Users.class)
+        FirebaseRecyclerOptions<Cart> options =
+                new FirebaseRecyclerOptions.Builder<Cart>()
+                        .setQuery(MybuyersproductQuery, Cart.class)
                         .build();
 
 
-        FirebaseRecyclerAdapter<Users, UserProductViewHolder> adapter =
-                new FirebaseRecyclerAdapter<Users, UserProductViewHolder>(options) {
+        FirebaseRecyclerAdapter<Cart, UserProductViewHolder> adapter =
+                new FirebaseRecyclerAdapter<Cart, UserProductViewHolder>(options) {
 
                     @NonNull
                     @Override
@@ -202,7 +211,7 @@ public class AdminViewBuyersActivity extends AppCompatActivity implements Google
                     }
 
                     @Override
-                    protected void onBindViewHolder(@NonNull UserProductViewHolder holder, int position, @NonNull Users model) {
+                    protected void onBindViewHolder(@NonNull UserProductViewHolder holder, int position, @NonNull Cart model) {
                         holder.tradersimageonscreen.setImageResource(Integer.parseInt(model.getimage()));
                         holder.tradersnameafterbuying.setText("Name: " + model.getname());
                         holder.tradersnameafterbuyingphone.setText("Name: " + model.getPhone());

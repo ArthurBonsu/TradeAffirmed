@@ -173,7 +173,7 @@ String    productdetailsimage;
               if (productID != null) {
                   getProductDetails(productID);
 
-        mDatabaseLikeCount = FirebaseDatabase.getInstance().getReference().child("Product").child(productID).child("Likes").child("count");
+     //   mDatabaseLikeCount = FirebaseDatabase.getInstance().getReference().child("Product").child(productID).child("Likes").child("count");
 
               }
         if (ViewBuyers != null) {
@@ -283,27 +283,27 @@ String    productdetailsimage;
     }
 
 
-    private void getProductDetails(String productID) {
+    private void getProductDetails(final String productID) {
         productsRef = FirebaseDatabase.getInstance().getReference().child("Products");
         if (productID != null) {
-            productsRef.child(productID).addValueEventListener(new ValueEventListener() {
+            productsRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
-                        Products products = dataSnapshot.getValue(Products.class);
-                           if (dataSnapshot.child("pimage").getValue(String.class) != null) {
-                                productdetailsimage = dataSnapshot.child("pimage").getValue(String.class);
+
+                           if (dataSnapshot.child(productID).child("pimage").getValue(String.class) != null) {
+                                productdetailsimage = dataSnapshot.child(productID).child("pimage").getValue(String.class);
                            }
 
-                           if (dataSnapshot.child("pname").getValue(String.class) != null) {
-                               productdetailsname = dataSnapshot.child("pname").getValue(String.class);
+                           if (dataSnapshot.child(productID).child("pname").getValue(String.class) != null) {
+                               productdetailsname = dataSnapshot.child(productID).child("pname").getValue(String.class);
                            }
 
-                           if (dataSnapshot.child("desc").getValue(String.class) != null) {
-                               productdetailsdescription = dataSnapshot.child("desc").getValue(String.class);
+                           if (dataSnapshot.child(productID).child("desc").getValue(String.class) != null) {
+                               productdetailsdescription = dataSnapshot.child(productID).child("desc").getValue(String.class);
                            }
-                           if (dataSnapshot.child("number").getValue(String.class) != null) {
-                                productdetailsnumber = dataSnapshot.child("number").getValue(String.class);
+                           if (dataSnapshot.child(productID).child("number").getValue(String.class) != null) {
+                                productdetailsnumber = dataSnapshot.child(productID).child("number").getValue(String.class);
                            }
 
                         ImageView adminproductdetailsimage = (ImageView) findViewById(R.id.adminproductdetailsimage);

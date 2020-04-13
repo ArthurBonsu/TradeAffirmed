@@ -18,6 +18,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.simcoder.bimbo.Model.HashMaps;
 import com.simcoder.bimbo.R;
 import com.simcoder.bimbo.instagram.Models.Like;
 import com.simcoder.bimbo.instagram.Models.Photo;
@@ -82,17 +83,19 @@ public class HomeFragment extends Fragment {
             query.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+
+
                     for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
                         if (followingkey != null) {
                             if (singleSnapshot != null) {
                                 followingkey = singleSnapshot.getKey();
 
-                                if (singleSnapshot.child(followingkey).child("name") != null) {
+                                if (singleSnapshot.child(followingkey).child("name").getValue() != null) {
                                     Log.d(TAG, "onDataChange: found user: " +
 
-                                            singleSnapshot.child(followingkey).child("name").getValue());
+                                            singleSnapshot.child(followingkey).child("name").getValue(String.class));
                                     if (singleSnapshot.child(followingkey).getValue() != null) {
-                                        mFollowing.add(singleSnapshot.child(followingkey).getValue().toString());
+                                        mFollowing.add(singleSnapshot.child(followingkey).getValue(String.class));
                                     }
                                 }
                             }
@@ -145,7 +148,7 @@ public class HomeFragment extends Fragment {
                                     Map<String, Object> objectMap = (HashMap<String, Object>) singleSnapshot.getValue();
                                     if (photo != null) {
                                         if (objectMap.get("caption") != null) {
-                                            photo.setCaption(objectMap.get(getString(R.string.field_caption)).toString());
+                                            photo.setCaption(objectMap.get("caption").toString());
                                         }
                                         //     photo.setTags(objectMap.get(getString(R.string.field_tags)).toString());
                                         if (objectMap.get("photoid") != null) {
@@ -175,16 +178,16 @@ public class HomeFragment extends Fragment {
                                                 if (dataSnapshot != null) {
 
 
-                                                    if (dSnapshot.getValue(Like.class) != null) {
+                                                    if (dSnapshot.getValue() != null) {
                                                         like.setLikeid(dSnapshot.getValue(Like.class).getLikeid());
                                                     }
-                                                    if (dSnapshot.getValue(Like.class) != null) {
+                                                    if (dSnapshot.getValue() != null) {
                                                         like.setnumber(dSnapshot.getValue(Like.class).getnumber());
                                                     }
-                                                    if (dSnapshot.child("Users").child("name").getValue(Like.class) != null) {
+                                                    if (dSnapshot.child("Users").child("name").getValue() != null) {
                                                         like.setname(dSnapshot.child("Users").child("name").getValue(Like.class).getname());
                                                     }
-                                                    if (dSnapshot.child("Users").child("uid").getValue(Like.class) != null) {
+                                                    if (dSnapshot.child("Users").child("uid").getValue() != null) {
                                                         like.setuid(dSnapshot.child("Users").child("uid").getValue(Like.class).getuid());
                                                     }
                                                     if (like != null) {
@@ -205,16 +208,16 @@ public class HomeFragment extends Fragment {
                                                         }
 
                                                         Comment comment = new Comment();
-                                                        if (dSnapshot.child("comment").getValue(Comment.class) != null) {
+                                                        if (dSnapshot.child("comment").getValue() != null) {
                                                             comment.setComment(dSnapshot.child("comment").getValue(Comment.class).getComment());
                                                         }
-                                                        if (dSnapshot.child("commentkey").getValue(Comment.class) != null) {
+                                                        if (dSnapshot.child("commentkey").getValue() != null) {
                                                             comment.setcommentkey(dSnapshot.child("commentkey").getValue(Comment.class).getcommentkey());
                                                         }
-                                                        if (dSnapshot.child("name").getValue(Comment.class) != null) {
+                                                        if (dSnapshot.child("name").getValue() != null) {
                                                             comment.setname(dSnapshot.child("name").getValue(Comment.class).getname());
                                                         }
-                                                        if (dSnapshot.child("uid").getValue(Comment.class) != null) {
+                                                        if (dSnapshot.child("uid").getValue() != null) {
                                                             comment.setuid(dSnapshot.child("uid").getValue(Comment.class).getuid());
                                                         }
                                                         if (comment != null) {
@@ -234,13 +237,13 @@ public class HomeFragment extends Fragment {
                                                     Tags tags1 = new Tags();
                                                     if (tags1 != null) {
                                                         if (dSnapshot != null) {
-                                                            if (dSnapshot.child("image").getValue(Tags.class) != null) {
+                                                            if (dSnapshot.child("image").getValue() != null) {
                                                                 tags1.setimage(dSnapshot.child("image").getValue(Tags.class).getimage());
                                                             }
-                                                            if (dSnapshot.child("name").getValue(Tags.class) != null) {
+                                                            if (dSnapshot.child("name").getValue() != null) {
                                                                 tags1.setname(dSnapshot.child("name").getValue(Tags.class).getname());
                                                             }
-                                                            if (dSnapshot.child("uid").getValue(Tags.class) != null) {
+                                                            if (dSnapshot.child("uid").getValue() != null) {
                                                                 tags1.setuid(dSnapshot.child("uid").getValue(Tags.class).getuid());
                                                             }
                                                             if (tags1 != null) {

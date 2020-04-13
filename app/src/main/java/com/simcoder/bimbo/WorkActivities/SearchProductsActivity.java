@@ -20,6 +20,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.Query;
 import com.rey.material.widget.ImageView;
 import com.simcoder.bimbo.Model.Products;
 import com.simcoder.bimbo.ViewHolder.ProductViewHolder;
@@ -129,10 +130,10 @@ public class SearchProductsActivity extends AppCompatActivity
 
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Products");
-
+        Query referencequery =  reference.orderByChild("name").startAt(SearchInput);
         FirebaseRecyclerOptions<Products> options =
                 new FirebaseRecyclerOptions.Builder<Products>()
-                .setQuery(reference.orderByChild("name").startAt(SearchInput), Products.class)
+                .setQuery(referencequery, Products.class)
                 .build();
 
 
@@ -141,12 +142,12 @@ public class SearchProductsActivity extends AppCompatActivity
                     @Override
                     protected void onBindViewHolder(@NonNull ProductViewHolder holder, int position, @NonNull final Products model) {
                         if (model != null) {
-                            holder.txtProductName.setText(model.getname());
+                            holder.txtProductName.setText(model.getpname());
                             holder.txtProductDescription.setText(model.getdesc());
                             holder.txtProductPrice.setText("Price = " + model.getprice() + "$");
                             if (model != null) {
                                 if (theproductimageview != null) {
-                                    Picasso.get().load(Integer.parseInt(model.getimage())).resize(400, 0).networkPolicy(NetworkPolicy.OFFLINE).into(theproductimageview, new Callback() {
+                                    Picasso.get().load(Integer.parseInt(model.getpimage())).resize(400, 0).networkPolicy(NetworkPolicy.OFFLINE).into(theproductimageview, new Callback() {
 
 
                                         @Override
@@ -156,22 +157,23 @@ public class SearchProductsActivity extends AppCompatActivity
 
                                         @Override
                                         public void onError(Exception e) {
-                                            Picasso.get().load(Integer.parseInt(model.getimage())).resize(100,0).into(theproductimageview);
+                                            Picasso.get().load(Integer.parseInt(model.getpimage())).resize(100, 0).into(theproductimageview);
                                         }
 
                                     });
 
 
-                                }}
+                                }
 
                                 holder.itemView.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    Intent intent = new Intent(SearchProductsActivity.this, ProductDetailsActivity.class);
-                                    intent.putExtra("pid", model.getpid());
-                                    startActivity(intent);
-                                }
-                            });
+                                    @Override
+                                    public void onClick(View view) {
+                                        Intent intent = new Intent(SearchProductsActivity.this, ProductDetailsActivity.class);
+                                        intent.putExtra("pid", model.getpid());
+                                        startActivity(intent);
+                                    }
+                                });
+                            }
                         }
                     }
                     @NonNull

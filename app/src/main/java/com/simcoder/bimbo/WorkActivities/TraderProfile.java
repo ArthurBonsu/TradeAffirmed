@@ -94,7 +94,7 @@ public class TraderProfile extends AppCompatActivity  implements  View.OnClickLi
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.traderprofile);
 
@@ -189,17 +189,18 @@ public class TraderProfile extends AppCompatActivity  implements  View.OnClickLi
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0) {
+                    dataSnapshot.getValue(Users.class);
 
                     traderkey = dataSnapshot.getKey();
                     if (theProfileID != null) {
-                        traderimage = dataSnapshot.child(theProfileID).child("image").getValue().toString();
-                        coverimage = dataSnapshot.child(theProfileID).child("coverimage").getValue().toString();
-                        traderquote = dataSnapshot.child(theProfileID).child("quote").getValue().toString();
+                        traderimage = dataSnapshot.child(theProfileID).child("image").getValue(String.class);
+                        coverimage = dataSnapshot.child(theProfileID).child("coverimage").getValue(String.class);
+                        traderquote = dataSnapshot.child(theProfileID).child("quote").getValue(String.class);
 
-                        traderfollowers = dataSnapshot.child(theProfileID).child("followers").child("number").getValue().toString();
-                        tradername = dataSnapshot.child(theProfileID).child("name").getValue().toString();
-                        traderphoneaddress = dataSnapshot.child(theProfileID).child("address").getValue().toString();
-                        traderjob = dataSnapshot.child(theProfileID).child("job").getValue().toString();
+                        traderfollowers = dataSnapshot.child(theProfileID).child("followers").child("number").getValue(String.class);
+                        tradername = dataSnapshot.child(theProfileID).child("name").getValue(String.class);
+                        traderphoneaddress = dataSnapshot.child(theProfileID).child("address").getValue(String.class);
+                        traderjob = dataSnapshot.child(theProfileID).child("job").getValue(String.class);
                     }
                 }
 
@@ -230,6 +231,7 @@ public class TraderProfile extends AppCompatActivity  implements  View.OnClickLi
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 if (dataSnapshot.exists()) {
+                                    dataSnapshot.getValue(Users.class);
 
                                     if (dataSnapshot.child("followers") != null && dataSnapshot.child("followers").hasChild("number")) {
                                         Log.i("Number of followers", ".");
@@ -311,7 +313,7 @@ public class TraderProfile extends AppCompatActivity  implements  View.OnClickLi
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
 
-                        String usershere = dataSnapshot.getValue(Users.class).toString();
+                         dataSnapshot.getValue(Users.class);
 
                                 if (traderimageonscreen != null) {
                                     if (traderimage != null) {

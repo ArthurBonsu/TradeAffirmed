@@ -301,53 +301,53 @@ public  class  AdminAllCustomers extends Fragment {
             myretrievalref.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    Photo post = dataSnapshot.getValue(Photo.class);
+
                     photokey = dataSnapshot.getKey();
 
                     //  System.out.println(post);
-                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                        for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                         Log.d(TAG, "The Photokey " + photokey);
 
-                        if (dataSnapshot1.child("caption").getValue() != null) {
-                            caption = dataSnapshot1.child("caption").getValue().toString();
+                        if (dataSnapshot1.child("caption").getValue(String.class) != null) {
+                            caption = dataSnapshot1.child("caption").getValue(String.class);
                         }
-                        if (dataSnapshot1.child("date").getValue() != null) {
-                            date = dataSnapshot1.child("date").getValue().toString();
-
-                        }
-                        if (dataSnapshot1.child("image").getValue() != null) {
-                            image = dataSnapshot1.child("image").getValue().toString();
+                        if (dataSnapshot1.child("date").getValue(String.class) != null) {
+                            date = dataSnapshot1.child("date").getValue(String.class);
 
                         }
-                        if (dataSnapshot1.child("name").getValue(Photo.class) != null) {
-                            name = dataSnapshot1.child("name").getValue(Photo.class).toString();
+                        if (dataSnapshot1.child("image").getValue(String.class) != null) {
+                            image = dataSnapshot1.child("image").getValue(String.class);
 
-                            if (dataSnapshot1.child("photoid").getValue() != null) {
-                                photoid = dataSnapshot1.child("photoid").getValue().toString();
+                        }
+                        if (dataSnapshot1.child("name").getValue(String.class) != null) {
+                            name = dataSnapshot1.child("name").getValue(String.class);
 
-                            }
-                            if (dataSnapshot1.child("pid").getValue() != null) {
-                                pid = dataSnapshot1.child("pid").getValue().toString();
-
-                            }
-                            if (dataSnapshot1.child("posttype").getValue() != null) {
-                                posttype = dataSnapshot1.child("posttype").getValue().toString();
+                            if (dataSnapshot1.child("photoid").getValue(String.class) != null) {
+                                photoid = dataSnapshot1.child("photoid").getValue(String.class);
 
                             }
-                            if (dataSnapshot1.child("price").getValue() != null) {
-                                price = dataSnapshot1.child("price").getValue().toString();
+                            if (dataSnapshot1.child("pid").getValue(String.class) != null) {
+                                pid = dataSnapshot1.child("pid").getValue(String.class);
 
                             }
-                            if (dataSnapshot1.child("tid").getValue() != null) {
-                                tid = dataSnapshot1.child("tid").getValue().toString();
+                            if (dataSnapshot1.child("posttype").getValue(String.class) != null) {
+                                posttype = dataSnapshot1.child("posttype").getValue(String.class);
 
                             }
-                            if (dataSnapshot1.child("traderimage").getValue() != null) {
-                                traderimage = dataSnapshot1.child("traderimage").getValue().toString();
+                            if (dataSnapshot1.child("price").getValue(String.class) != null) {
+                                price = dataSnapshot1.child("price").getValue(String.class);
 
                             }
-                            if (dataSnapshot1.child("tradername").getValue() != null) {
-                                tradername = dataSnapshot1.child("tradername").getValue().toString();
+                            if (dataSnapshot1.child("tid").getValue(String.class) != null) {
+                                tid = dataSnapshot1.child("tid").getValue(String.class);
+
+                            }
+                            if (dataSnapshot1.child("traderimage").getValue(String.class) != null) {
+                                traderimage = dataSnapshot1.child("traderimage").getValue(String.class);
+
+                            }
+                            if (dataSnapshot1.child("tradername").getValue(String.class) != null) {
+                                tradername = dataSnapshot1.child("tradername").getValue(String.class);
 
 
                             }
@@ -400,15 +400,16 @@ public  class  AdminAllCustomers extends Fragment {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
 
-                            User myysers = dataSnapshot.getValue(User.class);
-                            Log.i(TAG, "MainfeedSnapshots " + myysers);
+
+
                             if (dataSnapshot.exists()) {
 
-                                if (dataSnapshot.child("uid").getValue() != null) {
-                                    useridentifier = dataSnapshot.child("uid").getValue().toString();
-                                    if (dataSnapshot.child("role").getValue() != null) {
-                                        role = dataSnapshot.child("role").getValue().toString();
+                                if (dataSnapshot.child("uid").getValue(String.class) != null) {
+                                    useridentifier = dataSnapshot.child("uid").getValue(String.class);
+                                    if (dataSnapshot.child("role").getValue(String.class) != null) {
+                                        role = dataSnapshot.child("role").getValue(String.class);
                                     }
+
                                 }
                             }
                         }
@@ -643,7 +644,7 @@ public  class  AdminAllCustomers extends Fragment {
         //GETFOLLOWING WILL PULL FROM DIFFERENT DATASTORE( THE USER DATASTORE)
 
         public void setTheProfilePhoto(final Context ctx, final String image) {
-            theprofileimage = (CircleImageView) itemView.findViewById(R.id.profile_photo);
+            theprofileimage = (CircleImageView)itemView.findViewById(R.id.profile_photo);
             if (theprofileimage != null) {
                 Picasso.get().load(image).resize(400, 0).networkPolicy(NetworkPolicy.OFFLINE).into(theprofileimage, new Callback() {
 
@@ -693,12 +694,7 @@ public  class  AdminAllCustomers extends Fragment {
                                       String likekey = snapshot.child("Likes").getKey();
 
 
-*/                                                                String Photokey = snapshot.getKey();
-                                    String TheLikeKey= snapshot.child(Photokey).child("Likes").getKey();
-                                    String Commentkey = snapshot.child(Photokey).child("Comments").getKey();
-                                    String ReplyKey = snapshot.child(Photokey).child("Replies").getKey();
-
-
+*/
                                     Log.i(TAG, "MainfeedSnapshots " + snapshot);
 
                                     if (snapshot.child("caption").getValue(String.class) != null) {
@@ -802,8 +798,7 @@ public  class  AdminAllCustomers extends Fragment {
 
                                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
 
-                                    Photo post = dataSnapshot1.getValue(Photo.class);
-                                    Log.i(TAG, "MainfeedSnapshots " + post);
+
 
                                     photokey = dataSnapshot1.getKey();
                                     Log.d(TAG, "The Photokey " + photokey);
@@ -832,8 +827,6 @@ public  class  AdminAllCustomers extends Fragment {
                             public void onDataChange(DataSnapshot dataSnapshot) {
 
                                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                                    Photo post = dataSnapshot1.getValue(Photo.class);
-                                    Log.i(TAG, "MainfeedSnapshots " + post);
 
                                     photokey = dataSnapshot1.getKey();
                                     Log.d(TAG, "The Photokey " + photokey);

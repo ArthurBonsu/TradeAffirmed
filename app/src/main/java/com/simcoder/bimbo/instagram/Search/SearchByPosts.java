@@ -110,7 +110,7 @@ public class SearchByPosts extends AppCompatActivity{
                         if (dataSnapshot != null) {
                             for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
 
-                                Log.d(TAG, "onDataChange: found user:" + singleSnapshot.child("name").getValue(User.class).toString());
+                                Log.d(TAG, "onDataChange: found user:" + singleSnapshot.child("name").getValue(String.class));
                                 if (dataSnapshot != null) {
                                     if (mUserList != null) {
                                         mUserList.add(singleSnapshot.getValue(User.class));

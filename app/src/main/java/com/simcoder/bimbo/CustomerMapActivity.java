@@ -82,6 +82,7 @@ import com.nabinbhandari.android.permissions.PermissionHandler;
 import com.nabinbhandari.android.permissions.Permissions;
 import com.simcoder.bimbo.Model.DriverLocation;
 import com.simcoder.bimbo.Model.DriverSearch;
+import com.simcoder.bimbo.Model.HashMaps;
 import com.simcoder.bimbo.Model.Users;
 import com.simcoder.bimbo.WorkActivities.CartActivity;
 import com.simcoder.bimbo.WorkActivities.HomeActivity;
@@ -296,9 +297,10 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
+
                             if (role != null){
                                   if (dataSnapshot.child("role").getValue() != null){
-                                role = dataSnapshot.child("role").getValue().toString();
+                                role = dataSnapshot.child("role").getValue(String.class);
 
                             }}
                     }}
@@ -511,7 +513,8 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                             mDriversDatabase.addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
-                                     service =      dataSnapshot.child("service").getValue().toString();
+
+                                     service =      dataSnapshot.child("service").getValue(String.class);
                                     /*
                                     Iterator<DataSnapshot> items = dataSnapshot.getChildren().iterator();
                                     Toast.makeText(CustomerMapActivity.this, "Total Traders:"+ dataSnapshot.getChildrenCount(),Toast.LENGTH_LONG).show();
@@ -675,8 +678,10 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists() && requestBol) {
-                     String zero = (String) dataSnapshot.child("l").child("zero").getValue();
-                    String one = (String) dataSnapshot.child("l").child("one").getValue();
+
+                     String zero =  dataSnapshot.child("l").child("zero").getValue(String.class);
+                    String one =  dataSnapshot.child("l").child("one").getValue(String.class);
+                    Log.d("Zero and one",  zero + one);
 
 
                 //    List<Users> map = (List<Users>) dataSnapshot.child("l").getValue();
@@ -773,30 +778,33 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             mDriverIcalledDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+
                     if (dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0) {
-                        if (dataSnapshot.child("name") != null) {
+
+
+                        if (dataSnapshot.child("tradername") != null) {
                             if (mDriverName != null) {
-                                mDriverName.setText(dataSnapshot.child("name").getValue().toString());
+                                mDriverName.setText(dataSnapshot.child("tradername").getValue(String.class));
                             } else {
                                 mDriverName.setText("No Trader Expected");
                             }
                         }
                         if (dataSnapshot.child("phone") != null) {
                             if (mDriverPhone != null) {
-                                mDriverPhone.setText(dataSnapshot.child("phone").getValue().toString());
+                                mDriverPhone.setText(dataSnapshot.child("phone").getValue(String.class));
                             } else {
                                 mDriverPhone.setText("No Number ");
                             }
                         }
                         if (dataSnapshot.child("car") != null) {
                             if (mDriverCar != null) {
-                                mDriverCar.setText(dataSnapshot.child("car").getValue().toString());
+                                mDriverCar.setText(dataSnapshot.child("car").getValue(String.class));
                             } else {
                                 mDriverCar.setText("Product Unavailable");
                             }
                         }
                         if (dataSnapshot.child("image") != null) {
-                            Glide.with(getApplication()).load(dataSnapshot.child("image").getValue().toString()).into(mDriverProfileImage);
+                            Glide.with(getApplication()).load(dataSnapshot.child("image").getValue(String.class)).into(mDriverProfileImage);
                         }
 
 
@@ -804,7 +812,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                         float ratingsTotal = 0;
                         float ratingsAvg = 0;
                         for (DataSnapshot child : dataSnapshot.child("rating").getChildren()) {
-                            ratingSum = ratingSum + Integer.valueOf(child.getValue().toString());
+                            ratingSum = ratingSum + Integer.valueOf(child.getValue(String.class));
                             ratingsTotal++;
                         }
                         if (ratingsTotal != 0) {
@@ -835,6 +843,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                 driveHasEndedRefListener = driveHasEndedRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
+                        dataSnapshot.getValue(Users.class);
                         if (dataSnapshot.exists()) {
 
                         } else {
@@ -1133,12 +1142,13 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             getwhereveravailabledriverislocationListener = getwhereveravailabledriverislocation.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+                    dataSnapshot.getValue(HashMaps.class);
                     if (dataSnapshot.exists() && !customerId.equals("")) {
                      //   List<Users> map = (List<Users>) dataSnapshot.getValue();
 
 
-                        latvalues = dataSnapshot.child("zero").getValue().toString();
-                        longvalues = dataSnapshot.child("one").getValue().toString();
+                        latvalues = dataSnapshot.child("zero").getValue(String.class);
+                        longvalues = dataSnapshot.child("one").getValue(String.class);
 
 
                         /*
@@ -1244,17 +1254,18 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         if (dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0) {
-                                            if (dataSnapshot.child(key).child("name") != null) {
-                                                myTradersName = dataSnapshot.child("name").getValue().toString();
+                                            dataSnapshot.getValue(Users.class);
+                                            if (dataSnapshot.child(key).child("tradername") != null) {
+                                                myTradersName = dataSnapshot.child(key).child("tradername").getValue(String.class);
                                             } else {
                                                 myTradersName = "No Trader Name";
                                             }
 
 
-                                            if (dataSnapshot.child(key).child("image") != null) {
-                                                myTradersPic = dataSnapshot.getValue().toString();
+                                            if (dataSnapshot.child(key).child("traderimage") != null) {
+                                                myTradersPic = dataSnapshot.getValue(String.class);
                                                 if (mDriverProfileImage !=null) {
-                                                    Glide.with(getApplication()).load(dataSnapshot.child("image").getValue().toString()).into(mDriverProfileImage);
+                                                    Glide.with(getApplication()).load(dataSnapshot.child("traderimage").getValue(String.class)).into(mDriverProfileImage);
                                                 }
                                                 if (mDriverProfileImage != null) {
                                                     mydriverbitmap = ((BitmapDrawable) mDriverProfileImage.getDrawable()).getBitmap();
@@ -1268,9 +1279,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 
 
                                         if (dataSnapshot.child(key).child("l").child("zero") != null) {
-                                            myTradersPic = dataSnapshot.getValue().toString();
+                                            myTradersPic = dataSnapshot.getValue(String.class);
                                             if (mDriverProfileImage != null) {
-                                                Glide.with(getApplication()).load(dataSnapshot.child("image").getValue().toString()).into(mDriverProfileImage);
+                                                Glide.with(getApplication()).load(dataSnapshot.child("traderimage").getValue(String.class)).into(mDriverProfileImage);
                                             }
                                             if (mDriverProfileImage != null) {
                                                 mydriverbitmap = ((BitmapDrawable) mDriverProfileImage.getDrawable()).getBitmap();

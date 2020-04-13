@@ -287,6 +287,7 @@ public class AdminAddNewProductActivityII extends AppCompatActivity implements G
                                    Uri myphoto = user.getPhotoUrl();
                                            mytraderimage = myphoto.toString();
                                        productkey =     ProductsRef.push().getKey();
+
                         Products producttobesent = new Products ( titleval,pimage,descval, price, productkey, saveCurrentDate, saveCurrentTime, traderid, tradername, mytraderimage);
 
                         ProductsRef.child(productkey).setValue(producttobesent, new

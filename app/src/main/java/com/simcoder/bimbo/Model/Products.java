@@ -52,13 +52,14 @@ public class Products {
     public Products() {
     }
 
+
+
     public Products( String pid,  String tid, String quantity, String price,String desc, String discount, String name, String image, String tradername, String traderimage,String size
 
                      ) {this.desc = desc;
         this.image = image;
 
 
-        this.image = image;
 
         this.name = name;
         this.tid = tid;
@@ -222,8 +223,26 @@ public class Products {
 
     }
 
+    public Products(String categoryname, String date, String desc, String discount, String time, String pid, String pimage, String pname, String price, String image, String name, String size, String tradername, String traderimage, String tid) {
+         this.categoryname = categoryname;
+         this.date = date;
+         this.desc = desc;
+         this.discount = discount;
+         this.time = time;
+         this.pid = pid;
+         this.pimage = pimage;
+         this.pname = pname;
+         this.price = price;
+         this.image = image;
+         this.name = name;
+         this.size =size;
+         this.tradername = tradername;
+         this.traderimage = traderimage;
+         this.tid = tid;
 
 
+
+    }
 
 
     public void setpimage(String pimage) {

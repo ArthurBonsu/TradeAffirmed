@@ -156,23 +156,21 @@ public  class ViewSingleUserOrders extends AppCompatActivity implements GoogleAp
                 .child("Orders");
         if (singleuserordertListRef != null) {
             if (traderID != null) {
-                myQuery = singleuserordertListRef.child("trader").orderByChild(traderID);
-                if (userID != null) {
-                    myUserQuery = myQuery.getRef().child("Users").child(userID).child("products");
-                }
+                myQuery = singleuserordertListRef.orderByChild("tid").equalTo(traderID);
+                    myUserQuery = myQuery.getRef().child("products");
+
             }
-                                    if (myUserQuery != null) {
-                                        DatabaseReference getthequatityreference = myUserQuery.getRef().child("").child("quantity");
 
 
-            getthequatityreference.addValueEventListener(new ValueEventListener() {
+
+            myQuery.addValueEventListener(new ValueEventListener() {
 
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
 
                     if (dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0) {
 
-                        quantity = dataSnapshot.getValue().toString();
+                        quantity = dataSnapshot.child("quantity").getValue(String.class);
                     }
                     }
 
@@ -188,7 +186,7 @@ public  class ViewSingleUserOrders extends AppCompatActivity implements GoogleAp
 
             });
 
-    }}}
+    }}
             @Override
     protected void onStart()
     {
@@ -204,13 +202,13 @@ public  class ViewSingleUserOrders extends AppCompatActivity implements GoogleAp
             @Override
             protected void onBindViewHolder(@NonNull SingleUserProductViewHolder holder, int position, @NonNull Products model)
             {       if (model != null){
-                holder.singleuserproductimage.setImageResource(Integer.parseInt(model.getimage()));
+                holder.singleuserproductimage.setImageResource(Integer.parseInt(model.getpimage()));
                 holder.singleuserproductquantity.setText("Quantity = " +  quantity);
                 holder.singleuserproductprice.setText("Price " + model.getprice() + "$");
-                holder.singleuserproductname.setText(model.getname());
+                holder.singleuserproductname.setText(model.getpname());
                            // USERNAME SHOULD BE ADDED APART FROM THE PRODUCT QUERY
                 if (singleuserproductimage != null) {
-                    Glide.with(getApplication()).load((model.getimage())).into(singleuserproductimage);
+                    Glide.with(getApplication()).load((model.getpimage())).into(singleuserproductimage);
                 }
              }}
 

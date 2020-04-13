@@ -33,7 +33,9 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.simcoder.bimbo.Model.Cart;
 import com.simcoder.bimbo.Model.Products;
+import com.simcoder.bimbo.Model.Users;
 import com.simcoder.bimbo.Prevalent.Prevalent;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -317,7 +319,7 @@ public class ProductDetailsActivity extends AppCompatActivity   implements Navig
 
         }
         final DatabaseReference cartListRef = FirebaseDatabase.getInstance().getReference().child("Cart");
-        final DatabaseReference TraderListRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Drivers").child("traders");
+
 
         if (cartListRef.getKey() == "") {
             cartkey = cartListRef.push().getKey();
@@ -362,6 +364,7 @@ public class ProductDetailsActivity extends AppCompatActivity   implements Navig
             cartforuser.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+                    dataSnapshot.getValue(Users.class);
                     if (dataSnapshot.hasChild(userID)) {
 
                          cartintoproductListRef = FirebaseDatabase.getInstance().getReference().child("Cart").child(cartkey).child("Users").child(userID).child("products");
@@ -452,12 +455,12 @@ public class ProductDetailsActivity extends AppCompatActivity   implements Navig
                             traderkey = model.gettid();
                              describe = model.getdesc();
                              suchtheprice = model.getprice();
-                             productname = model.getname();
+                             productname = model.getpname();
                             model.setTrader(traderkey);
 
                             holder.txtProductDescription.setText(model.getdesc());
                             holder.txtProductPrice.setText("Price = " + model.getprice() + "$");
-                            holder.setImage(getApplicationContext(), model.getimage());
+                            holder.setImage(getApplicationContext(), model.getpimage());
 
 
                             if (ProductRef != null) {
@@ -465,10 +468,11 @@ public class ProductDetailsActivity extends AppCompatActivity   implements Navig
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         if (dataSnapshot.exists()) {
+                                            dataSnapshot.getValue(Products.class);
                                             if (key != null) {
                                                 if (traderkey != null) {
                                                     if (dataSnapshot.child("tradername").getValue() != null) {
-                                                        thetraderhere = dataSnapshot.child("tradername").getValue().toString();
+                                                        thetraderhere = dataSnapshot.child("tradername").getValue(String.class);
 
 
                                                     }
@@ -615,7 +619,8 @@ public class ProductDetailsActivity extends AppCompatActivity   implements Navig
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
-                        String shippingState = dataSnapshot.child("state").getValue().toString();
+                        dataSnapshot.getValue(Cart.class);
+                        String shippingState = dataSnapshot.child("state").getValue(String.class);
 
                         if (shippingState.equals("shipped")) {
                             state = "Order Shipped";
