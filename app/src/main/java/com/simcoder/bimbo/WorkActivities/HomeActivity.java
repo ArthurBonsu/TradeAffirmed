@@ -119,6 +119,8 @@ public  class  HomeActivity extends AppCompatActivity
      String followingid;
      String followingname;
      String followingimage;
+
+    FloatingActionButton fab;
     //product_name
     // product_imagehere
     //  product_price
@@ -164,9 +166,24 @@ public  class  HomeActivity extends AppCompatActivity
             traderoruser = getIntent().getStringExtra("fromadmincategoryactivity");
         }
 
+        fab = (FloatingActionButton) findViewById(R.id.fab);
 
 
-        recyclerView = findViewById(R.id.recycler_menu);
+        if (fab != null) {
+            fab.setOnClickListener(
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            Intent intent = new Intent(HomeActivity.this, CartActivity.class);
+                            startActivity(intent);
+                        }
+
+
+                    });
+
+
+            recyclerView = findViewById(R.id.recycler_menu);
 
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -298,11 +315,13 @@ public  class  HomeActivity extends AppCompatActivity
 
          });
 
+                 Log.i("Followerinfo" , followingid + followingname + followingimage);
+
           if (getmyfollowingsagain != null){
 
               getmyfollowingsagain.onCallback(followingid, followingname, followingimage);
 
-             Log.i("Followerinfo" , followingid + followingname + followingimage);
+
 
 
 //        setSupportActionBar(toolbar);
@@ -324,19 +343,6 @@ public  class  HomeActivity extends AppCompatActivity
             }
 
 
-
-            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-            if (fab != null) {
-                fab.setOnClickListener(
-                        new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                if (!type.equals("Trader")) {
-                                    Intent intent = new Intent(HomeActivity.this, CartActivity.class);
-                                    startActivity(intent);
-                                }
-                            }
-                        });
 
 
 
