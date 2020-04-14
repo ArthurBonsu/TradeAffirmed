@@ -89,16 +89,18 @@ public class AdminMaintainProductsActivity extends AppCompatActivity implements 
 
         // KEYS PASSED IN FROM ADMINCATEGORY
 
-             if (getIntent() != null) {
+        Intent roleintent = getIntent();
+        if( roleintent.getExtras().getString("maintainrolefromadmincategory") != null) {
+            role = roleintent.getExtras().getString("maintainrolefromadmincategory");
+        }
 
-                 if (getIntent().getStringExtra("maintainrolefromadmincategory") != null) {
-                     role = getIntent().getStringExtra("maintainrolefromadmincategory").toString();
-                 }
+        Intent traderIDintent = getIntent();
+        if( traderIDintent.getExtras().getString("maintainfromadmincategoryactivity") != null) {
+            traderID = traderIDintent.getExtras().getString("maintainfromadmincategoryactivity");
+        }
 
-                 if (getIntent().getStringExtra("maintainfromadmincategoryactivity") != null) {
-                     traderID = getIntent().getStringExtra("maintainfromadmincategoryactivity");
-                 }
-             }
+
+
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
         if (mGoogleApiClient != null) {
             mGoogleSignInClient = GoogleSignIn.getClient(this, gso);

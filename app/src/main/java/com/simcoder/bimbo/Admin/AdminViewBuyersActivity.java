@@ -87,21 +87,37 @@ public class AdminViewBuyersActivity extends AppCompatActivity implements Google
         FirebaseAuth.getInstance();
         mAuth = FirebaseAuth.getInstance();
 
-
+        Intent roleintent = getIntent();
+        if( roleintent.getExtras().getString("rolefromadminproductdetailstoviewbuyers") != null) {
+            role = roleintent.getExtras().getString("rolefromadminproductdetailstoviewbuyers");
+        }
+       /*
         if (getIntent() != null) {
             if (getIntent().getStringExtra("rolefromadminproductdetailstoviewbuyers") != null) {
                 role = getIntent().getStringExtra("rolefromadminproductdetailstoviewbuyers").toString();
             }
 
-
+*/
+        Intent traderIDintent = getIntent();
+        if( traderIDintent.getExtras().getString("fromadminproductdetailstoviewbuyers") != null) {
+            traderID = traderIDintent.getExtras().getString("fromadminproductdetailstoviewbuyers");
+        }
+        /*
             if (getIntent().getStringExtra("fromadminproductdetailstoviewbuyers") != null) {
                 traderID = getIntent().getStringExtra("fromadminproductdetailstoviewbuyers");
             }
+*/
 
-            if (getIntent().getStringExtra("productIDfromadminproductdetailstoviewbuyers") != null) {
+
+        Intent productIDintent = getIntent();
+        if( productIDintent.getExtras().getString("productIDfromadminproductdetailstoviewbuyers") != null) {
+            productID = productIDintent.getExtras().getString("productIDfromadminproductdetailstoviewbuyers");
+        }
+          /*
+           if (getIntent().getStringExtra("productIDfromadminproductdetailstoviewbuyers") != null) {
                 productID = getIntent().getStringExtra("productIDfromadminproductdetailstoviewbuyers");
             }
-        }
+        */
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
         if (mGoogleApiClient != null) {

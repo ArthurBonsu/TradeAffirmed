@@ -90,55 +90,115 @@ String    productdetailsimage;
 
 
          // FROM ALL PRODUCTS
+                   Intent roleintent = getIntent();
+                     if( roleintent.getExtras().getString("rolefromsingleusertoadminproductdetails") != null) {
+                 role = roleintent.getExtras().getString("rolefromsingleusertoadminproductdetails");
+                   }
+                  /*
                     if (getIntent() != null) {
                         if (getIntent().getStringExtra("rolefromsingleusertoadminproductdetails") != null) {
                             role = getIntent().getStringExtra("rolefromsingleusertoadminproductdetails").toString();
                         }
-
-
+*/
+                     Intent traderintent = getIntent();
+                   if( traderintent.getExtras().getString("fromadminsingleusertoadminproductdetails") != null) {
+                       traderID = traderintent.getExtras().getString("fromadminsingleusertoadminproductdetails");
+                     }
+                   /*
                         if (getIntent().getStringExtra("fromadminsingleusertoadminproductdetails") != null) {
                             traderID = getIntent().getStringExtra("fromadminsingleusertoadminproductdetails");
                         }
+
+                    */
+        Intent userintent = getIntent();
+        if( userintent.getExtras().getString("neworderUserID") != null) {
+            userID = userintent.getExtras().getString("neworderUserID");
+        }
+
+
+        /*
                         if (getIntent().getStringExtra("neworderUserID") != null) {
                             userID = getIntent().getStringExtra("neworderUserID");
                         }
-
+*/
 
                         // FROM ALL PRODUCTS
+        Intent productIDintent = getIntent();
+        if( productIDintent.getExtras().getString("productIDfromallproducttoproductdetails") != null) {
+            productID = productIDintent.getExtras().getString("productIDfromallproducttoproductdetails");
+        }
 
-                        if (getIntent().getStringExtra("productIDfromallproducttoproductdetails") != null) {
+
+        /*                if (getIntent().getStringExtra("productIDfromallproducttoproductdetails") != null) {
                             productID = getIntent().getStringExtra("productIDfromallproducttoproductdetails");
                         }
-
-
-                        if (getIntent().getStringExtra("rolefromallproductdetails") != null) {
+*/
+        Intent roleintentfromproduct = getIntent();
+        if( roleintentfromproduct.getExtras().getString("rolefromallproductdetails") != null) {
+            role = roleintentfromproduct.getExtras().getString("rolefromallproductdetails");
+        }
+      /*
+        if (getIntent().getStringExtra("rolefromallproductdetails") != null) {
                             role = getIntent().getStringExtra("rolefromallproductdetails").toString();
                         }
 
+*/
 
+
+        Intent traderidfromallproducttoproductdetailsintent = getIntent();
+        if( traderidfromallproducttoproductdetailsintent.getExtras().getString("fromtheallproducttoadmiproductdetails") != null) {
+            traderID = traderidfromallproducttoproductdetailsintent.getExtras().getString("fromtheallproducttoadmiproductdetails");
+        }
+
+        /*
                         if (getIntent().getStringExtra("fromtheallproducttoadmiproductdetails") != null) {
                             traderID = getIntent().getStringExtra("fromtheallproducttoadmiproductdetails");
                         }
-
+*/
 
                         // FROM CART ACTIVITY
+
+
+        Intent productintent = getIntent();
+        if( productintent.getExtras().getString("fromusercartactivitydminproductdetails") != null) {
+            productID = productintent.getExtras().getString("fromusercartactivitydminproductdetails");
+        }
+                       /*
                         if (getIntent().getStringExtra("fromusercartactivitydminproductdetails") != null) {
                             productID = getIntent().getStringExtra("fromusercartactivitydminproductdetails");
                         }
-                        if (getIntent().getStringExtra("fromuserTHEIDcartactivitydminproductdetails") != null) {
+                        */
+
+
+        Intent useridintent = getIntent();
+        if( useridintent.getExtras().getString("fromuserTHEIDcartactivitydminproductdetails") != null) {
+            userID = useridintent.getExtras().getString("fromuserTHEIDcartactivitydminproductdetails");
+        }
+                      /*  if (getIntent().getStringExtra("fromuserTHEIDcartactivitydminproductdetails") != null) {
                             userID = getIntent().getStringExtra("fromuserTHEIDcartactivitydminproductdetails");
                         }
+*/
 
-
+        Intent userrole = getIntent();
+        if( userrole.getExtras().getString("rolefromadmincartadminproductdetails") != null) {
+            role = userrole.getExtras().getString("rolefromadmincartadminproductdetails");
+        }
+        /*
                         if (getIntent().getStringExtra("rolefromadmincartadminproductdetails") != null) {
                             role = getIntent().getStringExtra("rolefromadmincartadminproductdetails").toString();
                         }
-
-
+*/
+        Intent carttrader = getIntent();
+        if( carttrader.getExtras().getString("fromadmintcatactivitytoadminproductdetails") != null) {
+            traderID = carttrader.getExtras().getString("fromadmintcatactivitytoadminproductdetails");
+        }
+        /*
                         if (getIntent().getStringExtra("fromadmintcatactivitytoadminproductdetails") != null) {
                             traderID = getIntent().getStringExtra("fromadmintcatactivitytoadminproductdetails");
                         }
-                    }
+*/
+
+
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
         if (mGoogleApiClient != null) {

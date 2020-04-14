@@ -87,20 +87,23 @@ public class AdminAddNewProductActivity extends AppCompatActivity implements Goo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_add_new_product);
-                   if (getIntent() != null) {
-                       if (getIntent().getStringExtra("category") != null) {
-                           CategoryName = getIntent().getStringExtra("category").toString();
-                       }
+
+        Intent category = getIntent();
+        if( category.getExtras().getString("category") != null) {
+            CategoryName = category.getExtras().getString("category");
+        }
+
                        // KEYS PASSED IN FROM ADMINCATEGORY
+        Intent roleintent = getIntent();
+        if( roleintent.getExtras().getString("rolefromadmincategorytoaddadmin") != null) {
+            role = roleintent.getExtras().getString("rolefromadmincategorytoaddadmin");
+        }
+        Intent traderintent = getIntent();
+        if( traderintent.getExtras().getString("fromadmincategoryactivitytoaddadmin") != null) {
+            traderID = category.getExtras().getString("fromadmincategoryactivitytoaddadmin");
+        }
 
-                       if (getIntent().getStringExtra("rolefromadmincategorytoaddadmin") != null) {
-                           role = getIntent().getStringExtra("rolefromadmincategorytoaddadmin").toString();
-                       }
 
-                       if (getIntent() != null) {
-                           traderID = getIntent().getStringExtra("fromadmincategoryactivitytoaddadmin");
-                       }
-                   }
         ProductImagesRef = FirebaseStorage.getInstance().getReference().child("product_images");
         ProductsRef = FirebaseDatabase.getInstance().getReference().child("Product");
 

@@ -71,7 +71,9 @@ public class AdminAllProducts extends AppCompatActivity {  //ACTUALLY THIS ACTIV
         FirebaseAuth.getInstance();
         mAuth = FirebaseAuth.getInstance();
 
-                    Intent  rolesintent = getIntent();
+
+
+        Intent  rolesintent = getIntent();
 
                   if (rolesintent.getExtras().getString("rolefromadmincategorytoallproducts") != null) {
                       role = rolesintent.getExtras().getString("rolefromadmincategorytoallproducts");

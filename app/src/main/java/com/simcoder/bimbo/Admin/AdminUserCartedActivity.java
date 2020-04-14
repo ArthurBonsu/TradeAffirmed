@@ -79,19 +79,41 @@ public class AdminUserCartedActivity extends AppCompatActivity implements Google
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_cart_recycler);
 
-            if (getIntent() != null) {
-                if (getIntent() != null) {
-                    userID = getIntent().getStringExtra("userID");
-                    userID = getIntent().getStringExtra("userkey");
-                }
-                if (getIntent().getStringExtra("rolefromnewordertouserproduct") != null) {
+
+
+
+        Intent userintent = getIntent();
+        if( userintent.getExtras().getString("userID") != null) {
+            userID = userintent.getExtras().getString("userID");
+        }
+
+        Intent userIDintent = getIntent();
+        if( userIDintent.getExtras().getString("userkey") != null) {
+            userID = userIDintent.getExtras().getString("userkey");
+        }
+
+        Intent roleidintent = getIntent();
+        if( roleidintent.getExtras().getString("rolefromnewordertouserproduct") != null) {
+            role = roleidintent.getExtras().getString("rolefromnewordertouserproduct");
+        }
+
+
+
+            /*
+        if (getIntent().getStringExtra("rolefromnewordertouserproduct") != null) {
                     role = getIntent().getStringExtra("rolefromnewordertouserproduct").toString();
                 }
-
-                if (getIntent().getStringExtra("fromnewordertousersproductactivity") != null) {
+*/
+        Intent traderIDintent = getIntent();
+        if( traderIDintent.getExtras().getString("fromnewordertousersproductactivity") != null) {
+            traderID = traderIDintent.getExtras().getString("fromnewordertousersproductactivity");
+        }
+               /* if (getIntent().getStringExtra("fromnewordertousersproductactivity") != null) {
                     traderID = getIntent().getStringExtra("fromnewordertousersproductactivity");
                 }
-            }
+            */
+
+
 
         productsList = findViewById(R.id.theadmincartrecycler);
         productsList.setHasFixedSize(true);

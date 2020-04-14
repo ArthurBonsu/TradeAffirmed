@@ -70,15 +70,17 @@ public class AdminNewOrdersActivity extends AppCompatActivity implements GoogleA
         FirebaseAuth.getInstance();
         mAuth = FirebaseAuth.getInstance();
 
-                  if (getIntent() != null) {
-                      if (getIntent().getStringExtra("rolefromadmincategorytoadminneworder") != null) {
-                          role = getIntent().getStringExtra("rolefromadmincategorytoadminneworder").toString();
-                      }
 
-                      if (getIntent() != null) {
-                          traderID = getIntent().getStringExtra("fromadmincategoryactivityadminnewordder");
-                      }
-                  }
+        Intent roleintent = getIntent();
+        if( roleintent.getExtras().getString("rolefromadmincategorytoadminneworder") != null) {
+            role = roleintent.getExtras().getString("rolefromadmincategorytoadminneworder");
+        }
+
+        Intent traderIDintent = getIntent();
+        if( traderIDintent.getExtras().getString("fromadmincategoryactivityadminnewordder") != null) {
+            traderID = traderIDintent.getExtras().getString("fromadmincategoryactivityadminnewordder");
+        }
+
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
         if (mGoogleApiClient != null) {

@@ -77,6 +77,16 @@ public  class ViewSingleUserOrders extends AppCompatActivity implements GoogleAp
         TextView singleuserproductquantity;
         TextView singleuserproductprice;
 
+        Intent userIDintent = getIntent();
+        if( userIDintent.getExtras().getString("userID") != null) {
+            userID = userIDintent.getExtras().getString("userID");
+        }
+
+        Intent orderkeyintent = getIntent();
+        if( orderkeyintent.getExtras().getString("orderkey") != null) {
+            userID = orderkeyintent.getExtras().getString("orderkey");
+        }
+        /*
                 if (getIntent() != null) {
                     //FROM NEW SINGLE USER
                     if (getIntent() != null) {
@@ -84,32 +94,73 @@ public  class ViewSingleUserOrders extends AppCompatActivity implements GoogleAp
                         orderkey = getIntent().getStringExtra("orderkey");
                     }
 
+*/
+
+
+
+                    Intent roleintent = getIntent();
+                    if( roleintent.getExtras().getString("rolefromnewordertouserproduct") != null) {
+                        role = roleintent.getExtras().getString("rolefromnewordertouserproduct");
+                    }
+
+
+/*
+
+
                     if (getIntent().getExtras().get("rolefromnewordertouserproduct") != null) {
                         role = getIntent().getExtras().get("rolefromnewordertouserproduct").toString();
                     }
+*/
 
-
+        Intent traderintent = getIntent();
+        if( traderintent.getExtras().getString("fromnewordertousersproductactivity") != null) {
+            traderID = traderintent.getExtras().getString("fromnewordertousersproductactivity");
+        }
+        /*
                     if (getIntent().getStringExtra("fromnewordertousersproductactivity") != null) {
                         traderID = getIntent().getStringExtra("fromnewordertousersproductactivity");
                     }
+          */
+
+        Intent newwordtouserintent = getIntent();
+        if( newwordtouserintent.getExtras().getString("neworderUserID") != null) {
+            userID = newwordtouserintent.getExtras().getString("neworderUserID");
+        }
+               /*
                     if (getIntent().getStringExtra("neworderUserID") != null) {
                         userID = getIntent().getStringExtra("neworderUserID");
                     }
+*/
+        Intent rolewordintent = getIntent();
+        if( rolewordintent.getExtras().getString("rolefromviewbuyertoadminuserproductsactivity") != null) {
+            role = rolewordintent.getExtras().getString("rolefromviewbuyertoadminuserproductsactivity");
+        }
 
-
+        /*
                     if (getIntent().getExtras().get("rolefromviewbuyertoadminuserproductsactivity") != null) {
                         role = getIntent().getExtras().get("rolefromviewbuyertoadminuserproductsactivity").toString();
                     }
 
-
-                    if (getIntent().getStringExtra("fromviewbuyertradertoadminuserproductsactivity") != null) {
+*/
+        Intent fromviewbuyertoadminproductuserintent = getIntent();
+        if( fromviewbuyertoadminproductuserintent.getExtras().getString("fromviewbuyertradertoadminuserproductsactivity") != null) {
+            traderID = fromviewbuyertoadminproductuserintent.getExtras().getString("fromviewbuyertradertoadminuserproductsactivity");
+        }
+/*
+        if (getIntent().getStringExtra("fromviewbuyertradertoadminuserproductsactivity") != null) {
                         traderID = getIntent().getStringExtra("fromviewbuyertradertoadminuserproductsactivity");
                     }
+  */
+        Intent fromviewbuyertoadminuserprodintent = getIntent();
+        if( fromviewbuyertoadminuserprodintent.getExtras().getString("fromviewbuyeruseridtoadminuserproductsactivity") != null) {
+            userID = fromviewbuyertoadminuserprodintent.getExtras().getString("fromviewbuyeruseridtoadminuserproductsactivity");
+        }
+        /*
                     if (getIntent().getStringExtra("fromviewbuyeruseridtoadminuserproductsactivity") != null) {
                         userID = getIntent().getStringExtra("fromviewbuyeruseridtoadminuserproductsactivity");
                     }
+*/
 
-                }
         productsList = findViewById(R.id.products_list);
         if (productsList != null) {
             productsList.setHasFixedSize(true);

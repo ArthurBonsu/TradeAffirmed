@@ -41,6 +41,7 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.simcoder.bimbo.Model.Users;
 import com.simcoder.bimbo.R;
 import com.simcoder.bimbo.WorkActivities.CartActivity;
 import com.simcoder.bimbo.instagram.Models.Comment;
@@ -159,6 +160,9 @@ public  class  AdminAllCustomers extends Fragment {
     String likeskey;
     String likername, likeimage, likernumber, likeruid, likerlikeid;
     String    pname; String    pimage;
+    String address,amount,city,delivered,distance,mode,
+
+    number, phone, shippingcost,state;
 
     Query myLikeDatabaseQuery;
 
@@ -296,6 +300,8 @@ public  class  AdminAllCustomers extends Fragment {
 
             myretrievalref = RetrievingDatabase.getReference("Photos");
             photokey = myretrievalref.getKey();
+
+
 
 // Attach a listener to read the data at our posts reference
             myretrievalref.addValueEventListener(new ValueEventListener() {
@@ -458,7 +464,7 @@ public  class  AdminAllCustomers extends Fragment {
 
 
 
-    public  class MainFeedViewHolder extends RecyclerView.ViewHolder {
+    public  class AllCustomerViewHolder extends RecyclerView.ViewHolder {
         public LinearLayout root;
         CircleImageView mprofileImage;
         String likesString;
@@ -479,7 +485,7 @@ public  class  AdminAllCustomers extends Fragment {
 
         public ItemClickListner listner;
 
-        public MainFeedViewHolder(View itemView) {
+        public AllCustomerViewHolder(View itemView) {
             super(itemView);
             if (itemView != null) {
 
@@ -544,7 +550,7 @@ public  class  AdminAllCustomers extends Fragment {
                 timeDetla.setText(timeDetlaview);
             }
         }
-
+ /*
         public void setThefeedimage(final Context ctx, final String image) {
             thefeedimage = (SquareImageView) itemView.findViewById(R.id.post_image);
             if (image != null) {
@@ -570,7 +576,7 @@ public  class  AdminAllCustomers extends Fragment {
                 }
             }
         }
-
+*/
 
         public void setTheHeartRed(final Context ctx, final String image) {
             final android.widget.ImageView setTheHeartRed = (android.widget.ImageView) itemView.findViewById(R.id.image_heart_red);
@@ -675,18 +681,18 @@ public  class  AdminAllCustomers extends Fragment {
 
         Query queryhere =
 
-                FirebaseDatabase.getInstance().getReference().child("Photos");
+                FirebaseDatabase.getInstance().getReference().child("Orders");
         if (queryhere != null) {
 
-            FirebaseRecyclerOptions<Photo> options =
-                    new FirebaseRecyclerOptions.Builder<Photo>()
-                            .setQuery(queryhere, new SnapshotParser<Photo>() {
+            FirebaseRecyclerOptions<Users> options =
+                    new FirebaseRecyclerOptions.Builder<Users>()
+                            .setQuery(queryhere, new SnapshotParser<Users>() {
 
 
 
                                 @Nullable
                                 @Override
-                                public Photo parseSnapshot(@Nullable DataSnapshot snapshot) {
+                                public Users parseSnapshot(@Nullable DataSnapshot snapshot) {
 
 
                                       /*
@@ -695,15 +701,12 @@ public  class  AdminAllCustomers extends Fragment {
 
 
 */
-                                    Log.i(TAG, "MainfeedSnapshots " + snapshot);
+                                    Log.i(TAG, "AdminAllCustomers " + snapshot);
 
-                                    if (snapshot.child("caption").getValue(String.class) != null) {
-                                        caption =         snapshot.child("caption").getValue(String.class);
-                                    }
+
                                     if (snapshot.child("date").getValue(String.class) != null) {
                                         date =     snapshot.child("date").getValue(String.class);
                                     }
-
 
                                     if (snapshot.child("time").getValue(String.class) != null) {
                                         time =        snapshot.child("time").getValue(String.class);
@@ -722,50 +725,86 @@ public  class  AdminAllCustomers extends Fragment {
                                         tradername =     snapshot.child("tradername").getValue(String.class);
                                     }
 
-                                    if (snapshot.child("photoid").getValue(String.class) != null) {
-                                        photoid =   snapshot.child("photoid").getValue(String.class);
-                                    }
 
-                                    if (snapshot.child("pname").getValue(String.class) != null) {
-                                        pname =    snapshot.child("pname").getValue(String.class);
-                                    }
-
-                                    if (snapshot.child("pimage").getValue(String.class) != null) {
-                                        pimage =    snapshot.child("pimage").getValue(String.class);
-                                    }
-
-                                    if (snapshot.child("pid").getValue(String.class) != null) {
-                                        pid = snapshot.child("pid").getValue(String.class);
-                                    }
-
-                                    if (snapshot.child("posttype").getValue(String.class) != null) {
-                                        posttype =    snapshot.child("posttype").getValue(String.class);
+                                    if (snapshot.child("address").getValue(String.class) != null) {
+                                        address =     snapshot.child("address").getValue(String.class);
                                     }
 
 
-                                    if (snapshot.child("price").getValue(String.class) != null) {
-                                        price = snapshot.child("price").getValue(String.class);
+                                    if (snapshot.child("amount").getValue(String.class) != null) {
+                                        amount =     snapshot.child("amount").getValue(String.class);
+                                    }
+
+
+                                    if (snapshot.child("city").getValue(String.class) != null) {
+                                        city =     snapshot.child("city").getValue(String.class);
+                                    }
+
+
+                                    if (snapshot.child("delivered").getValue(String.class) != null) {
+                                        delivered =     snapshot.child("delivered").getValue(String.class);
+                                    }
+
+                                    if (snapshot.child("distance").getValue(String.class) != null) {
+                                        distance = snapshot.child("distance").getValue(String.class);
+                                    }
+
+
+                                    if (snapshot.child("image").getValue(String.class) != null) {
+                                        image =     snapshot.child("image").getValue(String.class);
+                                    }
+                                    if (snapshot.child("uid").getValue(String.class) != null) {
+                                        uid =     snapshot.child("uid").getValue(String.class);
+                                    }
+                                    if (snapshot.child("uid").getValue(String.class) != null) {
+                                        name =     snapshot.child("uid").getValue(String.class);
+                                    }
+                                    if (snapshot.child("mode").getValue(String.class) != null) {
+                                        mode =     snapshot.child("mode").getValue(String.class);
+                                    }
+
+
+                                    if (snapshot.child("number").getValue(String.class) != null) {
+                                        number =     snapshot.child("number").getValue(String.class);
+                                    }
+
+                                    if (snapshot.child("phone").getValue(String.class) != null) {
+                                        phone =     snapshot.child("phone").getValue(String.class);
+                                    }
+                                    if (snapshot.child("tradername").getValue(String.class) != null) {
+                                        quantity =     snapshot.child("tradername").getValue(String.class);
+                                    }
+
+                                    if (snapshot.child("tradername").getValue(String.class) != null) {
+                                        shippingcost =     snapshot.child("tradername").getValue(String.class);
+                                    }
+
+                                    if (snapshot.child("tradername").getValue(String.class) != null) {
+                                        state =     snapshot.child("tradername").getValue(String.class);
                                     }
 
 
 
-                                    return new Photo(caption, date,time, tid, thetraderimage, tradername, photoid, pname, pimage, pid, posttype, price);
+
+                                    return new Users(date,time,tid,thetraderimage,tradername,address,amount,city,delivered,distance,image,uid,name,mode,
+
+                                            number, phone, quantity,shippingcost,state);
 
 
                                 }
 
                             }).build();
 
-            feedadapter = new FirebaseRecyclerAdapter<Photo, MainFeedViewHolder>(options) {
+            feedadapter = new FirebaseRecyclerAdapter<Users, AllCustomerViewHolder>(options) {
                 @Nullable
                 @Override
-                public MainFeedViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                public AllCustomerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
                     @Nullable
                     View view = LayoutInflater.from(  parent.getContext())
                             .inflate(R.layout.layout_mainfeed_listitem, parent, false);
 
-                    return new MainFeedViewHolder(view);
+                    return new AllCustomerViewHolder(view);
                 }
 
                 ;
@@ -780,7 +819,7 @@ public  class  AdminAllCustomers extends Fragment {
                 }
 
                 @Override
-                protected void onBindViewHolder(@Nullable final MainFeedViewHolder holder, int position, @Nullable Photo model) {
+                protected void onBindViewHolder(@Nullable final AllCustomerViewHolder holder, int position, @Nullable Users model) {
                     if (model != null) {
 
                         key = model.getphotoid();
@@ -799,7 +838,11 @@ public  class  AdminAllCustomers extends Fragment {
                                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
 
 
-
+                             //       customerprofileshere
+                              //              customersimageforall
+                              //      customerphonenumber
+                              //              customerphonenumber
+                             //       customersjob
                                     photokey = dataSnapshot1.getKey();
                                     Log.d(TAG, "The Photokey " + photokey);
 
@@ -850,7 +893,7 @@ public  class  AdminAllCustomers extends Fragment {
 
                         holder.caption.setText(caption);
                         holder.timeDetla.setText(model.gettime());
-                        holder.setThefeedimage(getContext(), model.getpimage());
+
                         holder.setTheProfilePhoto(getContext(),  thetraderimage);
                         holder.heartRed.setImageResource(R.drawable.ic_heart_red);
 
