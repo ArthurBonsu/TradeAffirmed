@@ -118,9 +118,7 @@ public class AdminAddNewProductActivity extends AppCompatActivity implements Goo
            }
                        if (ProductsRef.push() != null) {
                            productRandomKey = ProductsRef.push().getKey();
-                           if (ProductsTraderRef.push() != null) {
-                               traderkeryhere = ProductsTraderRef.push().getKey();
-                           }
+
                        }
 
 

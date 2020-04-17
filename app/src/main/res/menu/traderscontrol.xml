@@ -43,6 +43,10 @@
                 android:id="@+id/Maintainnewproducts"
                 android:icon="@drawable/ic_github_line"
                 android:title="Maintain New Products"/>
+            <item
+                android:id="@+id/AdminNewOrders"
+                android:icon="@drawable/ic_github_line"
+                android:title="NEW ORDERS"/>
 
 
 

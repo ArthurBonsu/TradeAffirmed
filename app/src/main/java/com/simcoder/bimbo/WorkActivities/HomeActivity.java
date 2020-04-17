@@ -42,9 +42,12 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.rey.material.widget.ImageView;
 import com.simcoder.bimbo.Admin.AdminAddNewProductActivity;
+import com.simcoder.bimbo.Admin.AdminAddNewProductActivityII;
 import com.simcoder.bimbo.Admin.AdminAllCustomers;
+import com.simcoder.bimbo.Admin.AdminAllProducts;
 import com.simcoder.bimbo.Admin.AdminCategoryActivity;
 import com.simcoder.bimbo.Admin.AdminMaintainProductsActivity;
+import com.simcoder.bimbo.Admin.AdminNewOrdersActivity;
 import com.simcoder.bimbo.Admin.AdminProductDetails;
 import com.simcoder.bimbo.Admin.AdminUserCartedActivity;
 import com.simcoder.bimbo.Admin.AdminViewBuyersActivity;
@@ -116,9 +119,12 @@ public  class  HomeActivity extends AppCompatActivity
     String traderimage;
     FirebaseUser user;
     Query QueryFollowingsshere;
-     String followingid;
-     String followingname;
-     String followingimage;
+    String followingid;
+    String followingname;
+    String followingimage;
+    String userid;
+    TextView thefollowerid;
+    String thefolloweridnew;
 
     FloatingActionButton fab;
     //product_name
@@ -127,12 +133,24 @@ public  class  HomeActivity extends AppCompatActivity
 
     //product_description
     //thetraderiknow
- String   categoryname,date, desc,discount, time, pid, pimage,pname,price,image,name,size, tradername,tid;
+    String categoryname, date, desc, discount, time, pid, pimage, pname, price, image, name, size, tradername, tid;
     android.widget.ImageView product_imagehere;
- android.widget.ImageView thetraderimageforproduct;
+    android.widget.ImageView thetraderimageforproduct;
+
+    public interface Getmyfollowings {
+
+        void onCallback(String followingid, String followingname, String followingimage);
+
+
+    }
+
     Getmyfollowings gettingmyfollowingshere;
-    Getmyfollowings  gettingmyfollowingshereaswell;
-    Getmyfollowings  getmyfollowingsagain;
+    Getmyfollowings gettingmyfollowingshereaswell;
+    Getmyfollowings getmyfollowingsagain;
+    String followingidget;
+    String followingnameget;
+    String followingimageget;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -140,11 +158,9 @@ public  class  HomeActivity extends AppCompatActivity
                 (R.layout.activity_home));
 
 
-
-
-            if (getIntent().getExtras().get("rolefromcustomermapactivitytohomeactivity") != null) {
-                type = getIntent().getExtras().get("rolefromcustomermapactivitytohomeactivity").toString();
-            }
+        if (getIntent().getExtras().get("rolefromcustomermapactivitytohomeactivity") != null) {
+            type = getIntent().getExtras().get("rolefromcustomermapactivitytohomeactivity").toString();
+        }
 
         traderoruser = getIntent().getStringExtra("fromcustomermapactivitytohomeactivity");
 
@@ -186,10 +202,10 @@ public  class  HomeActivity extends AppCompatActivity
             recyclerView = findViewById(R.id.recycler_menu);
 
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        if (recyclerView != null) {
-            recyclerView.setLayoutManager(layoutManager);
-        }
+            LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+            if (recyclerView != null) {
+                recyclerView.setLayoutManager(layoutManager);
+            }
      /*  if (recyclerView != null) {
             recyclerView.setHasFixedSize(true);
 
@@ -197,70 +213,69 @@ public  class  HomeActivity extends AppCompatActivity
 */
 
 
-        thetraderview = findViewById(R.id.thetraderiknow);
+            thetraderview = findViewById(R.id.thetraderiknow);
 
-        product_imagehere = (ImageView) findViewById(R.id.product_imagehere);
-        thetraderimageforproduct = (ImageView)findViewById(R.id.thetraderimageforproduct);
+            product_imagehere = (ImageView) findViewById(R.id.product_imagehere);
+            thetraderimageforproduct = (ImageView) findViewById(R.id.thetraderimageforproduct);
+            thefollowerid = (TextView) findViewById(R.id.followerid);
 
-        Paper.init(this);
+            Paper.init(this);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.hometoolbar);
-        if (toolbar != null) {
-            toolbar.setTitle("Home");
-        }
-
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer != null) {
-            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-            drawer.addDrawerListener(toggle);
-            if (toggle != null) {
-                toggle.syncState();
+            Toolbar toolbar = (Toolbar) findViewById(R.id.hometoolbar);
+            if (toolbar != null) {
+                toolbar.setTitle("Home");
             }
 
-            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-            if (navigationView != null) {
-                navigationView.setNavigationItemSelectedListener(this);
-            }
-            View headerView = navigationView.getHeaderView(0);
-            TextView userNameTextView = headerView.findViewById(R.id.user_profile_name);
-            CircleImageView profileImageView = headerView.findViewById(R.id.user_profile_image);
 
-            // USER
-
-
-
-            mAuth = FirebaseAuth.getInstance();
-
-
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-
-
-
-            if (user.getDisplayName() != null) {
-                if (user.getDisplayName() != null) {
-                    userNameTextView.setText(user.getDisplayName());
-
-                    Picasso.get().load(user.getPhotoUrl()).placeholder(R.drawable.profile).into(profileImageView);
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            if (drawer != null) {
+                ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                        this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                drawer.addDrawerListener(toggle);
+                if (toggle != null) {
+                    toggle.syncState();
                 }
-            }}
 
-        myfirebaseDatabase = FirebaseDatabase.getInstance();
-        FollowerDatabase = FirebaseDatabase.getInstance();
-        ProductsRef = myfirebaseDatabase.getReference().child("Product");
-        FollowerDatabaseReference = FollowerDatabase.getReference().child("Following");
+                NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+                if (navigationView != null) {
+                    navigationView.setNavigationItemSelectedListener(this);
+                }
+                View headerView = navigationView.getHeaderView(0);
+                TextView userNameTextView = headerView.findViewById(R.id.user_profile_name);
+                CircleImageView profileImageView = headerView.findViewById(R.id.user_profile_image);
 
-        productkey = ProductsRef.getKey();
-        // GET FROM FOLLOWING KEY
+                // USER
 
-        productkey = ProductsRef.getKey();
 
-        fetch();
-        recyclerView.setAdapter(adapter);
+                mAuth = FirebaseAuth.getInstance();
 
-             ProductsRef.addValueEventListener(new ValueEventListener() {
+
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+
+                if (user.getDisplayName() != null) {
+                    if (user.getDisplayName() != null) {
+                        userNameTextView.setText(user.getDisplayName());
+
+                        Picasso.get().load(user.getPhotoUrl()).placeholder(R.drawable.profile).into(profileImageView);
+                    }
+                }
+            }
+
+            myfirebaseDatabase = FirebaseDatabase.getInstance();
+
+            ProductsRef = myfirebaseDatabase.getReference().child("Product");
+
+
+            productkey = ProductsRef.getKey();
+            // GET FROM FOLLOWING KEY
+
+            productkey = ProductsRef.getKey();
+
+            fetch();
+            recyclerView.setAdapter(adapter);
+
+            ProductsRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -278,95 +293,101 @@ public  class  HomeActivity extends AppCompatActivity
 
                 }
             });
-                   if (mAuth != null){
-             user = mAuth.getCurrentUser();
-             if (user != null){
-                 traderoruser = user.getUid();
+            if (mAuth != null) {
+                user = mAuth.getCurrentUser();
+                if (user != null) {
+                    userid = user.getUid();
+                    FollowerDatabase = FirebaseDatabase.getInstance();
 
-        QueryFollowingsshere = FollowerDatabaseReference.orderByChild("uid").equalTo(traderoruser);
+                    FollowerDatabaseReference = FollowerDatabase.getReference().child("Following");
+                    FollowerDatabaseReference.keepSynced(true);
+                    QueryFollowingsshere = FollowerDatabaseReference.orderByChild("uid").equalTo(userid);
 
-         QueryFollowingsshere.addValueEventListener(new ValueEventListener() {
-             @Override
-             public void onDataChange(DataSnapshot dataSnapshot) {
-                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                     if (dataSnapshot1.child("tid").getValue() != null) {
-                         followingid = dataSnapshot1.child("tid").getValue(String.class);
-                         if (dataSnapshot1.child("tradername").getValue() != null) {
-                             followingname = dataSnapshot1.child("tradername").getValue(String.class);
-                             if (dataSnapshot1.child("traderimage").getValue() != null) {
-                                 followingimage = dataSnapshot1.child("traderimage").getValue(String.class);
+                    QueryFollowingsshere.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
 
-                                 if (getmyfollowingsagain != null) {
-                                     if (followingid != null && followingname != null && followingimage != null) {
+                            for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                if (ds.child("tid").getValue() != null) {
+                                    followingid = ds.child("tid").getValue(String.class);
+                                }
 
-                                         getmyfollowingsagain.onCallback(followingid, followingname, followingimage);
-                                     }
-                                 }
-                             }
-                         }
-                     }
-                 }
-             }
-             @Override
-             public void onCancelled(DatabaseError databaseError) {
+                                if (ds.child("tradername").getValue() != null) {
+                                    followingname = ds.child("tradername").getValue(String.class);
+                                }
+                                if (ds.child("traderimage").getValue() != null) {
+                                    followingimage = ds.child("traderimage").getValue(String.class);
+                                }
+                                Log.d("Followers Well", followingid + followingname + followingimage);
 
-             }
+                                if (thefollowerid != null) {
+                                    thefollowerid.setText(followingid);
+                                }
+                                if (getmyfollowingsagain != null) {
+                                    if (followingid != null && followingname != null && followingimage != null) {
 
-
-         });
-
-                 Log.i("Followerinfo" , followingid + followingname + followingimage);
-
-          if (getmyfollowingsagain != null){
-
-              getmyfollowingsagain.onCallback(followingid, followingname, followingimage);
+                                        getmyfollowingsagain.onCallback(followingid, followingname, followingimage);
 
 
+                                    }
+                                }
+                            }
+
+                        }
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
 
 
+                    });
+
+                    Log.i("Followerinfo", followingid + followingname + followingimage);
+
+
+                    if (thefollowerid != null) {
+                        if (thefollowerid.getText() != null) {
+                            thefolloweridnew = thefollowerid.getText().toString();
+
+                            Log.d("Mygrabback", thefolloweridnew);
+                        }
 //        setSupportActionBar(toolbar);
 
-            GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
-            if (mGoogleApiClient != null) {
+                            GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
+                            if (mGoogleApiClient != null) {
 
-                mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-            }
+                                mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+                            }
 
-            if (mGoogleApiClient != null) {
-                mGoogleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(HomeActivity.this,
-                        new GoogleApiClient.OnConnectionFailedListener() {
-                            @Override
-                            public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+                            if (mGoogleApiClient != null) {
+                                mGoogleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(HomeActivity.this,
+                                        new GoogleApiClient.OnConnectionFailedListener() {
+                                            @Override
+                                            public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+                                            }
+                                        }).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
+                            }
+
+
+                            // USER
+                            user = mAuth.getCurrentUser();
+
+
+                            if (user != null) {
+                                traderoruser = "";
+                                traderoruser = user.getUid();
+
 
                             }
-                        }).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
+                        }
+                    }
+                }
             }
 
+        }
 
 
-
-
-
-                // USER
-                user = mAuth.getCurrentUser();
-
-
-
-                    if (user != null) {
-                        traderoruser = "";
-                        traderoruser = user.getUid();
-                    }
-
-
-            }}}}}
-
-
-    public interface Getmyfollowings {
-
-        void onCallback(String followingid, String followingname, String followingimage);
-
-
-    }
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -499,7 +520,6 @@ public  class  HomeActivity extends AppCompatActivity
                 if (traderoruser != null) {
                     if (ProductsRef != null) {
                         Query ProductsQuery = ProductsRef.orderByChild("tid").equalTo(traderoruser);
-                        //    Query ProductsQuery = ProductsRef;
 
 
                         if (ProductsQuery != null) {
@@ -589,13 +609,6 @@ public  class  HomeActivity extends AppCompatActivity
                                                 }
 
                                             }).build();
-
-                            //product_name
-                            // product_imagehere
-                            //  product_price
-
-                            //product_description
-                            //thetraderiknow
 
 
                             adapter = new FirebaseRecyclerAdapter<Products, ViewHolder>(options) {
@@ -728,9 +741,9 @@ public  class  HomeActivity extends AppCompatActivity
                     // WHICH IS CUSTOMER TO BE ADDED.
                     // PULLING DATABASE REFERENCE IS NULL, WE CHANGE BACK TO THE SETUP PAGE ELSE WE GO STRAIGHT TO MAP PAGE
                 }
-            }    }
+            }    };
 
-            ;
+
 
             if (mAuth != null) {
                 mAuth.addAuthStateListener(firebaseAuthListener);
@@ -831,7 +844,7 @@ public  class  HomeActivity extends AppCompatActivity
                         String cusomerId = "";
 
                         cusomerId = user.getUid();
-                        Intent intent = new Intent(HomeActivity.this, AdminAddNewProductActivity.class);
+                        Intent intent = new Intent(HomeActivity.this, AdminAddNewProductActivityII.class);
                         if (intent != null) {
                             intent.putExtra("traderorcustomer", traderoruser);
                             intent.putExtra("role", type);
@@ -847,7 +860,7 @@ public  class  HomeActivity extends AppCompatActivity
                         String cusomerId = "";
                         cusomerId = user.getUid();
 
-                        Intent intent = new Intent(HomeActivity.this, AdminAddNewProductActivity.class);
+                        Intent intent = new Intent(HomeActivity.this, AdminAddNewProductActivityII.class);
                         if (intent != null) {
                             intent.putExtra("traderorcustomer", traderoruser);
                             intent.putExtra("role", type);
@@ -895,8 +908,8 @@ public  class  HomeActivity extends AppCompatActivity
             }
         }
 
-
-        if (id == R.id.viewbuyershere) {
+//AdminNewOrders
+             if (id == R.id.viewbuyershere) {
 
             if (!type.equals("Trader")) {
                 if (FirebaseAuth.getInstance() != null) {
@@ -922,6 +935,42 @@ public  class  HomeActivity extends AppCompatActivity
                         cusomerId = user.getUid();
 
                         Intent intent = new Intent(HomeActivity.this, AdminViewBuyersActivity.class);
+                        if (intent != null) {
+                            intent.putExtra("traderorcustomer", traderoruser);
+                            intent.putExtra("role", type);
+                            startActivity(intent);
+                        }
+                    }
+                }
+            }
+        }
+
+        if (id == R.id.AdminNewOrders) {
+
+            if (!type.equals("Trader")) {
+                if (FirebaseAuth.getInstance() != null) {
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    if (user != null) {
+                        String cusomerId = "";
+
+                        cusomerId = user.getUid();
+                        Intent intent = new Intent(HomeActivity.this, AdminNewOrdersActivity.class);
+                        if (intent != null) {
+                            intent.putExtra("traderorcustomer", traderoruser);
+                            intent.putExtra("role", type);
+                            startActivity(intent);
+                        }
+                    }
+                }
+            } else {
+                if (FirebaseAuth.getInstance() != null) {
+
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    if (user != null) {
+                        String cusomerId = "";
+                        cusomerId = user.getUid();
+
+                        Intent intent = new Intent(HomeActivity.this, AdminNewOrdersActivity.class);
                         if (intent != null) {
                             intent.putExtra("traderorcustomer", traderoruser);
                             intent.putExtra("role", type);
@@ -1087,7 +1136,7 @@ public  class  HomeActivity extends AppCompatActivity
                         String cusomerId = "";
 
                         cusomerId = user.getUid();
-                        Intent intent = new Intent(HomeActivity.this, AdminAllCustomers.class);
+                        Intent intent = new Intent(HomeActivity.this, AdminAllProducts.class);
                         if (intent != null) {
                             intent.putExtra("traderorcustomer", traderoruser);
                             intent.putExtra("role", type);
@@ -1103,7 +1152,7 @@ public  class  HomeActivity extends AppCompatActivity
                         String cusomerId = "";
                         cusomerId = user.getUid();
 
-                        Intent intent = new Intent(HomeActivity.this, AdminAllCustomers.class);
+                        Intent intent = new Intent(HomeActivity.this, AdminAllProducts.class);
                         if (intent != null) {
                             intent.putExtra("traderorcustomer", traderoruser);
                             intent.putExtra("role", type);
@@ -1312,7 +1361,7 @@ public  class  HomeActivity extends AppCompatActivity
                         String cusomerId = "";
                         cusomerId = user.getUid();
 
-                        Intent intent = new Intent(HomeActivity.this, AdminAddNewProductActivity.class);
+                        Intent intent = new Intent(HomeActivity.this, AdminAddNewProductActivityII.class);
                         if (intent != null) {
                             intent.putExtra("traderorcustomer", traderoruser);
                             intent.putExtra("role", type);
@@ -1552,7 +1601,7 @@ public  class  HomeActivity extends AppCompatActivity
                         String cusomerId = "";
 
                         cusomerId = user.getUid();
-                        Intent intent = new Intent(HomeActivity.this, HomeActivity.class);
+                        Intent intent = new Intent(HomeActivity.this, AdminAllProducts.class);
                         if (intent != null) {
                             intent.putExtra("traderorcustomer", traderoruser);
                             intent.putExtra("role", type);
@@ -1568,7 +1617,7 @@ public  class  HomeActivity extends AppCompatActivity
                         String cusomerId = "";
                         cusomerId = user.getUid();
 
-                        Intent intent = new Intent(HomeActivity.this, AdminAllCustomers.class);
+                        Intent intent = new Intent(HomeActivity.this, AdminAllProducts.class);
                         if (intent != null) {
                             intent.putExtra("traderorcustomer", traderoruser);
                             intent.putExtra("role", type);

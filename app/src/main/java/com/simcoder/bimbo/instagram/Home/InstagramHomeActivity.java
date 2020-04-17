@@ -2,8 +2,10 @@ package com.simcoder.bimbo.instagram.Home;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
@@ -210,6 +212,7 @@ public class InstagramHomeActivity extends AppCompatActivity
     /**
      * BottomNavigationView setup
      */
+    @RequiresApi(api = Build.VERSION_CODES.CUPCAKE)
     private void setupBottomNavigationView() {
         Log.d(TAG, "setupBottomNavigationView: setting up BottomNavigationView");
         BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.bottomNavViewBar);

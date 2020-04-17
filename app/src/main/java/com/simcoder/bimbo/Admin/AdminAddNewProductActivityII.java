@@ -167,16 +167,18 @@ public class AdminAddNewProductActivityII extends AppCompatActivity implements G
             traderID = "";
             traderID = user.getUid();
         }
-        if (ProductsRef.push() != null) {
-            productRandomKey = ProductsRef.push().getKey();
 
-        }
 
         mStorage = FirebaseStorage.getInstance().getReference().child("product_images");
         productsfirebasedatabase = FirebaseDatabase.getInstance();
         ProductsRef = productsfirebasedatabase.getReference().child("Product");
 
         ProductsRef.keepSynced(true);
+
+        if (ProductsRef.push() != null) {
+            productRandomKey = ProductsRef.push().getKey();
+
+        }
 
         //I have to  check to ensure that gallery intent is not placed here for the other classes
         mProgress = new ProgressDialog(this);
@@ -338,6 +340,8 @@ public class AdminAddNewProductActivityII extends AppCompatActivity implements G
                 mImageUri = result.getUri();
 
                 InputProductImage.setImageURI(mImageUri);
+
+
 
             } else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
 

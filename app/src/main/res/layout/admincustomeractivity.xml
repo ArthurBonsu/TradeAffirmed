@@ -4,10 +4,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-
-
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -16,13 +12,13 @@
 
 
                 <TextView
-                    android:id="@+id/customerprofileshere"
+                    android:id="@+id/allcustomersname"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+
                     android:padding="8dp"
                     android:text="@string/michael_steelgard"
-                    android:textColor="@color/authui_colorPrimaryDark"
+
                     android:textSize="24sp"
                     android:textStyle="bold|italic" />
 
@@ -31,7 +27,7 @@
 
 
                 <ImageView
-                    android:id="@+id/customersimageforall"
+                    android:id="@+id/allcustomersimage"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:background="#2d2d2d"
@@ -50,31 +46,30 @@
 
 
 
-
                     <TextView
-                        android:id="@+id/customerphonenumber"
+                        android:id="@+id/allcustomersphonenumber"
                         android:layout_width="164dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
+
                         android:background="#ecedec"
                         android:padding="8dp"
                         android:text="@string/_0557154235s"
                         android:textSize="18sp" />
                     <TextView
-                        android:id="@+id/customersjob"
+                        android:id="@+id/allcustomersjob"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingLeft="50sp"
                         android:paddingRight="50sp"
                         android:layout_marginLeft="15sp"
-                        android:layout_marginTop="10dp"
-                        android:layout_toRightOf="@+id/customerphonenumber"
+
+                        android:layout_toRightOf="@+id/allcustomersphonenumber"
                         android:background="#ecedec"
                         android:padding="8dp"
                         android:text="@string/grilled_chicken_vendors"
                         android:paddingStart="50sp"
                         android:layout_marginStart="15sp"
-                        android:layout_toEndOf="@+id/customerphonenumber" />
+                        android:layout_toEndOf="@+id/allcustomersphonenumber" />
 
 
                 </RelativeLayout>

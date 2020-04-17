@@ -52,6 +52,7 @@ public class AdminMaintainProductsActivity extends AppCompatActivity implements 
     private static final int RC_SIGN_IN = 1;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
     String traderID;
+    String tradername;
 
     //AUTHENTICATORS
 
@@ -68,9 +69,27 @@ public class AdminMaintainProductsActivity extends AppCompatActivity implements 
         setContentView(R.layout.activity_admin_maintain_products);
 
         // WE GET THE PRODUCT ID FROM PREVIOUS ACTIVITIES
+
+        Intent productIDintent = getIntent();
+        if( productIDintent.getExtras().getString("pid") != null) {
+            productID = productIDintent.getExtras().getString("pid");
+        }
+
+        Intent roleintent = getIntent();
+        if( roleintent.getExtras().getString("maintainrolefromadmincategory") != null) {
+            role = roleintent.getExtras().getString("maintainrolefromadmincategory");
+        }
+
+        Intent traderIDintent = getIntent();
+        if( traderIDintent.getExtras().getString("maintainfromadmincategoryactivity") != null) {
+            traderID = traderIDintent.getExtras().getString("maintainfromadmincategoryactivity");
+        }
+
+
+
+        /*
         productID = getIntent().getStringExtra("pid");
-        productsRef = FirebaseDatabase.getInstance().getReference().child("Product").child(productID);
-        productTraderReference = FirebaseDatabase.getInstance().getReference().child("Product").child(productID).child("trader");
+*/
 
         applyChangesBtn = findViewById(R.id.apply_changes_btn);
         name = findViewById(R.id.product_name_maintain);
@@ -83,21 +102,14 @@ public class AdminMaintainProductsActivity extends AppCompatActivity implements 
         // THE AUTHENTICATORS
 
         //AUTHENTICATORS
-        FirebaseAuth.getInstance();
+
         mAuth = FirebaseAuth.getInstance();
 
+        productsRef = FirebaseDatabase.getInstance().getReference().child("Product").child(productID);
+        productTraderReference = FirebaseDatabase.getInstance().getReference().child("Product").child(productID);
 
         // KEYS PASSED IN FROM ADMINCATEGORY
 
-        Intent roleintent = getIntent();
-        if( roleintent.getExtras().getString("maintainrolefromadmincategory") != null) {
-            role = roleintent.getExtras().getString("maintainrolefromadmincategory");
-        }
-
-        Intent traderIDintent = getIntent();
-        if( traderIDintent.getExtras().getString("maintainfromadmincategoryactivity") != null) {
-            traderID = traderIDintent.getExtras().getString("maintainfromadmincategoryactivity");
-        }
 
 
 
@@ -120,10 +132,11 @@ public class AdminMaintainProductsActivity extends AppCompatActivity implements 
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
 
-                 user = FirebaseAuth.getInstance().getCurrentUser();
+                 user = mAuth.getCurrentUser();
                 if (user != null) {
                     traderID = "";
                     traderID = user.getUid();
+                    tradername = user.getDisplayName();
                 }
 
                 // I HAVE TO TRY TO GET THE SETUP INFORMATION , IF THEY ARE ALREADY PROVIDED WE TAKE TO THE NEXT STAGE
@@ -195,20 +208,18 @@ public class AdminMaintainProductsActivity extends AppCompatActivity implements 
                         productMap.put("pid", productID);
                         productMap.put("desc", pDescription);
                         productMap.put("price", pPrice);
-                        productMap.put("name", pName);
+                        productMap.put("pname", pName);
 
 
 
-                        traderMap.put("tid", traderID);
-                        traderMap.put("image", traderID);
-                        traderMap.put("name", traderID);
+
 
                         if (productsRef != null) {
                             productsRef.updateChildren(productMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
-                                        productTraderReference.child(traderID).updateChildren(traderMap);
+
 
 
                                         Toast.makeText(AdminMaintainProductsActivity.this, "Changes applied successfully.", Toast.LENGTH_SHORT).show();
@@ -239,9 +250,9 @@ public class AdminMaintainProductsActivity extends AppCompatActivity implements 
 
                         String pPrice = dataSnapshot.child("price").getValue(String.class);
 
-                        String pDescription = dataSnapshot.child("description").getValue(String.class);
+                        String pDescription = dataSnapshot.child("desc").getValue(String.class);
 
-                        String pImage = dataSnapshot.child("image").getValue(String.class);
+                        String pImage = dataSnapshot.child("pimage").getValue(String.class);
 
 
                               if (name != null) {
@@ -292,6 +303,34 @@ public class AdminMaintainProductsActivity extends AppCompatActivity implements 
     }
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+
+                user = mAuth.getCurrentUser();
+                if (mAuth != null) {
+                    if (user != null) {
+
+                        traderID = user.getUid();
+                    }
+
+                    // I HAVE TO TRY TO GET THE SETUP INFORMATION , IF THEY ARE ALREADY PROVIDED WE TAKE TO THE NEXT STAGE
+                    // WHICH IS CUSTOMER TO BE ADDED.
+                    // PULLING DATABASE REFERENCE IS NULL, WE CHANGE BACK TO THE SETUP PAGE ELSE WE GO STRAIGHT TO MAP PAGE
+                }
+            }    };
+
+
+
+        if (mAuth != null) {
+            mAuth.addAuthStateListener(firebaseAuthListener);
+        }
 
     }
 

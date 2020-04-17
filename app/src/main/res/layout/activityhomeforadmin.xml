@@ -1,0 +1,73 @@
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.simcoder.bimbo.CustomerMapActivity" >
+
+
+
+
+    <include
+        layout="@layout/app_barwithnocart"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+
+
+
+
+
+    <!--侧边栏样式-->
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="250dp"
+        android:layout_height="700dp">
+
+        <android.support.v4.widget.DrawerLayout
+            android:id="@+id/drawer_layout"
+            android:layout_width="250dp"
+            android:layout_height="700dp"
+
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            tools:openDrawer="start">
+
+            <!--主页内容-->
+
+
+            <android.support.design.widget.NavigationView
+                android:id="@+id/nav_view"
+                tools="start"
+                android:layout_width="250dp"
+                android:layout_height="700dp"
+                android:layout_gravity="start"
+                android:fitsSystemWindows="true"
+                android:visibility="visible"
+                app:headerLayout="@layout/nav_header_home"
+                app:menu="@menu/activity_home_drawer" />
+
+
+        </android.support.v4.widget.DrawerLayout>
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/hometoolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:background="@color/colorPrimary"
+        app:subtitleTextColor="@android:color/white"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+
+        app:titleTextColor="@android:color/white">
+    </android.support.v7.widget.Toolbar>
+</FrameLayout>
+

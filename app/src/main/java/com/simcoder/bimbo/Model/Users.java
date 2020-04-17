@@ -235,6 +235,80 @@ public class Users {
 
     }
 
+    public Users(String orderkey, String date, String time, String tid, String thetraderimage, String tradername, String address, String amount, String city, String delivered, String distance, String image, String uid, String name, String mode, String number, String phone, String quantity, String shippingcost, String state) {
+
+
+        this.desc = desc;
+        this.image = image;
+        this.title = title;
+        this.name = name;
+        this.phone = phone;
+        this.discount = discount;
+        this.pid = pid;
+        this.price = price;
+        this.quantity = quantity;
+        this.tid = tid;
+        this.traderID = traderID;
+        this.address = address;
+        this.amount = amount;
+        this.city = city;
+        this.date = date;
+        this.state = state;
+        this.distance = distance;
+        this.mode = mode;
+        this.number = number;
+        this.shippingcost = shippingcost;
+        this.time = time;
+        this.delivered = delivered;
+
+
+        this.count = count;
+        this.condition = condition;
+        this.uid = uid;
+        this.password = password;
+        this.coverimage = coverimage;
+        this.g = g;
+        this.traderimage = traderimage;
+        this.tradername = tradername;
+
+        this.one = one;
+        this.zero = zero;
+        this.customerId = customerId;
+        this.customerRideId = customerRideId;
+        this.destination = destination;
+        this.destinationLat = destinationLat;
+        this.destinationLng = destinationLng;
+        this.driverFoundID = driverFoundID;
+        this.customer = customer;
+        this.driver = driver;
+        this.predictDistance = predictDistance;
+        this.lat = lat;
+        this.lng = lng;
+        this.rating = rating;
+        this.triptime = triptime;
+        this.job = job;
+        this.quote = quote;
+        this.role = role;
+        this.car = car;
+        this.descriptions = descriptions;
+        this.field = field;
+        this.followersname = followersname;
+        this.customerPaid = customerPaid;
+        this.driverPaidOut = driverPaidOut;
+        this.timestamp = timestamp;
+        this.operations = operations;
+        this.reviewBy = reviewBy;
+        this.residences = residences;
+        this.service = service;
+        this.setinformations = setinformations;
+        this.baseprice = baseprice;
+        this.commentkey = commentkey;
+        this. likeid = likeid;
+        this.orderkey = orderkey;
+
+
+    }
+
 
     public String gettradername() {
         return tradername;
