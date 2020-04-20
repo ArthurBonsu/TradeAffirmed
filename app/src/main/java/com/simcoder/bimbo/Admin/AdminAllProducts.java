@@ -126,8 +126,10 @@ public  class  AdminAllProducts extends AppCompatActivity
     String followingid;
     String followingname;
     String followingimage;
-
+    DatabaseReference LikesDatabase;
     FloatingActionButton fab;
+    Query mylikesDetails;
+    String number;
     //product_name
     // product_imagehere
     //  product_price
@@ -234,7 +236,7 @@ public  class  AdminAllProducts extends AppCompatActivity
             productkey = ProductsRef.getKey();
             // GET FROM FOLLOWING KEY
 
-            productkey = ProductsRef.getKey();
+
 
             fetch();
             recyclerView.setAdapter(adapter);
@@ -516,8 +518,11 @@ public  class  AdminAllProducts extends AppCompatActivity
                                                         tid = snapshot.child("tid").getValue(String.class);
                                                     }
 
+                                                    if (snapshot.child("number").getValue() != null) {
+                                                        number = snapshot.child("number").getValue(String.class);
+                                                    }
 
-                                                    return new Products(categoryname, date, desc, discount, time, pid, pimage, pname, price, image, name, size, tradername, traderimage, tid);
+                                                    return new Products(categoryname, date, desc, discount, time, pid, pimage, pname, price, image, name, size, tradername, traderimage, tid, number);
 
 
                                                 }
@@ -540,13 +545,13 @@ public  class  AdminAllProducts extends AppCompatActivity
                                 }
 
                                 @Override
-                                protected void onBindViewHolder(ViewHolder holder, final int position, final Products model) {
+                                protected void onBindViewHolder(final ViewHolder holder, final int position, final Products model) {
 
 
                                     holder.product_name.setText(pname);
                                     holder.thetraderiknow.setText(tradername);
                                     holder.product_description.setText(desc);
-                                    holder.product_price.setText("Price = " +  "$" +price );                                  //   thetraderimageforproduct
+                                    holder.product_price.setText("Price = " + "$" + price);                                  //   thetraderimageforproduct
 
 
                                     if (thetraderimageforproduct != null) {
@@ -559,91 +564,103 @@ public  class  AdminAllProducts extends AppCompatActivity
                                     holder.setTraderImage(getApplication(), traderimage);
                                     holder.setImage(getApplicationContext(), pimage);
 
-                                       holder.maintainproduct.setOnClickListener(new View.OnClickListener() {
-                                           @Override
-                                           public void onClick(View v) {
-                                               if (type.equals("Trader")) {
-                                                   Intent intent = new Intent(AdminAllProducts.this, AdminMaintainProductsActivity.class);
-                                                   if (intent != null) {
-                                                       intent.putExtra("pid", pid);
-
-                                                   }
-                                                   startActivity(intent);
-                                               } else {
-                                                   Intent intent = new Intent(AdminAllProducts.this, AdminMaintainProductsActivity.class);
-                                                   if (intent != null) {
-                                                       intent.putExtra("pid", pid);
-                                                   }
-                                                   startActivity(intent);
-                                           }
-                                       };
-                                                                                 });
-
-                                    holder.product_imagehere.setOnClickListener(new View.OnClickListener() {
+                                    holder.maintainproduct.setOnClickListener(new View.OnClickListener() {
                                         @Override
-                                        public void onClick(View view) {
+                                        public void onClick(View v) {
                                             if (type.equals("Trader")) {
-                                                Intent intent = new Intent(AdminAllProducts.this, ProductDetailsActivity.class);
+                                                Intent intent = new Intent(AdminAllProducts.this, AdminMaintainProductsActivity.class);
                                                 if (intent != null) {
                                                     intent.putExtra("pid", pid);
-                                                    intent.putExtra("fromthehomeactivitytraderkey", tid);
-                                                    intent.putExtra("fromthehomeactivityname", model.getname());
-                                                    intent.putExtra("fromthehomeactivityprice", model.getprice());
-                                                    intent.putExtra("fromthehomeactivitydesc", model.getdesc());
-                                                    intent.putExtra("fromthehomeactivityname", thetraderhere);
-                                                    intent.putExtra("fromthehomeactivityimage", model.getimage());
 
                                                 }
                                                 startActivity(intent);
                                             } else {
-                                                Intent intent = new Intent(AdminAllProducts.this, ProductDetailsActivity.class);
+                                                Intent intent = new Intent(AdminAllProducts.this, AdminMaintainProductsActivity.class);
                                                 if (intent != null) {
-                                                    intent.putExtra("fromthehomeactivitytoproductdetails", tid);
+                                                    intent.putExtra("pid", pid);
                                                 }
                                                 startActivity(intent);
                                             }
                                         }
+
+                                        ;
                                     });
 
 
-                                    holder.thetraderimageforproduct.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View view) {
-                                            if (type.equals("Trader")) {
-                                                Intent intent = new Intent(AdminAllProducts.this, TraderProfile.class);
-                                                intent.putExtra("pid", pid);
-                                                intent.putExtra("fromhomeactivitytotraderprofile", tid);
 
-                                                startActivity(intent);
-                                            } else {
-                                                Intent intent = new Intent(AdminAllProducts.this, TraderProfile.class);
-                                                intent.putExtra("pid", pid);
-                                                intent.putExtra("fromhomeactivitytotraderprofile", tid);
+                                                    holder.product_imagehere.setOnClickListener(new View.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(View view) {
+                                                            if (type.equals("Trader")) {
+                                                                Intent intent = new Intent(AdminAllProducts.this, AdminProductDetails.class);
+                                                                if (intent != null) {
+                                                                    intent.putExtra("productIDfromallproducttoproductdetails", pid);
 
-                                                startActivity(intent);
-                                            }
+                                                                    intent.putExtra("fromtheallproducttoadmiproductdetails", tid);
+                                                                    intent.putExtra("rolefromallproductdetails", role);
+
+                                                                    intent.putExtra("pimage", pimage);
+                                                                    intent.putExtra("pname", pname);
+                                                                    intent.putExtra("desc", desc);
+                                                                    intent.putExtra("productlikes", number);
+                                                                    intent.putExtra("price", price);
+
+                                                                }
+                                                                startActivity(intent);
+                                                            } else {
+                                                                Intent intent = new Intent(AdminAllProducts.this, AdminProductDetails.class);
+                                                                intent.putExtra("productIDfromallproducttoproductdetails", pid);
+
+                                                                intent.putExtra("fromtheallproducttoadmiproductdetails", tid);
+                                                                intent.putExtra("rolefromallproductdetails", role);
+
+
+                                                                intent.putExtra("pimage", pimage);
+                                                                intent.putExtra("pname", pname);
+                                                                intent.putExtra("desc", desc);
+                                                                intent.putExtra("productlikes", number);
+                                                                intent.putExtra("price", price);
+
+                                                                startActivity(intent);
+                                                            }
+                                                        }
+                                                    });
+
+
+
+
+
+                                            holder.thetraderimageforproduct.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View view) {
+                                                    if (type.equals("Trader")) {
+                                                        Intent intent = new Intent(AdminAllProducts.this, TraderProfile.class);
+                                                        intent.putExtra("pid", pid);
+                                                        intent.putExtra("fromhomeactivitytotraderprofile", tid);
+
+                                                        startActivity(intent);
+                                                    } else {
+                                                        Intent intent = new Intent(AdminAllProducts.this, TraderProfile.class);
+                                                        intent.putExtra("pid", pid);
+                                                        intent.putExtra("fromhomeactivitytotraderprofile", tid);
+
+                                                        startActivity(intent);
+                                                    }
+
+                                                }
+
+                                            });
 
                                         }
 
-                                    });
+
+                                    }
+                                    ;
 
                                 }
 
 
-                            };
-
-                        }
-
-                    }
-
-                }
-
-
-            }
-
-        }
-
-    }
+                            }}}}}
 
     @Override
     protected void onStart() {

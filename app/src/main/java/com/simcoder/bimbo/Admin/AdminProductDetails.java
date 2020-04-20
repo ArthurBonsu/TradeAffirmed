@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +24,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthEmailException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -34,6 +36,8 @@ import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.simcoder.bimbo.Model.Products;
 import com.simcoder.bimbo.R;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 public class AdminProductDetails extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
@@ -47,12 +51,14 @@ public class AdminProductDetails extends AppCompatActivity implements View.OnCli
     Query myproductsdetails;
     DatabaseReference mDatabaseLikeCount;
 String    productdetailsimage;
-
+String
+        pname, pimage,desc,number;
             String productdetailsname;
     String productdetailsdescription;
             String productdetailsnumber;
     String LikeRefkey;
  String photokey;
+ String price;
 
     private static final int RC_SIGN_IN = 1;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
@@ -72,38 +78,83 @@ String    productdetailsimage;
     Boolean mProcessLike;
     String userID;
     boolean increment;
+    FirebaseUser user;
+    String productkey;
+    String productIDhere;
+
+
+
+    Button ViewCustomers;
+    ImageButton adminproductimagelikebutton;
+    ImageView adminproductdetailsimage;
+    TextView adminproductimageproductname;
+    TextView adminproductimagedescription;
+    TextView adminproductimagenumberoflikes;
+    TextView adminproductimageprice;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.adminproductdetailslayout);
+        ViewCustomers = (Button) findViewById(R.id.ViewCustomers);
+        adminproductimagelikebutton = (ImageButton) findViewById(R.id.adminproductimagelikebutton);
+        adminproductdetailsimage = (ImageView) findViewById(R.id.adminproductdetailsimage);
+        adminproductimageproductname = (TextView) findViewById(R.id.adminproductimageproductname);
+        adminproductimagedescription = (TextView) findViewById(R.id.adminproductimagedescription);
+        adminproductimagenumberoflikes = (TextView) findViewById(R.id.adminproductimagenumberoflikes);
+        adminproductimageprice = (TextView)findViewById(R.id.adminproductimageprice);
 
         productID = getIntent().getStringExtra("pid");
 
 
-        TextView ViewCustomers = (Button) findViewById(R.id.ViewCustomers);
-        ElegantNumberButton adminproductimagelikebutton = (ElegantNumberButton) findViewById(R.id.adminproductimagelikebutton);
-        ImageView adminproductdetailsimage = (ImageView) findViewById(R.id.adminproductdetailsimage);
-        TextView adminproductimageproductname = (TextView) findViewById(R.id.adminproductimageproductname);
-        TextView adminproductimagedescription = (TextView) findViewById(R.id.adminproductimagedescription);
-        TextView adminproductimagenumberoflikes = (TextView) findViewById(R.id.adminproductimagenumberoflikes);
+
+        Intent priceintent = getIntent();
+        if( priceintent.getExtras().getString("price") != null) {
+            price  = priceintent.getExtras().getString("price");
+        }
 
 
-         // FROM ALL PRODUCTS
-                   Intent roleintent = getIntent();
-                     if( roleintent.getExtras().getString("rolefromsingleusertoadminproductdetails") != null) {
-                 role = roleintent.getExtras().getString("rolefromsingleusertoadminproductdetails");
-                   }
-                  /*
-                    if (getIntent() != null) {
-                        if (getIntent().getStringExtra("rolefromsingleusertoadminproductdetails") != null) {
-                            role = getIntent().getStringExtra("rolefromsingleusertoadminproductdetails").toString();
-                        }
-*/
-                     Intent traderintent = getIntent();
-                   if( traderintent.getExtras().getString("fromadminsingleusertoadminproductdetails") != null) {
-                       traderID = traderintent.getExtras().getString("fromadminsingleusertoadminproductdetails");
-                     }
+        Intent pnameintent = getIntent();
+        if( pnameintent.getExtras().getString("pname") != null) {
+            pname = pnameintent.getExtras().getString("pname");
+        }
+
+
+        Intent pimageintent = getIntent();
+        if( pimageintent.getExtras().getString("pimage") != null) {
+            pimage = pimageintent.getExtras().getString("pimage");
+        }
+
+        Intent descintent = getIntent();
+        if( descintent.getExtras().getString("desc") != null) {
+            desc = descintent.getExtras().getString("desc");
+        }
+
+        Intent productlikesintent = getIntent();
+        if( productlikesintent.getExtras().getString("productlikes") != null) {
+            number = productlikesintent.getExtras().getString("productlikes");
+        }
+
+
+
+
+        Intent productIDidentifyintent = getIntent();
+        if( productIDidentifyintent.getExtras().getString("pid") != null) {
+            role = productIDidentifyintent.getExtras().getString("pid");
+        }
+
+
+        // FROM ALL PRODUCTS
+        Intent roleintent = getIntent();
+        if( roleintent.getExtras().getString("rolefromsingleusertoadminproductdetails") != null) {
+            role = roleintent.getExtras().getString("rolefromsingleusertoadminproductdetails");
+        }
+
+        Intent traderintent = getIntent();
+        if( traderintent.getExtras().getString("fromadminsingleusertoadminproductdetails") != null) {
+            traderID = traderintent.getExtras().getString("fromadminsingleusertoadminproductdetails");
+        }
                    /*
                         if (getIntent().getStringExtra("fromadminsingleusertoadminproductdetails") != null) {
                             traderID = getIntent().getStringExtra("fromadminsingleusertoadminproductdetails");
@@ -122,10 +173,13 @@ String    productdetailsimage;
                         }
 */
 
-                        // FROM ALL PRODUCTS
+        // FROM ALL PRODUCTS
         Intent productIDintent = getIntent();
         if( productIDintent.getExtras().getString("productIDfromallproducttoproductdetails") != null) {
             productID = productIDintent.getExtras().getString("productIDfromallproducttoproductdetails");
+             if (productID != null) {
+                 Log.i("productID2", productID);
+             }
         }
 
 
@@ -156,12 +210,15 @@ String    productdetailsimage;
                         }
 */
 
-                        // FROM CART ACTIVITY
+        // FROM CART ACTIVITY
 
 
         Intent productintent = getIntent();
         if( productintent.getExtras().getString("fromusercartactivitydminproductdetails") != null) {
             productID = productintent.getExtras().getString("fromusercartactivitydminproductdetails");
+            if (productID != null) {
+                Log.i("productID", productID);
+            }
         }
                        /*
                         if (getIntent().getStringExtra("fromusercartactivitydminproductdetails") != null) {
@@ -173,6 +230,7 @@ String    productdetailsimage;
         Intent useridintent = getIntent();
         if( useridintent.getExtras().getString("fromuserTHEIDcartactivitydminproductdetails") != null) {
             userID = useridintent.getExtras().getString("fromuserTHEIDcartactivitydminproductdetails");
+
         }
                       /*  if (getIntent().getStringExtra("fromuserTHEIDcartactivitydminproductdetails") != null) {
                             userID = getIntent().getStringExtra("fromuserTHEIDcartactivitydminproductdetails");
@@ -191,6 +249,7 @@ String    productdetailsimage;
         Intent carttrader = getIntent();
         if( carttrader.getExtras().getString("fromadmintcatactivitytoadminproductdetails") != null) {
             traderID = carttrader.getExtras().getString("fromadmintcatactivitytoadminproductdetails");
+
         }
         /*
                         if (getIntent().getStringExtra("fromadmintcatactivitytoadminproductdetails") != null) {
@@ -200,58 +259,90 @@ String    productdetailsimage;
 
 
 
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
-        if (mGoogleApiClient != null) {
-            mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+             mAuth = FirebaseAuth.getInstance();
+        myfirebasedatabase = FirebaseDatabase.getInstance();
+
+        user = mAuth.getCurrentUser();
+        if (user != null) {
+            traderID = "";
+            traderID = user.getUid();
+
+
+            // GET FROM FOLLOWING KEY
+
+
+            GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
+            if (mGoogleApiClient != null) {
+                mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+            }
+
+            if (mGoogleApiClient != null) {
+                mGoogleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(com.simcoder.bimbo.Admin.AdminProductDetails.this,
+                        new GoogleApiClient.OnConnectionFailedListener() {
+                            @Override
+                            public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+                            }
+                        }).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
+            }
+            buildGoogleApiClient();
+
+
+            if (adminproductdetailsimage != null) {
+                adminproductimageproductname.setText(pname);
+            }
+            if (adminproductimagedescription != null) {
+                adminproductimagedescription.setText(desc);
+            }
+            if (adminproductimagenumberoflikes != null) {
+                adminproductimagenumberoflikes.setText(number);
+            }
+            if (adminproductimageprice != null) {
+                adminproductimageprice.setText(price);
+
+            }
         }
 
-        if (mGoogleApiClient != null) {
-            mGoogleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(com.simcoder.bimbo.Admin.AdminProductDetails.this,
-                    new GoogleApiClient.OnConnectionFailedListener() {
-                        @Override
-                        public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
-                        }
-                    }).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
-        }
-        buildGoogleApiClient();
-        firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
 
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                if (user != null) {
-                    traderID = "";
-                    traderID = user.getUid();
+        if (pimage != null) {
+            Picasso.get().load(pimage).resize(400, 0).networkPolicy(NetworkPolicy.OFFLINE).into(adminproductdetailsimage, new Callback() {
+
+
+                @Override
+                public void onSuccess() {
+
                 }
 
-                // I HAVE TO TRY TO GET THE SETUP INFORMATION , IF THEY ARE ALREADY PROVIDED WE TAKE TO THE NEXT STAGE
-                // WHICH IS CUSTOMER TO BE ADDED.
-                // PULLING DATABASE REFERENCE IS NULL, WE CHANGE BACK TO THE SETUP PAGE ELSE WE GO STRAIGHT TO MAP PAGE
-            }
-        };
-              if (productID != null) {
-                  getProductDetails(productID);
+                @Override
+                public void onError(Exception e) {
+                    Picasso.get().load(pimage).resize(100, 0).into(adminproductdetailsimage);
+                }
 
-     //   mDatabaseLikeCount = FirebaseDatabase.getInstance().getReference().child("Product").child(productID).child("Likes").child("count");
 
-              }
+            });
+
+        }
+
+
+
+
         if (ViewBuyers != null) {
             ViewBuyers.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(AdminProductDetails.this, AdminViewBuyersActivity.class);
+                    Intent myintent = new Intent(AdminProductDetails.this, AdminViewBuyersActivity.class);
 
-                    intent.putExtra("productIDfromadminproductdetailstoviewbuyers", productID);
+                    myintent.putExtra("productIDfromadminproductdetailstoviewbuyers", productID);
 
-                    intent.putExtra("fromadminproductdetailstoviewbuyers", traderID);
-                    intent.putExtra("rolefromadminproductdetailstoviewbuyers", role);
+                    myintent.putExtra("fromadminproductdetailstoviewbuyers", traderID);
+                    myintent.putExtra("rolefromadminproductdetailstoviewbuyers", role);
 
-                    startActivity(intent);
+                    startActivity(myintent);
                 }
             });
         }
-
+/*
         adminproductimagelikebutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -261,11 +352,11 @@ String    productdetailsimage;
 
 
 
-                 photodatabase = myfirebasedatabase.getReference().child("Photo");
+                 photodatabase = myfirebasedatabase.getReference().child("Products");
                  photokey = photodatabase.getKey();
 
 
-                LikeRef = likesgetdatabase.getReference().child("Photo").child(photokey).child("Likes");
+                LikeRef = likesgetdatabase.getReference().child("Likes");
                       LikeRefkey = LikeRef.getKey();
                 if (LikeRef != null) {
                     LikeRef.addValueEventListener(new ValueEventListener() {
@@ -273,23 +364,41 @@ String    productdetailsimage;
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if (dataSnapshot.exists()) {
 
-                                if (dataSnapshot.child("uid").getValue(String.class) != null && dataSnapshot.hasChild(LikeRefkey)) {
-                                    Log.i("Product Unliked", ".");
+                                if (dataSnapshot.child("uid").getValue() != null && dataSnapshot.hasChild(LikeRefkey)) {
+                             //       Log.i("Product Unliked", ".User");
                                     LikeRef.child(LikeRefkey).removeValue();
                                     updateCounter(false);
                                     mProcessLike = false;
                                 } else {
-                                    Log.i("Product Liked", "User Liked");
-                                    LikeRef.push().setValue(mAuth.getCurrentUser().getUid());
-                                    updateCounter(true);
-                                    Log.i(dataSnapshot.getKey(), dataSnapshot.getChildrenCount() + "Count");
-                                    mProcessLike = false;
+                                //    Log.i("Product Liked", "User Liked");
+                                    if (mAuth.getCurrentUser() != null) {
+                                        LikeRef.push().setValue(mAuth.getCurrentUser().getUid());
+                                        LikeRef.child(mAuth.getCurrentUser().getUid()).child("uid").setValue(mAuth.getCurrentUser().getUid());
+                                        LikeRef.child(mAuth.getCurrentUser().getUid()).child("name").setValue(mAuth.getCurrentUser().getDisplayName());
+                                        LikeRef.child(mAuth.getCurrentUser().getUid()).child("image").setValue(mAuth.getCurrentUser().getPhotoUrl());
+                                        LikeRef.child(mAuth.getCurrentUser().getUid()).child("likeid").setValue(mAuth.getCurrentUser().getPhotoUrl());
+                                        LikeRef.child(mAuth.getCurrentUser().getUid()).child("number").setValue(mAuth.getCurrentUser().getPhotoUrl());
+                                        LikeRef.child(mAuth.getCurrentUser().getUid()).child("photoid").setValue(mAuth.getCurrentUser().getPhotoUrl());
+                                        LikeRef.child(mAuth.getCurrentUser().getUid()).child("pid").setValue(mAuth.getCurrentUser().getPhotoUrl());
+                                        LikeRef.child(mAuth.getCurrentUser().getUid()).child("pimage").setValue(mAuth.getCurrentUser().getPhotoUrl());
+                                        LikeRef.child(mAuth.getCurrentUser().getUid()).child("pname").setValue(mAuth.getCurrentUser().getPhotoUrl());
+                                        LikeRef.child(mAuth.getCurrentUser().getUid()).child("tid").setValue(mAuth.getCurrentUser().getPhotoUrl());
+                                        LikeRef.child(mAuth.getCurrentUser().getUid()).child("traderimage").setValue(mAuth.getCurrentUser().getPhotoUrl());
+                                        LikeRef.child(mAuth.getCurrentUser().getUid()).child("tradername").setValue(mAuth.getCurrentUser().getPhotoUrl());
+                                        LikeRef.child(mAuth.getCurrentUser().getUid()).child("uid").setValue(mAuth.getCurrentUser().getPhotoUrl());
+
+
+
+
+                                        updateCounter(true);
+                                        Log.i(dataSnapshot.getKey(), dataSnapshot.getChildrenCount() + "Count");
+                                        mProcessLike = false;
+                                    }
                                 }
+                                ;
+
                             }
-                            ;
-
                         }
-
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
 
@@ -306,7 +415,7 @@ String    productdetailsimage;
             private void updateCounter(final Boolean increment) {
                 this.increments = increment;
                 DatabaseReference mDatabaseLikeCount;
-                mDatabaseLikeCount = FirebaseDatabase.getInstance().getReference().child("Photos").child(photokey).child("Likes").child("number");
+                mDatabaseLikeCount = FirebaseDatabase.getInstance().getReference().child("Products").child("number");
                 mDatabaseLikeCount.runTransaction(new Transaction.Handler() {
                     @Override
                     public Transaction.Result doTransaction(MutableData mutableData) {
@@ -333,62 +442,40 @@ String    productdetailsimage;
 
 
         });
+
+    */
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
-        getProductDetails(productID);
-    }
+        firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
 
+                user = mAuth.getCurrentUser();
+                if (mAuth != null) {
+                    if (user != null) {
 
-    private void getProductDetails(final String productID) {
-        productsRef = FirebaseDatabase.getInstance().getReference().child("Products");
-        if (productID != null) {
-            productsRef.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.exists()) {
-
-                           if (dataSnapshot.child(productID).child("pimage").getValue(String.class) != null) {
-                                productdetailsimage = dataSnapshot.child(productID).child("pimage").getValue(String.class);
-                           }
-
-                           if (dataSnapshot.child(productID).child("pname").getValue(String.class) != null) {
-                               productdetailsname = dataSnapshot.child(productID).child("pname").getValue(String.class);
-                           }
-
-                           if (dataSnapshot.child(productID).child("desc").getValue(String.class) != null) {
-                               productdetailsdescription = dataSnapshot.child(productID).child("desc").getValue(String.class);
-                           }
-                           if (dataSnapshot.child(productID).child("number").getValue(String.class) != null) {
-                                productdetailsnumber = dataSnapshot.child(productID).child("number").getValue(String.class);
-                           }
-
-                        ImageView adminproductdetailsimage = (ImageView) findViewById(R.id.adminproductdetailsimage);
-                        TextView adminproductimageproductname = (TextView) findViewById(R.id.adminproductimageproductname);
-                        TextView adminproductimagedescription = (TextView) findViewById(R.id.adminproductimagedescription);
-                        TextView adminproductimagenumberoflikes = (TextView) findViewById(R.id.adminproductimagenumberoflikes);
-
-
-                        adminproductdetailsimage.setImageResource(Integer.parseInt(productdetailsimage));
-                        adminproductimageproductname.setText(productdetailsname);
-                        adminproductimagedescription.setText(productdetailsdescription);
-                        adminproductimagenumberoflikes.setText(productdetailsnumber);
-                        Picasso.get().load(productdetailsimage).into(adminproductdetailsimage);
+                        traderID = user.getUid();
                     }
 
-
+                    // I HAVE TO TRY TO GET THE SETUP INFORMATION , IF THEY ARE ALREADY PROVIDED WE TAKE TO THE NEXT STAGE
+                    // WHICH IS CUSTOMER TO BE ADDED.
+                    // PULLING DATABASE REFERENCE IS NULL, WE CHANGE BACK TO THE SETUP PAGE ELSE WE GO STRAIGHT TO MAP PAGE
                 }
+            }    };
 
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
 
-                }
-            });
-        }
+
+        if (mAuth != null) {
+            mAuth.addAuthStateListener(firebaseAuthListener);
+        };
     }
+
+
     protected synchronized void buildGoogleApiClient() {
         if (mGoogleApiClient != null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)

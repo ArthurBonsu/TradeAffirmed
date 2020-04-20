@@ -4,22 +4,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".WorkActivities.ProductDetailsActivity">
+    android:layout_height="match_parent">
+
 
     <ImageView
         android:id="@+id/adminproductdetailsimage"
         android:layout_width="match_parent"
         android:layout_height="260dp"
         android:scaleType="centerCrop"
-        />
+        android:contentDescription="TODO" />
+
 
     <TextView
         android:id="@+id/adminproductimageproductname"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/adminproductdetailsimage"
-        android:text="Product Name"
+
         android:textColor="@android:color/black"
         android:textStyle="bold"
         android:textSize="18sp"
@@ -34,7 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/adminproductimageproductname"
-        android:text="Product Description"
+
         android:textColor="@android:color/black"
         android:textStyle="bold"
         android:textSize="16sp"
@@ -47,50 +48,57 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/adminproductimagedescription"
-        android:text="Product Price"
+
         android:textColor="@android:color/black"
         android:textStyle="bold"
         android:textSize="18sp"
         android:gravity="center"
         android:layout_marginTop="10dp"
         />
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:id="@+id/likebuttonsresult"
+    android:layout_below="@+id/adminproductimageprice">
+    >
 
+
+    <ImageButton
+        android:id="@+id/adminproductimagelikebutton"
+        android:layout_width="75sp"
+        android:layout_height="50sp"
+        android:scaleType="fitCenter"
+        app:srcCompat="@drawable/likeicons"
+        android:contentDescription="likebutton" />
     <TextView
         android:id="@+id/adminproductimagenumberoflikes"
-        android:layout_width="match_parent"
+        android:layout_width="50sp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/adminproductimageprice"
-        android:text="Number of  Like"
+
         android:textColor="@android:color/black"
         android:textStyle="bold"
         android:textSize="18sp"
         android:gravity="center"
         android:layout_marginTop="10dp"
+        android:layout_below="@+id/adminproductimagelikebutton"
         />
 
-    <com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
-        android:id="@+id/adminproductimagelikebutton"
-        android:layout_width="wrap_content"
-        android:layout_height="20dp"
-        android:elevation="6dp"
-        app:textSize="16dp"
-        app:initialNumber="1"
-        app:finalNumber="10"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/adminproductimagenumberoflikes"
-        android:layout_marginTop="10dp"
-        >
-    </com.cepheuen.elegantnumberbutton.view.ElegantNumberButton>
+
+
+</LinearLayout>
+
+
 
     <Button
         android:id="@+id/ViewCustomers"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
-        android:hint="View Customers"
+        android:hint="@string/view_customers"
 
-        android:layout_below="@+id/adminproductimagelikebutton"
-        android:text="View Your Customers" />
+        android:layout_below="@+id/likebuttonsresult"
+      />
 
 
 </RelativeLayout>

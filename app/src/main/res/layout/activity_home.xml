@@ -19,7 +19,6 @@
 
 
 
-
     <!--侧边栏样式-->
     <android.support.constraint.ConstraintLayout
         android:layout_width="250dp"
@@ -69,5 +68,14 @@
 
         app:titleTextColor="@android:color/white">
     </android.support.v7.widget.Toolbar>
+
+    <TextView
+        android:id="@+id/thefollowerid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:visibility="invisible" />
+
+
 </FrameLayout>
 

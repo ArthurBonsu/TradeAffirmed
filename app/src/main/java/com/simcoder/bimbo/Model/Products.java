@@ -244,6 +244,28 @@ public class Products {
 
     }
 
+    public Products(String categoryname, String date, String desc, String discount, String time, String pid, String pimage, String pname, String price, String image, String name, String size, String tradername, String traderimage, String tid, String number) {
+
+        this.categoryname = categoryname;
+        this.date = date;
+        this.desc = desc;
+        this.discount = discount;
+        this.time = time;
+        this.pid = pid;
+        this.pimage = pimage;
+        this.pname = pname;
+        this.price = price;
+        this.image = image;
+        this.name = name;
+        this.size =size;
+        this.tradername = tradername;
+        this.traderimage = traderimage;
+        this.tid = tid;
+        this.number = number;
+
+
+    }
+
 
     public void setpimage(String pimage) {
         this.pimage = pimage;

@@ -124,9 +124,10 @@ public  class  HomeActivity extends AppCompatActivity
     String followingimage;
     String userid;
     TextView thefollowerid;
-    String thefolloweridnew;
 
     FloatingActionButton fab;
+  public  static   String thefolloweridgrabber;
+  public static  String thefollowerstepper;
     //product_name
     // product_imagehere
     //  product_price
@@ -144,12 +145,8 @@ public  class  HomeActivity extends AppCompatActivity
 
     }
 
-    Getmyfollowings gettingmyfollowingshere;
-    Getmyfollowings gettingmyfollowingshereaswell;
     Getmyfollowings getmyfollowingsagain;
-    String followingidget;
-    String followingnameget;
-    String followingimageget;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -217,7 +214,7 @@ public  class  HomeActivity extends AppCompatActivity
 
             product_imagehere = (ImageView) findViewById(R.id.product_imagehere);
             thetraderimageforproduct = (ImageView) findViewById(R.id.thetraderimageforproduct);
-            thefollowerid = (TextView) findViewById(R.id.followerid);
+            thefollowerid = (TextView) findViewById(R.id.thefollowerid);
 
             Paper.init(this);
 
@@ -319,10 +316,13 @@ public  class  HomeActivity extends AppCompatActivity
                                     followingimage = ds.child("traderimage").getValue(String.class);
                                 }
                                 Log.d("Followers Well", followingid + followingname + followingimage);
+                                thefolloweridgrabber = followingid;
 
-                                if (thefollowerid != null) {
-                                    thefollowerid.setText(followingid);
-                                }
+                                Log.d("Followersgrabber", thefolloweridgrabber);
+
+                                thefollowerstepper = thefolloweridgrabber;
+                                Log.d("Followerstepper", thefollowerstepper);
+
                                 if (getmyfollowingsagain != null) {
                                     if (followingid != null && followingname != null && followingimage != null) {
 
@@ -334,6 +334,7 @@ public  class  HomeActivity extends AppCompatActivity
                             }
 
                         }
+
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
 
@@ -341,16 +342,15 @@ public  class  HomeActivity extends AppCompatActivity
 
 
                     });
+                    if (thefolloweridgrabber != null) {
+                        Log.d("Followerinfo", thefolloweridgrabber);
 
-                    Log.i("Followerinfo", followingid + followingname + followingimage);
 
 
-                    if (thefollowerid != null) {
-                        if (thefollowerid.getText() != null) {
-                            thefolloweridnew = thefollowerid.getText().toString();
-
-                            Log.d("Mygrabback", thefolloweridnew);
-                        }
+                    Log.i("Mygrabback", thefolloweridgrabber);
+                    if (thefollowerstepper != null){
+                        Log.d("Followerdownstepper", thefollowerstepper);
+                    }}
 //        setSupportActionBar(toolbar);
 
                             GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
@@ -385,7 +385,7 @@ public  class  HomeActivity extends AppCompatActivity
                 }
             }
 
-        }
+
 
 
 
@@ -507,6 +507,7 @@ public  class  HomeActivity extends AppCompatActivity
 
 
     public void fetch() {
+
         FirebaseUser user;
         if (mAuth != null) {
             user = mAuth.getCurrentUser();
@@ -516,6 +517,58 @@ public  class  HomeActivity extends AppCompatActivity
                 ProductsRef.keepSynced(true);
                 productkey = ProductsRef.getKey();
 
+
+                if (mAuth != null) {
+                    user = mAuth.getCurrentUser();
+                    if (user != null) {
+                        userid = user.getUid();
+                        FollowerDatabase = FirebaseDatabase.getInstance();
+
+                        FollowerDatabaseReference = FollowerDatabase.getReference().child("Following");
+                        FollowerDatabaseReference.keepSynced(true);
+                        QueryFollowingsshere = FollowerDatabaseReference.orderByChild("uid").equalTo(userid);
+
+                        QueryFollowingsshere.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                    if (ds.child("tid").getValue() != null) {
+                                        followingid = ds.child("tid").getValue(String.class);
+                                    }
+
+                                    if (ds.child("tradername").getValue() != null) {
+                                        followingname = ds.child("tradername").getValue(String.class);
+                                    }
+                                    if (ds.child("traderimage").getValue() != null) {
+                                        followingimage = ds.child("traderimage").getValue(String.class);
+                                    }
+                                    Log.d("Followers Well", followingid + followingname + followingimage);
+                                    thefolloweridgrabber = followingid;
+
+                                    Log.d("Followersgrabber", thefolloweridgrabber);
+
+                                    thefollowerstepper = thefolloweridgrabber;
+                                    Log.d("Followerstepper", thefollowerstepper);
+
+                                    if (getmyfollowingsagain != null) {
+                                        if (followingid != null && followingname != null && followingimage != null) {
+
+                                            getmyfollowingsagain.onCallback(followingid, followingname, followingimage);
+
+
+                                        }
+                                    }
+                                }
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+                    }}
 
                 if (traderoruser != null) {
                     if (ProductsRef != null) {

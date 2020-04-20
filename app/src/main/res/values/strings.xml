@@ -393,4 +393,6 @@
 
     <string name="tostartimageintent">tostartimageintent</string>
     <string name="trader_imagehere">trader_imagehere</string>
+    <string name="change_write_settings_permission">Change Write Settings Permission</string>
+    <string name="view_customers">View Customers</string>
 </resources>
