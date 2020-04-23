@@ -3,10 +3,8 @@ package com.simcoder.bimbo.Admin;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -21,7 +19,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -42,23 +39,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.rey.material.widget.ImageView;
-import com.simcoder.bimbo.Admin.AdminAddNewProductActivity;
-import com.simcoder.bimbo.Admin.AdminAllCustomers;
-import com.simcoder.bimbo.Admin.AdminCategoryActivity;
-import com.simcoder.bimbo.Admin.AdminMaintainProductsActivity;
-import com.simcoder.bimbo.Admin.AdminProductDetails;
-import com.simcoder.bimbo.Admin.AdminUserCartedActivity;
-import com.simcoder.bimbo.Admin.AdminViewBuyersActivity;
 import com.simcoder.bimbo.Model.Users;
 import com.simcoder.bimbo.WorkActivities.CartActivity;
 import com.simcoder.bimbo.WorkActivities.CustomerProfile;
 import com.simcoder.bimbo.WorkActivities.HomeActivity;
-import com.simcoder.bimbo.Admin.ViewSingleUserOrders;
 import com.simcoder.bimbo.DriverMapActivity;
 import com.simcoder.bimbo.HistoryActivity;
 import com.simcoder.bimbo.Interface.ItemClickListner;
-import com.simcoder.bimbo.Model.Cart;
-import com.simcoder.bimbo.Model.Products;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
@@ -66,10 +53,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.simcoder.bimbo.R;
 import com.simcoder.bimbo.WorkActivities.SearchProductsActivity;
 import com.simcoder.bimbo.WorkActivities.TraderProfile;
-import com.simcoder.bimbo.instagram.Home.InstagramHomeActivity;
-import com.simcoder.bimbo.instagram.Home.MainViewFeedFragment;
-import com.simcoder.bimbo.instagram.Models.Photo;
-import com.simcoder.bimbo.instagram.Models.User;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -766,7 +749,7 @@ public  class  AdminAllCustomers extends AppCompatActivity
                         String cusomerId = "";
 
                         cusomerId = user.getUid();
-                        Intent intent = new Intent(AdminAllCustomers.this, ViewSingleUserOrders.class);
+                        Intent intent = new Intent(AdminAllCustomers.this, ViewYourPersonalProduct.class);
                         if (intent != null) {
                             intent.putExtra("traderorcustomer", traderoruser);
                             intent.putExtra("role", type);
@@ -782,7 +765,7 @@ public  class  AdminAllCustomers extends AppCompatActivity
                         String cusomerId = "";
                         cusomerId = user.getUid();
 
-                        Intent intent = new Intent(AdminAllCustomers.this, ViewSingleUserOrders.class);
+                        Intent intent = new Intent(AdminAllCustomers.this, ViewYourPersonalProduct.class);
                         if (intent != null) {
                             intent.putExtra("traderorcustomer", traderoruser);
                             intent.putExtra("role", type);
@@ -803,7 +786,7 @@ public  class  AdminAllCustomers extends AppCompatActivity
                         String cusomerId = "";
 
                         cusomerId = user.getUid();
-                        Intent intent = new Intent(AdminAllCustomers.this, AdminViewBuyersActivity.class);
+                        Intent intent = new Intent(AdminAllCustomers.this, ViewCurrentCartPlaced.class);
                         if (intent != null) {
                             intent.putExtra("traderorcustomer", traderoruser);
                             intent.putExtra("role", type);
@@ -819,7 +802,7 @@ public  class  AdminAllCustomers extends AppCompatActivity
                         String cusomerId = "";
                         cusomerId = user.getUid();
 
-                        Intent intent = new Intent(AdminAllCustomers.this, AdminViewBuyersActivity.class);
+                        Intent intent = new Intent(AdminAllCustomers.this, ViewCurrentCartPlaced.class);
                         if (intent != null) {
                             intent.putExtra("traderorcustomer", traderoruser);
                             intent.putExtra("role", type);
@@ -840,7 +823,7 @@ public  class  AdminAllCustomers extends AppCompatActivity
                         String cusomerId = "";
 
                         cusomerId = user.getUid();
-                        Intent intent = new Intent(AdminAllCustomers.this, AdminUserCartedActivity.class);
+                        Intent intent = new Intent(AdminAllCustomers.this, ViewAllCarts.class);
                         if (intent != null) {
                             intent.putExtra("traderorcustomer", traderoruser);
                             intent.putExtra("role", type);
@@ -856,7 +839,7 @@ public  class  AdminAllCustomers extends AppCompatActivity
                         String cusomerId = "";
                         cusomerId = user.getUid();
 
-                        Intent intent = new Intent(AdminAllCustomers.this, AdminUserCartedActivity.class);
+                        Intent intent = new Intent(AdminAllCustomers.this, ViewAllCarts.class);
                         if (intent != null) {
                             intent.putExtra("traderorcustomer", traderoruser);
                             intent.putExtra("role", type);
@@ -1247,7 +1230,7 @@ public  class  AdminAllCustomers extends AppCompatActivity
                         String cusomerId = "";
                         cusomerId = user.getUid();
 
-                        Intent intent = new Intent(AdminAllCustomers.this, ViewSingleUserOrders.class);
+                        Intent intent = new Intent(AdminAllCustomers.this, ViewYourPersonalProduct.class);
                         if (intent != null) {
                             intent.putExtra("traderorcustomer", traderoruser);
                             intent.putExtra("role", type);
@@ -1284,7 +1267,7 @@ public  class  AdminAllCustomers extends AppCompatActivity
                         String cusomerId = "";
                         cusomerId = user.getUid();
 
-                        Intent intent = new Intent(AdminAllCustomers.this, AdminViewBuyersActivity.class);
+                        Intent intent = new Intent(AdminAllCustomers.this, ViewCurrentCartPlaced.class);
                         if (intent != null) {
                             intent.putExtra("traderorcustomer", traderoruser);
                             intent.putExtra("role", type);
@@ -1321,7 +1304,7 @@ public  class  AdminAllCustomers extends AppCompatActivity
                         String cusomerId = "";
                         cusomerId = user.getUid();
 
-                        Intent intent = new Intent(AdminAllCustomers.this, AdminUserCartedActivity.class);
+                        Intent intent = new Intent(AdminAllCustomers.this, ViewAllCarts.class);
                         if (intent != null) {
                             intent.putExtra("traderorcustomer", traderoruser);
                             intent.putExtra("role", type);

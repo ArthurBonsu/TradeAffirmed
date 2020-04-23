@@ -2,47 +2,47 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    android:layout_margin="20dp"
+    android:background="@color/colorPrimaryDark">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:layout_margin="20dp"
-        android:background="@color/colorPrimaryDark">
+
 
         <TextView
             android:id="@+id/order_user_name"
             android:layout_width="160dp"
             android:layout_height="wrap_content"
-            android:text="UserName"
+            android:text="@string/username"
             android:textColor="@android:color/white"
-            android:textSize="15dp"
+            android:textSize="15sp"
             android:layout_marginLeft="2dp"
             android:textStyle="bold"
-            />
+            android:layout_marginStart="2dp" />
 
         <TextView
             android:id="@+id/order_phone_number"
             android:layout_width="160dp"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:text="Phone Number"
+            android:text="@string/phone_number9"
             android:textAlignment="viewEnd"
             android:textColor="@android:color/white"
-            android:textSize="15dp"
+            android:textSize="15sp"
             android:layout_marginRight="2dp"
             android:textStyle="bold"
             android:layout_alignParentRight="true"
-            android:layout_gravity="end" />
+            android:layout_gravity="end"
+            android:layout_marginEnd="2dp"
+            android:layout_below="@+id/order_user_name" />
 
         <TextView
             android:id="@+id/productkeyordered"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Product Key"
+            android:text="@string/product_key9"
             android:textColor="@android:color/white"
-            android:textSize="16dp"
+            android:textSize="16sp"
             android:textStyle="bold"
             android:layout_below="@+id/order_phone_number"
             android:gravity="center"
@@ -53,11 +53,11 @@
             android:id="@+id/order_total_price"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Total Price"
+            android:text="@string/total_price"
             android:textColor="@android:color/white"
-            android:textSize="16dp"
+            android:textSize="16sp"
             android:textStyle="bold"
-            android:layout_below="@+id/cart_product_quantity"
+            android:layout_below="@+id/productkeyordered"
             android:gravity="center"
             android:layout_marginTop="45dp"
             />
@@ -66,9 +66,9 @@
             android:id="@+id/order_address_city"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Address, City"
+            android:text="@string/address_city9"
             android:textColor="@android:color/white"
-            android:textSize="16dp"
+            android:textSize="16sp"
             android:textStyle="bold"
             android:layout_below="@+id/order_total_price"
             android:gravity="center"
@@ -79,60 +79,58 @@
             android:id="@+id/order_date_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Date Time"
+            android:text="@string/date_time99"
             android:textColor="@android:color/white"
-            android:textSize="16dp"
+            android:textSize="16sp"
             android:textStyle="bold"
             android:layout_below="@+id/order_address_city"
             android:gravity="center"
             android:layout_marginTop="15dp"
             />
+
+
         <TextView
             android:id="@+id/productnameordered"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Date Time"
-            android:textColor="@android:color/white"
-            android:textSize="16dp"
-            android:textStyle="bold"
-            android:layout_below="@+id/order_address_city"
-            android:gravity="center"
-            android:layout_marginTop="15dp"
-            />
-
-        <Button
-            android:id="@+id/show_all_products_btn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="29dp"
-            android:layout_marginBottom="10dp"
-            android:text="Show The Products That Were Ordered"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="15dp"
-            android:textAllCaps="false"
-            android:background="@android:color/white"
             android:layout_below="@+id/order_date_time"
+            android:layout_marginTop="30dp"
+            android:gravity="center"
+            android:text="@string/date_time9"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
             />
 
+    <Button
+        android:id="@+id/show_all_products_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/productnameordered"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="52dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="10dp"
+        android:background="@android:color/white"
+        android:text="Show The Previous Order List of User"
+        android:textAllCaps="false"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="15sp" />
 
-        <Button
-            android:id="@+id/showallcarteduserproducts"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="29dp"
-            android:layout_marginBottom="10dp"
-            android:text="Show The Carted Products of User"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="15dp"
-            android:textAllCaps="false"
-            android:background="@android:color/white"
-            android:layout_below="@+id/show_all_products_btn"
-            />
-
+    <Button
+        android:id="@+id/showallcarteduserproducts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/show_all_products_btn"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="29dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="10dp"
+        android:background="@android:color/white"
+        android:text="Show Products Ordered Now By User"
+        android:textAllCaps="false"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="15sp" />
 
         <Button
             android:id="@+id/shipapprove"
@@ -142,14 +140,14 @@
             android:layout_marginRight="20dp"
             android:layout_marginTop="29dp"
             android:layout_marginBottom="10dp"
-            android:text="APPROVE"
+            android:text="@string/approve9"
             android:textColor="@color/colorPrimaryDark"
-            android:textSize="15dp"
+            android:textSize="15sp"
             android:textAllCaps="false"
             android:background="@android:color/white"
             android:layout_below="@+id/showallcarteduserproducts"
             />
 
-    </RelativeLayout>
+
 
 </RelativeLayout>

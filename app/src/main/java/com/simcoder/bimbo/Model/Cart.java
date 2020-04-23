@@ -32,6 +32,7 @@ public class Cart {
     String pimage;
     String comment;
     String likes;
+    String cartkey;
     public Cart() {
     }
 
@@ -156,6 +157,50 @@ public class Cart {
         this.pname = pname;
         this.pimage = pimage;
 
+
+    }
+
+    public Cart(String cartkey, String date, String desc, String discount, String image, String name, String photoid, String pid, String pimage, String pname, String price, String quantity, String tid, String time, String traderimage, String tradername, String uid) {
+        this.cartkey = cartkey;
+        this.pid = pid;
+        this.tid = tid;
+        this.quantity = quantity;
+        this.price = price;
+        this.desc = desc;
+
+        this.discount = discount;
+        this.name = name;
+        this.image = image;
+        this.tradername = tradername;
+        this.traderimage = traderimage;
+        this.pname = pname;
+        this.pimage = pimage;
+        this.date =date;
+        this.photoid = photoid;
+        this.uid = uid;
+
+    }
+
+    public Cart(String image, String name, String pid, String pname, String quantity, String state, String tid, String traderimage, String tradername, String uid) {
+
+        this.cartkey = cartkey;
+        this.pid = pid;
+        this.tid = tid;
+        this.quantity = quantity;
+        this.price = price;
+        this.desc = desc;
+
+        this.discount = discount;
+        this.name = name;
+        this.image = image;
+        this.tradername = tradername;
+        this.traderimage = traderimage;
+        this.pname = pname;
+        this.pimage = pimage;
+        this.date =date;
+        this.photoid = photoid;
+        this.uid = uid;
+        this.state = state;
 
     }
 

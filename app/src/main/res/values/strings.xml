@@ -319,7 +319,7 @@
     <string name="numberoflikes">numberoflikes</string>
     <string name="the_number_of_likes">the number of likes</string>
     <string name="product_name">Product Name</string>
-    <string name="product_price">Product Price</string>
+
     <string name="product_description">Product Description</string>
     <string name="the_trader">The Trader</string>
     <string name="fromswitchimage">TODO</string>
@@ -395,4 +395,21 @@
     <string name="trader_imagehere">trader_imagehere</string>
     <string name="change_write_settings_permission">Change Write Settings Permission</string>
     <string name="view_customers">View Customers</string>
+    <string name="number_of_products_in_cart">Number of products in cart</string>
+    <string name="product_name_here">Product Name Here</string>
+
+    <string name="product_price">Product Price</string>
+    <string name="total_price">Total Price</string>
+    <string name="username">UserName</string>
+    <string name="phone_number9">Phone Number</string>
+    <string name="product_key9">Product Key</string>
+    <string name="address_city9">Address, City</string>
+    <string name="date_time99">Date Time</string>
+    <string name="show_the_carted_products_of_user9">Show The Carted Products of User</string>
+    <string name="approve9">APPROVE</string>
+    <string name="show_the_products_that_were_ordered9">Show The Products That Were Ordered</string>
+    <string name="date_time9">Date Time</string>
+    <string name="userimagehere">userimagehere</string>
+    <string name="usernamehere">username</string>
+
 </resources>

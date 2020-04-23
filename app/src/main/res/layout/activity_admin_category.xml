@@ -150,6 +150,8 @@
 
     </LinearLayout>
 
+    <!-- android:layout_above="@+id/check_orders_btn" -->
+
     <Button
         android:id="@+id/allproducts"
         android:layout_width="match_parent"
@@ -157,7 +159,7 @@
         android:layout_above="@+id/homebuttonhere"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="24dp"
         android:background="#FFA500"
         android:text="@string/view_all_products"
         android:textAllCaps="false"
@@ -171,13 +173,13 @@
         android:layout_above="@+id/maintain_btn"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="4dp"
         android:background="#FFA500"
         android:text="@string/home_button"
         android:textAllCaps="false"
         android:textColor="@android:color/white"
         android:textSize="20sp" />
-   <!-- android:layout_above="@+id/check_orders_btn" -->
+
 
     <Button
         android:id="@+id/maintain_btn"
@@ -186,7 +188,7 @@
         android:layout_above="@+id/check_orders_btn"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="18dp"
         android:background="#FFA500"
         android:text="@string/maintain_products"
         android:textAllCaps="false"
@@ -200,13 +202,26 @@
         android:layout_above="@+id/admin_logout_btn"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="84dp"
         android:background="#FFA500"
         android:text="@string/check_new_orders"
         android:textAllCaps="false"
         android:textColor="@android:color/white"
         android:textSize="20sp" />
 
+    <Button
+        android:id="@+id/incarts"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:layout_above="@+id/admin_logout_btn"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="30dp"
+        android:background="#FFA500"
+        android:text="In Cart"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        android:textSize="20sp" />
 
     <Button
         android:id="@+id/admin_logout_btn"

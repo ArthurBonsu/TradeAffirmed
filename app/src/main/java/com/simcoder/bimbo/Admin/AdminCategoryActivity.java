@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -29,15 +28,12 @@ import com.simcoder.bimbo.WorkActivities.HomeActivity;
 import com.simcoder.bimbo.MainActivity;
 import  com.simcoder.bimbo.R;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class AdminCategoryActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private ImageView tShirts, sportsTShirts, femaleDresses, sweathers;
     private ImageView glasses, hatsCaps, walletsBagsPurses, shoes;
     private ImageView headPhonesHandFree, Laptops, watches, mobilePhones;
 
-    private Button LogoutBtn, CheckOrdersBtn, maintainProductsBtn, HomeBtn, AllProducts;
+    private Button LogoutBtn, CheckOrdersBtn, maintainProductsBtn, HomeBtn, AllProducts,InCart;
     private DatabaseReference RoleReference;
     String role;
     private static final int RC_SIGN_IN = 1;
@@ -63,6 +59,7 @@ public class AdminCategoryActivity extends AppCompatActivity implements GoogleAp
         CheckOrdersBtn = (Button) findViewById(R.id.check_orders_btn);
         maintainProductsBtn = (Button) findViewById(R.id.maintain_btn);
         HomeBtn = (Button) findViewById(R.id.homebuttonhere);
+        InCart = (Button)findViewById(R.id.incarts);
         AllProducts = (Button)findViewById(R.id.allproducts);
         tShirts = (ImageView) findViewById(R.id.t_shirts);
         sportsTShirts = (ImageView) findViewById(R.id.sports_t_shirts);
@@ -125,6 +122,20 @@ public class AdminCategoryActivity extends AppCompatActivity implements GoogleAp
                                  }
                              });
                          }
+
+                         if (InCart != null) {
+                             InCart.setOnClickListener(new View.OnClickListener() {
+                                 @Override
+                                 public void onClick(View view) {
+                                     Intent intent = new Intent(AdminCategoryActivity.this, ViewAllCarts.class);
+                                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                                     startActivity(intent);
+                                     finish();
+                                 }
+                             });
+                         }
+
                          if (CheckOrdersBtn != null) {
                              CheckOrdersBtn.setOnClickListener(new View.OnClickListener() {
                                  @Override

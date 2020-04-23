@@ -1,72 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_margin="10dp"
+    android:orientation="vertical"
     app:cardElevation="15dp">
 
-    <RelativeLayout
+
+    <ImageView
+        android:id="@+id/admincartimageofuser"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="10dp"
-        android:background="@color/colorPrimaryDark">
+        android:layout_height="200sp"
+        android:layout_marginTop="2dp"
+        android:background="#2d2d2d"
+        android:contentDescription="@string/userimagehere"
+        android:scaleType="fitCenter"
+        android:visibility="visible"
+        app:srcCompat="@drawable/chickend"
+        tools:visibility="visible" />
+
+    <ImageView
+        android:id="@+id/admincartimageofproduct"
+        android:layout_width="match_parent"
+        android:layout_height="200sp"
+        android:background="#2d2d2d"
+        android:layout_marginTop="2dp"
+        android:contentDescription="@string/trader_imagehere"
+        android:scaleType="fitCenter"
+        android:visibility="visible"
+        app:srcCompat="@drawable/chickend"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/admincartproductid"
+        android:layout_width="match_parent"
+        android:layout_height="50sp"
+        android:layout_marginStart="2dp"
+        android:layout_marginLeft="2dp"
+        android:text="@string/product_name_here"
+        android:textColor="@color/black"
+        android:textSize="15sp"
+        android:textStyle="bold" />
 
 
+    <TextView
+        android:id="@+id/admincarttitlehere"
+        android:layout_width="match_parent"
+        android:layout_height="50sp"
+        android:layout_marginStart="2dp"
+        android:layout_marginLeft="2dp"
+        android:text="@string/product_name_here"
+        android:textColor="@color/black"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:visibility="visible" />
 
-        <ImageView
-            android:id="@+id/admincartimageofprouct"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:background="#2d2d2d"
-            android:layout_below="@+id/cart_product_quantity"
-            android:contentDescription="@string/tradersimageonscreen"
-            android:scaleType="centerCrop" />
+    <TextView
+        android:id="@+id/admincartquantity"
+        android:layout_width="match_parent"
+        android:layout_height="50sp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginRight="2dp"
+
+        android:text="@string/number_of_products_in_cart"
+
+        android:textColor="@color/black"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:visibility="visible" />
+
+    <TextView
+        android:id="@+id/admincart_price"
+        android:layout_width="match_parent"
+        android:layout_height="50sp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginRight="2dp"
+        android:text="@string/product_price"
+        android:textColor="@color/black"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:visibility="visible" />
+
+    <TextView
+        android:id="@+id/admincarttime"
+        android:layout_width="match_parent"
+        android:layout_height="50sp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginRight="2dp"
+
+        android:text="@string/product_price"
+        android:textColor="@color/black"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:visibility="visible" />
 
 
+    <TextView
+        android:id="@+id/admincartusername"
+        android:layout_width="match_parent"
+        android:layout_height="50sp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginRight="2dp"
+
+        android:text="@string/usernamehere"
+        android:textColor="@color/black"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:visibility="visible" />
 
 
-        <TextView
-            android:id="@+id/admincarttitlehere"
-            android:layout_width="160dp"
-            android:layout_height="wrap_content"
-            android:text="Product Name Here"
-            android:layout_below="@+id/admincartimageofprouct"
-            android:textColor="@android:color/white"
-            android:textSize="15dp"
-            android:layout_marginLeft="2dp"
-            android:textStyle="bold"
-            />
-
-        <TextView
-            android:id="@+id/admincartquantity"
-            android:layout_width="160dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:text="Number of products in cart"
-            android:textAlignment="viewEnd"
-            android:layout_below="@+id/admincarttitlehere"
-            android:textColor="@android:color/white"
-            android:textSize="15dp"
-            android:layout_marginRight="2dp"
-            android:textStyle="bold"
-            android:layout_alignParentRight="true"
-            android:gravity="end" />
-
-        <TextView
-            android:id="@+id/admincart_price"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Product Price"
-            android:layout_below="@+id/admincartquantity"
-            android:textColor="@android:color/white"
-            android:textSize="18dp"
-            android:textStyle="bold"
-
-            android:gravity="center"
-            android:layout_marginTop="15dp"
-            />
-
-    </RelativeLayout>
-
-</android.support.v7.widget.CardView>
+</LinearLayout>

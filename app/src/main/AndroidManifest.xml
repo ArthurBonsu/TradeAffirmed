@@ -138,10 +138,10 @@
         <activity android:name=".WorkActivities.SettinsActivity" />
         <activity android:name=".WorkActivities.CustomerProfile" />
         <activity android:name=".WorkActivities.TraderProfile" />
-
-        <activity android:name=".Admin.ViewSingleUserOrders" />
-        <activity android:name=".Admin.AdminViewBuyersActivity" />
-        <activity android:name=".Admin.AdminUserCartedActivity" />
+        <activity android:name=".Admin.ViewYourPersonalOrder" />
+        <activity android:name=".Admin.ViewYourPersonalProduct" />
+        <activity android:name=".Admin.ViewCurrentCartPlaced" />
+        <activity android:name=".Admin.ViewAllCarts" />
         <activity android:name=".Admin.AdminProductDetails" />
         <activity android:name=".Admin.AdminNewOrdersActivity" />
         <activity android:name=".Admin.AdminMaintainProductsActivity" />
@@ -150,6 +150,9 @@
         <activity android:name=".Admin.AdminAllCustomers" />
         <activity android:name=".Admin.AdminAddNewProductActivity" />
         <activity android:name=".Admin.AdminAddNewProductActivityII" />
+        <activity android:name=".Admin.AdminViewCartOfUser" />
+
+
         <activity android:name=".instagram.dialogs.ConfirmPasswordDialog" />
         <activity android:name=".instagram.Home.InstagramHomeActivity" />
         <activity android:name=".instagram.Home.CameraFragment" />
