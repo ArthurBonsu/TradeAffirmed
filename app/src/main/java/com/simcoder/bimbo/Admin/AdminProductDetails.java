@@ -322,7 +322,7 @@ String
             ViewBuyers.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent myintent = new Intent(AdminProductDetails.this, ViewCurrentCartPlaced.class);
+                    Intent myintent = new Intent(AdminProductDetails.this, ViewSpecificUsersCart.class);
 
                     myintent.putExtra("productIDfromadminproductdetailstoviewbuyers", productID);
 

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -17,7 +18,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="vertical">
 
@@ -38,14 +39,34 @@
                     android:scaleType="centerCrop"
                     android:visibility="visible" />
 
-                <TextView
-                    android:id="@+id/carttheproductname"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:padding="8dp"
-                    android:text="@string/carttheproductname"
-                    android:textSize="18sp" />
+                    android:orientation="horizontal">
+
+
+                    <ImageView
+                        android:id="@+id/numberoflikesimage"
+                        android:layout_width="50sp"
+                        android:layout_height="50dp"
+                        android:contentDescription="@string/cart_number_of_likess"
+                        android:scaleType="fitCenter"
+                        android:visibility="visible"
+                        app:srcCompat="@drawable/likeicons"
+                        tools:visibility="visible" />
+
+                    <TextView
+                        android:id="@+id/therealnumberoflikes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:background="#ecedec"
+                        android:padding="8dp"
+                        android:text="@string/_23numberoflikes"
+                        android:textSize="18sp" />
+
+
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/carttheproductprice"
@@ -77,14 +98,14 @@
                     android:text="@string/cartdescriptionhere"
                     android:textSize="18sp" />
 
-                <ImageView
-                    android:id="@+id/numberoflikesimage"
-                    android:layout_width="match_parent"
-                    android:layout_height="170dp"
-                    android:contentDescription="@string/cart_number_of_likess"
-                    android:scaleType="centerCrop"
-                    android:visibility="visible"
-                    tools:visibility="visible" />
+                <TextView
+                    android:id="@+id/carttheproductname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:padding="8dp"
+                    android:text="@string/carttheproductname"
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/cartquantity"

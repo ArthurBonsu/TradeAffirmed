@@ -120,12 +120,14 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".CustomerMapActivity" />
+        <activity android:name=".CustomerMapActivity"
+            android:hardwareAccelerated="true"  />
         <activity android:name=".CustomerSettingsActivity" />
         <activity android:name=".DriverSettingsActivity" />
         <activity android:name=".HistoryActivity" />
         <activity android:name=".HistorySingleActivity" />
-        <activity android:name=".DriverMapActivity" />
+        <activity android:name=".DriverMapActivity"
+            android:hardwareAccelerated="true"  />
         <activity android:name=".WorkActivities.CartActivity" />
         <activity android:name=".WorkActivities.ConfirmFinalOrderActivity" />
         <activity android:name=".WorkActivities.HomeActivity" />
@@ -138,9 +140,9 @@
         <activity android:name=".WorkActivities.SettinsActivity" />
         <activity android:name=".WorkActivities.CustomerProfile" />
         <activity android:name=".WorkActivities.TraderProfile" />
-        <activity android:name=".Admin.ViewYourPersonalOrder" />
+        <activity android:name=".Admin.ViewSpecificUsersOrder" />
         <activity android:name=".Admin.ViewYourPersonalProduct" />
-        <activity android:name=".Admin.ViewCurrentCartPlaced" />
+        <activity android:name=".Admin.ViewSpecificUsersCart" />
         <activity android:name=".Admin.ViewAllCarts" />
         <activity android:name=".Admin.AdminProductDetails" />
         <activity android:name=".Admin.AdminNewOrdersActivity" />

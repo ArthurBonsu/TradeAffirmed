@@ -623,7 +623,7 @@ public  class  AdminViewCartOfUser extends AppCompatActivity
                             holder.admincartusername.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    Intent intentviewbuyers = new Intent(AdminViewCartOfUser.this, ViewCurrentCartPlaced.class);
+                                    Intent intentviewbuyers = new Intent(AdminViewCartOfUser.this, ViewSpecificUsersCart.class);
                                     intentviewbuyers.putExtra("userIDfromcart", uid);
 
                                     startActivity(intentviewbuyers);
@@ -882,7 +882,7 @@ public  class  AdminViewCartOfUser extends AppCompatActivity
                         String cusomerId = "";
 
                         cusomerId = user.getUid();
-                        Intent intent = new Intent(AdminViewCartOfUser.this, ViewCurrentCartPlaced.class);
+                        Intent intent = new Intent(AdminViewCartOfUser.this, ViewSpecificUsersCart.class);
                         if (intent != null) {
                             intent.putExtra("traderorcustomer", traderoruser);
                             intent.putExtra("role", type);
@@ -898,7 +898,7 @@ public  class  AdminViewCartOfUser extends AppCompatActivity
                         String cusomerId = "";
                         cusomerId = user.getUid();
 
-                        Intent intent = new Intent(AdminViewCartOfUser.this, ViewCurrentCartPlaced.class);
+                        Intent intent = new Intent(AdminViewCartOfUser.this, ViewSpecificUsersCart.class);
                         if (intent != null) {
                             intent.putExtra("traderorcustomer", traderoruser);
                             intent.putExtra("role", type);
@@ -1363,7 +1363,7 @@ public  class  AdminViewCartOfUser extends AppCompatActivity
                         String cusomerId = "";
                         cusomerId = user.getUid();
 
-                        Intent intent = new Intent(AdminViewCartOfUser.this, ViewCurrentCartPlaced.class);
+                        Intent intent = new Intent(AdminViewCartOfUser.this, ViewSpecificUsersCart.class);
                         if (intent != null) {
                             intent.putExtra("traderorcustomer", traderoruser);
                             intent.putExtra("role", type);

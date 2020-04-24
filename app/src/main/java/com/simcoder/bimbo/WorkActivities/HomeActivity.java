@@ -47,7 +47,7 @@ import com.simcoder.bimbo.Admin.AdminMaintainProductsActivity;
 import com.simcoder.bimbo.Admin.AdminNewOrdersActivity;
 import com.simcoder.bimbo.Admin.AdminProductDetails;
 import com.simcoder.bimbo.Admin.ViewAllCarts;
-import com.simcoder.bimbo.Admin.ViewCurrentCartPlaced;
+import com.simcoder.bimbo.Admin.ViewSpecificUsersCart;
 import com.simcoder.bimbo.Admin.ViewYourPersonalProduct;
 import com.simcoder.bimbo.DriverMapActivity;
 import com.simcoder.bimbo.HistoryActivity;
@@ -962,7 +962,7 @@ public  class  HomeActivity extends AppCompatActivity
                         String cusomerId = "";
 
                         cusomerId = user.getUid();
-                        Intent intent = new Intent(HomeActivity.this, ViewCurrentCartPlaced.class);
+                        Intent intent = new Intent(HomeActivity.this, ViewSpecificUsersCart.class);
                         if (intent != null) {
                             intent.putExtra("traderorcustomer", traderoruser);
                             intent.putExtra("role", type);
@@ -978,7 +978,7 @@ public  class  HomeActivity extends AppCompatActivity
                         String cusomerId = "";
                         cusomerId = user.getUid();
 
-                        Intent intent = new Intent(HomeActivity.this, ViewCurrentCartPlaced.class);
+                        Intent intent = new Intent(HomeActivity.this, ViewSpecificUsersCart.class);
                         if (intent != null) {
                             intent.putExtra("traderorcustomer", traderoruser);
                             intent.putExtra("role", type);
@@ -1479,7 +1479,7 @@ public  class  HomeActivity extends AppCompatActivity
                         String cusomerId = "";
                         cusomerId = user.getUid();
 
-                        Intent intent = new Intent(HomeActivity.this, ViewCurrentCartPlaced.class);
+                        Intent intent = new Intent(HomeActivity.this, ViewSpecificUsersCart.class);
                         if (intent != null) {
                             intent.putExtra("traderorcustomer", traderoruser);
                             intent.putExtra("role", type);

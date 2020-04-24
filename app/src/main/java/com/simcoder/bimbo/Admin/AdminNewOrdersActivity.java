@@ -562,7 +562,7 @@ public  class  AdminNewOrdersActivity  extends AppCompatActivity
                                     public void onClick(View view) {
 
 
-                                        Intent intentviewpersonalorder = new Intent(AdminNewOrdersActivity.this, ViewYourPersonalOrder.class);
+                                        Intent intentviewpersonalorder = new Intent(AdminNewOrdersActivity.this, ViewSpecificUsersOrder.class);
 
 
                                         intentviewpersonalorder.putExtra("orderkey", orderkey);
@@ -865,7 +865,7 @@ public  class  AdminNewOrdersActivity  extends AppCompatActivity
                         String cusomerId = "";
 
                         cusomerId = user.getUid();
-                        Intent intent = new Intent(AdminNewOrdersActivity.this, ViewCurrentCartPlaced.class);
+                        Intent intent = new Intent(AdminNewOrdersActivity.this, ViewSpecificUsersCart.class);
                         if (intent != null) {
                             intent.putExtra("traderorcustomer", traderoruser);
                             intent.putExtra("role", type);
@@ -881,7 +881,7 @@ public  class  AdminNewOrdersActivity  extends AppCompatActivity
                         String cusomerId = "";
                         cusomerId = user.getUid();
 
-                        Intent intent = new Intent(AdminNewOrdersActivity.this, ViewCurrentCartPlaced.class);
+                        Intent intent = new Intent(AdminNewOrdersActivity.this, ViewSpecificUsersCart.class);
                         if (intent != null) {
                             intent.putExtra("traderorcustomer", traderoruser);
                             intent.putExtra("role", type);
@@ -1346,7 +1346,7 @@ public  class  AdminNewOrdersActivity  extends AppCompatActivity
                         String cusomerId = "";
                         cusomerId = user.getUid();
 
-                        Intent intent = new Intent(AdminNewOrdersActivity.this, ViewCurrentCartPlaced.class);
+                        Intent intent = new Intent(AdminNewOrdersActivity.this, ViewSpecificUsersCart.class);
                         if (intent != null) {
                             intent.putExtra("traderorcustomer", traderoruser);
                             intent.putExtra("role", type);

@@ -843,7 +843,7 @@ public  class  AdminAllProducts extends AppCompatActivity
                         String cusomerId = "";
 
                         cusomerId = user.getUid();
-                        Intent intent = new Intent(AdminAllProducts.this, ViewCurrentCartPlaced.class);
+                        Intent intent = new Intent(AdminAllProducts.this, ViewSpecificUsersCart.class);
                         if (intent != null) {
                             intent.putExtra("traderorcustomer", traderoruser);
                             intent.putExtra("role", type);
@@ -859,7 +859,7 @@ public  class  AdminAllProducts extends AppCompatActivity
                         String cusomerId = "";
                         cusomerId = user.getUid();
 
-                        Intent intent = new Intent(AdminAllProducts.this, ViewCurrentCartPlaced.class);
+                        Intent intent = new Intent(AdminAllProducts.this, ViewSpecificUsersCart.class);
                         if (intent != null) {
                             intent.putExtra("traderorcustomer", traderoruser);
                             intent.putExtra("role", type);
@@ -1324,7 +1324,7 @@ public  class  AdminAllProducts extends AppCompatActivity
                         String cusomerId = "";
                         cusomerId = user.getUid();
 
-                        Intent intent = new Intent(AdminAllProducts.this, ViewCurrentCartPlaced.class);
+                        Intent intent = new Intent(AdminAllProducts.this, ViewSpecificUsersCart.class);
                         if (intent != null) {
                             intent.putExtra("traderorcustomer", traderoruser);
                             intent.putExtra("role", type);

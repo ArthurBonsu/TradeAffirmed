@@ -122,7 +122,7 @@ public  class ViewYourPersonalProduct extends AppCompatActivity
     String state;
     String thecustomersjob;
     String secondsnapshotkey;
-
+   String  thirdsnapshotkey;
     Getmyfollowings getmyfollowingsagain;
     String userkey;
 
@@ -139,6 +139,7 @@ public  class ViewYourPersonalProduct extends AppCompatActivity
     DatabaseReference myreferencetoimage;
     DatabaseReference productsRef;
    String snapshotkeys;
+   String traderuser;
 
 
     //
@@ -295,7 +296,7 @@ public  class ViewYourPersonalProduct extends AppCompatActivity
 
 
                     orderkey = OrdersRef.getKey();
-
+              //      ProductsRef = OrdersRef.child(orderkey).child("products");
 
                     // GET FROM FOLLOWING KEY
                     if (orderkey != null) {
@@ -479,22 +480,13 @@ public  class ViewYourPersonalProduct extends AppCompatActivity
 
             }
 
-            myfirebaseDatabase = FirebaseDatabase.getInstance();
+            traderuser = traderoruser+userID;
+            @Nullable
 
-            OrdersRef = myfirebaseDatabase.getReference().child("Orders");
+            Query queryhere =
 
-
-            orderkey = OrdersRef.getKey();
-            // GET FROM FOLLOWING KEY
-
-
-            if (orderkey != null) {
-                 @Nullable
-
-                 Query queryhere =
-
-                         OrdersRef.orderByChild("tid").equalTo(traderoruser);
-                 if (queryhere != null) {
+                    FirebaseDatabase.getInstance().getReference().child("Orders").orderByChild("traderuser").equalTo(traderuser);
+            if (queryhere != null) {
 
                      FirebaseRecyclerOptions<Cart> options =
                              new FirebaseRecyclerOptions.Builder<Cart>()
@@ -504,7 +496,8 @@ public  class ViewYourPersonalProduct extends AppCompatActivity
                                          @Nullable
                                          @Override
                                          public Cart parseSnapshot(@Nullable DataSnapshot snapshot) {
-
+                                             snapshotkeys = snapshot.getKey();
+                                             Log.d("SNAPshotkey", snapshotkeys);
 
                                       /*
                                       String commentkey = snapshot.child("Comments").getKey();
@@ -512,52 +505,88 @@ public  class ViewYourPersonalProduct extends AppCompatActivity
 
 
 */
-                                             if (snapshot.child("products").child("image").getValue() != null) {
-                                                 image = snapshot.child("products").child("image").getValue(String.class);
+                                             for (DataSnapshot snapshot1 : snapshot.getChildren()) {
+
+                                                 //                for (DataSnapshot snapshot3: snapshot1.getChildren()){
+
+                                                 secondsnapshotkey = snapshot1.getKey();
+
+                                                 ;
+
+
+                                                 Log.d("SNAPSHOTKEYS", secondsnapshotkey);
+                                                 for (DataSnapshot snapshot2 : snapshot1.getChildren()) {
+                                                     thirdsnapshotkey = snapshot2.getKey();
+                                                     Log.d("THIRDSNAPSHOTKEYS", thirdsnapshotkey);
+
+
+                                                     if (snapshotkeys != null) {
+                                                         if (secondsnapshotkey != null) {
+
+                                                             if (thirdsnapshotkey != null) {
+
+                                                                 if (snapshot.child("products").child(thirdsnapshotkey).child("image").getValue() != null) {
+                                                                     image = snapshot.child("products").child(thirdsnapshotkey).child("image").getValue(String.class);
+                                                                     //        Log.d("image", image);
+                                                                 }
+
+                                                                 if (snapshot.child("products").child(thirdsnapshotkey).child("name").getValue() != null) {
+                                                                     name = snapshot.child("products").child(thirdsnapshotkey).child("name").getValue(String.class);
+                                                                 }
+                                                                 //     Log.d("name", name);
+                                                                 if (snapshot.child("products").child(thirdsnapshotkey).child("pid").getValue() != null) {
+                                                                     pid = snapshot.child("products").child(thirdsnapshotkey).child("pid").getValue(String.class);
+                                                                 }
+                                                                 //       Log.d("pid", pid);
+                                                                 if (snapshot.child("products").child(thirdsnapshotkey).child("pname").getValue() != null) {
+                                                                     pname = snapshot.child("products").child(thirdsnapshotkey).child("pname").getValue(String.class);
+                                                                 }
+                                                                 if (snapshot.child("products").child(thirdsnapshotkey).child("pimage").getValue() != null) {
+                                                                     pimage = snapshot.child("products").child(thirdsnapshotkey).child("pimage").getValue(String.class);
+                                                                 }
+                                                                 //      Log.d("pid", pname);
+                                                                 if (snapshot.child("products").child(thirdsnapshotkey).child("quantity").getValue() != null) {
+                                                                     quantity = snapshot.child("products").child(thirdsnapshotkey).child("quantity").getValue(String.class);
+                                                                 }
+                                                                 //        Log.d("quantity", pname);
+                                                                 if (snapshot.child("products").child(thirdsnapshotkey).child("state").getValue() != null) {
+                                                                     state = snapshot.child("products").child(thirdsnapshotkey).child("state").getValue(String.class);
+                                                                 }
+                                                                 //       Log.d("state", state);
+                                                                 if (snapshot.child("products").child(thirdsnapshotkey).child("tid").getValue() != null) {
+                                                                     tid = snapshot.child("products").child(thirdsnapshotkey).child("tid").getValue(String.class);
+                                                                 }
+                                                                 //       Log.d("tid", tid);
+
+                                                                 if (snapshot.child("products").child(thirdsnapshotkey).child("traderimage").getValue() != null) {
+                                                                     traderimage = snapshot.child("products").child(thirdsnapshotkey).child("traderimage").getValue(String.class);
+                                                                 }
+
+                                                                 //       Log.d("traderimage", traderimage);
+                                                                 if (snapshot.child("products").child(thirdsnapshotkey).child("tradername").getValue() != null) {
+                                                                     tradername = snapshot.child("products").child(thirdsnapshotkey).child("tradername").getValue(String.class);
+                                                                 }
+                                                                 //      Log.d("tradername", tradername);
+                                                                 if (snapshot.child("products").child(thirdsnapshotkey).child("uid").getValue() != null) {
+                                                                     uid = snapshot.child("products").child(thirdsnapshotkey).child("uid").getValue(String.class);
+                                                                 }
+                                                                 if (snapshot.child("products").child(thirdsnapshotkey).child("price").getValue() != null) {
+                                                                     price = snapshot.child("products").child(thirdsnapshotkey).child("price").getValue(String.class);
+                                                                 }
+                                                                 if (snapshot.child("products").child(thirdsnapshotkey).child("time").getValue() != null) {
+                                                                     time = snapshot.child("products").child(thirdsnapshotkey).child("time").getValue(String.class);
+                                                                 }
+                                                                 //       Log.d("uid", uid);
+                                                             }
+                                                         }
+                                                     }
+                                                 }
                                              }
 
-                                             if (snapshot.child("products").child("name").getValue() != null) {
-                                                 name = snapshot.child("products").child("name").getValue(String.class);
-                                             }
-
-                                             if (snapshot.child("products").child("pid").getValue() != null) {
-                                                 pid = snapshot.child("products").child("pid").getValue(String.class);
-                                             }
-
-                                             if (snapshot.child("products").child("pname").getValue() != null) {
-                                                 pname = snapshot.child("products").child("pname").getValue(String.class);
-                                             }
-
-                                             if (snapshot.child("products").child("quantity").getValue() != null) {
-                                                 quantity = snapshot.child("products").child("quantity").getValue(String.class);
-                                             }
-
-                                             if (snapshot.child("products").child("state").getValue() != null) {
-                                                 state = snapshot.child("products").child("state").getValue(String.class);
-                                             }
-
-                                             if (snapshot.child("products").child("tid").getValue() != null) {
-                                                 tid = snapshot.child("products").child("tid").getValue(String.class);
-                                             }
-
-
-                                             if (snapshot.child("products").child("traderimage").getValue() != null) {
-                                                 traderimage = snapshot.child("products").child("traderimage").getValue(String.class);
-                                             }
-
-
-                                             if (snapshot.child("products").child("tradername").getValue() != null) {
-                                                 tradername = snapshot.child("products").child("tradername").getValue(String.class);
-                                             }
-
-                                             if (snapshot.child("products").child("uid").getValue() != null) {
-                                                 uid = snapshot.child("products").child("uid").getValue(String.class);
-                                             }
-
-                                             return new Cart(image, name, pid, pname, quantity, state, tid, traderimage, tradername, uid);
-
+                                             return new Cart(image, name,  pid,pimage, pname, quantity, state, tid, traderimage, tradername, uid, price, time);
 
                                          }
+
 
                                      }).build();
 
@@ -606,7 +635,7 @@ public  class ViewYourPersonalProduct extends AppCompatActivity
                                  holder.admincartusername.setOnClickListener(new View.OnClickListener() {
                                      @Override
                                      public void onClick(View v) {
-                                         Intent intentviewbuyers = new Intent(ViewYourPersonalProduct.this, ViewCurrentCartPlaced.class);
+                                         Intent intentviewbuyers = new Intent(ViewYourPersonalProduct.this, ViewSpecificUsersCart.class);
                                          intentviewbuyers.putExtra("userIDfromcart", uid);
 
                                          startActivity(intentviewbuyers);
@@ -663,7 +692,7 @@ public  class ViewYourPersonalProduct extends AppCompatActivity
 
         }
 
-    }
+
     @Nullable
     @Override
     public void onStart() {
@@ -864,7 +893,7 @@ public  class ViewYourPersonalProduct extends AppCompatActivity
                         String cusomerId = "";
 
                         cusomerId = user.getUid();
-                        Intent intent = new Intent(ViewYourPersonalProduct.this, ViewCurrentCartPlaced.class);
+                        Intent intent = new Intent(ViewYourPersonalProduct.this, ViewSpecificUsersCart.class);
                         if (intent != null) {
                             intent.putExtra("traderorcustomer", traderoruser);
                             intent.putExtra("role", type);
@@ -880,7 +909,7 @@ public  class ViewYourPersonalProduct extends AppCompatActivity
                         String cusomerId = "";
                         cusomerId = user.getUid();
 
-                        Intent intent = new Intent(ViewYourPersonalProduct.this, ViewCurrentCartPlaced.class);
+                        Intent intent = new Intent(ViewYourPersonalProduct.this, ViewSpecificUsersCart.class);
                         if (intent != null) {
                             intent.putExtra("traderorcustomer", traderoruser);
                             intent.putExtra("role", type);
@@ -1345,7 +1374,7 @@ public  class ViewYourPersonalProduct extends AppCompatActivity
                         String cusomerId = "";
                         cusomerId = user.getUid();
 
-                        Intent intent = new Intent(ViewYourPersonalProduct.this, ViewCurrentCartPlaced.class);
+                        Intent intent = new Intent(ViewYourPersonalProduct.this, ViewSpecificUsersCart.class);
                         if (intent != null) {
                             intent.putExtra("traderorcustomer", traderoruser);
                             intent.putExtra("role", type);

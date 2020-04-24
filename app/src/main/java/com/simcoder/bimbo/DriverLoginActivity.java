@@ -78,10 +78,11 @@ public class DriverLoginActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                mProgress.show();
-                signIn();
-               mProgress.hide();
-            }
+                if (mProgress != null) {
+                    mProgress.show();
+                    signIn();
+                    mProgress.hide();
+                }}
         });
 
 

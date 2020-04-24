@@ -1525,4 +1525,33 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     public void onPointerCaptureChanged ( boolean hasCapture){
 
     }
+
+
+
+
+    @Override
+    public void onResume() {
+        mapFragment.onResume();
+        super.onResume();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mapFragment.onDestroy();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mapFragment.onPause();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mapFragment.onLowMemory();
+    }
+
+
 }

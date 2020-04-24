@@ -228,7 +228,7 @@ android.widget.ImageView admincartimageofproduct;
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
-            toolbar.setTitle("User Activity");
+            toolbar.setTitle("View All Carts");
         }
 //        setSupportActionBar(toolbar);
 
@@ -617,7 +617,7 @@ android.widget.ImageView admincartimageofproduct;
                             holder.admincartusername.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    Intent intentviewbuyers = new Intent(ViewAllCarts.this, ViewCurrentCartPlaced.class);
+                                    Intent intentviewbuyers = new Intent(ViewAllCarts.this, ViewSpecificUsersCart.class);
                                     intentviewbuyers.putExtra("userIDfromcart", uid);
 
                                     startActivity(intentviewbuyers);
@@ -876,7 +876,7 @@ android.widget.ImageView admincartimageofproduct;
                         String cusomerId = "";
 
                         cusomerId = user.getUid();
-                        Intent intent = new Intent(ViewAllCarts.this, ViewCurrentCartPlaced.class);
+                        Intent intent = new Intent(ViewAllCarts.this, ViewSpecificUsersCart.class);
                         if (intent != null) {
                             intent.putExtra("traderorcustomer", traderoruser);
                             intent.putExtra("role", type);
@@ -892,7 +892,7 @@ android.widget.ImageView admincartimageofproduct;
                         String cusomerId = "";
                         cusomerId = user.getUid();
 
-                        Intent intent = new Intent(ViewAllCarts.this, ViewCurrentCartPlaced.class);
+                        Intent intent = new Intent(ViewAllCarts.this, ViewSpecificUsersCart.class);
                         if (intent != null) {
                             intent.putExtra("traderorcustomer", traderoruser);
                             intent.putExtra("role", type);
@@ -1357,7 +1357,7 @@ android.widget.ImageView admincartimageofproduct;
                         String cusomerId = "";
                         cusomerId = user.getUid();
 
-                        Intent intent = new Intent(ViewAllCarts.this, ViewCurrentCartPlaced.class);
+                        Intent intent = new Intent(ViewAllCarts.this, ViewSpecificUsersCart.class);
                         if (intent != null) {
                             intent.putExtra("traderorcustomer", traderoruser);
                             intent.putExtra("role", type);

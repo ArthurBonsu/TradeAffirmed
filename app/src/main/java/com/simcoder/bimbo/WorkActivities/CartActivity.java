@@ -46,7 +46,7 @@ import com.simcoder.bimbo.Admin.AdminCategoryActivity;
 import com.simcoder.bimbo.Admin.AdminMaintainProductsActivity;
 import com.simcoder.bimbo.Admin.AdminProductDetails;
 import com.simcoder.bimbo.Admin.ViewAllCarts;
-import com.simcoder.bimbo.Admin.ViewCurrentCartPlaced;
+import com.simcoder.bimbo.Admin.ViewSpecificUsersCart;
 import com.simcoder.bimbo.Admin.ViewYourPersonalProduct;
 import com.simcoder.bimbo.DriverMapActivity;
 import com.simcoder.bimbo.HistoryActivity;
@@ -87,6 +87,7 @@ public  class  CartActivity extends AppCompatActivity
     private static final int RC_SIGN_IN = 1;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
     private FirebaseRecyclerAdapter adapter;
+    TextView therealnumberoflikes;
 
 
 
@@ -115,7 +116,7 @@ public  class  CartActivity extends AppCompatActivity
     String somerole;
     String key;
     String uid;
-
+    int oneTyprProductTPrice;
 
     String traderkey;
     String thetraderhere;
@@ -177,6 +178,7 @@ public  class  CartActivity extends AppCompatActivity
         thepicturebeingloaded = (android.widget.ImageView) findViewById(R.id.cartproductimageonscreeen);
         thetraderpicturebeingloaded = (android.widget.ImageView) findViewById(R.id.cartimageonscreen);
         cartthenextactivityhere = (Button) findViewById(R.id.cartnextbutton);
+        therealnumberoflikes = (TextView)findViewById(R.id.therealnumberoflikes);
         //     recyclerView.setAdapter(adapter);
 
         //    if (recyclerView != null) {
@@ -361,6 +363,7 @@ public  class  CartActivity extends AppCompatActivity
         public TextView carttradernamehere;
         public TextView cartdescriptionhere;
         public TextView cartquantity;
+        public  TextView  therealnumberoflikes;
 
         public android.widget.ImageView cartimageonscreen;
         public android.widget.ImageView cartproductimageonscreeen;
@@ -379,6 +382,7 @@ public  class  CartActivity extends AppCompatActivity
             cartimageonscreen = itemView.findViewById(R.id.cartimageonscreen);
             cartproductimageonscreeen = itemView.findViewById(R.id.cartproductimageonscreeen);
             numberoflikesimage = itemView.findViewById(R.id.numberoflikesimage);
+            therealnumberoflikes =  itemView.findViewById(R.id.therealnumberoflikes);
 
         }
 
@@ -538,7 +542,7 @@ public  class  CartActivity extends AppCompatActivity
 
 
             @Override
-            protected void onBindViewHolder(ViewHolder holder, final int position, final Cart model) {
+            protected void onBindViewHolder(final ViewHolder holder, final int position, final Cart model) {
                 holder.carttheproductname.setText(model.getname());
                 holder.carttheproductprice.setText("Price = " + model.getprice() + "$");
                 holder.cartdescriptionhere.setText(model.getdesc());
@@ -562,6 +566,20 @@ public  class  CartActivity extends AppCompatActivity
                      holder.setTraderImage(getApplication(), model.gettraderimage());
 
                     holder.cartquantity.setText(thetraderhere);
+            DatabaseReference myProducts =         FirebaseDatabase.getInstance().getReference().child("Products");
+               myProducts.addValueEventListener(new ValueEventListener() {
+                   @Override
+                   public void onDataChange(DataSnapshot dataSnapshot) {
+                       if (pid != null) {
+                           String numberoflikes = dataSnapshot.child(pid).child("number").getValue(String.class);
+                           holder.therealnumberoflikes.setText(numberoflikes);
+                       }}
+
+                   @Override
+                   public void onCancelled(DatabaseError databaseError) {
+
+                   }
+               });
 
                     if (holder != null) {
                         holder.carttheproductname.setOnClickListener(new View.OnClickListener() {
@@ -824,7 +842,7 @@ public  class  CartActivity extends AppCompatActivity
                         String cusomerId = "";
 
                         cusomerId = user.getUid();
-                        Intent intent = new Intent(CartActivity.this, ViewCurrentCartPlaced.class);
+                        Intent intent = new Intent(CartActivity.this, ViewSpecificUsersCart.class);
                         if (intent != null) {
                             intent.putExtra("traderorcustomer", customerid);
                             intent.putExtra("role", role);
@@ -840,7 +858,7 @@ public  class  CartActivity extends AppCompatActivity
                         String cusomerId = "";
                         cusomerId = user.getUid();
 
-                        Intent intent = new Intent(CartActivity.this, ViewCurrentCartPlaced.class);
+                        Intent intent = new Intent(CartActivity.this, ViewSpecificUsersCart.class);
                         if (intent != null) {
                             intent.putExtra("traderorcustomer", customerid);
                             intent.putExtra("role", role);
@@ -1331,7 +1349,7 @@ public  class  CartActivity extends AppCompatActivity
                         String cusomerId = "";
                         cusomerId = user.getUid();
 
-                        Intent intent = new Intent(CartActivity.this, ViewCurrentCartPlaced.class);
+                        Intent intent = new Intent(CartActivity.this, ViewSpecificUsersCart.class);
                         if (intent != null) {
                             intent.putExtra("traderorcustomer", cusomerId);
                             intent.putExtra("role", role);
