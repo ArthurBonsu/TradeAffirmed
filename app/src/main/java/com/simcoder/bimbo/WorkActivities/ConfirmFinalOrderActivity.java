@@ -69,6 +69,8 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity
         cartkey = getIntent().getStringExtra("cartkey");
         totalAmount = getIntent().getStringExtra("Total Price");
         productIDHERE = getIntent().getStringExtra("pid");
+
+
         Toast.makeText(this, "Total Price =  $ " + totalAmount, Toast.LENGTH_SHORT).show();
 
 

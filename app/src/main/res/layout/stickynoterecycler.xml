@@ -21,6 +21,16 @@
 
     </android.support.design.widget.AppBarLayout>
 
+
+    <!--侧边栏样式-->
+
+
+
+
+
+
+
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/stickyheaderrecyler"
         android:layout_width="match_parent"
@@ -31,65 +41,50 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginBottom="5dp"
-        app:layout_constraintBottom_toTopOf="@+id/cartnextbutton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginBottom="5dp">
 
 
-    <!--侧边栏样式-->
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="250dp"
-        android:layout_height="700dp">
-
-        <android.support.v4.widget.DrawerLayout
-            android:id="@+id/drawer_layout"
-            android:layout_width="250dp"
-            android:layout_height="700dp"
-
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0"
-            tools:openDrawer="start">
-
-            <!--主页内容-->
-
-
-            <android.support.design.widget.NavigationView
-                android:id="@+id/nav_view"
-                tools="start"
-                android:layout_width="250dp"
-                android:layout_height="700dp"
-                android:layout_gravity="start"
-                android:fitsSystemWindows="true"
-                android:visibility="visible"
-                app:headerLayout="@layout/nav_header_home"
-                app:menu="@menu/activity_home_drawer" />
-
-
-        </android.support.v4.widget.DrawerLayout>
-    </android.support.constraint.ConstraintLayout>
+    </android.support.v7.widget.RecyclerView>
 
     <Button
         android:id="@+id/cartnextbutton"
-        android:layout_width="match_parent"
+        android:layout_width="386dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="650dp"
+        android:layout_marginTop="450sp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
+        android:background="@color/colorPrimary"
         android:text="@string/nextclicktogotoconfirm"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/stickyheaderrecyler" />
+        android:visibility="visible"
+        tools:visibility="visible" />
+<android.support.v4.widget.DrawerLayout
+android:id="@+id/drawer_layout"
+android:layout_width="250dp"
+android:layout_height="700dp"
+
+android:layout_marginEnd="8dp"
+android:layout_marginRight="8dp"
+android:visibility="visible"
+tools:openDrawer="start">
+
+<!--主页内容-->
+
+
+<android.support.design.widget.NavigationView
+    android:id="@+id/nav_view"
+    tools="start"
+    android:layout_width="250dp"
+    android:layout_height="700dp"
+    android:layout_gravity="start"
+    android:fitsSystemWindows="true"
+    android:visibility="visible"
+    app:headerLayout="@layout/nav_header_home"
+    app:menu="@menu/activity_home_drawer">
+
+
+</android.support.design.widget.NavigationView>
+</android.support.v4.widget.DrawerLayout>
+
 </FrameLayout>

@@ -56,6 +56,7 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.simcoder.bimbo.Model.Products;
 import com.simcoder.bimbo.R;
 import com.simcoder.bimbo.instagram.Home.InstagramHomeActivity;
 import com.squareup.picasso.Callback;
@@ -73,9 +74,9 @@ public  class  CartActivity extends AppCompatActivity
 
     private Button NextProcessBtn;
     private  Button cartthenextactivityhere;
-    private TextView txtTotalAmount, txtMsg1;
+    public TextView txtTotalAmount, txtMsg1;
 
-    private int overTotalPrice = 0;
+    public final  int overTotalPrice = 0;
     String productID = "";
     String userID = "";
     DatabaseReference UserRef;
@@ -89,9 +90,10 @@ public  class  CartActivity extends AppCompatActivity
     private FirebaseRecyclerAdapter adapter;
     TextView therealnumberoflikes;
 
-
+     ViewHolder holders;
 
     //AUTHENTICATORS
+
 
     private GoogleMap mMap;
     GoogleApiClient mGoogleApiClient;
@@ -106,9 +108,9 @@ public  class  CartActivity extends AppCompatActivity
     String traderoruser;
     String nameofproduct;
     String productid;
-    String quantity;
-    String image;
-    String price;
+    public  String quantity;
+    public  String image;
+    public String price;
     String users;
     String time;
     String useridentifier;
@@ -116,17 +118,22 @@ public  class  CartActivity extends AppCompatActivity
     String somerole;
     String key;
     String uid;
-    int oneTyprProductTPrice;
-
+    public  int oneTyprProductTPrice;
+    TextView cartquantity;
     String traderkey;
     String thetraderhere;
     String tradername;
     String thetraderimage;
     android.widget.ImageView thepicturebeingloaded;
     android.widget.ImageView  thetraderpicturebeingloaded;
+    FirebaseDatabase myfirebasedatabase;
     DatabaseReference UsersRef;
     FirebaseUser user;
+    String  numberoflikes;
     Query cartquery;
+    Query thelikequery;
+    String productkey;
+    DatabaseReference myProducts;
     String date, desc, discount, name, photoid,pid, pimage, pname,tid, traderimage;
 
     @Override
@@ -134,8 +141,8 @@ public  class  CartActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(
                 (R.layout.stickynoterecycler));
+        cartthenextactivityhere = (Button) findViewById(R.id.cartnextbutton);
 
-        ;
 
         recyclerView = findViewById(R.id.stickyheaderrecyler);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -173,187 +180,69 @@ public  class  CartActivity extends AppCompatActivity
             TextView userNameTextView = headerView.findViewById(R.id.user_profile_name);
             CircleImageView profileImageView = headerView.findViewById(R.id.user_profile_image);
         }
-
-        fetch();
         thepicturebeingloaded = (android.widget.ImageView) findViewById(R.id.cartproductimageonscreeen);
         thetraderpicturebeingloaded = (android.widget.ImageView) findViewById(R.id.cartimageonscreen);
-        cartthenextactivityhere = (Button) findViewById(R.id.cartnextbutton);
-        therealnumberoflikes = (TextView)findViewById(R.id.therealnumberoflikes);
+
+        therealnumberoflikes = (TextView) findViewById(R.id.therealnumberoflikes);
+        cartquantity = (TextView) findViewById(R.id.cartquantity);
+        mAuth = FirebaseAuth.getInstance();
+        user = mAuth.getCurrentUser();
+        if (user != null) {
+            uid = user.getUid();
+
+
+            myfirebasedatabase = FirebaseDatabase.getInstance();
+            UsersRef = myfirebasedatabase.getReference().child("Users");
+            UsersRef.keepSynced(true);
+            CartListRef = myfirebasedatabase.getReference().child("Cart");
+            CartListRef.keepSynced(true);
+            myProducts = myfirebasedatabase.getReference().child("Products");
+            myProducts.keepSynced(true);
+
+
+            fetch();
+
         //     recyclerView.setAdapter(adapter);
 
         //    if (recyclerView != null) {
         //       recyclerView.setAdapter(adapter);
         //   }
 
-        mAuth = FirebaseAuth.getInstance();
-        user = mAuth.getCurrentUser();
-        if (user != null) {
-            uid = user.getUid();
-
-            UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
-            UsersRef.keepSynced(true);
-            CartListRef = FirebaseDatabase.getInstance().getReference().child("Cart");
-            CartListRef.keepSynced(true);
-            cartlistkey = CartListRef.getKey();
-            cartquery = CartListRef.orderByChild("tid").equalTo(uid);
-
-            if (cartquery != null) {
-                cartquery.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-
-                        if (cartlistkey != null) {
-                            for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                                cartlistkey = dataSnapshot1.getKey();
-                                Log.d("TAG", cartlistkey);
-                                if (dataSnapshot.child("date").getValue() != null) {
-                                    date = dataSnapshot.child("date").getValue(String.class);
-                                }
-                                if (dataSnapshot.child("desc").getValue() != null) {
-                                    desc = dataSnapshot.child("desc").getValue(String.class);
-                                }
-                                if (dataSnapshot.child("discount").getValue() != null) {
-                                    discount = dataSnapshot.child("discount").getValue(String.class);
-                                }
-                                if (dataSnapshot.child("image").getValue() != null) {
-                                    image = dataSnapshot.child("image").getValue(String.class);
-                                }
 
 
-                                if (dataSnapshot.child("name").getValue() != null) {
-                                    name = dataSnapshot.child("name").getValue(String.class);
-                                }
 
-                                if (dataSnapshot.child("photoid").getValue() != null) {
-                                    photoid = dataSnapshot.child("photoid").getValue(String.class);
-                                }
+            GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
+            if (mGoogleApiClient != null) {
 
-                                if (dataSnapshot.child("pid").getValue() != null) {
-                                    pid = dataSnapshot.child("pid").getValue(String.class);
-                                }
-                                if (dataSnapshot.child("pimage").getValue() != null) {
-                                    pimage = dataSnapshot.child("pimage").getValue(String.class);
-                                }
-                                if (dataSnapshot.child("pname").getValue() != null) {
-                                    pname = dataSnapshot.child("pname").getValue(String.class);
-                                }
-                                if (dataSnapshot.child("price").getValue() != null) {
-                                    price = dataSnapshot.child("price").getValue(String.class);
-                                }
-                                if (dataSnapshot.child("quantity").getValue() != null) {
-                                    quantity = dataSnapshot.child("quantity").getValue(String.class);
-                                }
-                                if (dataSnapshot.child("tid").getValue() != null) {
-                                    tid = dataSnapshot.child("tid").getValue(String.class);
-                                }
-                                if (dataSnapshot.child("time").getValue() != null) {
-                                    time = dataSnapshot.child("time").getValue(String.class);
-                                }
-                                if (dataSnapshot.child("traderimage").getValue() != null) {
-                                    traderimage = dataSnapshot.child("traderimage").getValue(String.class);
-                                }
-                                if (dataSnapshot.child("tradername").getValue() != null) {
-                                    tradername = dataSnapshot.child("tradername").getValue(String.class);
-                                }
-                                if (dataSnapshot.child("uid").getValue() != null) {
-                                    uid = dataSnapshot.child("uid").getValue(String.class);
-                                }
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-
-                });
+                mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
             }
-        }
 
+            if (mGoogleApiClient != null) {
+                mGoogleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(CartActivity.this,
+                        new GoogleApiClient.OnConnectionFailedListener() {
+                            @Override
+                            public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
-        if (mGoogleApiClient != null) {
-
-            mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-        }
-
-        if (mGoogleApiClient != null) {
-            mGoogleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(CartActivity.this,
-                    new GoogleApiClient.OnConnectionFailedListener() {
-                        @Override
-                        public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-                        }
-                    }).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
-        }
-
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        if (fab != null) {
-            fab.setOnClickListener(
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            if (!role.equals("Trader")) {
-                                Intent intent = new Intent(CartActivity.this, CartActivity.class);
-                                startActivity(intent);
                             }
-                        }
-                    });
+                        }).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
+            }
+
 
             // USER
 
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-            UserRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers");
-            UserRef.keepSynced(true);
-            if (mAuth.getCurrentUser() != null) {
-                UserDetailsRef = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(mAuth.getCurrentUser().getUid());
-                UserDetailsRef.keepSynced(true);
-
-                UserDetailsRef.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-
-                        if (dataSnapshot.exists()) {
-                            if (dataSnapshot.child("uid").getValue() != null) {
-                                useridentifier = dataSnapshot.child("uid").getValue(String.class);
-                            }
-                            if (dataSnapshot.child("role").getValue() != null) {
-                                role = dataSnapshot.child("role").getValue(String.class);
-                            }
-                        }
+            cartthenextactivityhere.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent cartactivityintent = new Intent(CartActivity.this, ConfirmFinalOrderActivity.class);
+                    if (cartactivityintent != null) {
+                        cartactivityintent.putExtra("totalprice", overhypenumber);
+                        startActivity(cartactivityintent);
                     }
-
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-            }
-            if (!role.equals("Trader"))
-
-                if (user != null) {
-                    customerid = "";
-                    customerid = user.getUid();
                 }
+            });
 
 
-        }
-
-
-
-        cartthenextactivityhere.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent cartactivityintent = new Intent(CartActivity.this, ConfirmFinalOrderActivity.class);
-                if (cartactivityintent != null) {
-                    startActivity(cartactivityintent);
-                }
-            }
-        });
-    }
+        }}
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -364,6 +253,7 @@ public  class  CartActivity extends AppCompatActivity
         public TextView cartdescriptionhere;
         public TextView cartquantity;
         public  TextView  therealnumberoflikes;
+
 
         public android.widget.ImageView cartimageonscreen;
         public android.widget.ImageView cartproductimageonscreeen;
@@ -493,93 +383,152 @@ public  class  CartActivity extends AppCompatActivity
 }
 
     private void fetch() {
+
+
         Query query = FirebaseDatabase.getInstance()
                 .getReference()
                 .child("Cart");
+        if (query != null) {
 
-        FirebaseRecyclerOptions<Cart> options =
-                new FirebaseRecyclerOptions.Builder<Cart>()
-                        .setQuery(query, new SnapshotParser<Cart>() {
-
-
-
-                            @Override
-                            public Cart parseSnapshot( DataSnapshot snapshot) {
-
-                                return new Cart(snapshot.child("pid").getValue(String.class),
-
-                                        snapshot.child("tid").getValue(String.class),
-                                        snapshot.child("quantity").getValue(String.class),
-                                        snapshot.child("price").getValue(String.class),
-                                        snapshot.child("desc").getValue(String.class),
-                                        snapshot.child("discount").getValue(String.class),
-                                        snapshot.child("name").getValue(String.class),
-                                        snapshot.child("image").getValue(String.class),
-                                        snapshot.child("tradername").getValue(String.class),
-                                        snapshot.child("traderimage").getValue(String.class),
-                                        snapshot.child("pname").getValue(String.class),
-                                        snapshot.child("pimage").getValue(String.class)
+            FirebaseRecyclerOptions<Cart> options =
+                    new FirebaseRecyclerOptions.Builder<Cart>()
+                            .setQuery(query, new SnapshotParser<Cart>() {
 
 
-                                );
+                                @NonNull
+                                @Override
+                                public Cart parseSnapshot(@NonNull DataSnapshot snapshot) {
 
 
+                                    if (snapshot.child("pid").getValue() != null) {
+                                        pid = snapshot.child("pid").getValue(String.class);
+                                    }
+                                    if (snapshot.child("tid").getValue() != null) {
+                                        tid = snapshot.child("tid").getValue(String.class);
+                                    }
+
+                                    if (snapshot.child("quantity").getValue() != null) {
+                                        quantity = snapshot.child("quantity").getValue(String.class);
+                                    }
+                                    if (snapshot.child("price").getValue() != null) {
+                                        price = snapshot.child("price").getValue(String.class);
+                                    }
+
+                                    if (snapshot.child("desc").getValue() != null) {
+                                        desc = snapshot.child("desc").getValue(String.class);
+                                    }
+
+
+                                    if (snapshot.child("pimage").getValue() != null) {
+                                        pimage = snapshot.child("pimage").getValue(String.class);
+                                    }
+                                    if (snapshot.child("pname").getValue() != null) {
+                                        pname = snapshot.child("pname").getValue(String.class);
+                                    }
+
+
+                                    if (snapshot.child("discount").getValue() != null) {
+                                        discount = snapshot.child("discount").getValue(String.class);
+                                    }
+
+                                    if (snapshot.child("name").getValue() != null) {
+                                        name = snapshot.child("name").getValue(String.class);
+                                    }
+
+
+                                    if (snapshot.child("image").getValue() != null) {
+                                        image = snapshot.child("image").getValue(String.class);
+                                    }
+
+                                    if (snapshot.child("tradername").getValue() != null) {
+                                        tradername = snapshot.child("tradername").getValue(String.class);
+                                    }
+
+                                    if (snapshot.child("traderimage").getValue() != null) {
+                                        traderimage = snapshot.child("traderimage").getValue(String.class);
+                                    }
+
+
+                                    return new Cart(pid, tid, quantity, price, desc, pimage, pname, discount, name, image, tradername, traderimage);
+
+
+                                }
+
+                            }).build();
+
+
+            adapter = new FirebaseRecyclerAdapter<Cart, ViewHolder>(options) {
+                @Override
+                public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                    View view = LayoutInflater.from(parent.getContext())
+                            .inflate(R.layout.cart_items_layout, parent, false);
+
+                    return new ViewHolder(view);
+                }
+
+
+                @Override
+                protected void onBindViewHolder(final ViewHolder holder, final int position, final Cart model) {
+
+                         holders = holder;
+                    holder.carttheproductname.setText(pname);
+                    holder.carttheproductprice.setText("Price = " + price + "$");
+                    holder.cartdescriptionhere.setText(desc);
+                    holder.cartquantity.setText(quantity);
+                    holder.carttradernamehere.setText(tradername);
+                    myfirebasedatabase = FirebaseDatabase.getInstance();
+
+                    myProducts = myfirebasedatabase.getReference().child("Products");
+                    myProducts.keepSynced(true);
+                    Query firebasequery =  myfirebasedatabase.getReference().child("Products").orderByChild("pid").equalTo(pid);
+
+                    firebasequery.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+
+                            for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+
+
+
+                               productkey  = dataSnapshot1.getKey();
+                                Log.d(TAG, "Datasnapshot productkey " + productkey);
+
+                                Log.d(TAG, "UserID here  " + uid );
+                                if (dataSnapshot1.child("pid").getValue() != null) {
+                                    numberoflikes = dataSnapshot1.child("pid").getValue(String.class);
+                                    holders.therealnumberoflikes.setText(numberoflikes);
+                                    Log.d(TAG, "The number of likes " + numberoflikes);
+
+
+
+                                      }
                             }
-                        })
-                        .build();
+                        }
+
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+
+                    key = model.getpid();
+                    traderkey = model.gettid();
+
+                    if (thepicturebeingloaded != null) {
+                        Picasso.get().load(pimage).placeholder(R.drawable.profile).into(thepicturebeingloaded);
+                    }
+
+                    if (thetraderpicturebeingloaded != null) {
+                        Picasso.get().load(traderimage).placeholder(R.drawable.profile).into(thetraderpicturebeingloaded);
+                    }
+
+
+                    holder.setImage(getApplicationContext(), pimage);
+                    holder.setTraderImage(getApplication(), traderimage);
 
 
 
-
-        adapter = new FirebaseRecyclerAdapter<Cart, ViewHolder>(options) {
-            @Override
-            public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                View view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.cart_items_layout, parent, false);
-
-                return new ViewHolder(view);
-            }
-
-
-            @Override
-            protected void onBindViewHolder(final ViewHolder holder, final int position, final Cart model) {
-                holder.carttheproductname.setText(model.getname());
-                holder.carttheproductprice.setText("Price = " + model.getprice() + "$");
-                holder.cartdescriptionhere.setText(model.getdesc());
-                holder.cartquantity.setText(model.getquantity());
-                holder.carttradernamehere.setText(model.gettradername());
-
-                key = model.getpid();
-                traderkey = model.gettid();
-
-                if (thepicturebeingloaded != null) {
-                    Picasso.get().load(model.getimage()).placeholder(R.drawable.profile).into(thepicturebeingloaded);
-                }
-
-                if (thetraderpicturebeingloaded != null) {
-                    Picasso.get().load(model.gettraderimage()).placeholder(R.drawable.profile).into(thetraderpicturebeingloaded);
-                }
-
-
-
-                holder.setImage(getApplicationContext(), model.getimage());
-                     holder.setTraderImage(getApplication(), model.gettraderimage());
-
-                    holder.cartquantity.setText(thetraderhere);
-            DatabaseReference myProducts =         FirebaseDatabase.getInstance().getReference().child("Products");
-               myProducts.addValueEventListener(new ValueEventListener() {
-                   @Override
-                   public void onDataChange(DataSnapshot dataSnapshot) {
-                       if (pid != null) {
-                           String numberoflikes = dataSnapshot.child(pid).child("number").getValue(String.class);
-                           holder.therealnumberoflikes.setText(numberoflikes);
-                       }}
-
-                   @Override
-                   public void onCancelled(DatabaseError databaseError) {
-
-                   }
-               });
 
                     if (holder != null) {
                         holder.carttheproductname.setOnClickListener(new View.OnClickListener() {
@@ -590,11 +539,11 @@ public  class  CartActivity extends AppCompatActivity
                                     if (intent != null) {
                                         intent.putExtra("pid", key);
                                         intent.putExtra("fromthehomeactivitytraderkey", traderkey);
-                                        intent.putExtra("fromthehomeactivityname", model.getname());
-                                        intent.putExtra("fromthehomeactivityprice", model.getprice());
-                                        intent.putExtra("fromthehomeactivitydesc", model.getdesc());
+                                        intent.putExtra("fromthehomeactivityname", name);
+                                        intent.putExtra("fromthehomeactivityprice", price);
+                                        intent.putExtra("fromthehomeactivitydesc", desc);
                                         intent.putExtra("fromthehomeactivityname", thetraderhere);
-                                        intent.putExtra("fromthehomeactivityimage", model.getimage());
+                                        intent.putExtra("fromthehomeactivityimage", pimage);
 
                                     }
                                     startActivity(intent);
@@ -610,9 +559,11 @@ public  class  CartActivity extends AppCompatActivity
 
                     }
 
-                int oneTyprProductTPrice = ((Integer.valueOf(model.getprice()))) * Integer.valueOf(model.getquantity());
-                overTotalPrice = overTotalPrice + oneTyprProductTPrice;
-                productID = model.getpid();
+                     oneTyprProductTPrice = ((Integer.valueOf(price))) * Integer.valueOf(quantity);
+                    Integer.valueOf(overTotalPrice) = overTotalPrice + oneTyprProductTPrice;
+
+
+                    productID = pid;
 
                     if (holder != null) {
                         holder.carttradernamehere.setOnClickListener(new View.OnClickListener() {
@@ -636,18 +587,15 @@ public  class  CartActivity extends AppCompatActivity
                     }
 
 
-
                 }
 
-        };
-        recyclerView.setAdapter(adapter);
-    };
+            };
+            recyclerView.setAdapter(adapter);
+        }
+        ;
 
 
-
-
-
-
+    }
 
 
 
