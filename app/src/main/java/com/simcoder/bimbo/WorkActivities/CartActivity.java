@@ -76,7 +76,7 @@ public  class  CartActivity extends AppCompatActivity
     private  Button cartthenextactivityhere;
     public TextView txtTotalAmount, txtMsg1;
 
-    public final  int overTotalPrice = 0;
+    public int overTotalPrice = 0;
     String productID = "";
     String userID = "";
     DatabaseReference UserRef;
@@ -210,7 +210,6 @@ public  class  CartActivity extends AppCompatActivity
 
 
 
-
             GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
             if (mGoogleApiClient != null) {
 
@@ -235,11 +234,12 @@ public  class  CartActivity extends AppCompatActivity
                 public void onClick(View v) {
                     Intent cartactivityintent = new Intent(CartActivity.this, ConfirmFinalOrderActivity.class);
                     if (cartactivityintent != null) {
-                        cartactivityintent.putExtra("totalprice", overhypenumber);
+                        cartactivityintent.putExtra("totalprice", overTotalPrice);
                         startActivity(cartactivityintent);
                     }
                 }
             });
+
 
 
         }}
@@ -560,7 +560,7 @@ public  class  CartActivity extends AppCompatActivity
                     }
 
                      oneTyprProductTPrice = ((Integer.valueOf(price))) * Integer.valueOf(quantity);
-                    Integer.valueOf(overTotalPrice) = overTotalPrice + oneTyprProductTPrice;
+                    overTotalPrice = overTotalPrice + oneTyprProductTPrice;
 
 
                     productID = pid;
