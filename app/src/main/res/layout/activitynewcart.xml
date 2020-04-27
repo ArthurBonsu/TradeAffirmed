@@ -46,7 +46,33 @@
 
     </android.support.v7.widget.RecyclerView>
 
-    <android.support.v4.widget.DrawerLayout
+    <TextView
+        android:id="@+id/total_price1"
+        android:layout_width="384dp"
+        android:layout_height="42dp"
+        android:layout_marginTop="400sp"
+        android:text="@string/total_amount"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        tools:visibility="gone" />
+
+    <Button
+        android:id="@+id/cartnextbutton2"
+        android:layout_width="386dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="450sp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:background="@color/colorPrimary"
+        android:text="@string/nextclicktogotoconfirm"
+        android:visibility="gone"
+        tools:visibility="gone" />
+
+
+<android.support.v4.widget.DrawerLayout
 android:id="@+id/drawer_layout"
 android:layout_width="250dp"
 android:layout_height="700dp"

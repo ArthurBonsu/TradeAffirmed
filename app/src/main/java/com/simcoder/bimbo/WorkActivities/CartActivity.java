@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.SnapshotParser;
 import com.google.android.gms.auth.api.Auth;
@@ -118,7 +119,7 @@ public  class  CartActivity extends AppCompatActivity
     String somerole;
     String key;
     String uid;
-    public  int oneTyprProductTPrice;
+    public  int oneTyprProductTPrice =0;
     TextView cartquantity;
     String traderkey;
     String thetraderhere;
@@ -136,16 +137,16 @@ public  class  CartActivity extends AppCompatActivity
     DatabaseReference myProducts;
     String date, desc, discount, name, photoid,pid, pimage, pname,tid, traderimage;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(
-                (R.layout.stickynoterecycler));
-        cartthenextactivityhere = (Button) findViewById(R.id.cartnextbutton);
+                (R.layout.activitynewcart));
 
 
         recyclerView = findViewById(R.id.stickyheaderrecyler);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         if (recyclerView != null) {
             recyclerView.setLayoutManager(layoutManager);
         }
@@ -153,6 +154,46 @@ public  class  CartActivity extends AppCompatActivity
             recyclerView.setHasFixedSize(true);
 
         }
+
+        /*
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                LinearLayoutManager layoutManager=LinearLayoutManager.class.cast(recyclerView.getLayoutManager());
+                int totalItemCount = layoutManager.getItemCount();
+                int lastVisible = layoutManager.findLastVisibleItemPosition();
+
+                boolean endHasBeenReached = lastVisible + 5 >= totalItemCount;
+                if (!(totalItemCount > 0) && endHasBeenReached) {
+                    //you have reached to the bottom of your recycler view
+
+                    txtTotalAmount.setVisibility(View.GONE);
+                    cartthenextactivityhere.setVisibility(View.GONE);
+
+                }
+                else {
+
+                    txtTotalAmount.setVisibility(View.VISIBLE);
+                    cartthenextactivityhere.setVisibility(View.VISIBLE);
+
+                    cartthenextactivityhere.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view)
+                        {
+                            txtTotalAmount.setText("Total Price = $" + String.valueOf(overTotalPrice));
+
+                            Intent intent = new Intent(CartActivity.this, ConfirmFinalOrderActivity.class);
+                            intent.putExtra("Total Price", String.valueOf(overTotalPrice));
+                            startActivity(intent);
+                            finish();
+                        }
+                    });
+                }
+            }
+        });
+
+*/
+
 
         Paper.init(this);
 
@@ -180,11 +221,17 @@ public  class  CartActivity extends AppCompatActivity
             TextView userNameTextView = headerView.findViewById(R.id.user_profile_name);
             CircleImageView profileImageView = headerView.findViewById(R.id.user_profile_image);
         }
+        cartthenextactivityhere = (Button) findViewById(R.id.cartnextbutton2);
+        txtTotalAmount = (TextView) findViewById(R.id.total_price1);
+        cartthenextactivityhere.setVisibility(View.GONE);
+        txtTotalAmount.setVisibility(View.GONE);
+
         thepicturebeingloaded = (android.widget.ImageView) findViewById(R.id.cartproductimageonscreeen);
         thetraderpicturebeingloaded = (android.widget.ImageView) findViewById(R.id.cartimageonscreen);
 
         therealnumberoflikes = (TextView) findViewById(R.id.therealnumberoflikes);
         cartquantity = (TextView) findViewById(R.id.cartquantity);
+
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
         if (user != null) {
@@ -228,7 +275,7 @@ public  class  CartActivity extends AppCompatActivity
 
 
             // USER
-
+           /*
             cartthenextactivityhere.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -239,10 +286,65 @@ public  class  CartActivity extends AppCompatActivity
                     }
                 }
             });
+*/
+            final boolean[] loading = {true};
+
+            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                    super.onScrollStateChanged(recyclerView, newState);
+                }
+
+
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy)
+                {
+
+                    if (loading[0]) {
+                        if (dy > 0) //check for scroll down
+                        {
+                            int numItems  = layoutManager.getChildCount();
+                           int totalItemCount = layoutManager.getItemCount()-1;
+                            int pos = layoutManager.findFirstVisibleItemPosition();
+
+                            if ((numItems + pos) >= totalItemCount) {
+                                loading[0] = false;
+
+                                Log.v("...", " Reached Last Item");
+                                cartthenextactivityhere.setVisibility(View.VISIBLE);
+                                txtTotalAmount.setVisibility(View.VISIBLE);
+                                txtTotalAmount.setText(String.valueOf(overTotalPrice));
+                            }
+
+                        }
+                    }
+                }
+            });
+
+            cartthenextactivityhere.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view)
+                {    if (txtTotalAmount != null){
+                    if (txtTotalAmount.getText() !=null){
+                        if (txtTotalAmount.getText().toString() !=null){
+                       overTotalPrice = Integer.parseInt(txtTotalAmount.getText().toString());
+                    Intent intent = new Intent(CartActivity.this, ConfirmFinalOrderActivity.class);
+                    intent.putExtra("Total Price", String.valueOf(overTotalPrice));
+                    startActivity(intent);
+                    finish();
+                }}}}
+            });
+/*
+            int pos = layoutManager.findLastCompletelyVisibleItemPosition();
+            int numItems =  adapter.getItemCount();
+            if (pos >= numItems - 1 ){
 
 
 
+            };*/
         }}
+
+
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -412,6 +514,7 @@ public  class  CartActivity extends AppCompatActivity
                                     }
                                     if (snapshot.child("price").getValue() != null) {
                                         price = snapshot.child("price").getValue(String.class);
+
                                     }
 
                                     if (snapshot.child("desc").getValue() != null) {
@@ -447,6 +550,7 @@ public  class  CartActivity extends AppCompatActivity
                                     if (snapshot.child("traderimage").getValue() != null) {
                                         traderimage = snapshot.child("traderimage").getValue(String.class);
                                     }
+
 
 
                                     return new Cart(pid, tid, quantity, price, desc, pimage, pname, discount, name, image, tradername, traderimage);
@@ -527,7 +631,20 @@ public  class  CartActivity extends AppCompatActivity
                     holder.setImage(getApplicationContext(), pimage);
                     holder.setTraderImage(getApplication(), traderimage);
 
+                    if(price != null) {
+                        if (quantity != null) {
 
+                            oneTyprProductTPrice = ((Integer.valueOf(price))) * Integer.valueOf(quantity);
+                            if (quantity != null) {
+                                if (price != null) {
+
+                                    Log.d("Price of Cart Activity", price);
+                                    Log.d("QuantityCart Activity", quantity );
+                                }
+                            }
+                            overTotalPrice = overTotalPrice + oneTyprProductTPrice;
+                        } }
+                    Toast.makeText(getApplicationContext(),"This represents the total price", overTotalPrice);
 
 
                     if (holder != null) {
@@ -558,10 +675,15 @@ public  class  CartActivity extends AppCompatActivity
                         });
 
                     }
-
+/*
                      oneTyprProductTPrice = ((Integer.valueOf(price))) * Integer.valueOf(quantity);
-                    overTotalPrice = overTotalPrice + oneTyprProductTPrice;
+                               if (quantity != null) {
+                                   if (price != null) {
 
+                                   Log.d("Price of Cart Activity", quantity + price);
+                               }}
+                                   overTotalPrice = overTotalPrice + oneTyprProductTPrice;
+*/
 
                     productID = pid;
 
@@ -619,12 +741,13 @@ public  class  CartActivity extends AppCompatActivity
                 // PULLING DATABASE REFERENCE IS NULL, WE CHANGE BACK TO THE SETUP PAGE ELSE WE GO STRAIGHT TO MAP PAGE
             }
         };
+       // cartthenextactivityhere.setVisibility(View.GONE);
+     //   txtTotalAmount.setVisibility(View.GONE);
 
         adapter.startListening();
         if (mAuth != null) {
             mAuth.addAuthStateListener(firebaseAuthListener);
         }
-
 
 
     }

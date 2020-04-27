@@ -412,5 +412,6 @@
     <string name="userimagehere">userimagehere</string>
     <string name="usernamehere">username</string>
     <string name="_23numberoflikes">23</string>
+    <string name="total_amount">TOTAL AMOUNT</string>
 
 </resources>

@@ -499,12 +499,7 @@ public  class ViewYourPersonalProduct extends AppCompatActivity
                                              snapshotkeys = snapshot.getKey();
                                              Log.d("SNAPshotkey", snapshotkeys);
 
-                                      /*
-                                      String commentkey = snapshot.child("Comments").getKey();
-                                      String likekey = snapshot.child("Likes").getKey();
 
-
-*/
                                              for (DataSnapshot snapshot1 : snapshot.getChildren()) {
 
                                                  //                for (DataSnapshot snapshot3: snapshot1.getChildren()){

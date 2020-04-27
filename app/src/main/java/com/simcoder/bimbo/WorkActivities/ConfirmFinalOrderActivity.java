@@ -22,6 +22,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.simcoder.bimbo.HistoryActivity;
 import com.simcoder.bimbo.Model.Cart;
@@ -49,6 +50,13 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity
     String productname;
     private String totalAmount = "";
     private static final int RC_SIGN_IN = 1;
+    Query CartQuery;
+    DatabaseReference CartDatabase;
+    FirebaseDatabase Firebaseorders;
+    FirebaseUser user;
+    String uid;
+
+
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
 
 
@@ -66,9 +74,22 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_confirm_final_order);
 
-        cartkey = getIntent().getStringExtra("cartkey");
-        totalAmount = getIntent().getStringExtra("Total Price");
-        productIDHERE = getIntent().getStringExtra("pid");
+        Intent cartkeyintent = getIntent();
+        if (cartkeyintent.getExtras().getString("cartkey") != null) {
+            cartkey = cartkeyintent.getExtras().getString("cartkey");
+        }
+        Intent totalamountintent = getIntent();
+        if (totalamountintent.getExtras().getString("Total Price") != null) {
+            totalAmount = totalamountintent.getExtras().getString("Total Price");
+        }
+        Intent productintent = getIntent();
+        if (productintent.getExtras().getString("pid") != null) {
+            productIDHERE = productintent.getExtras().getString("pid");
+        }
+
+   //     cartkey = getIntent().getStringExtra("cartkey");
+    //    totalAmount = getIntent().getStringExtra("Total Price");
+   //     productIDHERE = getIntent().getStringExtra("pid");
 
 
         Toast.makeText(this, "Total Price =  $ " + totalAmount, Toast.LENGTH_SHORT).show();
@@ -79,6 +100,23 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity
         phoneEditText = (EditText) findViewById(R.id.shippment_phone_number);
         addressEditText = (EditText) findViewById(R.id.shippment_address);
         cityEditText = (EditText) findViewById(R.id.shippment_city);
+
+         mAuth = FirebaseAuth.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+        user = mAuth.getCurrentUser();
+        if (user != null) {
+            uid = user.getUid();
+        }
+
+            Firebaseorders = FirebaseDatabase.getInstance();
+          CartDatabase = Firebaseorders.getReference().child("Cart");
+           CartDatabase.keepSynced(true);
+
+
+
+
+
+
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
         if (mGoogleApiClient != null) {
@@ -157,7 +195,7 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity
 
                  orderKey =ordersRef.push().getKey();
         final DatabaseReference productRef = FirebaseDatabase.getInstance().getReference()
-                .child("Orders").child(orderKey).child("Users").child(userID).child("products").child(productIDHERE);
+                .child("Orders").child(orderKey).child("products");
         final DatabaseReference productImageRef = FirebaseDatabase.getInstance().getReference()
                 .child("Product").child(productIDHERE);
 
@@ -174,6 +212,7 @@ public class ConfirmFinalOrderActivity extends AppCompatActivity
                          if (dataSnapshot.child("name").getValue() != null) {
                              productname = dataSnapshot.child("name").getValue(String.class);
                          }
+
 
                     }
                 }
