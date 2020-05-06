@@ -57,6 +57,7 @@ import java.util.Map;
 public class HistorySingleActivity extends AppCompatActivity implements OnMapReadyCallback, RoutingListener {
     //HERE THE CUSTOMER CHECKS ALL THE HISTORY OF ALL PRODUCTS THAT HE HAS BOUGHT AND THE RIDES OR DELIVERY DETAILS
  // NOW TO HISTORY SINGLE  ACTIVITY ..
+    // HE ALSO MONITORS THE INFORMATION OF THE LIVE RIDE FROM HERE
     private String rideId, currentUserId, customerId, driverId, userDriverOrCustomer;
 
     private TextView rideLocation;
@@ -141,7 +142,7 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
-                    dataSnapshot.getValue(HashMaps.class);
+                    dataSnapshot.getValue(String.class);
                     for (DataSnapshot child:dataSnapshot.getChildren()){
 
                         if (child.getKey().equals("customer")){
@@ -351,6 +352,8 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
         String date = DateFormat.format("MM-dd-yyyy hh:mm", cal).toString();
         return date;
     }
+
+    // WE CAN MAKE IT DYNAMIC AND ROUTE BASED ON TRANSIT
     private void getRouteToMarker() {
         Routing routing = new Routing.Builder()
                 .travelMode(AbstractRouting.TravelMode.DRIVING)
@@ -360,7 +363,7 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
                 .build();
         routing.execute();
     }
-
+   // SOMETHING TO BE ABLE TO PREDICT TRANSPORT MODE AS WELL AS THE EXPECTED ROUTE AND DIRECTION OF CUSTOMER
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap=googleMap;

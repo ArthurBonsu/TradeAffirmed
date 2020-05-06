@@ -413,5 +413,23 @@
     <string name="usernamehere">username</string>
     <string name="_23numberoflikes">23</string>
     <string name="total_amount">TOTAL AMOUNT</string>
+    <string name="address">address</string>
+    <string name="these_are_the_details_of_shipment">These are the details of shipment</string>
+    <string name="carseeen">car</string>
+    <string name="motorcarhere">motor</string>
+    <string name="bicycleishere">bicycle</string>
+    <string name="walkingishere">walking</string>
+    <string name="products_boughthere">PRODUCTS BOUGHT</string>
+    <string name="timeishere">time</string>
+    <string name="timewrapup">time</string>
+    <string name="nameisheree">Name</string>
+    <string name="total_amountforonfiirmorefder">Total amount</string>
+    <string name="cityconfirmorder">city</string>
+    <string name="shipping_costextraction">Shipping cost</string>
+    <string name="stateoftheconfirmed">state</string>
+    <string name="traderconfirmedorder">Trader</string>
+    <string name="traderidconfirmedheree">traderid</string>
+    <string name="dateofposthere">dateofposthere</string>
+    <string name="modeoftransportclick">Button</string>
 
 </resources>

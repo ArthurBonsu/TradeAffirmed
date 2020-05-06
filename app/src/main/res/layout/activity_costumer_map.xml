@@ -70,7 +70,8 @@
                     android:layout_toLeftOf="@+id/gosearch"
 
 
-                    android:layout_toStartOf="@+id/gosearch" >
+                    android:layout_toStartOf="@+id/gosearch"
+                android:layout_marginStart="7dp">
 
             </SearchView>
 
@@ -90,7 +91,8 @@
             android:scaleType="centerCrop"
             android:src="@android:drawable/ic_media_play"
             tools:ignore="RtlCompat"
-            tools:src="@drawable/searchcamerahere" />
+            tools:src="@drawable/searchcamerahere"
+            android:layout_marginStart="350dp" />
 
     </RelativeLayout>
 

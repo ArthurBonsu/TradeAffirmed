@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <TextView
+        android:id="@+id/pricebarbicycle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="502dp"
+        android:layout_marginLeft="502dp"
+        android:layout_marginTop="300dp"
+        android:layout_marginEnd="27dp"
+        android:layout_marginRight="27dp"
+        android:layout_marginBottom="62dp"
+        android:text="Price"
+        app:layout_constraintBottom_toTopOf="@+id/textView14"
+        app:layout_constraintEnd_toStartOf="@+id/pricebicyclevaluehere"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/motorpricebar"
+        app:layout_constraintVertical_bias="1.0" />
+
+
+    <TextView
+        android:id="@+id/pricebicyclevaluehere"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="548dp"
+        android:layout_marginLeft="548dp"
+        android:layout_marginTop="108dp"
+        android:text="TextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bicycleimage" />
+
+    <TextView
+        android:id="@+id/pricebar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="76dp"
+        android:layout_marginEnd="140dp"
+        android:layout_marginRight="140dp"
+        android:text="Price"
+        app:layout_constraintEnd_toEndOf="@+id/walkingvalue"
+        app:layout_constraintTop_toBottomOf="@+id/walkingimage" />
+
+    <TextView
+        android:id="@+id/walkingvalue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="76dp"
+        android:layout_marginEnd="384dp"
+        android:layout_marginRight="384dp"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="@+id/pricebicyclevaluehere"
+        app:layout_constraintTop_toBottomOf="@+id/walkingimage" />
+
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginBottom="936dp"
+        android:text="Select The Mode Of Transport"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/carimage"
+        android:layout_width="190dp"
+        android:layout_height="93dp"
+        android:layout_marginTop="94dp"
+        app:layout_constraintEnd_toStartOf="@+id/motorimage"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+        app:srcCompat="@drawable/taxihere" />
+
+    <ImageView
+        android:id="@+id/motorimage"
+        android:layout_width="130dp"
+        android:layout_height="108dp"
+
+        android:layout_marginStart="452dp"
+        android:layout_marginLeft="452dp"
+        android:layout_marginTop="79dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+        app:srcCompat="@drawable/deliveryofhighway" />
+
+    <ImageView
+        android:id="@+id/walkingimage"
+        android:layout_width="101dp"
+        android:layout_height="125dp"
+
+        android:layout_marginTop="136dp"
+        android:layout_marginEnd="472dp"
+        android:layout_marginRight="472dp"
+        app:layout_constraintEnd_toEndOf="@+id/bicycleimage"
+        app:layout_constraintTop_toBottomOf="@+id/carimage"
+        app:srcCompat="@drawable/walkinghere" />
+
+    <ImageView
+        android:id="@+id/bicycleimage"
+        android:layout_width="86dp"
+        android:layout_height="139dp"
+        android:layout_marginTop="124dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.946"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/motorimage"
+        app:srcCompat="@drawable/bicycle" />
+
+    <TextView
+        android:id="@+id/carpricevalue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="148dp"
+        android:layout_marginLeft="148dp"
+        android:layout_marginTop="48dp"
+        android:text="TextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/carimage" />
+
+    <TextView
+        android:id="@+id/carpricebar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="42dp"
+        android:layout_marginEnd="108dp"
+        android:layout_marginRight="108dp"
+        android:text="Price"
+        app:layout_constraintEnd_toEndOf="@+id/carpricevalue"
+        app:layout_constraintTop_toBottomOf="@+id/carimage" />
+
+    <TextView
+        android:id="@+id/motorpricevalue"
+        android:layout_width="48dp"
+        android:layout_height="21dp"
+        android:layout_marginStart="424dp"
+        android:layout_marginLeft="424dp"
+        android:layout_marginTop="47dp"
+        android:text="TextView"
+        app:layout_constraintStart_toStartOf="@+id/carpricevalue"
+        app:layout_constraintTop_toBottomOf="@+id/motorimage" />
+
+    <TextView
+        android:id="@+id/motorpricebar"
+        android:layout_width="81dp"
+        android:layout_height="58dp"
+        android:layout_marginStart="312dp"
+        android:layout_marginLeft="312dp"
+        android:layout_marginTop="40dp"
+        android:text="Price"
+        app:layout_constraintStart_toStartOf="@+id/carpricevalue"
+        app:layout_constraintTop_toBottomOf="@+id/motorimage" />
+
+    <Button
+        android:id="@+id/modeoftransportclick"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_marginBottom="36dp"
+        android:text="@string/modeoftransportclick"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="NEXT" />
+
+    <TextView
+        android:id="@+id/textView11"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:text="TextView"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="-16dp" />
+
+    <TextView
+        android:id="@+id/distanceid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="108dp"
+        android:layout_marginLeft="108dp"
+        android:layout_marginTop="80dp"
+        android:text="TextView"
+        app:layout_constraintStart_toStartOf="@+id/textView14"
+        app:layout_constraintTop_toTopOf="@+id/pricebicyclevaluehere" />
+
+    <TextView
+        android:id="@+id/shippingcostid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="96dp"
+        android:layout_marginEnd="248dp"
+        android:layout_marginRight="248dp"
+        android:text="TextView"
+        app:layout_constraintEnd_toStartOf="@+id/textView14"
+        app:layout_constraintTop_toBottomOf="@+id/walkingvalue" />
+
+    <TextView
+        android:id="@+id/textView13"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="93dp"
+        android:layout_marginEnd="61dp"
+        android:layout_marginRight="61dp"
+        android:text="Shippingcost"
+        app:layout_constraintEnd_toEndOf="@+id/shippingcostid"
+        app:layout_constraintEnd_toStartOf="@+id/shippingcostid"
+        app:layout_constraintTop_toBottomOf="@+id/pricebar" />
+
+    <TextView
+        android:id="@+id/textView14"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="452dp"
+        android:layout_marginLeft="452dp"
+        android:layout_marginTop="188dp"
+        android:text="Distance"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bicycleimage" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="649dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="1dp"
+        android:layout_marginLeft="1dp"
+        android:layout_marginBottom="840dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+
+
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/transportradioids">
+            <RadioButton
+                android:id="@+id/bicycle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15sp"
+                android:text="@string/bicycleishere" />
+            <RadioButton
+                android:id="@+id/car"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15sp"
+                android:text="@string/carseeen" />
+
+            <RadioButton
+                android:id="@+id/motor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15sp"
+                android:text="@string/motorcarhere" />
+
+            <RadioButton
+                android:id="@+id/walking"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:padding="15sp"
+                android:text="@string/walkingishere" />
+
+        </RadioGroup>
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>
