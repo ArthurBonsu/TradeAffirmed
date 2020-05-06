@@ -113,7 +113,7 @@ import static com.simcoder.bimbo.Model.Constants.ERROR_DIALOG_REQUEST;
 import static com.simcoder.bimbo.Model.Constants.PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION;
 import static com.simcoder.bimbo.Model.Constants.PERMISSIONS_REQUEST_ENABLE_GPS;
 
-public class CustomerMapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, NavigationView.OnNavigationItemSelectedListener, GoogleMap.OnMarkerClickListener {
+public class CustomerMapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, NavigationView.OnNavigationItemSelectedListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnMarkerDragListener {
     // THERE HAS TO BE A SEARCH BOX TO QUERY FROM PRODUCT TABLE
     private GoogleMap mMap;
     GoogleApiClient mGoogleApiClient;
@@ -397,7 +397,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                         if (requestBol) {
                             endRide();
                             // WE HAVE TO ALSO ENDTRADE()
-                            mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
+                            mMap.animateCamera(CameraUpdateFactory.zoomTo(17));
 
                         } else {
                             //SELECT THE TYPE OF SERVICCE WE WANT
@@ -460,23 +460,47 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                             // AND PUTS THEM HERE IN LATITUDES
                                             pickupLocation = new LatLng(latitude, longitude);
                                             if (mMap != null) {
-                                                pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Pickup Here").icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_pickup)).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                                                pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Your location").icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_pickup)).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
 
-                                                pickupMarker.setTitle("I am Set");
-                                                if (mRequest != null) {
-                                                    mRequest.setText("Getting your Trader....");
-                                                    mMap.moveCamera(CameraUpdateFactory.newLatLng(pickupLocation));
-                                                    mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
-                                                    getClosestDriver();
-                                                }
-                                            }
 
+                                                currentMarker = mMap.addMarker(new MarkerOptions().position(latLng).title("This is my original location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+                                                latLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+                                                currentMarker.setPosition(latLng);
+                                                currentMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+
+
+
+                                                //   mypickup2marker.position(markersetupLocation).title("We are fully set").draggable(true).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                                                //    mypickup2marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+
+                                                mypickup2marker.setPosition(markersetupLocation);
+                                                mypickup2marker.setTitle("We are fully set");
+
+                                                  if (mypickup2marker != null) {
+
+
+
+                                                          mypickup2marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+
+                                                          mMap.moveCamera(CameraUpdateFactory.newLatLng(markersetupLocation));
+                                                          mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+
+
+                                                          //     pickupMarker.setTitle("I am Set");
+                                                          if (mRequest != null) {
+                                                              mRequest.setText("Getting your Trader....");
+                                                              //     mMap.moveCamera(CameraUpdateFactory.newLatLng(pickupLocation));
+                                                              //     mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
+                                                              getClosestDriver();
+                                                          }
+                                                      }
+                                                  }
                                         }
                                     }
                                 }
                             }
-                        }
-                    }
+                        }}
+
                 });
 
 
@@ -1130,6 +1154,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                     latLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
 
                                     mMap.setOnMarkerClickListener(CustomerMapActivity.this);
+                                    mMap.setOnMarkerDragListener(CustomerMapActivity.this);
 
                                     latLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
                                     double latitude = mLastLocation.getLatitude();
@@ -1138,14 +1163,16 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                     Log.d("LatitudeOnReadyMap ", String.valueOf(latitude));
                                     Log.d("LongituddeOnReadyMap", String.valueOf(longitude));
 
-                                    currentMarker = mMap.addMarker(new MarkerOptions().position(latLng).title("This is my original location").icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_pickup)).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+                                    currentMarker = mMap.addMarker(new MarkerOptions().position(latLng).title("This is my original location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
                                     markersetupLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
 
                                     mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-                                    //  mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
+                                      mMap.animateCamera(CameraUpdateFactory.zoomTo(13));
 
-                                    mypickup2marker = mMap.addMarker(new MarkerOptions().position(markersetupLocation).title("Let's meetup here").draggable(true).icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_pickup)));
-                                    mypickup2marker.setTag("Look for a location");
+                                    mypickup2marker = mMap.addMarker(new MarkerOptions().position(markersetupLocation).title("Set up your meeting point").draggable(true).icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_pickup)));
+
+
+
                                 }
                             }
                         }
@@ -1230,7 +1257,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                 //THIS IS WHERE WE PLAY WITH CAMERA, CAN PROVIDE MANY CAMERA FEATURES
                 if (mMap != null) {
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-                    mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
+                    mMap.animateCamera(CameraUpdateFactory.zoomTo(17));
                     if (!getDriversAroundStarted)
                         getDriversAround();
 
@@ -1882,13 +1909,48 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         mapFragment.onLowMemory();
     }
 
+    @Override
+    public void onMarkerDrag(Marker marker) {
+         mypickup2marker.setDraggable(true);
 
+          double latitude = mypickup2marker.getPosition().latitude;
+          double longitude = mypickup2marker.getPosition().longitude;
+        markersetupLocation =  new LatLng (mypickup2marker.getPosition().latitude, mypickup2marker.getPosition().longitude);
+        mypickup2marker.setTag(markersetupLocation);
+
+        Toast.makeText(getApplicationContext(), String.valueOf(latitude), Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), String.valueOf(longitude), Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onMarkerDragEnd(Marker marker) {
+
+    }
+
+    @Override
+    public void onMarkerDragStart(Marker marker) {
+
+    }
     @Override
     public boolean onMarkerClick(Marker marker) {
 
-        mypickup2marker.setDraggable(true);
-        mypickup2marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+   //     mypickup2marker.setDraggable(true);
+        currentMarker = mMap.addMarker(new MarkerOptions().position(latLng).title("This is my original location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+        latLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+        currentMarker.setPosition(latLng);
+        currentMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
 
+
+
+     //   mypickup2marker.position(markersetupLocation).title("We are fully set").draggable(true).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+    //    mypickup2marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+       mypickup2marker.setPosition(markersetupLocation);
+       mypickup2marker.setTitle("We are fully set");
+       mypickup2marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(markersetupLocation));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(17));
         return false;
     }
+
+
 }
