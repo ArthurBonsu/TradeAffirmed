@@ -191,9 +191,14 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     DatabaseReference mDriversDatabase;
     DatabaseReference ref;
     DatabaseReference NameoftheDriversontheMap;
-
+    DatabaseReference actuallocationRef;
+       ImageButton zoomtooriginallocation;
+       ImageButton zoominandoutofcamera;
+       ImageButton zoomtomarkerpoint;
     GeoFire geoFire;
     Marker currentMarker;
+    boolean zoomin = false;
+    boolean hasclicked = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -250,9 +255,13 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
         mRadioGroup.check(R.id.UberX);
         serchbutton = findViewById(R.id.gosearch);
         messagefloatingbutton = findViewById(R.id.messagefloatingActionButton);
+         zoomtooriginallocation = findViewById(R.id.getoriginalocation);;
+         zoominandoutofcamera = findViewById(R.id.zoom_in);
+        zoomtomarkerpoint =  findViewById(R.id.zoomtomarkerpoint);
+
 
         mRequest = findViewById(R.id.request);
-        myvlayoutnavigationalview = findViewById(R.id.myvlayoutnavigationalview);
+
         autocompleteFragment = (PlaceAutocompleteFragment)
                 getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
 
@@ -395,9 +404,24 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     @Override
                     public void onClick(View v) {
                         if (requestBol) {
+
+                            currentMarker = mMap.addMarker(new MarkerOptions().position(latLng).title("This is my original location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+                            latLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+                            currentMarker.setPosition(latLng);
+                            currentMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+
+
+                            //   mypickup2marker.position(markersetupLocation).title("We are fully set").draggable(true).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                            //    mypickup2marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                            mypickup2marker.setPosition(markersetupLocation);
+                            mypickup2marker.setTitle("Drag to your location");
+                            mypickup2marker.setDraggable(true);
+                            mypickup2marker.setIcon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_pickup));
+                            mMap.moveCamera(CameraUpdateFactory.newLatLng(markersetupLocation));
+                         //   mMap.animateCamera(CameraUpdateFactory.zoomTo(17));
                             endRide();
                             // WE HAVE TO ALSO ENDTRADE()
-                            mMap.animateCamera(CameraUpdateFactory.zoomTo(17));
+                            mMap.animateCamera(CameraUpdateFactory.zoomTo(14));
 
                         } else {
                             //SELECT THE TYPE OF SERVICCE WE WANT
@@ -440,25 +464,26 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                     ref = myfirebaseDatabase.getReference("customerRequest");
                                     //     driverRef = myfirebaseDatabase.getReference().child("Users").child("Drivers").child(driverFoundID).child("customerRequest");
                                     customerRef = myfirebaseDatabase.getReference().child("Users").child("Customers").child(customerId).child("customerRequest");
-
+                                    actuallocationRef = myfirebaseDatabase.getReference().child("Users").child("Customers").child(customerId).child("actuallocation");
 
                                     GeoFire geoFire = new GeoFire(ref);
                                     GeoFire geoFire1 = new GeoFire(customerRef);
+
+
+                                    GeoFire geoFire2 = new GeoFire(actuallocationRef);
                                     //    geoFire = new GeoFire(customerRef);
                                     //ERROR IS IT IS NOT GETTING LATITITUDES
                                     //WHENEVER I PRESS THIS I PUT THE USER INTO THE DATABASE
                                     // IT SEARCHES FOR THE LOCATION
 
                                     if (mLastLocation != null) {
-                                        double latitude = mLastLocation.getLatitude();
-                                        double longitude = mLastLocation.getLongitude();
-                                        if (geoFire != null) {
-                                            geoFire.setLocation(userId, new GeoLocation(latitude, longitude));
-                                            geoFire1.setLocation(userId, new GeoLocation(latitude, longitude));
-                                            Log.d("longitudeYo", String.valueOf(latitude));
-                                            Log.d("LatitudeYoYO", String.valueOf(longitude));
+                                        double latitudegeolocation = mLastLocation.getLatitude();
+                                        double longitudegeolocation = mLastLocation.getLongitude();
+                                        Log.d("longitudeYotopdone", String.valueOf(latitudegeolocation));
+                                        Log.d("LatitudeYoYOtopdone", String.valueOf(longitudegeolocation));
                                             // AND PUTS THEM HERE IN LATITUDES
-                                            pickupLocation = new LatLng(latitude, longitude);
+                                        geoFire2.setLocation(userId, new GeoLocation(latitudegeolocation, longitudegeolocation));
+                                            pickupLocation = new LatLng(latitudegeolocation, longitudegeolocation);
                                             if (mMap != null) {
                                                 pickupMarker = mMap.addMarker(new MarkerOptions().position(pickupLocation).title("Your location").icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_pickup)).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
 
@@ -473,12 +498,20 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                                                 //   mypickup2marker.position(markersetupLocation).title("We are fully set").draggable(true).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
                                                 //    mypickup2marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
 
-                                                mypickup2marker.setPosition(markersetupLocation);
+                                               mypickup2marker.setPosition(markersetupLocation);
                                                 mypickup2marker.setTitle("We are fully set");
 
                                                   if (mypickup2marker != null) {
 
-
+                                                      if (geoFire != null) {
+                                                        double  latitude = markersetupLocation.latitude;
+                                                        double   longitude = markersetupLocation.longitude;
+                                                          Log.d("longitudeYotop", String.valueOf(latitude));
+                                                          Log.d("LatitudeYoYOtop", String.valueOf(longitude));
+                                                          geoFire.setLocation(userId, new GeoLocation(latitude, longitude));
+                                                          geoFire1.setLocation(userId, new GeoLocation(latitude, longitude));
+                                                          Log.d("longitudeYo", String.valueOf(latitude));
+                                                          Log.d("LatitudeYoYO", String.valueOf(longitude));
 
                                                           mypickup2marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
 
@@ -517,7 +550,78 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
             }
         });
 
+        zoomtooriginallocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mLastLocation != null){
+                actuallocationRef = myfirebaseDatabase.getReference().child("Users").child("Customers").child(customerId).child("actuallocation");
 
+                GeoFire geoFire2 = new GeoFire(actuallocationRef);
+
+                if (mLastLocation != null) {
+                    double latitudegeolocation = mLastLocation.getLatitude();
+                    double longitudegeolocation = mLastLocation.getLongitude();
+                    Log.d("longitudeYotopdone", String.valueOf(latitudegeolocation));
+                    Log.d("LatitudeYoYOtopdone", String.valueOf(longitudegeolocation));
+                    // AND PUTS THEM HERE IN LATITUDES
+                    geoFire2.setLocation(customerId, new GeoLocation(latitudegeolocation, longitudegeolocation));
+                    pickupLocation = new LatLng(latitudegeolocation, longitudegeolocation);
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(pickupLocation));
+                    mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+                }
+
+
+                }
+        }});
+        zoominandoutofcamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                 if(zoomin== false) {
+
+                     mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+                     zoomin = true;
+                 }
+
+                else{
+
+                    mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
+                       zoomin = false;
+                 }
+
+            }
+
+        });
+
+        zoomtomarkerpoint.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ref = myfirebaseDatabase.getReference("customerRequest");
+                //     driverRef = myfirebaseDatabase.getReference().child("Users").child("Drivers").child(driverFoundID).child("customerRequest");
+                customerRef = myfirebaseDatabase.getReference().child("Users").child("Customers").child(customerId).child("customerRequest");
+
+                GeoFire geoFire = new GeoFire(ref);
+                GeoFire geoFire1 = new GeoFire(customerRef);
+                if (mypickup2marker != null) {
+
+                    if (geoFire != null) {
+                        double latitude = markersetupLocation.latitude;
+                        double longitude = markersetupLocation.longitude;
+                        Log.d("longitudeYotop", String.valueOf(latitude));
+                        Log.d("LatitudeYoYOtop", String.valueOf(longitude));
+                        geoFire.setLocation(customerId, new GeoLocation(latitude, longitude));
+                        geoFire1.setLocation(customerId, new GeoLocation(latitude, longitude));
+                        Log.d("longitudeYo", String.valueOf(latitude));
+                        Log.d("LatitudeYoYO", String.valueOf(longitude));
+
+                   //     mypickup2marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+
+                        mMap.moveCamera(CameraUpdateFactory.newLatLng(markersetupLocation));
+                        mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+                    }}
+
+            }
+        });
     }
     //THE CUSTOMER USES THE PLACE AUTOOOMPLETE FRAGMENT TO SET THE DESTINATION
 
@@ -1935,20 +2039,40 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     public boolean onMarkerClick(Marker marker) {
 
    //     mypickup2marker.setDraggable(true);
-        currentMarker = mMap.addMarker(new MarkerOptions().position(latLng).title("This is my original location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
-        latLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-        currentMarker.setPosition(latLng);
-        currentMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+          if (hasclicked==true) {
+              currentMarker = mMap.addMarker(new MarkerOptions().position(latLng).title("This is my original location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+              latLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+              currentMarker.setPosition(latLng);
+              currentMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
 
 
+              //   mypickup2marker.position(markersetupLocation).title("We are fully set").draggable(true).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+              //    mypickup2marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+              mypickup2marker.setPosition(markersetupLocation);
+              mypickup2marker.setTitle("We are fully set");
+              mypickup2marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+              mMap.moveCamera(CameraUpdateFactory.newLatLng(markersetupLocation));
+              mMap.animateCamera(CameraUpdateFactory.zoomTo(17));
+               hasclicked = false;
+          }
+          else {
+              currentMarker = mMap.addMarker(new MarkerOptions().position(latLng).title("This is my original location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+              latLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+              currentMarker.setPosition(latLng);
+              currentMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
 
-     //   mypickup2marker.position(markersetupLocation).title("We are fully set").draggable(true).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-    //    mypickup2marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-       mypickup2marker.setPosition(markersetupLocation);
-       mypickup2marker.setTitle("We are fully set");
-       mypickup2marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(markersetupLocation));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(17));
+
+              //   mypickup2marker.position(markersetupLocation).title("We are fully set").draggable(true).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+              //    mypickup2marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+              mypickup2marker.setPosition(markersetupLocation);
+              mypickup2marker.setTitle("Drag to your location");
+              mypickup2marker.setDraggable(true);
+              mypickup2marker.setIcon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_pickup));
+              mMap.moveCamera(CameraUpdateFactory.newLatLng(markersetupLocation));
+              mMap.animateCamera(CameraUpdateFactory.zoomTo(17));
+               hasclicked = true;
+          }
+
         return false;
     }
 

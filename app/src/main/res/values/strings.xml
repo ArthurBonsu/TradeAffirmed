@@ -431,5 +431,8 @@
     <string name="traderidconfirmedheree">traderid</string>
     <string name="dateofposthere">dateofposthere</string>
     <string name="modeoftransportclick">Button</string>
+    <string name="todohere">TODO</string>
+    <string name="todo2">TODO</string>
+    <string name="you_are_marked_at_kotoka">You are marked at Kotoka</string>
 
 </resources>

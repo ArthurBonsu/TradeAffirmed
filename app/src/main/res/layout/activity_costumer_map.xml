@@ -21,35 +21,25 @@
         android:layout_width="262dp"
         android:layout_height="wrap_content"
         android:visibility="gone"
+        android:layout_marginLeft="35sp"
         tools:layout="@layout/place_autocomplete_fragment"
-        tools:visibility="gone" />
+        tools:visibility="gone"
+        android:layout_marginStart="35sp" />
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+    <TextView
+        android:layout_width="290sp"
+        android:layout_height="50sp"
+        android:layout_marginTop="110sp"
+        android:text="@string/you_are_marked_at_kotoka"
+        android:textSize="14sp">
 
-        <LinearLayout
-            android:id="@+id/buttons"
-            style="?android:buttonBarStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageButton
-                android:id="@+id/myvlayoutnavigationalview"
-                android:layout_width="63dp"
-                android:layout_height="57dp"
-                android:contentDescription="@string/navigation_drawer_things"
-                android:scaleType="centerCrop"
-                android:src="@drawable/navigationdrawer"
-                tools:src="@drawable/navigationdrawer" />
+    </TextView>
 
 
-        </LinearLayout>
 
         <android.support.v7.widget.CardView
             android:layout_width="270dp"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/buttons"
             android:layout_marginStart="20sp"
             android:layout_marginLeft="20sp"
             android:layout_marginTop="20sp"
@@ -61,20 +51,22 @@
 
 
             <SearchView
-                    android:id="@+id/mysearchbox"
-                    android:layout_width="310dp"
-                    android:layout_height="wrap_content"
+                android:id="@+id/mysearchbox"
+                android:layout_width="310dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="29dp"
+                android:layout_marginLeft="30dp"
+
                 android:layout_marginTop="25dp"
-                android:layout_marginLeft="7dp"
-
-                    android:layout_toLeftOf="@+id/gosearch"
 
 
-                    android:layout_toStartOf="@+id/gosearch"
-                android:layout_marginStart="7dp">
+                android:layout_toStartOf="@+id/gosearch"
+                android:layout_toLeftOf="@+id/gosearch"
+                android:background="@color/item_default_color">
 
             </SearchView>
 
+ <!-- This is to be done in a way that a person can take the location and specify it on the map, not just his location alone -->
 
         </android.support.v7.widget.CardView>
 
@@ -94,20 +86,20 @@
             tools:src="@drawable/searchcamerahere"
             android:layout_marginStart="350dp" />
 
-    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_gravity="bottom">
+        android:layout_gravity="bottom"
+        android:orientation="vertical">
+
         <LinearLayout
+            android:id="@+id/driverInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/driverInfo"
             android:layout_gravity="bottom"
-            android:orientation="horizontal"
             android:background="@android:color/white"
+            android:orientation="horizontal"
             android:visibility="gone">
 
             <ImageView
@@ -122,92 +114,129 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingLeft="40sp"
                 android:paddingStart="40sp"
+                android:paddingLeft="40sp"
                 android:paddingEnd="40sp">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/driverName"
-                    android:paddingBottom="10sp"
-                    android:paddingTop="20sp"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/driverPhone"
-                    android:paddingBottom="10sp"
-                    android:paddingTop="20sp"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/driverCar"
-                    android:paddingBottom="10sp"
-                    android:paddingTop="20sp"/>
+
                 <RatingBar
+                    android:id="@+id/ratingBar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/ratingBar"
                     android:layout_gravity="center"
                     android:numStars="5"
-                    android:stepSize="0.1"/>
+                    android:stepSize="0.1" />
+
+                <TextView
+                    android:id="@+id/driverPhone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="20sp"
+                    android:paddingBottom="10sp" />
+
+                <TextView
+                    android:id="@+id/driverCar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="20sp"
+                    android:paddingBottom="10sp" />
+
+                <TextView
+                    android:id="@+id/driverName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="20sp"
+                    android:paddingBottom="10sp" />
 
             </LinearLayout>
         </LinearLayout>
+
         <LinearLayout
-            android:background="@android:color/white"
-            android:orientation="vertical"
+            style="?android:buttonBarStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="?android:buttonBarStyle">
-            <RadioGroup
-                android:layout_width="match_parent"
+            android:background="@android:color/white"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/radioGroup"
-                android:orientation="horizontal">
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/stationary"
-                    android:id="@+id/UberX"
-                    style="?android:attr/borderlessButtonStyle"/>
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/mobile"
-                    android:id="@+id/UberBlack"
-                    style="?android:attr/borderlessButtonStyle"/>
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/hybrid"
-                    android:id="@+id/UberXl"
-                    style="?android:attr/borderlessButtonStyle"/>
-            </RadioGroup>
+                android:orientation="horizontal"
+                android:layout_marginLeft="300sp"
+                android:layout_marginStart="200sp">
 
+
+                <ImageButton
+                    android:id="@+id/zoom_in"
+                    android:layout_width="69dp"
+                    android:layout_height="74dp"
+                    android:background="@color/item_default_color"
+
+                    android:contentDescription="@string/zoom_in_content"
+                    android:padding="5sp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/plusiconhere" />
+
+                <ImageButton
+                    android:id="@+id/getoriginalocation"
+                    android:layout_width="70sp"
+                    android:layout_height="70sp"
+                    android:background="@color/item_default_color"
+                    android:contentDescription="@string/todo2"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/acamerascannerhere"
+                    android:padding="5sp"/>
+
+                <ImageButton
+                    android:id="@+id/zoomtomarkerpoint"
+                    android:layout_width="70sp"
+                    android:layout_height="70sp"
+                    android:background="@color/item_default_color"
+                    android:contentDescription="@string/todo2"
+                    android:padding="5sp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/mappinicon" />
+
+            </LinearLayout>
             <Button
-                android:layout_gravity="bottom"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/call_trader"
                 android:id="@+id/request"
                 style="?android:attr/borderlessButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:text="@string/call_trader"
 
                 />
+
+            <RadioGroup
+                android:id="@+id/radioGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/UberX"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/stationary" />
+
+                <RadioButton
+                    android:id="@+id/UberBlack"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/mobile" />
+
+                <RadioButton
+                    android:id="@+id/UberXl"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hybrid" />
+            </RadioGroup>
         </LinearLayout>
     </LinearLayout>
 
 
-    <ImageButton
-        android:id="@+id/zoom_in"
-        android:layout_width="60dp"
-        android:layout_height="74dp"
-        android:layout_marginStart="300sp"
-        android:layout_marginLeft="300sp"
-
-        android:layout_marginTop="300sp"
-        android:contentDescription="@string/zoom_in_content"
-        android:scaleType="fitCenter"
-        android:src="@drawable/plusiconhere" />
 
 
     <android.support.design.widget.FloatingActionButton
@@ -220,7 +249,8 @@
         android:clickable="true"
         android:focusable="true"
         android:scaleType="fitCenter"
-        android:src="@drawable/callcredithere" />
+        android:src="@drawable/callcredithere"
+        app:backgroundTint="@color/item_default_color" />
 
 
 
@@ -259,7 +289,9 @@
                 android:fitsSystemWindows="true"
                 android:visibility="visible"
                 app:headerLayout="@layout/nav_header_home"
-                app:menu="@menu/activitycustomermapdrawer" />
+                app:menu="@menu/activitycustomermapdrawer">
+
+            </android.support.design.widget.NavigationView>
 
 
         </android.support.v4.widget.DrawerLayout>
@@ -273,8 +305,8 @@
         android:background="@color/colorPrimary"
         app:subtitleTextColor="@android:color/white"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-
         app:titleTextColor="@android:color/white"></android.support.v7.widget.Toolbar>
+
 
 </FrameLayout>
 
